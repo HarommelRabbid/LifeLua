@@ -15,3 +15,4 @@ TBA use vitasdk
 * libvita2d by xerpi
 * Inspiration from Lua Player Plus Vita by Rinnegatamante
 * [Compound Assignment Operators](http://lua-users.org/files/wiki_insecure/power_patches/5.2/compound-5.2.2.patch) (Lua patch) by [SvenOlsen](http://lua-users.org/wiki/SvenOlsen)
+* [Bitwise operators, integer division and !=](http://lua-users.org/files/wiki_insecure/power_patches/5.1/bitwise_operators_5.1.4_1.patch) by Thierry Grellier, darkmist@mail.ru & Joshua Simmons
