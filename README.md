@@ -1,5 +1,5 @@
 # LifeLua
-LifeLuaJIT is an open-source LuaJIT interpreter for the PSVita which combines ease with advanced features.
+LifeLuaJIT is an open-source LuaJIT interpreter for the PSVita which combines ease with advanceability.
 ## Documentation
 TBA
 ## Samples
