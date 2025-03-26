@@ -6,7 +6,7 @@ TBA
 For a showcase of LifeLua's features go to the repository's `sample` folder.
 ## Compiling
 TBA use vitasdk
-## Copyright
+## Disclaimer
 LifeLua is licenced under GPLv3, that meaning you'll have to release the source code to your LifeLua app without any obfuscation/byte-code compiling. Disrespecting the licence will lead to a dispute or even closure/takedown if you continue to disrespect it after you've been told to release the pure source code.
 ## Credits
 * HENkaku by Team Molecule
