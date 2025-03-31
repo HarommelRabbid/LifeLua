@@ -12,7 +12,6 @@ LifeLua is licenced under GPLv3, that meaning you're required to release the sou
 * HENkaku by Team Molecule
 * TheFloW's VitaShell (?)
 * RegistryEditor MOD by devnoname120
-* (Small) Help from LiEnby (SilicaAndPina)
 * Developers of vitasdk
 * libvita2d by xerpi
 * Inspiration from Lua Player Plus Vita by Rinnegatamante
