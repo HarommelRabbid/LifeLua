@@ -15,17 +15,17 @@ endif()
 
 ## Define project parameters here
 # Name of the project
-project(test)
+project(lifelua)
 # This line adds Vita helper macros, must go after project definition in order
 # to build Vita specific artifacts (self/vpk).
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 ## Configuration options for this app
 # Display name (under bubble in LiveArea)
-set(VITA_APP_NAME "LifeFlow WIP")
+set(VITA_APP_NAME "LifeLua")
 # Unique ID must be exactly 9 characters. Recommended: XXXXYYYYY where X =
 # unique string of developer and Y = a unique number for this app
-set(VITA_TITLEID  "TEST78900")
+set(VITA_TITLEID  "LIFELUAJT")
 # Optional version string to show in LiveArea's more info screen
 set(VITA_VERSION  "00.00")
 
