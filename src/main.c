@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #include <vitasdk.h>
+#include <taihen.h>
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
@@ -26,6 +27,7 @@ vita2d_pgf *pgf;
 vita2d_pvf *pvf;
 SceCtrlData pad, oldpad;
 SceCommonDialogConfigParam cmnDlgCfgParam;
+bool unsafe = true;
 
 static int lua_delay(lua_State *L) {
 	int secs = luaL_optinteger(L, 1, 0);
@@ -37,8 +39,32 @@ static int lua_exit(lua_State *L) {
     return 0;
 }
 
+static int lua_uri(lua_State *L) {
+	const char *uri_string = luaL_checkstring(L, 1);
+	sceAppMgrLaunchAppByUri(0xFFFFF, (char*)uri_string);
+	return 0;
+}
+
+static int lua_unsafe(lua_State *L){
+	lua_pushboolean(L, unsafe);
+	return 1;
+}
+
+static int lua_bootparams(lua_State *L) {
+	if (!unsafe)
+		return luaL_error(L, "os.launchparams() requires unsafe mode to be activated from the HENkaku settings");
+	char bootparams[1024];
+	bootparams[0] = 0;
+	sceAppMgrGetAppParam(bootparams);
+	lua_pushstring(L, bootparams);
+	return 1;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
+	{"uri", lua_uri},
+	{"unsafe", lua_unsafe},
+	{"launchparams", lua_bootparams},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -95,22 +121,16 @@ static int lua_text(lua_State *L){
 
 // Draw rectangle
 static int lua_rect(lua_State *L) {
-	int argc = lua_gettop(L);
+	//int argc = lua_gettop(L);
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
     int width = luaL_checkinteger(L, 3);
     int height = luaL_checkinteger(L, 4);
     unsigned int color = luaL_checkinteger(L, 5);
-	unsigned int outline;
-	if (argc == 6) outline = luaL_checkinteger(L, 6);
+	//unsigned int outline;
+	//if (argc == 6) outline = luaL_checkinteger(L, 6);
 
     vita2d_draw_rectangle(x, y, width, height, color);
-	if (argc==6){
-		vita2d_draw_line(x, y, width, y, outline);
-		vita2d_draw_line(x, height, width, height, outline);
-		vita2d_draw_line(x, y, x, height, outline);
-		vita2d_draw_line(width, y, width, height, outline);
-	}
     return 0;
 }
 
@@ -228,6 +248,17 @@ static int lua_released(lua_State *L){
 	lua_pushboolean(L, !(pad.buttons == button) && (oldpad.buttons == button));
 	return 1;
 }
+static int lua_analogl(lua_State *L){
+	lua_pushinteger(L, pad.lx - 128);
+	lua_pushinteger(L, pad.ly - 128);
+	return 2;
+}
+
+static int lua_analogr(lua_State *L){
+	lua_pushinteger(L, pad.rx - 128);
+	lua_pushinteger(L, pad.ry - 128);
+	return 2;
+}
 
 static const struct luaL_Reg controls_lib[] = {
     {"lock", lua_lockpsbutton},
@@ -236,6 +267,8 @@ static const struct luaL_Reg controls_lib[] = {
 	{"pressed", lua_pressed},
 	{"held", lua_held},
 	{"released", lua_released},
+	{"leftanalog", lua_analogl},
+	{"rightanalog", lua_analogr},
     {NULL, NULL}
 };
 
@@ -253,12 +286,20 @@ void luaL_opencontrols(lua_State *L) {
 	luaL_pushglobalint(L, SCE_CTRL_TRIANGLE);
 	luaL_pushglobalint(L, SCE_CTRL_LTRIGGER);
 	luaL_pushglobalint(L, SCE_CTRL_RTRIGGER);
+	luaL_pushglobalint(L, SCE_CTRL_L1);
+	luaL_pushglobalint(L, SCE_CTRL_R1);
+	luaL_pushglobalint(L, SCE_CTRL_L2);
+	luaL_pushglobalint(L, SCE_CTRL_R2);
+	luaL_pushglobalint(L, SCE_CTRL_L3);
+	luaL_pushglobalint(L, SCE_CTRL_R3);
 	luaL_pushglobalint(L, SCE_CTRL_START);
 	luaL_pushglobalint(L, SCE_CTRL_SELECT);
 	luaL_pushglobalint(L, SCE_CTRL_POWER);
 	luaL_pushglobalint(L, SCE_CTRL_VOLUP);
 	luaL_pushglobalint(L, SCE_CTRL_VOLDOWN);
 	luaL_pushglobalint(L, SCE_CTRL_PSBUTTON);
+	luaL_pushglobalint(L, SCE_CTRL_INTERCEPTED);
+	luaL_pushglobalint(L, SCE_CTRL_HEADPHONE);
 }
 
 int main(){
@@ -274,6 +315,13 @@ int main(){
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
 	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
 	sceShellUtilInitEvents(0);
+
+	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
+	if(fd < 0){
+		unsafe = false;
+	}else{
+		sceIoClose(fd);
+	}
 
 	vita2d_init();
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));

@@ -31,10 +31,11 @@ set(VITA_VERSION  "00.00")
 
 ## Flags and includes for building
 # Note that we make sure not to overwrite previous flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 # Optional. You can specify more param.sfo flags this way.
-set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1 -s unsafe=true")
+set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
 
 # Add any additional include paths here
 include_directories(
@@ -59,12 +60,19 @@ target_link_libraries(${PROJECT_NAME}
     vita2d
     SceDisplay_stub
     SceGxm_stub
+    SceLibKernel_stub
     SceSysmodule_stub
     SceCtrl_stub
     SceCommonDialog_stub
     ScePgf_stub
     ScePvf_stub
     SceAppMgr_stub
+    SceAppUtil_stub
+    ScePromoterUtil_stub
+    SceKernelModulemgr_stub
+    SceShellSvc_stub
+    SceShutterSound_stub
+    SceRegistryMgr_stub
     SceAudio_stub
     luajit-5.1
     dl
@@ -73,15 +81,15 @@ target_link_libraries(${PROJECT_NAME}
     png
     jpeg
     freetype
+    c
     m
     z
-    c
     bz2
     pthread
 )
 
 ## Create Vita files
-vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
+vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME} UNSAFE)
 # The FILE directive lets you add additional files to the VPK, the syntax is
 # FILE src_path dst_path_in_vpk. In this case, we add the LiveArea paths.
 vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
