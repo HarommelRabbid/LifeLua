@@ -21,6 +21,7 @@
 #include <lauxlib.h>
 #define str(str) #str
 #define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
+#define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
 
 lua_State *L;
 vita2d_pgf *pgf;
@@ -28,7 +29,24 @@ vita2d_pvf *pvf;
 SceCtrlData pad, oldpad;
 SceCommonDialogConfigParam cmnDlgCfgParam;
 bool unsafe = true;
+//static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+//static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
+//static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 
+// string converting funcs
+void utf2ascii(char* dst, uint16_t* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*(src++))&0xFF;
+	*dst=0x00;
+}
+
+void ascii2utf(uint16_t* dst, char* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*src++);
+	*dst=0x00;
+}
+
+// lua functions
 static int lua_delay(lua_State *L) {
 	int secs = luaL_optinteger(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
@@ -60,11 +78,96 @@ static int lua_bootparams(lua_State *L) {
 	return 1;
 }
 
+/*
+static int lua_keyboard(lua_State *L){
+	char* title1 = (char*)luaL_checkstring(L, 1);
+	char* default_text = (char*)luaL_optstring(L, 2, "");
+	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
+	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_TYPE_DEFAULT);
+	SceUInt32 option = luaL_optinteger(L, 5, 0);
+	//SceUInt32 button = luaL_optinteger(L, 7, SCE_IME_DIALOG_BUTTON_ENTER);
+	SceUInt32 dialog_mode = luaL_optinteger(L, 6, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
+	SceUInt32 enter_label = luaL_optinteger(L, 7, SCE_IME_ENTER_LABEL_DEFAULT);
+	SceUInt32 length = luaL_optinteger(L, 8, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
+
+	if (type > 3) return luaL_error(L, "Invalid keyboard type");
+	if (mode > 1) return luaL_error(L, "Invalid keyboard mode");
+	if (strlen(title1) > SCE_IME_DIALOG_MAX_TITLE_LENGTH) return luaL_error(L, "Title is too long! Try to shorten it");
+
+	ascii2utf(initial_text, default_text);
+	ascii2utf(title, title1);
+
+	SceImeDialogParam param;
+	sceImeDialogParamInit(&param);
+	param.supportedLanguages = 0x0001FFFF;
+	param.languagesForced = SCE_TRUE;
+	param.type = type;
+	param.title = title;
+	param.textBoxMode = mode;
+	param.maxTextLength = length;
+	param.initialText = initial_text;
+	param.inputTextBuffer = input_text;
+	if (option > 0) param.option = option;
+	param.dialogMode = dialog_mode;
+	param.enterLabel = enter_label;
+	sceImeDialogInit(&param);
+	
+	SceCommonDialogStatus status = sceImeDialogGetStatus();
+	if (status == SCE_COMMON_DIALOG_STATUS_FINISHED){
+		SceImeDialogResult result;
+		memset(&result, 0, sizeof(SceImeDialogResult));
+		sceImeDialogGetResult(&result);
+		if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
+			lua_pushnil(L);
+		}else{
+			char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
+			utf2ascii(res, input_text);
+			lua_pushstring(L, res);
+		}
+		sceImeDialogTerm();
+	}
+	return 1;
+}
+*/
+
+/*
+static int lua_message(lua_State *L) {
+	const char *msg = luaL_checkstring(L, 1);
+  	SceMsgDialogUserMessageParam msg_param;
+  	memset(&msg_param, 0, sizeof(msg_param));
+  	msg_param.buttonType = SCE_MSG_DIALOG_BUTTON_TYPE_OK;
+  	msg_param.msg = (SceChar8 *)msg;
+
+  	SceMsgDialogParam param;
+  	sceMsgDialogParamInit(&param);
+  	_sceCommonDialogSetMagicNumber(&param.commonParam);
+  	param.mode = SCE_MSG_DIALOG_MODE_USER_MSG;
+  	param.userMsgParam = &msg_param;
+
+	sceMsgDialogInit(&param);
+
+	if (sceMsgDialogGetStatus() == SCE_COMMON_DIALOG_STATUS_FINISHED){
+		SceMsgDialogResult result;
+		sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
+		sceMsgDialogGetResult(&result);
+		if (result.result == SCE_COMMON_DIALOG_RESULT_OK) lua_pushboolean(L, true);
+		if (result.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED) lua_pushboolean(L, false);
+		if (result.result == SCE_COMMON_DIALOG_RESULT_ABORTED) lua_pushnil(L);
+	}
+  	sceMsgDialogTerm();	
+
+  	return 1;
+}
+*/
+
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
 	{"unsafe", lua_unsafe},
 	{"launchparams", lua_bootparams},
+	//{"keyboard", lua_keyboard},
+	//{"message", lua_message},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -80,6 +183,21 @@ void luaL_extendos(lua_State *L) {
 
 	luaL_setfuncs(L, os_lib, 0); // extending the os library
 	lua_pop(L, 1);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
+	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_DEFAULT);
+	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEND);
+	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEARCH);
+	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_GO);
+	//luaL_pushglobalint(L, SCE_IME_OPTION_MULTILINE);
+	//luaL_pushglobalint(L, SCE_IME_OPTION_NO_AUTO_CAPITALIZATION);
+	//luaL_pushglobalint(L, SCE_IME_OPTION_NO_ASSISTANCE);
 }
 
 static int lua_range(lua_State *L) {
@@ -121,16 +239,22 @@ static int lua_text(lua_State *L){
 
 // Draw rectangle
 static int lua_rect(lua_State *L) {
-	//int argc = lua_gettop(L);
+	int argc = lua_gettop(L);
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
     int width = luaL_checkinteger(L, 3);
     int height = luaL_checkinteger(L, 4);
     unsigned int color = luaL_checkinteger(L, 5);
-	//unsigned int outline;
-	//if (argc == 6) outline = luaL_checkinteger(L, 6);
+	unsigned int outline;
+	if (argc == 6) outline = luaL_checkinteger(L, 6);
 
     vita2d_draw_rectangle(x, y, width, height, color);
+	if (argc == 6){
+		vita2d_draw_line(x-1, y, x+width, y, outline);
+		vita2d_draw_line(x, y, x, y+height, outline);
+		vita2d_draw_line(width+x, y, width+x, y+height, outline);
+		vita2d_draw_line(x-1, y+height, x+width, y+height, outline);
+	}
     return 0;
 }
 
