@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <math.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 #include <vitasdk.h>
 #include <psp2/ctrl.h>
@@ -13,17 +18,21 @@
 #include <luajit.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#define str(str) #str
+#define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
 
 lua_State *L;
 vita2d_pgf *pgf;
 vita2d_pvf *pvf;
+SceCtrlData pad, oldpad;
+SceCommonDialogConfigParam cmnDlgCfgParam;
 
-int lua_delay(lua_State *L) {
+static int lua_delay(lua_State *L) {
 	int secs = luaL_optinteger(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
     return 0;
 }
-int lua_exit(lua_State *L) {
+static int lua_exit(lua_State *L) {
     sceKernelExitProcess(0);
     return 0;
 }
@@ -47,7 +56,7 @@ void luaL_extendos(lua_State *L) {
 	lua_pop(L, 1);
 }
 
-int lua_range(lua_State *L) {
+static int lua_range(lua_State *L) {
 	double num = luaL_checknumber(L, 1);
 	double lower = luaL_checknumber(L, 2);
 	double upper = luaL_checknumber(L, 3);
@@ -73,10 +82,10 @@ void luaL_extendmath(lua_State *L) {
 	lua_pop(L, 1);
 }
 
-int lua_text(lua_State *L){
+static int lua_text(lua_State *L){
 	int x = luaL_checkinteger(L, 1);
 	int y = luaL_checkinteger(L, 2);
-	const char* text = (const char*)luaL_checkstring(L, 3);
+	const char *text = luaL_checkstring(L, 3);
 	unsigned int color = luaL_checkinteger(L, 4);
 	float size = luaL_optnumber(L, 5, 1.0f);
 
@@ -85,19 +94,28 @@ int lua_text(lua_State *L){
 }
 
 // Draw rectangle
-int lua_rect(lua_State *L) {
+static int lua_rect(lua_State *L) {
+	int argc = lua_gettop(L);
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
     int width = luaL_checkinteger(L, 3);
     int height = luaL_checkinteger(L, 4);
     unsigned int color = luaL_checkinteger(L, 5);
+	unsigned int outline;
+	if (argc == 6) outline = luaL_checkinteger(L, 6);
 
     vita2d_draw_rectangle(x, y, width, height, color);
+	if (argc==6){
+		vita2d_draw_line(x, y, width, y, outline);
+		vita2d_draw_line(x, height, width, height, outline);
+		vita2d_draw_line(x, y, x, height, outline);
+		vita2d_draw_line(width, y, width, height, outline);
+	}
     return 0;
 }
 
 // Draw circle
-int lua_circle(lua_State *L) {
+static int lua_circle(lua_State *L) {
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
     int radius = luaL_checkinteger(L, 3);
@@ -108,7 +126,7 @@ int lua_circle(lua_State *L) {
 }
 
 // Draw line
-int lua_line(lua_State *L) {
+static int lua_line(lua_State *L) {
     int x0 = luaL_checkinteger(L, 1);
     int y0 = luaL_checkinteger(L, 2);
     int x1 = luaL_checkinteger(L, 3);
@@ -119,7 +137,7 @@ int lua_line(lua_State *L) {
     return 0;
 }
 
-int lua_swapbuff(lua_State *L) {
+static int lua_swapbuff(lua_State *L) {
 	int color = luaL_optinteger(L, 1, RGBA8(0, 0, 0, 255));
     vita2d_end_drawing();
     vita2d_swap_buffers();
@@ -145,7 +163,7 @@ void luaL_opendraw(lua_State *L) {
 	lua_setglobal(L, "draw");
 }
 
-int lua_newcolor(lua_State *L) {
+static int lua_newcolor(lua_State *L) {
 	int r = luaL_checkinteger(L, 1);
 	int g = luaL_checkinteger(L, 2);
 	int b = luaL_checkinteger(L, 3);
@@ -165,8 +183,97 @@ void luaL_opencolor(lua_State *L) {
 	lua_setglobal(L, "color");
 }
 
+static int lua_lockpsbutton(lua_State *L){
+	bool lock = lua_toboolean(L, 1);
+	bool lockq = lua_toboolean(L, 2);
+	if (lock==true){
+		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
+	}else{
+		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
+	}
+	if(lockq==true){
+		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
+	}else{
+		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
+	}
+	return 0;
+}
+
+static int lua_updatecontrols(lua_State *L){
+	oldpad = pad;
+	sceCtrlPeekBufferPositive(0, &pad, 1);
+	return 0;
+}
+
+static int lua_check(lua_State *L){
+	int button = luaL_checkinteger(L, 1);
+	lua_pushboolean(L, (pad.buttons == button));
+	return 1;
+}
+
+static int lua_pressed(lua_State *L){
+	int button = luaL_checkinteger(L, 1);
+	lua_pushboolean(L, (pad.buttons == button) && !(oldpad.buttons == button));
+	return 1;
+}
+
+static int lua_held(lua_State *L){
+	int button = luaL_checkinteger(L, 1);
+	lua_pushboolean(L, (pad.buttons == button) && (oldpad.buttons == button));
+	return 1;
+}
+
+static int lua_released(lua_State *L){
+	int button = luaL_checkinteger(L, 1);
+	lua_pushboolean(L, !(pad.buttons == button) && (oldpad.buttons == button));
+	return 1;
+}
+
+static const struct luaL_Reg controls_lib[] = {
+    {"lock", lua_lockpsbutton},
+	{"update", lua_updatecontrols},
+	{"check", lua_check},
+	{"pressed", lua_pressed},
+	{"held", lua_held},
+	{"released", lua_released},
+    {NULL, NULL}
+};
+
+void luaL_opencontrols(lua_State *L) {
+	lua_newtable(L);
+	luaL_setfuncs(L, controls_lib, 0);
+	lua_setglobal(L, "controls");
+	luaL_pushglobalint(L, SCE_CTRL_UP);
+	luaL_pushglobalint(L, SCE_CTRL_DOWN);
+	luaL_pushglobalint(L, SCE_CTRL_LEFT);
+	luaL_pushglobalint(L, SCE_CTRL_RIGHT);
+	luaL_pushglobalint(L, SCE_CTRL_CROSS);
+	luaL_pushglobalint(L, SCE_CTRL_CIRCLE);
+	luaL_pushglobalint(L, SCE_CTRL_SQUARE);
+	luaL_pushglobalint(L, SCE_CTRL_TRIANGLE);
+	luaL_pushglobalint(L, SCE_CTRL_LTRIGGER);
+	luaL_pushglobalint(L, SCE_CTRL_RTRIGGER);
+	luaL_pushglobalint(L, SCE_CTRL_START);
+	luaL_pushglobalint(L, SCE_CTRL_SELECT);
+	luaL_pushglobalint(L, SCE_CTRL_POWER);
+	luaL_pushglobalint(L, SCE_CTRL_VOLUP);
+	luaL_pushglobalint(L, SCE_CTRL_VOLDOWN);
+	luaL_pushglobalint(L, SCE_CTRL_PSBUTTON);
+}
+
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
+
+	SceAppUtilInitParam appUtilParam;
+	SceAppUtilBootParam appUtilBootParam;
+	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
+	memset(&appUtilBootParam, 0, sizeof(SceAppUtilBootParam));
+	sceAppUtilInit(&appUtilParam, &appUtilBootParam);
+	sceCommonDialogConfigParamInit(&cmnDlgCfgParam);
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *)&cmnDlgCfgParam.language);
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
+	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
+	sceShellUtilInitEvents(0);
 
 	vita2d_init();
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
@@ -179,15 +286,21 @@ int main(){
 	luaL_extendmath(L);
 	luaL_opendraw(L);
 	luaL_opencolor(L);
+	luaL_opencontrols(L);
 
+	vita2d_start_drawing();
+    vita2d_clear_screen();
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
 		while(1){
+			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
         	vita2d_clear_screen();
 			vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
 			vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, lua_tostring(L, -1));
+			if(!(pad.buttons == SCE_CTRL_CROSS) && (oldpad.buttons == SCE_CTRL_CROSS)) break;
 			vita2d_end_drawing();
     		vita2d_swap_buffers();
+			oldpad = pad;
 		}
 	}
 
