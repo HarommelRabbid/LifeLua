@@ -39,7 +39,6 @@ set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
 
 # Add any additional include paths here
 include_directories(
-  ../common # This is for debugScreenPrintf(), you shouldn't need it in your projects
   ${VITASDK}/arm-vita-eabi/include/luajit-2.1
 )
 
