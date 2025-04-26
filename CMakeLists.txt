@@ -63,6 +63,13 @@ target_link_libraries(${PROJECT_NAME}
     SceSysmodule_stub
     SceCtrl_stub
     SceCommonDialog_stub
+    SceIme_stub
+    SceFios2_stub
+    SceVshBridge_stub
+    SceShellSvc_stub
+    ScePspnetAdhoc_stub
+    SceTouch_stub
+    SceMotion_stub
     ScePgf_stub
     ScePvf_stub
     SceAppMgr_stub

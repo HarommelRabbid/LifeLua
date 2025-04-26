@@ -12,6 +12,7 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <psp2/ctrl.h>
+#include <psp2/touch.h>
 #include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
 
@@ -22,6 +23,7 @@
 #define str(str) #str
 #define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
 #define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
+#define range(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 
 lua_State *L;
 vita2d_pgf *pgf;
@@ -44,6 +46,26 @@ void ascii2utf(uint16_t* dst, char* src){
 	if(!src || !dst)return;
 	while(*src)*(dst++)=(*src++);
 	*dst=0x00;
+}
+
+// Taken from modoru, thanks to TheFloW
+void firmware_string(char string[8], unsigned int version) {
+	char a = (version >> 24) & 0xf;
+	char b = (version >> 20) & 0xf;
+	char c = (version >> 16) & 0xf;
+	char d = (version >> 12) & 0xf;
+
+	sceClibMemset(string, 0, 8);
+	string[0] = '0' + a;
+	string[1] = '.';
+	string[2] = '0' + b;
+	string[3] = '0' + c;
+	string[4] = '\0';
+
+	if (d) {
+		string[4] = '0' + d;
+		string[5] = '\0';
+	}
 }
 
 // lua functions
@@ -79,56 +101,66 @@ static int lua_bootparams(lua_State *L) {
 }
 
 /*
-static int lua_keyboard(lua_State *L){
-	char* title1 = (char*)luaL_checkstring(L, 1);
-	char* default_text = (char*)luaL_optstring(L, 2, "");
-	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
-	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_TYPE_DEFAULT);
-	SceUInt32 option = luaL_optinteger(L, 5, 0);
-	//SceUInt32 button = luaL_optinteger(L, 7, SCE_IME_DIALOG_BUTTON_ENTER);
-	SceUInt32 dialog_mode = luaL_optinteger(L, 6, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
-	SceUInt32 enter_label = luaL_optinteger(L, 7, SCE_IME_ENTER_LABEL_DEFAULT);
-	SceUInt32 length = luaL_optinteger(L, 8, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
-
-	if (type > 3) return luaL_error(L, "Invalid keyboard type");
-	if (mode > 1) return luaL_error(L, "Invalid keyboard mode");
-	if (strlen(title1) > SCE_IME_DIALOG_MAX_TITLE_LENGTH) return luaL_error(L, "Title is too long! Try to shorten it");
-
-	ascii2utf(initial_text, default_text);
-	ascii2utf(title, title1);
-
-	SceImeDialogParam param;
-	sceImeDialogParamInit(&param);
-	param.supportedLanguages = 0x0001FFFF;
-	param.languagesForced = SCE_TRUE;
-	param.type = type;
-	param.title = title;
-	param.textBoxMode = mode;
-	param.maxTextLength = length;
-	param.initialText = initial_text;
-	param.inputTextBuffer = input_text;
-	if (option > 0) param.option = option;
-	param.dialogMode = dialog_mode;
-	param.enterLabel = enter_label;
-	sceImeDialogInit(&param);
-	
-	SceCommonDialogStatus status = sceImeDialogGetStatus();
-	if (status == SCE_COMMON_DIALOG_STATUS_FINISHED){
-		SceImeDialogResult result;
-		memset(&result, 0, sizeof(SceImeDialogResult));
-		sceImeDialogGetResult(&result);
-		if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
-			lua_pushnil(L);
-		}else{
-			char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
-			utf2ascii(res, input_text);
-			lua_pushstring(L, res);
-		}
-		sceImeDialogTerm();
-	}
-	return 1;
+static int lua_shuttersound(lua_State *L) {
+	uint32_t type = (uint32_t)luaL_checkinteger(L, 1);
+	if ((type > 2) || (type < 0))
+		return luaL_error(L, "Invalid shutter ID");
+	sceShutterSoundPlay(type);
+	return 0;
 }
 */
+
+static int lua_keyboard(lua_State *L) {
+    static SceWChar16 input_text[256]; // UTF-16 buffer
+    static SceWChar16 title_text[32];  // UTF-16 title
+
+    SceImeDialogParam param;
+    sceImeDialogParamInit(&param);
+
+    memset(input_text, 0, sizeof(input_text));
+    memset(title_text, 0, sizeof(title_text));
+
+    // Convert simple ASCII title to UTF-16
+    const char *ascii_title = "Enter text";
+    for (int i = 0; i < strlen(ascii_title); i++) {
+        title_text[i] = (SceWChar16)ascii_title[i];
+    }
+
+    param.supportedLanguages = 0x0001; // Basic Latin
+    param.languagesForced = 1;
+    param.type = SCE_IME_TYPE_BASIC_LATIN;
+    param.title = title_text;
+    param.maxTextLength = 255;
+    param.initialText = input_text;
+    param.inputTextBuffer = input_text;
+
+    sceImeDialogInit(&param);
+
+    while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+        // You can draw something here
+        sceKernelDelayThread(1000);
+    }
+
+    SceImeDialogResult result;
+    sceImeDialogGetResult(&result);
+
+    sceImeDialogTerm();
+
+    if (result.button == SCE_IME_DIALOG_BUTTON_ENTER) {
+        // Convert UTF-16 back to normal char* string
+        char utf8_text[256];
+        memset(utf8_text, 0, sizeof(utf8_text));
+        for (int i = 0; i < 255 && input_text[i]; i++) {
+            utf8_text[i] = (char)input_text[i];
+        }
+
+        lua_pushstring(L, utf8_text);
+        return 1;
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
 
 /*
 static int lua_message(lua_State *L) {
@@ -160,14 +192,46 @@ static int lua_message(lua_State *L) {
 }
 */
 
+static int lua_realfirmware(lua_State *L) {
+	char fw_str[8];
+	SceKernelFwInfo info;
+	info.size = sizeof(SceKernelFwInfo);
+	_vshSblGetSystemSwVersion(&info);
+	firmware_string(fw_str, info.version);
+	lua_pushstring(L, fw_str);
+	return 1;
+}
+
+static int lua_spoofedfirmware(lua_State *L) {
+	char fw_str[8];
+	SceKernelFwInfo info;
+	info.size = sizeof(SceKernelFwInfo);
+	sceKernelGetSystemSwVersion(&info);
+	firmware_string(fw_str, info.version);
+	lua_pushstring(L, fw_str);
+	return 1;
+}
+
+static int lua_factoryfirmware(lua_State *L) {
+	char fw_str[8];
+	SceUInt32 ver;
+	_vshSblAimgrGetSMI(&ver);
+	firmware_string(fw_str, ver);
+	lua_pushstring(L, fw_str);
+	return 1;
+}
 
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
 	{"unsafe", lua_unsafe},
 	{"launchparams", lua_bootparams},
-	//{"keyboard", lua_keyboard},
+	{"realfirmware", lua_realfirmware},
+	{"spoofedfirmware", lua_spoofedfirmware},
+	{"factoryfirmware", lua_factoryfirmware},
+	{"keyboard", lua_keyboard},
 	//{"message", lua_message},
+	//{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -183,6 +247,9 @@ void luaL_extendos(lua_State *L) {
 
 	luaL_setfuncs(L, os_lib, 0); // extending the os library
 	lua_pop(L, 1);
+	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
+	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
+	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
@@ -233,7 +300,7 @@ static int lua_text(lua_State *L){
 	unsigned int color = luaL_checkinteger(L, 4);
 	float size = luaL_optnumber(L, 5, 1.0f);
 
-    vita2d_pgf_draw_text(pgf, x, y+20 * size, color, size, text);
+    vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color, size, text);
 	return 0;
 }
 
@@ -291,9 +358,24 @@ static int lua_swapbuff(lua_State *L) {
     return 0;
 }
 
+static int lua_textwidth(lua_State *L){
+	const char *text = luaL_checkstring(L, 1);
+	float size = luaL_optnumber(L, 2, 1.0f);
+	lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+	return 1;
+}
+
+static int lua_textheight(lua_State *L){
+	const char *text = luaL_checkstring(L, 1);
+	float size = luaL_optnumber(L, 2, 1.0f);
+	lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+	return 1;
+}
 
 static const struct luaL_Reg draw_lib[] = {
     {"text", lua_text},
+	{"textwidth", lua_textwidth},
+	{"textheight", lua_textheight},
     {"rect", lua_rect},
     {"circle", lua_circle},
     {"line", lua_line},
@@ -346,6 +428,56 @@ static int lua_lockpsbutton(lua_State *L){
 static int lua_updatecontrols(lua_State *L){
 	oldpad = pad;
 	sceCtrlPeekBufferPositive(0, &pad, 1);
+	/*
+	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
+	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
+	lua_newtable(L); // Create fronttouch table
+    for (int i = 0; i < fronttouch.reportNum; i++) {
+        lua_newtable(L);
+
+        float x = (fronttouch.report[i].x / 1920.0f) * 960.0f;
+        float y = (fronttouch.report[i].y / 1088.0f) * 544.0f;
+
+        lua_pushnumber(L, x);
+        lua_setfield(L, -2, "x");
+
+        lua_pushnumber(L, y);
+        lua_setfield(L, -2, "y");
+
+        lua_pushinteger(L, fronttouch.report[i].id);
+        lua_setfield(L, -2, "id");
+
+        lua_pushinteger(L, fronttouch.report[i].force);
+        lua_setfield(L, -2, "force");
+
+        lua_rawseti(L, -2, i+1);
+    }
+    lua_setglobal(L, "fronttouch"); // fronttouch = table
+
+    // BACK TOUCH
+    lua_newtable(L); // Create backtouch table
+    for (int i = 0; i < reartouch.reportNum; i++) {
+        lua_newtable(L);
+
+        float x = (reartouch.report[i].x / 1920.0f) * 960.0f;
+        float y = (reartouch.report[i].y / 1088.0f) * 544.0f;
+
+        lua_pushnumber(L, x);
+        lua_setfield(L, -2, "x");
+
+        lua_pushnumber(L, y);
+        lua_setfield(L, -2, "y");
+
+        lua_pushinteger(L, reartouch.report[i].id);
+        lua_setfield(L, -2, "id");
+
+        lua_pushinteger(L, reartouch.report[i].force);
+        lua_setfield(L, -2, "force");
+
+        lua_rawseti(L, -2, i+1);
+    }
+    lua_setglobal(L, "reartouch"); // backtouch = table
+	*/
 	return 0;
 }
 
@@ -384,6 +516,41 @@ static int lua_analogr(lua_State *L){
 	return 2;
 }
 
+static int lua_enterbutton(lua_State *L){
+	int enterButton;
+    sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, &enterButton);
+	if (enterButton == SCE_SYSTEM_PARAM_ENTER_BUTTON_CROSS) lua_pushinteger(L, SCE_CTRL_CROSS);
+	else if (enterButton == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE) lua_pushinteger(L, SCE_CTRL_CIRCLE);
+	return 1;
+}
+
+static int lua_cancelbutton(lua_State *L){
+	int enterButton;
+    sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, &enterButton);
+	if (enterButton == SCE_SYSTEM_PARAM_ENTER_BUTTON_CROSS) lua_pushinteger(L, SCE_CTRL_CIRCLE);
+	else if (enterButton == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE) lua_pushinteger(L, SCE_CTRL_CROSS);
+	return 1;
+}
+
+static int lua_touch(lua_State *L){
+	SceTouchData touch;
+	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
+	lua_newtable(L);
+	for (int i = 0; i < touch.reportNum; i++) {
+		lua_newtable(L);
+		lua_pushnumber(L, (range(touch.report[i].x, 1920, 960) - 50));
+		lua_setfield(L, -2, "x");
+		lua_pushnumber(L, (range(touch.report[i].y, 1088, 544) - 56.5));
+		lua_setfield(L, -2, "y");
+		lua_pushinteger(L, touch.report[i].id);
+        lua_setfield(L, -2, "id");
+        lua_pushinteger(L, touch.report[i].force);
+        lua_setfield(L, -2, "force");
+		lua_rawseti(L, -2, i+1);
+	}
+	return 1;
+}
+
 static const struct luaL_Reg controls_lib[] = {
     {"lock", lua_lockpsbutton},
 	{"update", lua_updatecontrols},
@@ -393,6 +560,9 @@ static const struct luaL_Reg controls_lib[] = {
 	{"released", lua_released},
 	{"leftanalog", lua_analogl},
 	{"rightanalog", lua_analogr},
+	{"enterbutton", lua_enterbutton},
+	{"cancelbutton", lua_cancelbutton},
+	{"fronttouch", lua_touch},
     {NULL, NULL}
 };
 
@@ -400,6 +570,8 @@ void luaL_opencontrols(lua_State *L) {
 	lua_newtable(L);
 	luaL_setfuncs(L, controls_lib, 0);
 	lua_setglobal(L, "controls");
+	//lua_setfield(L, -2, "fronttouch");
+	//lua_setfield(L, -2, "backtouch");
 	luaL_pushglobalint(L, SCE_CTRL_UP);
 	luaL_pushglobalint(L, SCE_CTRL_DOWN);
 	luaL_pushglobalint(L, SCE_CTRL_LEFT);
@@ -424,6 +596,33 @@ void luaL_opencontrols(lua_State *L) {
 	luaL_pushglobalint(L, SCE_CTRL_PSBUTTON);
 	luaL_pushglobalint(L, SCE_CTRL_INTERCEPTED);
 	luaL_pushglobalint(L, SCE_CTRL_HEADPHONE);
+}
+
+static int lua_fileexist(lua_State *L){
+	const char* path = luaL_checkstring(L, 1);
+	SceIoStat stat;
+	int res = sceIoGetstat(path, &stat);
+	if(res >= 0) lua_pushboolean(L, true);
+	else lua_pushboolean(L, false);
+	return 1;
+}
+
+static const struct luaL_Reg io_lib[] = {
+	{"exists", lua_fileexist},
+    {NULL, NULL}
+};
+
+void luaL_extendio(lua_State *L) {
+	lua_getglobal(L, "io");
+	if (!lua_istable(L, -1)) {
+		lua_pop(L, 1);
+		lua_newtable(L);
+		lua_setglobal(L, "io");
+		lua_getglobal(L, "io");
+	}
+
+	luaL_setfuncs(L, io_lib, 0);
+	lua_pop(L, 1);
 }
 
 int main(){
@@ -475,6 +674,9 @@ int main(){
 			oldpad = pad;
 		}
 	}
+	vita2d_end_drawing();
+    vita2d_swap_buffers();
+	sceDisplayWaitVblankStart();
 
 	lua_close(L);
 	vita2d_fini();
