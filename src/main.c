@@ -15,6 +15,7 @@
 #include <psp2/touch.h>
 #include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
+#include "include/ftp.h"
 
 #include <lua.h>
 #include <luajit.h>
@@ -28,25 +29,10 @@
 lua_State *L;
 vita2d_pgf *pgf;
 vita2d_pvf *pvf;
+vita2d_pvf *psexchar;
 SceCtrlData pad, oldpad;
 SceCommonDialogConfigParam cmnDlgCfgParam;
 bool unsafe = true;
-//static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
-//static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
-//static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
-
-// string converting funcs
-void utf2ascii(char* dst, uint16_t* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*(src++))&0xFF;
-	*dst=0x00;
-}
-
-void ascii2utf(uint16_t* dst, char* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*src++);
-	*dst=0x00;
-}
 
 // Taken from modoru, thanks to TheFloW
 void firmware_string(char string[8], unsigned int version) {
@@ -109,58 +95,6 @@ static int lua_shuttersound(lua_State *L) {
 	return 0;
 }
 */
-
-static int lua_keyboard(lua_State *L) {
-    static SceWChar16 input_text[256]; // UTF-16 buffer
-    static SceWChar16 title_text[32];  // UTF-16 title
-
-    SceImeDialogParam param;
-    sceImeDialogParamInit(&param);
-
-    memset(input_text, 0, sizeof(input_text));
-    memset(title_text, 0, sizeof(title_text));
-
-    // Convert simple ASCII title to UTF-16
-    const char *ascii_title = "Enter text";
-    for (int i = 0; i < strlen(ascii_title); i++) {
-        title_text[i] = (SceWChar16)ascii_title[i];
-    }
-
-    param.supportedLanguages = 0x0001; // Basic Latin
-    param.languagesForced = 1;
-    param.type = SCE_IME_TYPE_BASIC_LATIN;
-    param.title = title_text;
-    param.maxTextLength = 255;
-    param.initialText = input_text;
-    param.inputTextBuffer = input_text;
-
-    sceImeDialogInit(&param);
-
-    while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        // You can draw something here
-        sceKernelDelayThread(1000);
-    }
-
-    SceImeDialogResult result;
-    sceImeDialogGetResult(&result);
-
-    sceImeDialogTerm();
-
-    if (result.button == SCE_IME_DIALOG_BUTTON_ENTER) {
-        // Convert UTF-16 back to normal char* string
-        char utf8_text[256];
-        memset(utf8_text, 0, sizeof(utf8_text));
-        for (int i = 0; i < 255 && input_text[i]; i++) {
-            utf8_text[i] = (char)input_text[i];
-        }
-
-        lua_pushstring(L, utf8_text);
-        return 1;
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
 
 /*
 static int lua_message(lua_State *L) {
@@ -229,7 +163,6 @@ static const struct luaL_Reg os_lib[] = {
 	{"realfirmware", lua_realfirmware},
 	{"spoofedfirmware", lua_spoofedfirmware},
 	{"factoryfirmware", lua_factoryfirmware},
-	{"keyboard", lua_keyboard},
 	//{"message", lua_message},
 	//{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
@@ -628,6 +561,8 @@ void luaL_extendio(lua_State *L) {
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 
+	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -638,6 +573,9 @@ int main(){
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
 	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
 	sceShellUtilInitEvents(0);
+
+	char vita_ip[16];
+	unsigned short int vita_port = 0;
 
 	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
 	if(fd < 0){
@@ -650,6 +588,7 @@ int main(){
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
+	psexchar = vita2d_load_custom_pvf("sa0:data/font/pvf/psexchar.pvf");
 
 	L = luaL_newstate();
 	luaL_openlibs(L);
@@ -661,27 +600,74 @@ int main(){
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
-	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
-		while(1){
-			sceCtrlPeekBufferPositive(0, &pad, 1);
-			vita2d_start_drawing();
-        	vita2d_clear_screen();
-			vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
-			vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, lua_tostring(L, -1));
-			if(!(pad.buttons == SCE_CTRL_CROSS) && (oldpad.buttons == SCE_CTRL_CROSS)) break;
-			vita2d_end_drawing();
-    		vita2d_swap_buffers();
-			oldpad = pad;
+	while(1){
+		if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
+			while(1){
+				sceCtrlPeekBufferPositive(0, &pad, 1);
+				vita2d_start_drawing();
+    	    	vita2d_clear_screen();
+				vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
+				vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, lua_tostring(L, -1));
+
+				vita2d_pvf_draw_text(psexchar, 2, 80, RGBA8(255, 255, 255, 255), 1.0f, "\"");
+				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "\""), 80, RGBA8(255, 255, 255, 255), 1.0f, " Retry");
+
+				vita2d_pvf_draw_text(psexchar, 2, 100, RGBA8(255, 255, 255, 255), 1.0f, "#");
+				if (vita_port == 0) {
+					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Enable FTP");
+				}else{
+					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Disable FTP");
+				}
+
+				vita2d_pvf_draw_text(psexchar, 2, 120, RGBA8(255, 255, 255, 255), 1.0f, "!");
+				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "!"), 120, RGBA8(255, 255, 255, 255), 1.0f, " Close app");
+
+				if (vita_port != 0) {
+					vita2d_pvf_draw_textf(pvf, 2, 160, RGBA8(255, 255, 255, 255), 1.0f, "FTP is now enabled at: %s:%u", vita_ip, vita_port);
+				}
+
+				if(!(pad.buttons == SCE_CTRL_CROSS) && (oldpad.buttons == SCE_CTRL_CROSS)){
+					if (vita_port != 0) {
+						ftpvita_fini();
+						vita_port = 0;
+					}
+					break;
+				}
+				else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
+					if (vita_port != 0) {
+						ftpvita_fini();
+						vita_port = 0;
+					}
+					sceKernelExitProcess(0);
+				}
+				else if(!(pad.buttons == SCE_CTRL_SQUARE) && (oldpad.buttons == SCE_CTRL_SQUARE)){
+					if(vita_port == 0){
+						ftpvita_init(vita_ip, &vita_port);
+						ftpvita_add_device("app0:");
+						ftpvita_add_device("ux0:");
+						ftpvita_add_device("ur0:");
+					}else{
+						ftpvita_fini();
+						vita_port = 0;
+					}
+				};
+
+				vita2d_end_drawing();
+    			vita2d_swap_buffers();
+				oldpad = pad;
+			}
 		}
 	}
-	vita2d_end_drawing();
-    vita2d_swap_buffers();
-	sceDisplayWaitVblankStart();
+	//vita2d_end_drawing();
+    //vita2d_swap_buffers();
+	//sceDisplayWaitVblankStart();
 
 	lua_close(L);
 	vita2d_fini();
 	vita2d_free_pgf(pgf);
 	vita2d_free_pvf(pvf);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 	sceKernelExitProcess(0);
 	return 0;
 }
