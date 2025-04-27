@@ -13,6 +13,7 @@
 #include <taihen.h>
 #include <psp2/ctrl.h>
 #include <psp2/touch.h>
+#include <psp2/motion.h>
 #include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
 #include "include/ftp.h"
@@ -24,13 +25,15 @@
 #define str(str) #str
 #define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
 #define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
-#define range(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
+#define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 
 lua_State *L;
 vita2d_pgf *pgf;
 vita2d_pvf *pvf;
 vita2d_pvf *psexchar;
 SceCtrlData pad, oldpad;
+SceTouchData fronttouch, reartouch;
+SceMotionSensorState motion;
 SceCommonDialogConfigParam cmnDlgCfgParam;
 bool unsafe = true;
 
@@ -87,7 +90,6 @@ static int lua_bootparams(lua_State *L) {
 	return 1;
 }
 
-/*
 static int lua_shuttersound(lua_State *L) {
 	uint32_t type = (uint32_t)luaL_checkinteger(L, 1);
 	if ((type > 2) || (type < 0))
@@ -95,7 +97,56 @@ static int lua_shuttersound(lua_State *L) {
 	sceShutterSoundPlay(type);
 	return 0;
 }
-*/
+
+/*static int lua_keyboard(lua_State *L){
+	char* title1 = (char*)luaL_checkstring(L, 1);
+	char* default_text = (char*)luaL_optstring(L, 2, "");
+	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
+	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_TYPE_DEFAULT);
+	SceUInt32 option = luaL_optinteger(L, 5, 0);
+	//SceUInt32 button = luaL_optinteger(L, 7, SCE_IME_DIALOG_BUTTON_ENTER);
+	SceUInt32 dialog_mode = luaL_optinteger(L, 6, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
+	SceUInt32 enter_label = luaL_optinteger(L, 7, SCE_IME_ENTER_LABEL_DEFAULT);
+	SceUInt32 length = luaL_optinteger(L, 8, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
+
+	if (type > 3) return luaL_error(L, "Invalid keyboard type");
+	if (mode > 1) return luaL_error(L, "Invalid keyboard mode");
+	if (strlen(title1) > SCE_IME_DIALOG_MAX_TITLE_LENGTH) return luaL_error(L, "Title is too long! Try to shorten it");
+
+	ascii2utf(initial_text, default_text);
+	ascii2utf(title, title1);
+
+	SceImeDialogParam param;
+	sceImeDialogParamInit(&param);
+	param.supportedLanguages = 0x0001FFFF;
+	param.languagesForced = SCE_TRUE;
+	param.type = type;
+	param.title = title;
+	param.textBoxMode = mode;
+	param.maxTextLength = length;
+	param.initialText = initial_text;
+	param.inputTextBuffer = input_text;
+	if (option > 0) param.option = option;
+	param.dialogMode = dialog_mode;
+	param.enterLabel = enter_label;
+	sceImeDialogInit(&param);
+	
+	SceCommonDialogStatus status = sceImeDialogGetStatus();
+	if (status == SCE_COMMON_DIALOG_STATUS_FINISHED){
+		SceImeDialogResult result;
+		memset(&result, 0, sizeof(SceImeDialogResult));
+		sceImeDialogGetResult(&result);
+		if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
+			lua_pushnil(L);
+		}else{
+			char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
+			utf2ascii(res, input_text);
+			lua_pushstring(L, res);
+		}
+		sceImeDialogTerm();
+	}
+	return 1;
+}
 
 /*
 static int lua_message(lua_State *L) {
@@ -184,10 +235,11 @@ static const struct luaL_Reg os_lib[] = {
 	{"spoofedfirmware", lua_spoofedfirmware},
 	{"factoryfirmware", lua_factoryfirmware},
 	{"closeotherapps", lua_closeotherapps},
-	{"closeotherapp", lua_closeotherapp},
+	{"closeapp", lua_closeotherapp},
 	{"infobar", lua_infobar},
+	//{"keyboard", lua_keyboard},
 	//{"message", lua_message},
-	//{"shuttersound", lua_shuttersound},
+	{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -204,14 +256,20 @@ void luaL_extendos(lua_State *L) {
 	luaL_setfuncs(L, os_lib, 0); // extending the os library
 	lua_pop(L, 1);
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, "INFOBAR_VISIBILITY_INVISIBLE");
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE, "INFOBAR_VISIBILITY_VISIBLE");
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_BLACK);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_COLOR_BLACK, "INFOBAR_COLOR_BLACK");
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_WHITE);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_COLOR_WHITE, "INFOBAR_COLOR_WHITE");
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE, "INFOBAR_TRANSPARENCY_OPAQUE");
 	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT);
-	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
-	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
-	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
+	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT, "INFOBAR_TRANSPARENCY_TRANSLUCENT");
+	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
+	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
+	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
 	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
@@ -390,6 +448,9 @@ static int lua_lockpsbutton(lua_State *L){
 static int lua_updatecontrols(lua_State *L){
 	oldpad = pad;
 	sceCtrlPeekBufferPositive(0, &pad, 1);
+	sceMotionGetSensorState(&motion, 1);
+	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
+	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
 	/*
 	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
 	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
@@ -494,20 +555,71 @@ static int lua_cancelbutton(lua_State *L){
 	return 1;
 }
 
-static int lua_touch(lua_State *L){
-	SceTouchData touch;
-	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch, 1);
+static int lua_accelerometer(lua_State *L){
 	lua_newtable(L);
-	for (int i = 0; i < touch.reportNum; i++) {
+
+	lua_pushnumber(L, motion.accelerometer.x);
+    lua_setfield(L, -2, "x");
+	lua_pushnumber(L, motion.accelerometer.y);
+    lua_setfield(L, -2, "y");
+	lua_pushnumber(L, motion.accelerometer.z);
+    lua_setfield(L, -2, "z");
+	return 1;
+}
+
+static int lua_gyroscope(lua_State *L){
+	lua_newtable(L);
+
+	lua_pushnumber(L, motion.gyro.x);
+    lua_setfield(L, -2, "x");
+	lua_pushnumber(L, motion.gyro.y);
+    lua_setfield(L, -2, "y");
+	lua_pushnumber(L, motion.gyro.z);
+    lua_setfield(L, -2, "z");
+	return 1;
+}
+
+static int lua_fronttouch(lua_State *L){
+	lua_newtable(L);
+
+	for (int i = 0; i < fronttouch.reportNum; i++) {
 		lua_newtable(L);
-		lua_pushnumber(L, (range(touch.report[i].x, 1920, 960) - 50));
+
+		lua_pushinteger(L, lerp(fronttouch.report[i].x, 1920, 960));
 		lua_setfield(L, -2, "x");
-		lua_pushnumber(L, (range(touch.report[i].y, 1088, 544) - 56.5));
+
+		lua_pushinteger(L, lerp(fronttouch.report[i].y, 1285, 855));
 		lua_setfield(L, -2, "y");
-		lua_pushinteger(L, touch.report[i].id);
+
+		lua_pushinteger(L, fronttouch.report[i].id);
         lua_setfield(L, -2, "id");
-        lua_pushinteger(L, touch.report[i].force);
+
+        lua_pushinteger(L, fronttouch.report[i].force);
         lua_setfield(L, -2, "force");
+
+		lua_rawseti(L, -2, i+1);
+	}
+	return 1;
+}
+
+static int lua_reartouch(lua_State *L){
+	lua_newtable(L);
+
+	for (int i = 0; i < reartouch.reportNum; i++) {
+		lua_newtable(L);
+
+		lua_pushinteger(L, lerp(reartouch.report[i].x, 1920, 960));
+		lua_setfield(L, -2, "x");
+
+		lua_pushinteger(L, lerp(reartouch.report[i].y, 1285, 855));
+		lua_setfield(L, -2, "y");
+
+		lua_pushinteger(L, reartouch.report[i].id);
+        lua_setfield(L, -2, "id");
+
+        lua_pushinteger(L, reartouch.report[i].force);
+        lua_setfield(L, -2, "force");
+
 		lua_rawseti(L, -2, i+1);
 	}
 	return 1;
@@ -524,7 +636,10 @@ static const struct luaL_Reg controls_lib[] = {
 	{"rightanalog", lua_analogr},
 	{"enterbutton", lua_enterbutton},
 	{"cancelbutton", lua_cancelbutton},
-	{"fronttouch", lua_touch},
+	{"accelerometer", lua_accelerometer},
+	{"gyroscope", lua_gyroscope},
+	{"fronttouch", lua_fronttouch},
+	{"reartouch", lua_reartouch},
     {NULL, NULL}
 };
 
@@ -591,9 +706,14 @@ int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+	sceTouchEnableTouchForce(SCE_TOUCH_PORT_FRONT);
+	sceTouchEnableTouchForce(SCE_TOUCH_PORT_BACK);
+	sceMotionStartSampling();
+	sceMotionMagnetometerOn();
 
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -645,8 +765,10 @@ int main(){
 
 				vita2d_pvf_draw_text(psexchar, 2, 100, RGBA8(255, 255, 255, 255), 1.0f, "#");
 				if (vita_port == 0) {
+					sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
 					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Enable FTP");
 				}else{
+					sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
 					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Disable FTP");
 				}
 
@@ -699,6 +821,9 @@ int main(){
 	vita2d_free_pvf(pvf);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
+	sceMotionMagnetometerOff();
+	sceMotionStopSampling();
 	sceKernelExitProcess(0);
 	return 0;
 }
