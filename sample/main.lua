@@ -1,7 +1,7 @@
 white = color.new(255, 255, 255)
 blue = color.new(0, 0, 255)
 local sel = 1
-local samples = {"Hello World", "Controls", "System functions", "Keyboard"}
+local samples = {"Hello World", "Controls", ".SFO Reader"}
 local bar = false
 while true do
 draw.rect(0, 0, 960, 60, blue)
