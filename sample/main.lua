@@ -1,7 +1,8 @@
 white = color.new(255, 255, 255)
 blue = color.new(0, 0, 255)
 local sel = 1
-local samples = {"Hello World", "Controls"}
+local samples = {"Hello World", "Controls", "System functions", "Keyboard"}
+local bar = false
 while true do
 draw.rect(0, 0, 960, 60, blue)
 draw.text(480-string.len("LifeLua Showcase Menu")*6, 20, "LifeLua Showcase Menu", white)
@@ -23,5 +24,6 @@ if controls.pressed(SCE_CTRL_DOWN) and sel < #samples then sel = sel + 1 end
 selpressed = controls.held(SCE_CTRL_CROSS)
 if controls.released(SCE_CTRL_CROSS) then controls.update() dofile("samples/"..samples[sel]..".lua") end
 if controls.released(SCE_CTRL_START) then os.exit() end
+if controls.released(SCE_CTRL_SELECT) then if not bar then os.infobar(INFOBAR_VISIBILITY_VISIBLE, INFOBAR_COLOR_WHITE, INFOBAR_TRANSPARENCY_TRANSLUCENT) bar = true else os.infobar() bar = false end end
 draw.swapbuffers()
 end
