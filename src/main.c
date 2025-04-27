@@ -37,6 +37,22 @@ SceMotionSensorState motion;
 SceCommonDialogConfigParam cmnDlgCfgParam;
 bool unsafe = true;
 
+typedef struct {
+    char magic[4];       // "\0PSF"
+    uint32_t version;
+    uint32_t key_table_offset;
+    uint32_t data_table_offset;
+    uint32_t tables_entries;
+} SFOHeader;
+
+typedef struct {
+    uint16_t key_offset;
+    uint16_t param_fmt;
+    uint32_t param_len;
+    uint32_t param_max_len;
+    uint32_t data_offset;
+} SFOEntry;
+
 // Taken from modoru, thanks to TheFloW
 void firmware_string(char string[8], unsigned int version) {
 	char a = (version >> 24) & 0xf;
@@ -684,8 +700,69 @@ static int lua_fileexist(lua_State *L){
 	return 1;
 }
 
+static int lua_newfolder(lua_State *L){
+	// pretty crappy implementation, will fix later not sure
+	const char* path = luaL_checkstring(L, 1);
+	sceIoMkdir(path, 0777);
+	return 0;
+}
+
+static int lua_readsfo(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+
+    SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
+    if (fd < 0)
+        return luaL_error(L, "Failed to open SFO");
+
+    int file_size = sceIoLseek(fd, 0, SCE_SEEK_END);
+    sceIoLseek(fd, 0, SCE_SEEK_SET);
+
+    void *buffer = malloc(file_size);
+    if (!buffer) {
+        sceIoClose(fd);
+        return luaL_error(L, "Failed to allocate memory");
+    }
+
+    sceIoRead(fd, buffer, file_size);
+    sceIoClose(fd);
+
+    SFOHeader *header = (SFOHeader *)buffer;
+    if (memcmp(header->magic, "\0PSF", 4) != 0) {
+        free(buffer);
+        return luaL_error(L, "Invalid SFO magic");
+    }
+
+    SFOEntry *entries = (SFOEntry *)(buffer + sizeof(SFOHeader));
+    const char *key_table = (const char *)buffer + header->key_table_offset;
+    const char *data_table = (const char *)buffer + header->data_table_offset;
+
+    lua_newtable(L);
+
+    for (int i = 0; i < header->tables_entries; i++) {
+        const char *key = key_table + entries[i].key_offset;
+        const void *data = data_table + entries[i].data_offset;
+
+        if (entries[i].param_fmt == 0x0204) { // string
+            lua_pushstring(L, (const char *)data);
+        } else if (entries[i].param_fmt == 0x0404) { // int32
+            uint32_t value;
+            memcpy(&value, data, sizeof(uint32_t));
+            lua_pushinteger(L, value);
+        } else {
+            lua_pushnil(L); // unsupported type
+        }
+
+        lua_setfield(L, -2, key);
+    }
+
+    free(buffer);
+    return 1;
+}
+
 static const struct luaL_Reg io_lib[] = {
+	{"readsfo", lua_readsfo},
 	{"exists", lua_fileexist},
+	{"newfolder", lua_newfolder},
     {NULL, NULL}
 };
 
@@ -748,6 +825,7 @@ int main(){
 	luaL_opendraw(L);
 	luaL_opencolor(L);
 	luaL_opencontrols(L);
+	luaL_extendio(L);
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
