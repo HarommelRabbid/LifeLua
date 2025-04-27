@@ -67,7 +67,8 @@ static int lua_exit(lua_State *L) {
 
 static int lua_uri(lua_State *L) {
 	const char *uri_string = luaL_checkstring(L, 1);
-	sceAppMgrLaunchAppByUri(0xFFFFF, (char*)uri_string);
+	int flag = luaL_optinteger(L, 2, 0xFFFFF);
+	sceAppMgrLaunchAppByUri(flag, (char*)uri_string);
 	return 0;
 }
 
@@ -155,6 +156,25 @@ static int lua_factoryfirmware(lua_State *L) {
 	return 1;
 }
 
+static int lua_closeotherapps(lua_State *L){
+	sceAppMgrDestroyOtherApp();
+	return 0;
+}
+
+static int lua_closeotherapp(lua_State *L){
+	const char *name = luaL_checkstring(L, 1);
+	sceAppMgrDestroyAppByName(name);
+	return 0;
+}
+
+static int lua_infobar(lua_State *L){
+	int state = luaL_optinteger(L, 1, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
+	int color = luaL_optinteger(L, 2, SCE_APPMGR_INFOBAR_COLOR_BLACK);
+	int transparency = luaL_optinteger(L, 3, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
+	sceAppMgrSetInfobarState(state, color, transparency);
+	return 0;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -163,6 +183,9 @@ static const struct luaL_Reg os_lib[] = {
 	{"realfirmware", lua_realfirmware},
 	{"spoofedfirmware", lua_spoofedfirmware},
 	{"factoryfirmware", lua_factoryfirmware},
+	{"closeotherapps", lua_closeotherapps},
+	{"closeotherapp", lua_closeotherapp},
+	{"infobar", lua_infobar},
 	//{"message", lua_message},
 	//{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
@@ -180,6 +203,12 @@ void luaL_extendos(lua_State *L) {
 
 	luaL_setfuncs(L, os_lib, 0); // extending the os library
 	lua_pop(L, 1);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_BLACK);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_WHITE);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
+	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT);
 	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
 	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
 	//luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
@@ -560,6 +589,8 @@ void luaL_extendio(lua_State *L) {
 
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
+	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+	sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
 
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
