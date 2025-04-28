@@ -146,15 +146,13 @@ static int lua_keyboard(lua_State *L){
 	char* title1 = (char*)luaL_checkstring(L, 1);
 	char* default_text = (char*)luaL_optstring(L, 2, "");
 	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
-	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_TYPE_DEFAULT);
+	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
 	SceUInt32 option = luaL_optinteger(L, 5, 0);
 	//SceUInt32 button = luaL_optinteger(L, 7, SCE_IME_DIALOG_BUTTON_ENTER);
 	SceUInt32 dialog_mode = luaL_optinteger(L, 6, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
 	SceUInt32 enter_label = luaL_optinteger(L, 7, SCE_IME_ENTER_LABEL_DEFAULT);
 	SceUInt32 length = luaL_optinteger(L, 8, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
 
-	if (type > 3) return luaL_error(L, "Invalid keyboard type");
-	if (mode > 1) return luaL_error(L, "Invalid keyboard mode");
 	if (strlen(title1) > SCE_IME_DIALOG_MAX_TITLE_LENGTH) return luaL_error(L, "Title is too long! Try to shorten it");
 
 	ascii2utf(initial_text, default_text);
@@ -187,6 +185,7 @@ static int lua_keyboard(lua_State *L){
     }
 
     SceImeDialogResult result;
+	sceClibMemset(&result, 0, sizeof(SceImeDialogResult));
     sceImeDialogGetResult(&result);
 
     if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
@@ -198,7 +197,6 @@ static int lua_keyboard(lua_State *L){
 	}
 
 	sceImeDialogTerm();
-	
 	return 1;
 }
 
@@ -332,6 +330,12 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
+	luaL_pushglobalint(L, SCE_IME_TYPE_DEFAULT);
+	luaL_pushglobalint(L, SCE_IME_TYPE_BASIC_LATIN);
+	luaL_pushglobalint(L, SCE_IME_TYPE_NUMBER);
+	luaL_pushglobalint(L, SCE_IME_TYPE_EXTENDED_NUMBER);
+	luaL_pushglobalint(L, SCE_IME_TYPE_URL);
+	luaL_pushglobalint(L, SCE_IME_TYPE_MAIL);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
@@ -351,6 +355,7 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_YESNO);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_NONE);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL);
 }
 
 static int lua_range(lua_State *L) {
