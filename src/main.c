@@ -35,6 +35,9 @@ SceCtrlData pad, oldpad;
 SceTouchData fronttouch, reartouch;
 SceMotionSensorState motion;
 SceCommonDialogConfigParam cmnDlgCfgParam;
+static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
+static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
+static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 bool unsafe = true;
 
 typedef struct {
@@ -52,6 +55,18 @@ typedef struct {
     uint32_t param_max_len;
     uint32_t data_offset;
 } SFOEntry;
+
+void utf2ascii(char* dst, uint16_t* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*(src++))&0xFF;
+	*dst=0x00;
+}
+
+void ascii2utf(uint16_t* dst, char* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*src++);
+	*dst=0x00;
+}
 
 // Taken from modoru, thanks to TheFloW
 void firmware_string(char string[8], unsigned int version) {
@@ -71,6 +86,13 @@ void firmware_string(char string[8], unsigned int version) {
 		string[4] = '0' + d;
 		string[5] = '\0';
 	}
+}
+
+int file_exists(const char* path) {
+	SceIoStat stat;
+	int res = sceIoGetstat(path, &stat);
+	if(res >= 0) return 1;
+	else return 0;
 }
 
 // lua functions
@@ -114,7 +136,13 @@ static int lua_shuttersound(lua_State *L) {
 	return 0;
 }
 
-/*static int lua_keyboard(lua_State *L){
+static int lua_selfexecute(lua_State *L){
+	const char* path = luaL_checkstring(L, 1);
+	sceAppMgrLoadExec(path, NULL, NULL);
+	return 0;
+}
+
+static int lua_keyboard(lua_State *L){
 	char* title1 = (char*)luaL_checkstring(L, 1);
 	char* default_text = (char*)luaL_optstring(L, 2, "");
 	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
@@ -146,30 +174,41 @@ static int lua_shuttersound(lua_State *L) {
 	param.dialogMode = dialog_mode;
 	param.enterLabel = enter_label;
 	sceImeDialogInit(&param);
-	
-	SceCommonDialogStatus status = sceImeDialogGetStatus();
-	if (status == SCE_COMMON_DIALOG_STATUS_FINISHED){
-		SceImeDialogResult result;
-		memset(&result, 0, sizeof(SceImeDialogResult));
-		sceImeDialogGetResult(&result);
-		if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
-			lua_pushnil(L);
-		}else{
-			char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
-			utf2ascii(res, input_text);
-			lua_pushstring(L, res);
-		}
-		sceImeDialogTerm();
+
+	while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+        vita2d_start_drawing();
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+    }
+
+    SceImeDialogResult result;
+    sceImeDialogGetResult(&result);
+
+    if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
+		lua_pushnil(L);
+	}else{
+		char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
+		utf2ascii(res, input_text);
+		lua_pushstring(L, res);
 	}
+
+	sceImeDialogTerm();
+	
 	return 1;
 }
 
-/*
 static int lua_message(lua_State *L) {
 	const char *msg = luaL_checkstring(L, 1);
-  	SceMsgDialogUserMessageParam msg_param;
+	int type = luaL_optinteger(L, 2, SCE_MSG_DIALOG_BUTTON_TYPE_OK);
+
+	SceMsgDialogUserMessageParam msg_param;
   	memset(&msg_param, 0, sizeof(msg_param));
-  	msg_param.buttonType = SCE_MSG_DIALOG_BUTTON_TYPE_OK;
+  	msg_param.buttonType = type;
   	msg_param.msg = (SceChar8 *)msg;
 
   	SceMsgDialogParam param;
@@ -177,22 +216,28 @@ static int lua_message(lua_State *L) {
   	_sceCommonDialogSetMagicNumber(&param.commonParam);
   	param.mode = SCE_MSG_DIALOG_MODE_USER_MSG;
   	param.userMsgParam = &msg_param;
-
 	sceMsgDialogInit(&param);
 
-	if (sceMsgDialogGetStatus() == SCE_COMMON_DIALOG_STATUS_FINISHED){
-		SceMsgDialogResult result;
-		sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
-		sceMsgDialogGetResult(&result);
-		if (result.result == SCE_COMMON_DIALOG_RESULT_OK) lua_pushboolean(L, true);
-		if (result.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED) lua_pushboolean(L, false);
-		if (result.result == SCE_COMMON_DIALOG_RESULT_ABORTED) lua_pushnil(L);
-	}
-  	sceMsgDialogTerm();	
+	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+        vita2d_start_drawing();
 
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+    }
+
+	SceMsgDialogResult result;
+	sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
+	sceMsgDialogGetResult(&result);
+	if (result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) lua_pushboolean(L, false);
+	else lua_pushboolean(L, true);
+
+	sceMsgDialogTerm();
   	return 1;
 }
-*/
 
 static int lua_realfirmware(lua_State *L) {
 	char fw_str[8];
@@ -247,14 +292,15 @@ static const struct luaL_Reg os_lib[] = {
 	{"uri", lua_uri},
 	{"unsafe", lua_unsafe},
 	{"launchparams", lua_bootparams},
+	{"execute", lua_selfexecute},
 	{"realfirmware", lua_realfirmware},
 	{"spoofedfirmware", lua_spoofedfirmware},
 	{"factoryfirmware", lua_factoryfirmware},
 	{"closeotherapps", lua_closeotherapps},
 	{"closeapp", lua_closeotherapp},
 	{"infobar", lua_infobar},
-	//{"keyboard", lua_keyboard},
-	//{"message", lua_message},
+	{"keyboard", lua_keyboard},
+	{"message", lua_message},
 	{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
     {NULL, NULL}
@@ -286,21 +332,25 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
-	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_DEFAULT);
-	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEND);
-	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEARCH);
-	//luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_GO);
-	//luaL_pushglobalint(L, SCE_IME_OPTION_MULTILINE);
-	//luaL_pushglobalint(L, SCE_IME_OPTION_NO_AUTO_CAPITALIZATION);
-	//luaL_pushglobalint(L, SCE_IME_OPTION_NO_ASSISTANCE);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
+	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
+	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_DEFAULT);
+	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEND);
+	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEARCH);
+	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_GO);
+	luaL_pushglobalint(L, SCE_IME_OPTION_MULTILINE);
+	luaL_pushglobalint(L, SCE_IME_OPTION_NO_AUTO_CAPITALIZATION);
+	luaL_pushglobalint(L, SCE_IME_OPTION_NO_ASSISTANCE);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_OK);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_YESNO);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_NONE);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL);
 }
 
 static int lua_range(lua_State *L) {
@@ -387,6 +437,7 @@ static int lua_line(lua_State *L) {
 static int lua_swapbuff(lua_State *L) {
 	int color = luaL_optinteger(L, 1, RGBA8(0, 0, 0, 255));
     vita2d_end_drawing();
+	vita2d_wait_rendering_done();
     vita2d_swap_buffers();
     vita2d_start_drawing();
 	vita2d_set_clear_color(color);
@@ -693,17 +744,30 @@ void luaL_opencontrols(lua_State *L) {
 
 static int lua_fileexist(lua_State *L){
 	const char* path = luaL_checkstring(L, 1);
-	SceIoStat stat;
-	int res = sceIoGetstat(path, &stat);
-	if(res >= 0) lua_pushboolean(L, true);
+	if (file_exists(path)) lua_pushboolean(L, true);
 	else lua_pushboolean(L, false);
 	return 1;
 }
 
 static int lua_newfolder(lua_State *L){
-	// pretty crappy implementation, will fix later not sure
 	const char* path = luaL_checkstring(L, 1);
-	sceIoMkdir(path, 0777);
+	if(!file_exists(path)){
+		char dirname[512];
+		memset(dirname, 0x00, sizeof(dirname));
+
+		for(int i = 0; i < strlen(path); i++) {
+			if(path[i] == '/' || path[i] == '\\') {
+				memset(dirname, 0, sizeof(dirname));
+				strncpy(dirname, path, i);
+
+				if(!file_exists(dirname)){
+					sceIoMkdir(dirname, 0777);
+				}	
+			}
+		}
+
+		sceIoMkdir(path, 0777);
+	}
 	return 0;
 }
 
@@ -890,6 +954,7 @@ int main(){
 		}
 	}
 	//vita2d_end_drawing();
+	//vita2d_common_dialog_update();
     //vita2d_swap_buffers();
 	//sceDisplayWaitVblankStart();
 
@@ -902,6 +967,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceMotionMagnetometerOff();
 	sceMotionStopSampling();
+	sceAppUtilShutdown();
 	sceKernelExitProcess(0);
 	return 0;
 }
