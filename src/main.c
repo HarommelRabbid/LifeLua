@@ -238,6 +238,40 @@ static int lua_message(lua_State *L) {
   	return 1;
 }
 
+static int lua_sysmessage(lua_State *L) {
+	int type = luaL_checkinteger(L, 1);
+
+	SceMsgDialogSystemMessageParam msg_param;
+  	memset(&msg_param, 0, sizeof(msg_param));
+  	msg_param.sysMsgType = type;
+
+  	SceMsgDialogParam param;
+  	sceMsgDialogParamInit(&param);
+  	_sceCommonDialogSetMagicNumber(&param.commonParam);
+  	param.mode = SCE_MSG_DIALOG_MODE_SYSTEM_MSG;
+  	param.sysMsgParam = &msg_param;
+	sceMsgDialogInit(&param);
+
+	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+        vita2d_start_drawing();
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+    }
+
+	SceMsgDialogResult result;
+	sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
+	sceMsgDialogGetResult(&result);
+	if ((result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) || (result.buttonId == SCE_MSG_DIALOG_MODE_INVALID)) lua_pushboolean(L, false);
+	else lua_pushboolean(L, true);
+	sceMsgDialogTerm();
+  	return 1;
+}
+
 static int lua_realfirmware(lua_State *L) {
 	char fw_str[8];
 	SceKernelFwInfo info;
@@ -300,6 +334,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"infobar", lua_infobar},
 	{"keyboard", lua_keyboard},
 	{"message", lua_message},
+	{"systemmessage", lua_sysmessage},
 	{"shuttersound", lua_shuttersound},
     {"exit", lua_exit},
     {NULL, NULL}
@@ -357,6 +392,17 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_NONE);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_NOSPACE);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_MAGNETIC_CALIBRATION);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT_SMALL);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT_CANCEL);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_NEED_MC_CONTINUE);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_NEED_MC_OPERATION);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_MIC_DISABLED);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_OPERATION);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_APPLICATION);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_EMPTY_STORE);
 }
 
 static int lua_range(lua_State *L) {
