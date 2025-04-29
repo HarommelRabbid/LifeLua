@@ -5,7 +5,11 @@ TBA
 ## Samples
 For a showcase of LifeLua's features go to the repository's `sample` folder.
 ## Compiling
-Use VitaSDK.
+Install [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
+
+```
+mkdir build && cd build && cmake .. && make
+```
 ## Disclaimer
 LifeLua is licenced under GPLv3, that meaning you're required to release the source code to your LifeLua app without any obfuscation/byte-code compiling.
 ## Credits
