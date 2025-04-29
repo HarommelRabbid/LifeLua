@@ -190,7 +190,7 @@ static int lua_keyboard(lua_State *L){
 	sceClibMemset(&result, 0, sizeof(SceImeDialogResult));
     sceImeDialogGetResult(&result);
 
-    if !((option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) || (option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER)) {
+    if (!((option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) || (option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER))) {
 		lua_pushnil(L);
 	}else{
 		char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
@@ -232,9 +232,8 @@ static int lua_message(lua_State *L) {
 	SceMsgDialogResult result;
 	sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
 	sceMsgDialogGetResult(&result);
-	if (result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) lua_pushboolean(L, false);
+	if ((result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) || (result.buttonId == SCE_MSG_DIALOG_MODE_INVALID)) lua_pushboolean(L, false);
 	else lua_pushboolean(L, true);
-
 	sceMsgDialogTerm();
   	return 1;
 }
