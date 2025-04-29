@@ -39,6 +39,8 @@ static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 bool unsafe = true;
+char vita_ip[16];
+unsigned short int vita_port = 0;
 
 typedef struct {
     char magic[4];       // "\0PSF"
@@ -188,7 +190,7 @@ static int lua_keyboard(lua_State *L){
 	sceClibMemset(&result, 0, sizeof(SceImeDialogResult));
     sceImeDialogGetResult(&result);
 
-    if (result.button != SCE_IME_DIALOG_BUTTON_ENTER) {
+    if !((option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) || (option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER)) {
 		lua_pushnil(L);
 	}else{
 		char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
@@ -848,6 +850,70 @@ void luaL_extendio(lua_State *L) {
 	lua_pop(L, 1);
 }
 
+void luaL_lifelua_dofile(lua_State *L){
+	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
+		bool error = true;
+		while(error){
+			sceCtrlPeekBufferPositive(0, &pad, 1);
+			vita2d_start_drawing();
+    		vita2d_clear_screen();
+			vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
+			vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, lua_tostring(L, -1));
+
+			vita2d_pvf_draw_text(psexchar, 2, 80, RGBA8(255, 255, 255, 255), 1.0f, "\"");
+			vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "\""), 80, RGBA8(255, 255, 255, 255), 1.0f, " Retry");
+
+			vita2d_pvf_draw_text(psexchar, 2, 100, RGBA8(255, 255, 255, 255), 1.0f, "#");
+			if (vita_port == 0) {
+				sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
+				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Enable FTP");
+			}else{
+				sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
+				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Disable FTP");
+			}
+
+			vita2d_pvf_draw_text(psexchar, 2, 120, RGBA8(255, 255, 255, 255), 1.0f, "!");
+			vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "!"), 120, RGBA8(255, 255, 255, 255), 1.0f, " Close app");
+
+			if (vita_port != 0) {
+				vita2d_pvf_draw_textf(pvf, 2, 160, RGBA8(255, 255, 255, 255), 1.0f, "FTP is now enabled at: %s:%u", vita_ip, vita_port);
+			}
+
+			if(!(pad.buttons == SCE_CTRL_CROSS) && (oldpad.buttons == SCE_CTRL_CROSS)){
+				if (vita_port != 0) {
+					ftpvita_fini();
+					vita_port = 0;
+				}
+				error = false;
+				//luaL_lifelua_dofile(L); this'll cause the app to freeze if you retry but the error doesn't change at all
+			}
+			else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
+				if (vita_port != 0) {
+					ftpvita_fini();
+					vita_port = 0;
+				}
+				sceKernelExitProcess(0);
+			}
+			else if(!(pad.buttons == SCE_CTRL_SQUARE) && (oldpad.buttons == SCE_CTRL_SQUARE)){
+				if(vita_port == 0){
+					ftpvita_init(vita_ip, &vita_port);
+					ftpvita_add_device("app0:");
+					ftpvita_add_device("ux0:");
+					ftpvita_add_device("ur0:");
+				}else{
+					ftpvita_fini();
+					vita_port = 0;
+				}
+			};
+
+			vita2d_end_drawing();
+    		vita2d_swap_buffers();
+			oldpad = pad;
+		}
+		if(!error) luaL_lifelua_dofile(L);
+	}
+}
+
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
@@ -870,9 +936,6 @@ int main(){
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
 	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
 	sceShellUtilInitEvents(0);
-
-	char vita_ip[16];
-	unsigned short int vita_port = 0;
 
 	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
 	if(fd < 0){
@@ -898,66 +961,9 @@ int main(){
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
-	while(1){
-		if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
-			while(1){
-				sceCtrlPeekBufferPositive(0, &pad, 1);
-				vita2d_start_drawing();
-    	    	vita2d_clear_screen();
-				vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
-				vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, lua_tostring(L, -1));
 
-				vita2d_pvf_draw_text(psexchar, 2, 80, RGBA8(255, 255, 255, 255), 1.0f, "\"");
-				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "\""), 80, RGBA8(255, 255, 255, 255), 1.0f, " Retry");
+	luaL_lifelua_dofile(L);
 
-				vita2d_pvf_draw_text(psexchar, 2, 100, RGBA8(255, 255, 255, 255), 1.0f, "#");
-				if (vita_port == 0) {
-					sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
-					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Enable FTP");
-				}else{
-					sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN | SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
-					vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "#"), 100, RGBA8(255, 255, 255, 255), 1.0f, " Disable FTP");
-				}
-
-				vita2d_pvf_draw_text(psexchar, 2, 120, RGBA8(255, 255, 255, 255), 1.0f, "!");
-				vita2d_pvf_draw_text(pvf, 2+vita2d_pvf_text_width(psexchar, 1.0f, "!"), 120, RGBA8(255, 255, 255, 255), 1.0f, " Close app");
-
-				if (vita_port != 0) {
-					vita2d_pvf_draw_textf(pvf, 2, 160, RGBA8(255, 255, 255, 255), 1.0f, "FTP is now enabled at: %s:%u", vita_ip, vita_port);
-				}
-
-				if(!(pad.buttons == SCE_CTRL_CROSS) && (oldpad.buttons == SCE_CTRL_CROSS)){
-					if (vita_port != 0) {
-						ftpvita_fini();
-						vita_port = 0;
-					}
-					break;
-				}
-				else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
-					if (vita_port != 0) {
-						ftpvita_fini();
-						vita_port = 0;
-					}
-					sceKernelExitProcess(0);
-				}
-				else if(!(pad.buttons == SCE_CTRL_SQUARE) && (oldpad.buttons == SCE_CTRL_SQUARE)){
-					if(vita_port == 0){
-						ftpvita_init(vita_ip, &vita_port);
-						ftpvita_add_device("app0:");
-						ftpvita_add_device("ux0:");
-						ftpvita_add_device("ur0:");
-					}else{
-						ftpvita_fini();
-						vita_port = 0;
-					}
-				};
-
-				vita2d_end_drawing();
-    			vita2d_swap_buffers();
-				oldpad = pad;
-			}
-		}
-	}
 	//vita2d_end_drawing();
 	//vita2d_common_dialog_update();
     //vita2d_swap_buffers();
