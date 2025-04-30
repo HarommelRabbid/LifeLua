@@ -58,6 +58,19 @@ typedef struct {
     uint32_t data_offset;
 } SFOEntry;
 
+typedef struct {
+	unsigned int color;
+} Color;
+
+int string_ends_with(const char * str, const char * suffix){
+	int str_len = strlen(str);
+	int suffix_len = strlen(suffix);
+
+	return 
+	(str_len >= suffix_len) &&
+	(0 == strcmp(str + (str_len-suffix_len), suffix));
+}
+
 void utf2ascii(char* dst, uint16_t* src){
 	if(!src || !dst)return;
 	while(*src)*(dst++)=(*(src++))&0xFF;
@@ -288,6 +301,8 @@ static int lua_errormessage(lua_State *L) {
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
         vita2d_start_drawing();
+
+		//vita2d_get_current_fb();
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -546,6 +561,36 @@ static int lua_textheight(lua_State *L){
 	return 1;
 }
 
+static int lua_image(lua_State *L){
+	// not too good of a implementation, but too lazy to implement custom Lua variable types right now, so I think this'll suffice for now?
+	int argc = lua_gettop(L);
+	const char *filename = luaL_checkstring(L, 1);
+	int x = luaL_checkinteger(L, 2);
+	int y = luaL_checkinteger(L, 3);
+	unsigned int color;
+	vita2d_texture *image;
+	if(file_exists(filename)){
+		if(string_ends_with(filename, ".png")){
+			image = vita2d_load_PNG_file(filename);
+		}else if((string_ends_with(filename, ".jpeg")) || (string_ends_with(filename, ".jpg"))){
+			image = vita2d_load_JPEG_file(filename);
+		}else if(string_ends_with(filename, ".bmp")){
+			image = vita2d_load_BMP_file(filename);
+		}else{
+			return luaL_error(L, "Image file type isn't accepted (must be a .png, .jpeg/.jpg, or a .bmp)");
+		}
+	}else{
+		return luaL_error(L, "Image doesn't exist");
+	}
+	if(!(argc == 4)){
+		vita2d_draw_texture(image, x, y);
+	}else{
+		color = luaL_checkinteger(L, 4);
+		vita2d_draw_texture_tint(image, x, y, color);
+	}
+	return 0;
+}
+
 static const struct luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -553,6 +598,7 @@ static const struct luaL_Reg draw_lib[] = {
     {"rect", lua_rect},
     {"circle", lua_circle},
     {"line", lua_line},
+	{"image", lua_image},
     {"swapbuffers", lua_swapbuff},
     {NULL, NULL}
 };
@@ -605,56 +651,6 @@ static int lua_updatecontrols(lua_State *L){
 	sceMotionGetSensorState(&motion, 1);
 	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
 	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
-	/*
-	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
-	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
-	lua_newtable(L); // Create fronttouch table
-    for (int i = 0; i < fronttouch.reportNum; i++) {
-        lua_newtable(L);
-
-        float x = (fronttouch.report[i].x / 1920.0f) * 960.0f;
-        float y = (fronttouch.report[i].y / 1088.0f) * 544.0f;
-
-        lua_pushnumber(L, x);
-        lua_setfield(L, -2, "x");
-
-        lua_pushnumber(L, y);
-        lua_setfield(L, -2, "y");
-
-        lua_pushinteger(L, fronttouch.report[i].id);
-        lua_setfield(L, -2, "id");
-
-        lua_pushinteger(L, fronttouch.report[i].force);
-        lua_setfield(L, -2, "force");
-
-        lua_rawseti(L, -2, i+1);
-    }
-    lua_setglobal(L, "fronttouch"); // fronttouch = table
-
-    // BACK TOUCH
-    lua_newtable(L); // Create backtouch table
-    for (int i = 0; i < reartouch.reportNum; i++) {
-        lua_newtable(L);
-
-        float x = (reartouch.report[i].x / 1920.0f) * 960.0f;
-        float y = (reartouch.report[i].y / 1088.0f) * 544.0f;
-
-        lua_pushnumber(L, x);
-        lua_setfield(L, -2, "x");
-
-        lua_pushnumber(L, y);
-        lua_setfield(L, -2, "y");
-
-        lua_pushinteger(L, reartouch.report[i].id);
-        lua_setfield(L, -2, "id");
-
-        lua_pushinteger(L, reartouch.report[i].force);
-        lua_setfield(L, -2, "force");
-
-        lua_rawseti(L, -2, i+1);
-    }
-    lua_setglobal(L, "reartouch"); // backtouch = table
-	*/
 	return 0;
 }
 
@@ -801,8 +797,6 @@ void luaL_opencontrols(lua_State *L) {
 	lua_newtable(L);
 	luaL_setfuncs(L, controls_lib, 0);
 	lua_setglobal(L, "controls");
-	//lua_setfield(L, -2, "fronttouch");
-	//lua_setfield(L, -2, "backtouch");
 	luaL_pushglobalint(L, SCE_CTRL_UP);
 	luaL_pushglobalint(L, SCE_CTRL_DOWN);
 	luaL_pushglobalint(L, SCE_CTRL_LEFT);
@@ -910,10 +904,46 @@ static int lua_readsfo(lua_State *L) {
     return 1;
 }
 
+static int lua_list(lua_State *L){
+	const char* path = luaL_checkstring(L, 1);
+	int dfd = sceIoDopen(path);
+	if (dfd < 0) {
+		lua_pushnil(L);
+	}else{
+		lua_newtable(L);
+		SceIoDirent dir;
+		while (sceIoDread(dfd, &dir) > 0) {
+			lua_newtable(L);
+			lua_pushstring(L, dir.d_name);
+			lua_setfield(L, -2, "name");
+			/*
+			lua_pushstring(L, dir.d_stat.st_ctime);
+			lua_setfield(L, -2, "ctime");
+			lua_pushstring(L, dir.d_stat.st_mtime);
+			lua_setfield(L, -2, "mtime");
+			lua_pushstring(L, dir.d_stat.st_atime);
+			lua_setfield(L, -2, "atime");
+			*/
+			lua_pushboolean(L, SCE_S_ISDIR(dir.d_stat.st_mode));
+			lua_setfield(L, -2, "isafolder");
+			lua_pushnumber(L, dir.d_stat.st_size);
+			lua_setfield(L, -2, "size");
+		}
+		sceIoDclose(dfd);
+	}
+}
+
+static int lua_deletefolder(lua_State *L){
+	const char* folder = luaL_checkstring(L, 1);
+	sceIoRmdir(folder);
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"exists", lua_fileexist},
 	{"newfolder", lua_newfolder},
+	{"deletefolder", lua_deletefolder},
+	{"list", lua_list},
     {NULL, NULL}
 };
 
@@ -930,9 +960,77 @@ void luaL_extendio(lua_State *L) {
 	lua_pop(L, 1);
 }
 
+static int lua_ftp(lua_State *L){
+	bool enable = lua_toboolean(L, 1);
+	if (enable){
+		if (vita_port == 0){
+			ftpvita_init(vita_ip, &vita_port);
+			lua_newtable(L);
+			lua_pushstring(L, vita_ip);
+			lua_setfield(L, -2, "ip");
+			lua_pushinteger(L, vita_port);
+			lua_setfield(L, -2, "port");
+		}else{
+			return luaL_error(L, "FTP was already started once");
+		}
+	}else{
+		if (vita_port != 0) {
+			ftpvita_fini();
+			vita_port = 0;
+			return 0;
+		}else{
+			return luaL_error(L, "FTP was already finished once");
+		}
+	}
+	return 1;
+}
+
+static int lua_ftp_add(lua_State *L){
+	if (vita_port != 0){
+		const char* device = luaL_checkstring(L, 1);
+		ftpvita_add_device(device);
+	}else{
+		return luaL_error(L, "FTP isn't running");
+	}
+	return 1;
+}
+
+static int lua_ftp_del(lua_State *L){
+	if (vita_port != 0){
+		const char* device = luaL_checkstring(L, 1);
+		ftpvita_del_device(device);
+	}else{
+		return luaL_error(L, "FTP isn't running");
+	}
+	return 1;
+}
+
+static const struct luaL_Reg network_lib[] = {
+	{"ftp", lua_ftp},
+	{"adddevice", lua_ftp_add},
+	{"removedevice", lua_ftp_del},
+    {NULL, NULL}
+};
+
+void luaL_opennetwork(lua_State *L) {
+	lua_newtable(L);
+	luaL_setfuncs(L, network_lib, 0);
+	lua_setglobal(L, "network");
+}
+
 void luaL_lifelua_dofile(lua_State *L){
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
 		bool error = true;
+		if (vita_port != 0) {
+			ftpvita_fini();
+			vita_port = 0;
+		}
+		do {
+			sceCtrlPeekBufferPositive(0, &pad, 1);
+			sceKernelDelayThread(10000); // wait 10ms
+		} while (pad.buttons != 0);
+
+		oldpad = pad; // Reset oldpad to current state
 		while(error){
 			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
@@ -990,7 +1088,12 @@ void luaL_lifelua_dofile(lua_State *L){
     		vita2d_swap_buffers();
 			oldpad = pad;
 		}
-		if(!error) luaL_lifelua_dofile(L);
+		if(!error){
+			//vita2d_clear_screen();
+			//vita2d_swap_buffers();
+
+			luaL_lifelua_dofile(L);
+		}
 	}
 }
 
@@ -1038,6 +1141,7 @@ int main(){
 	luaL_opencolor(L);
 	luaL_opencontrols(L);
 	luaL_extendio(L);
+	luaL_opennetwork(L);
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
