@@ -369,6 +369,27 @@ static int lua_infobar(lua_State *L){
 	return 0;
 }
 
+static int lua_lock(lua_State *L){
+	int argc = lua_gettop(L);
+	bool enable = lua_toboolean(L, 1);
+	if(enable){
+		for (int i = 2; i <= argc; i++) {
+			if (lua_type(L, i) == LUA_TNUMBER){
+				SceShellUtilLockType type = luaL_checkinteger(L, i);
+				sceShellUtilLock((SceShellUtilLockType)(type));
+			}
+		}
+	}else{
+		for (int i = 2; i <= argc; i++) {
+			if (lua_type(L, i) == LUA_TNUMBER){
+				SceShellUtilLockType type = luaL_checkinteger(L, i);
+				sceShellUtilUnlock((SceShellUtilLockType)(type));
+			}
+		}
+	}
+	return 0;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -386,6 +407,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"systemmessage", lua_sysmessage},
 	{"errormessage", lua_errormessage},
 	{"shuttersound", lua_shuttersound},
+	{"lock", lua_lock},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -416,6 +438,18 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_POWEROFF_MENU);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_UNK8);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_MC_INSERTED);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_MC_REMOVED);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_UNK80);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_UNK100);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_UNK200);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_MUSIC_PLAYER);
+	luaL_pushglobalint(L, SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2);
 	luaL_pushglobalint(L, SCE_IME_TYPE_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_TYPE_BASIC_LATIN);
 	luaL_pushglobalint(L, SCE_IME_TYPE_NUMBER);
@@ -588,6 +622,7 @@ static int lua_image(lua_State *L){
 		color = luaL_checkinteger(L, 4);
 		vita2d_draw_texture_tint(image, x, y, color);
 	}
+	vita2d_free_texture(image);
 	return 0;
 }
 
@@ -632,12 +667,12 @@ void luaL_opencolor(lua_State *L) {
 static int lua_lockpsbutton(lua_State *L){
 	bool lock = lua_toboolean(L, 1);
 	bool lockq = lua_toboolean(L, 2);
-	if (lock==true){
+	if (lock){
 		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
 	}else{
 		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
 	}
-	if(lockq==true){
+	if(lockq){
 		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
 	}else{
 		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
@@ -931,11 +966,13 @@ static int lua_list(lua_State *L){
 		}
 		sceIoDclose(dfd);
 	}
+	return 1;
 }
 
 static int lua_deletefolder(lua_State *L){
 	const char* folder = luaL_checkstring(L, 1);
 	sceIoRmdir(folder);
+	return 0;
 }
 
 static const struct luaL_Reg io_lib[] = {
