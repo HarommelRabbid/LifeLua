@@ -1,3 +1,8 @@
+/*
+	LifeLua WIP, a PS Vita LuaJIT interpreter
+	by Harommel OddSock
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -702,6 +707,16 @@ static int lua_remainingcapacity(lua_State *L){
 	return 1;
 }
 
+static int lua_externalpower(lua_State *L){
+	lua_pushboolean(L, scePowerIsPowerOnline());
+	return 1;
+}
+
+static int lua_isbatterylow(lua_State *L){
+	lua_pushboolean(L, scePowerIsLowBattery());
+	return 1;
+}
+
 static int lua_tick(lua_State *L){
 	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
 	sceKernelPowerTick((SceKernelPowerTickType)tick);
@@ -797,6 +812,8 @@ static const struct luaL_Reg os_lib[] = {
 	{"batterytemperature", lua_temperature},
 	{"batterycapacity", lua_capacity},
 	{"remainingbatterycapacity", lua_remainingcapacity},
+	{"externalbattery", lua_externalpower},
+	{"batteryislow", lua_isbatterylow},
 	{"powertick", lua_tick},
 	{"powerlock", lua_powerlock},
 	{"powerunlock", lua_powerunlock},
