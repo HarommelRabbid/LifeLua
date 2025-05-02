@@ -80,6 +80,8 @@ target_link_libraries(${PROJECT_NAME}
     SceShellSvc_stub
     SceShutterSound_stub
     SceRegistryMgr_stub
+    SceScreenShot_stub
+    ScePower_stub 
     SceAudio_stub
     luajit-5.1
     dl

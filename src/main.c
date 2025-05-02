@@ -59,6 +59,15 @@ typedef struct {
 } SFOEntry;
 
 typedef struct {
+    SceUInt64 start_time;
+    SceUInt64 stop_time;
+    SceUInt64 pause_time;
+    SceUInt64 total_paused;
+    int running;
+    int paused;
+} Timer;
+
+typedef struct {
 	unsigned int color;
 } Color;
 
@@ -111,6 +120,128 @@ int file_exists(const char* path) {
 }
 
 // lua functions
+static int timer_new(lua_State *L) {
+    Timer *t = (Timer *)lua_newuserdata(L, sizeof(Timer));
+    t->start_time = 0;
+    t->stop_time = 0;
+    t->running = 0;
+
+    luaL_getmetatable(L, "timer");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+static int lua_starttimer(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    t->start_time = sceKernelGetProcessTimeWide();
+    t->stop_time = 0;
+    t->pause_time = 0;
+    t->total_paused = 0;
+    t->running = 1;
+    t->paused = 0;
+    return 0;
+}
+
+static int lua_stoptimer(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    if (t->running && !t->paused) {
+        t->stop_time = sceKernelGetProcessTimeWide();
+    }
+    t->running = 0;
+    t->paused = 0;
+    return 0;
+}
+
+static int lua_pausetimer(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    if (t->running && !t->paused) {
+        t->pause_time = sceKernelGetProcessTimeWide();
+        t->paused = 1;
+    }
+    return 0;
+}
+
+static int lua_resumetimer(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    if (t->running && t->paused) {
+        SceUInt64 now = sceKernelGetProcessTimeWide();
+        t->total_paused += now - t->pause_time;
+        t->paused = 0;
+    }
+    return 0;
+}
+
+static int lua_timerelapsed(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    SceUInt64 now;
+    if (t->paused)
+        now = t->pause_time;
+    else if (!t->running)
+        now = t->stop_time;
+    else
+        now = sceKernelGetProcessTimeWide();
+
+    double elapsed = (double)(now - t->start_time - t->total_paused) / 1000000.0;
+    lua_pushnumber(L, elapsed);
+    return 1;
+}
+
+static int lua_settimer(lua_State *L){
+	Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
+	t->start_time = starting_point;
+	return 0;
+}
+
+static int lua_resettimer(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
+    t->start_time = starting_point;
+    t->stop_time = 0;
+    t->pause_time = 0;
+    t->total_paused = 0;
+    t->running = 0;
+    t->paused = 0;
+    return 0;
+}
+
+static int lua_istimerrunning(lua_State *L) {
+    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
+    lua_pushboolean(L, t->running && !(t->paused));
+    return 1;
+}
+
+static const luaL_Reg timer_methods[] = {
+    {"start", lua_starttimer},
+    {"stop", lua_stoptimer},
+    {"pause", lua_pausetimer},
+    {"resume", lua_resumetimer},
+    {"elapsed", lua_timerelapsed},
+    {"reset", lua_resettimer},
+	{"set", lua_settimer},
+	{"isrunning", lua_istimerrunning},
+    {NULL, NULL}
+};
+
+static const luaL_Reg timer_lib[] = {
+    {"new", timer_new},
+    {NULL, NULL}
+};
+
+void luaL_opentimer(lua_State *L) {
+	luaL_newmetatable(L, "timer");
+
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
+
+    luaL_setfuncs(L, timer_methods, 0);
+    lua_pop(L, 1);
+
+	lua_newtable(L);
+	luaL_setfuncs(L, timer_lib, 0);
+	lua_setglobal(L, "timer");
+}
+
 static int lua_delay(lua_State *L) {
 	int secs = luaL_optinteger(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
@@ -191,6 +322,11 @@ static int lua_keyboard(lua_State *L){
 	while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
         vita2d_start_drawing();
 
+		lua_getglobal(L, "LifeLuaIMEDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
+
         vita2d_end_drawing();
         vita2d_common_dialog_update();
         vita2d_swap_buffers();
@@ -218,21 +354,49 @@ static int lua_keyboard(lua_State *L){
 static int lua_message(lua_State *L) {
 	const char *msg = luaL_checkstring(L, 1);
 	int type = luaL_optinteger(L, 2, SCE_MSG_DIALOG_BUTTON_TYPE_OK);
+	const char *msg1;
+	const char *msg2;
+	const char *msg3;
+	int size1, size2, size3;
+	if (type == SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS){
+		msg1 = luaL_checkstring(L, 3);
+		size1 = luaL_checkinteger(L, 4);
+		msg2 = luaL_checkstring(L, 5);
+		size2 = luaL_checkinteger(L, 6);
+		msg3 = luaL_checkstring(L, 7);
+		size3 = luaL_checkinteger(L, 8);
+	}
 
 	SceMsgDialogUserMessageParam msg_param;
+	SceMsgDialogButtonsParam button_param;
   	memset(&msg_param, 0, sizeof(msg_param));
+	if (type == SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS) memset(&button_param, 0, sizeof(button_param));
   	msg_param.buttonType = type;
   	msg_param.msg = (SceChar8 *)msg;
+	if (type == SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS){
+		button_param.msg1 = msg1;
+		button_param.msg2 = msg2;
+		button_param.msg3 = msg3;
+		button_param.fontSize1 = size1;
+		button_param.fontSize2 = size2;
+		button_param.fontSize3 = size3;
+	}
 
   	SceMsgDialogParam param;
   	sceMsgDialogParamInit(&param);
   	_sceCommonDialogSetMagicNumber(&param.commonParam);
   	param.mode = SCE_MSG_DIALOG_MODE_USER_MSG;
+	if (type == SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS) msg_param.buttonParam = &button_param;
   	param.userMsgParam = &msg_param;
 	sceMsgDialogInit(&param);
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
         vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaMessageDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -245,8 +409,21 @@ static int lua_message(lua_State *L) {
 	SceMsgDialogResult result;
 	sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
 	sceMsgDialogGetResult(&result);
-	if ((result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) || (result.buttonId == SCE_MSG_DIALOG_MODE_INVALID)) lua_pushboolean(L, false);
-	else lua_pushboolean(L, true);
+	if(type != SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS){
+		if ((result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) || (result.buttonId == SCE_MSG_DIALOG_MODE_INVALID)) lua_pushboolean(L, false);
+		else lua_pushboolean(L, true);
+	}else{
+		switch (result.buttonId) {
+			case SCE_MSG_DIALOG_BUTTON_ID_BUTTON1:
+				lua_pushstring(L, msg1); break;
+			case SCE_MSG_DIALOG_BUTTON_ID_BUTTON2:
+				lua_pushstring(L, msg2); break;
+			case SCE_MSG_DIALOG_BUTTON_ID_BUTTON3:
+				lua_pushstring(L, msg3); break;
+			default:
+				lua_pushnil(L);
+		}
+	}
 	sceMsgDialogTerm();
   	return 1;
 }
@@ -267,6 +444,11 @@ static int lua_sysmessage(lua_State *L) {
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
         vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaSystemMessageDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -302,7 +484,10 @@ static int lua_errormessage(lua_State *L) {
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
         vita2d_start_drawing();
 
-		//vita2d_get_current_fb();
+		lua_getglobal(L, "LifeLuaErrorCodeDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
@@ -319,6 +504,16 @@ static int lua_errormessage(lua_State *L) {
 	else lua_pushboolean(L, true);
 	sceMsgDialogTerm();
   	return 1;
+}
+
+static int lua_closemessage(lua_State *L){
+	sceMsgDialogClose();
+	return 0;
+}
+
+static int lua_abortmessage(lua_State *L){
+	sceMsgDialogAbort();
+	return 0;
 }
 
 static int lua_realfirmware(lua_State *L) {
@@ -390,6 +585,126 @@ static int lua_lock(lua_State *L){
 	return 0;
 }
 
+static int lua_runningapps(lua_State *L){
+	int max = luaL_optinteger(L, 1, 100);
+	int runningapps[] = {};
+	int runningappsint = sceAppMgrGetRunningAppIdListForShell(runningapps, max);
+	lua_newtable(L);
+	for(int i = 0; i <= runningappsint; i++){
+		SceUID pid = sceAppMgrGetProcessIdByAppIdForShell(runningapps[i]);
+		char titleid[64];
+		sceAppMgrGetNameById(pid, titleid);
+		lua_pushstring(L, titleid);
+		lua_rawseti(L, -2, i+1);
+	}
+	return 1;
+}
+static int lua_ischarging(lua_State *L){
+	lua_pushboolean(L, scePowerIsBatteryCharging());
+	return 1;
+}
+
+static int lua_percent(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryLifePercent());
+	return 1;
+}
+
+static int lua_lifetime(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryLifeTime());
+	return 1;
+}
+
+static int lua_voltage(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryVolt());
+	return 1;
+}
+
+static int lua_soh(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatterySOH());
+	return 1;
+}
+
+static int lua_cyclecount(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryCycleCount());
+	return 1;
+}
+
+static int lua_temperature(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryTemp() / 100); // to celsius
+	return 1;
+}
+
+static int lua_capacity(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryFullCapacity());
+	return 1;
+}
+
+static int lua_remainingcapacity(lua_State *L){
+	lua_pushinteger(L, scePowerGetBatteryRemainCapacity());
+	return 1;
+}
+
+static int lua_tick(lua_State *L){
+	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerTick((SceKernelPowerTickType)tick);
+	return 0;
+}
+
+static int lua_powerlock(lua_State *L){
+	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerLock((SceKernelPowerTickType)tick);
+	return 0;
+}
+
+static int lua_powerunlock(lua_State *L){
+	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerUnlock((SceKernelPowerTickType)tick);
+	return 0;
+}
+
+static int lua_screenshot(lua_State *L){
+	bool enable = lua_toboolean(L, 1);
+	if (!enable) sceScreenShotDisable();
+	else sceScreenShotEnable();
+	return 0;
+}
+
+static int lua_screenshotoverlay(lua_State *L){
+	const char *path = luaL_checkstring(L, 1);
+	int offset_x = luaL_optinteger(L, 2, 0);
+	int offset_y = luaL_optinteger(L, 3, 0);
+	sceScreenShotSetOverlayImage(path, offset_x, offset_y);
+	return 0;
+}
+
+static int lua_screenshotinfo(lua_State *L){
+	SceScreenShotParam param;
+	const char *phototitle;
+	const char *gametitle;
+	const char *gamecomment;
+	if (!lua_isnil(L, 1)) phototitle = luaL_checkstring(L, 1);
+	if (!lua_isnil(L, 2)) gametitle = luaL_checkstring(L, 2);
+	if (!lua_isnil(L, 3)) gamecomment = luaL_checkstring(L, 3);
+	if (!lua_isnil(L, 1)) param.photoTitle = (SceWChar32 *)phototitle;
+	if (!lua_isnil(L, 2)) param.gameTitle = (SceWChar32 *)gametitle;
+	if (!lua_isnil(L, 3)) param.gameComment = (SceWChar32 *)gamecomment;
+	sceScreenShotSetParam(&param);
+	return 0;
+}
+
+static int lua_mountpointunmount(lua_State *L){
+	const char *mountpoint = luaL_checkstring(L, 1);
+	sceAppMgrUmount(mountpoint);
+	return 0;
+}
+
+static int lua_systemevent(lua_State *L){
+	SceAppMgrSystemEvent sysevent;
+	sceAppMgrReceiveSystemEvent(&sysevent);
+	lua_pushinteger(L, sysevent.systemEvent);
+	return 1;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -406,8 +721,28 @@ static const struct luaL_Reg os_lib[] = {
 	{"message", lua_message},
 	{"systemmessage", lua_sysmessage},
 	{"errormessage", lua_errormessage},
+	{"closemessage", lua_closemessage},
+	{"abortmessage", lua_abortmessage},
 	{"shuttersound", lua_shuttersound},
 	{"lock", lua_lock},
+	{"runningapps", lua_runningapps},
+	{"isbatterycharging", lua_ischarging},
+	{"batterypercent", lua_percent},
+	{"batterySOH", lua_soh},
+	{"batterylifetime", lua_lifetime},
+	{"batteryvoltage", lua_voltage},
+	{"batterycyclecount", lua_cyclecount},
+	{"batterytemperature", lua_temperature},
+	{"batterycapacity", lua_capacity},
+	{"remainingbatterycapacity", lua_remainingcapacity},
+	{"powertick", lua_tick},
+	{"powerlock", lua_powerlock},
+	{"powerunlock", lua_powerunlock},
+	{"screenshot", lua_screenshot},
+	{"screenshotoverlay", lua_screenshotoverlay},
+	{"screenshotinfo", lua_screenshotinfo},
+	{"unmountmountpoint", lua_mountpointunmount},
+	{"getsystemevent", lua_systemevent},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -476,6 +811,9 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_NONE);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_FONT_SIZE_DEFAULT);
+	luaL_pushglobalint(L, SCE_MSG_DIALOG_FONT_SIZE_SMALL);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_NOSPACE);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_MAGNETIC_CALIBRATION);
@@ -487,6 +825,14 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_OPERATION);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_APPLICATION);
 	luaL_pushglobalint(L, SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_EMPTY_STORE);
+	luaL_pushglobalint(L, SCE_KERNEL_POWER_TICK_DEFAULT);
+	luaL_pushglobalint(L, SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
+	luaL_pushglobalint(L, SCE_KERNEL_POWER_TICK_DISABLE_OLED_OFF);
+	luaL_pushglobalint(L, SCE_KERNEL_POWER_TICK_DISABLE_OLED_DIMMING);
+	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_RESUME);
+	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_PURCHASE);
+	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_NP_MESSAGE_ARRIVED);
+	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_REDEMPTION);
 }
 
 static int lua_range(lua_State *L) {
@@ -622,7 +968,7 @@ static int lua_image(lua_State *L){
 		color = luaL_checkinteger(L, 4);
 		vita2d_draw_texture_tint(image, x, y, color);
 	}
-	vita2d_free_texture(image);
+	//vita2d_free_texture(image);
 	return 0;
 }
 
@@ -681,8 +1027,16 @@ static int lua_lockpsbutton(lua_State *L){
 }
 
 static int lua_updatecontrols(lua_State *L){
+	int argc = lua_gettop(L);
+	bool ext = false;
+	bool bind = false;
+	if (argc >= 1) ext = lua_toboolean(L, 1);
+	if (argc >= 2) bind = lua_toboolean(L, 2);
 	oldpad = pad;
-	sceCtrlPeekBufferPositive(0, &pad, 1);
+	if(!ext && !bind) sceCtrlPeekBufferPositive(0, &pad, 1);
+	else if(ext && !bind) sceCtrlReadBufferPositiveExt(0, &pad, 1);
+	else if(!ext && bind) sceCtrlReadBufferPositive2(0, &pad, 1);
+	else if(ext && bind) sceCtrlReadBufferPositiveExt2(0, &pad, 1);
 	sceMotionGetSensorState(&motion, 1);
 	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &fronttouch, 1);
 	sceTouchPeek(SCE_TOUCH_PORT_BACK, &reartouch, 1);
@@ -939,34 +1293,39 @@ static int lua_readsfo(lua_State *L) {
     return 1;
 }
 
-static int lua_list(lua_State *L){
-	const char* path = luaL_checkstring(L, 1);
-	int dfd = sceIoDopen(path);
-	if (dfd < 0) {
-		lua_pushnil(L);
-	}else{
-		lua_newtable(L);
-		SceIoDirent dir;
-		while (sceIoDread(dfd, &dir) > 0) {
-			lua_newtable(L);
-			lua_pushstring(L, dir.d_name);
-			lua_setfield(L, -2, "name");
-			/*
-			lua_pushstring(L, dir.d_stat.st_ctime);
-			lua_setfield(L, -2, "ctime");
-			lua_pushstring(L, dir.d_stat.st_mtime);
-			lua_setfield(L, -2, "mtime");
-			lua_pushstring(L, dir.d_stat.st_atime);
-			lua_setfield(L, -2, "atime");
-			*/
-			lua_pushboolean(L, SCE_S_ISDIR(dir.d_stat.st_mode));
-			lua_setfield(L, -2, "isafolder");
-			lua_pushnumber(L, dir.d_stat.st_size);
-			lua_setfield(L, -2, "size");
-		}
-		sceIoDclose(dfd);
-	}
-	return 1;
+static int lua_list(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+    SceUID dir = sceIoDopen(path);
+    if (dir < 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    lua_newtable(L); // files table
+    int i = 1;
+
+    SceIoDirent dirent;
+    while (1) {
+        memset(&dirent, 0, sizeof(SceIoDirent));
+        int res = sceIoDread(dir, &dirent);
+        if (res <= 0) break;
+
+        lua_newtable(L); // single file entry
+
+        lua_pushstring(L, dirent.d_name);
+        lua_setfield(L, -2, "name");
+
+        lua_pushboolean(L, SCE_S_ISDIR(dirent.d_stat.st_mode));
+        lua_setfield(L, -2, "isafolder");
+
+        lua_pushinteger(L, dirent.d_stat.st_size);
+        lua_setfield(L, -2, "size");
+
+        lua_rawseti(L, -2, i++);
+    }
+
+    sceIoDclose(dir);
+    return 1;
 }
 
 static int lua_deletefolder(lua_State *L){
@@ -1044,8 +1403,8 @@ static int lua_ftp_del(lua_State *L){
 
 static const struct luaL_Reg network_lib[] = {
 	{"ftp", lua_ftp},
-	{"adddevice", lua_ftp_add},
-	{"removedevice", lua_ftp_del},
+	{"ftpadddevice", lua_ftp_add},
+	{"ftpremovedevice", lua_ftp_del},
     {NULL, NULL}
 };
 
@@ -1062,12 +1421,12 @@ void luaL_lifelua_dofile(lua_State *L){
 			ftpvita_fini();
 			vita_port = 0;
 		}
-		do {
-			sceCtrlPeekBufferPositive(0, &pad, 1);
-			sceKernelDelayThread(10000); // wait 10ms
-		} while (pad.buttons != 0);
+		//do {
+		//	sceCtrlPeekBufferPositive(0, &pad, 1);
+		//	sceKernelDelayThread(10000); // wait 10ms
+		//} while (pad.buttons != 0);
 
-		oldpad = pad; // Reset oldpad to current state
+		//oldpad = pad; // Reset oldpad to current state
 		while(error){
 			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
@@ -1126,8 +1485,10 @@ void luaL_lifelua_dofile(lua_State *L){
 			oldpad = pad;
 		}
 		if(!error){
-			//vita2d_clear_screen();
-			//vita2d_swap_buffers();
+			vita2d_start_drawing();
+			vita2d_clear_screen();
+			vita2d_end_drawing();
+			vita2d_swap_buffers();
 
 			luaL_lifelua_dofile(L);
 		}
@@ -1146,6 +1507,7 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -1179,6 +1541,7 @@ int main(){
 	luaL_opencontrols(L);
 	luaL_extendio(L);
 	luaL_opennetwork(L);
+	luaL_opentimer(L);
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
@@ -1197,6 +1560,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceMotionMagnetometerOff();
 	sceMotionStopSampling();
 	sceAppUtilShutdown();
