@@ -1,8 +1,9 @@
 white = color.new(255, 255, 255)
 blue = color.new(0, 0, 255)
 local sel = 1
-local samples = {"Hello World", "Controls", ".SFO Reader"}
+local samples = {"Hello World", "Controls", ".SFO Reader", "Message", "Keyboard", "3 Button Message", "Battery"}
 local bar = false
+os.screenshotinfo("Hello from LifeLua!", "Hello", "Comment")
 while true do
 draw.rect(0, 0, 960, 60, blue)
 draw.text(480-string.len("LifeLua Showcase Menu")*6, 20, "LifeLua Showcase Menu", white)
