@@ -506,6 +506,64 @@ static int lua_errormessage(lua_State *L) {
   	return 1;
 }
 
+static int lua_progressmessage(lua_State *L) {
+	const char *msg = luaL_checkstring(L, 1);
+
+	SceMsgDialogProgressBarParam msg_param;
+  	memset(&msg_param, 0, sizeof(msg_param));
+	msg_param.msg = (const SceChar8 *)msg;
+	msg_param.barType = SCE_MSG_DIALOG_PROGRESSBAR_TYPE_PERCENTAGE;
+
+  	SceMsgDialogParam param;
+  	sceMsgDialogParamInit(&param);
+  	_sceCommonDialogSetMagicNumber(&param.commonParam);
+  	param.mode = SCE_MSG_DIALOG_MODE_PROGRESS_BAR;
+  	param.progBarParam = &msg_param;
+	sceMsgDialogInit(&param);
+
+	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+        vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaProgressMessageDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
+
+        vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+    }
+
+	SceMsgDialogResult result;
+	sceClibMemset(&result, 0, sizeof(SceMsgDialogResult));
+	sceMsgDialogGetResult(&result);
+	if ((result.buttonId == SCE_MSG_DIALOG_BUTTON_ID_NO) || (result.buttonId == SCE_MSG_DIALOG_MODE_INVALID)) lua_pushboolean(L, false);
+	else lua_pushboolean(L, true);
+	sceMsgDialogTerm();
+  	return 1;
+}
+
+static int lua_progmsg(lua_State *L){
+	const char *msg = luaL_checkstring(L, 1);
+	sceMsgDialogProgressBarSetMsg(SCE_MSG_DIALOG_PROGRESSBAR_TARGET_BAR_DEFAULT, (SceChar8 *)msg);
+	return 0;
+}
+
+static int lua_proginc(lua_State *L){
+	int inc = luaL_checkinteger(L, 1);
+	sceMsgDialogProgressBarInc(SCE_MSG_DIALOG_PROGRESSBAR_TARGET_BAR_DEFAULT, inc);
+	return 0;
+}
+
+static int lua_progset(lua_State *L){
+	int inc = luaL_checkinteger(L, 1);
+	sceMsgDialogProgressBarSetValue(SCE_MSG_DIALOG_PROGRESSBAR_TARGET_BAR_DEFAULT, inc);
+	return 0;
+}
+
 static int lua_closemessage(lua_State *L){
 	sceMsgDialogClose();
 	return 0;
@@ -721,6 +779,10 @@ static const struct luaL_Reg os_lib[] = {
 	{"message", lua_message},
 	{"systemmessage", lua_sysmessage},
 	{"errormessage", lua_errormessage},
+	{"progressmessage", lua_progressmessage},
+	{"progressmessagetext", lua_progmsg},
+	{"setprogressmessage", lua_progset},
+	{"incprogressmessage", lua_proginc},
 	{"closemessage", lua_closemessage},
 	{"abortmessage", lua_abortmessage},
 	{"shuttersound", lua_shuttersound},
