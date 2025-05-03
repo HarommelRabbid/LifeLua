@@ -21,7 +21,7 @@
 #include <psp2/motion.h>
 #include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
-#include "include/ftp.h"
+#include "include/ftpvita.h"
 
 #include <lua.h>
 #include <luajit.h>
@@ -1510,18 +1510,19 @@ void luaL_opennetwork(lua_State *L) {
 }
 
 void luaL_lifelua_dofile(lua_State *L){
+	bool error = false;
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
-		bool error = true;
-		//if (vita_port != 0) {
-		//	ftpvita_fini();
-		//	vita_port = 0;
-		//}
-		//do {
-		//	sceCtrlPeekBufferPositive(0, &pad, 1);
-		//	sceKernelDelayThread(10000); // wait 10ms
-		//} while (pad.buttons != 0);
+		error = true;
+		if (vita_port != 0) {
+			ftpvita_fini();
+			vita_port = 0;
+		}
+		do {
+			sceCtrlPeekBufferPositive(0, &pad, 1);
+			sceKernelDelayThread(10000); // wait 10ms
+		} while (pad.buttons != 0);
 
-		//oldpad = pad; // Reset oldpad to current state
+		oldpad = pad; // Reset oldpad to current state
 		while(error){
 			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
@@ -1554,7 +1555,7 @@ void luaL_lifelua_dofile(lua_State *L){
 					vita_port = 0;
 				}
 				error = false;
-				//luaL_lifelua_dofile(L); this'll cause the app to freeze if you retry but the error doesn't change at all
+				luaL_lifelua_dofile(L); //this'll cause the app to freeze if you retry but the error doesn't change at all, NVM actually
 			}
 			else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
 				if (vita_port != 0) {
@@ -1579,14 +1580,14 @@ void luaL_lifelua_dofile(lua_State *L){
     		vita2d_swap_buffers();
 			oldpad = pad;
 		}
-		if(!error){
+		/*if(!error){
 			vita2d_start_drawing();
 			vita2d_clear_screen();
 			vita2d_end_drawing();
 			vita2d_swap_buffers();
 
 			luaL_lifelua_dofile(L);
-		}
+		}*/
 	}
 }
 

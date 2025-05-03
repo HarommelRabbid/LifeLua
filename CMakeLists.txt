@@ -52,7 +52,7 @@ link_directories(
 # Add all the files needed to compile here
 add_executable(${PROJECT_NAME}
   src/main.c
-  src/include/ftp.c
+  src/include/ftpvita.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
