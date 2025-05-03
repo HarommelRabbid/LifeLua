@@ -72,10 +72,6 @@ typedef struct {
     int paused;
 } Timer;
 
-typedef struct {
-	unsigned int color;
-} Color;
-
 int string_ends_with(const char * str, const char * suffix){
 	int str_len = strlen(str);
 	int suffix_len = strlen(suffix);
@@ -812,7 +808,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"batterycapacity", lua_capacity},
 	{"remainingbatterycapacity", lua_remainingcapacity},
 	{"externalbattery", lua_externalpower},
-	{"batteryislow", lua_isbatterylow},
+	{"isbatterylow", lua_isbatterylow},
 	{"powertick", lua_tick},
 	{"powerlock", lua_powerlock},
 	{"powerunlock", lua_powerunlock},
@@ -1423,14 +1419,111 @@ static int lua_list(lua_State *L) {
     return 1;
 }
 
+static int lua_editsfo(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+    const char *param = luaL_checkstring(L, 2);
+
+    // Get the new value (could be string or number)
+    int value_type = lua_type(L, 3);
+
+    // Open file
+    SceUID fd = sceIoOpen(path, SCE_O_RDWR, 0);
+    if (fd < 0)
+        return luaL_error(L, "Failed to open .SFO for writing");
+
+    int file_size = sceIoLseek(fd, 0, SCE_SEEK_END);
+    sceIoLseek(fd, 0, SCE_SEEK_SET);
+
+    void *buffer = malloc(file_size);
+    if (!buffer) {
+        sceIoClose(fd);
+        return luaL_error(L, "Failed to allocate memory");
+    }
+
+    sceIoRead(fd, buffer, file_size);
+
+    SFOHeader *header = (SFOHeader *)buffer;
+    SFOEntry *entries = (SFOEntry *)(buffer + sizeof(SFOHeader));
+    char *key_table = (char *)buffer + header->key_table_offset;
+    char *data_table = (char *)buffer + header->data_table_offset;
+
+    int found = 0;
+
+    for (int i = 0; i < header->tables_entries; i++) {
+        const char *key = key_table + entries[i].key_offset;
+
+        if (strcmp(key, param) == 0) {
+            char *data = data_table + entries[i].data_offset;
+
+            if (entries[i].param_fmt == 0x0204) { // string
+                if (value_type != LUA_TSTRING) {
+                    free(buffer);
+                    sceIoClose(fd);
+                    return luaL_error(L, "Expected a string value for field '%s'", param);
+                }
+                const char *newstr = lua_tostring(L, 3);
+                memset(data, 0, entries[i].param_max_len); // clear
+                strncpy(data, newstr, entries[i].param_max_len - 1);
+                found = 1;
+                break;
+            } else if (entries[i].param_fmt == 0x0404) { // int32
+                if (!lua_isnumber(L, 3)) {
+                    free(buffer);
+                    sceIoClose(fd);
+                    return luaL_error(L, "Expected an integer value for field '%s'", param);
+                }
+                uint32_t intval = (uint32_t)lua_tonumber(L, 3);
+                memcpy(data, &intval, sizeof(uint32_t));
+                found = 1;
+                break;
+            } else {
+                free(buffer);
+                sceIoClose(fd);
+                return luaL_error(L, "Unsupported .SFO field type for '%s'", param);
+            }
+        }
+    }
+
+    if (!found) {
+        free(buffer);
+        sceIoClose(fd);
+        return luaL_error(L, "Parameter '%s' not found in SFO", param);
+    }
+
+    sceIoLseek(fd, 0, SCE_SEEK_SET);
+    sceIoWrite(fd, buffer, file_size);
+
+    sceIoClose(fd);
+    free(buffer);
+
+    return 0;
+}
+
 static int lua_deletefolder(lua_State *L){
 	const char* folder = luaL_checkstring(L, 1);
-	sceIoRmdir(folder);
+	if(file_exists(folder)){
+		char dirname[512];
+		memset(dirname, 0x00, sizeof(dirname));
+
+		for(int i = 0; i < strlen(folder); i++) {
+			if(folder[i] == '/' || folder[i] == '\\') {
+				memset(dirname, 0, sizeof(dirname));
+				strncpy(dirname, folder, i);
+
+				if(file_exists(dirname)){
+					sceIoRmdir(dirname);
+				}	
+			}
+		}
+
+		sceIoRmdir(folder);
+	}
 	return 0;
 }
 
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
+	{"editsfo", lua_editsfo},
 	{"exists", lua_fileexist},
 	{"newfolder", lua_newfolder},
 	{"deletefolder", lua_deletefolder},
@@ -1555,7 +1648,7 @@ void luaL_lifelua_dofile(lua_State *L){
 					vita_port = 0;
 				}
 				error = false;
-				luaL_lifelua_dofile(L); //this'll cause the app to freeze if you retry but the error doesn't change at all, NVM actually
+				luaL_lifelua_dofile(L); //this'll cause the app to freeze if you retry but the error doesn't change at all, NVM actually it doesn't anymore
 			}
 			else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
 				if (vita_port != 0) {
@@ -1586,7 +1679,7 @@ void luaL_lifelua_dofile(lua_State *L){
 			vita2d_end_drawing();
 			vita2d_swap_buffers();
 
-			luaL_lifelua_dofile(L);
+		//luaL_lifelua_dofile(L);
 		}*/
 	}
 }
