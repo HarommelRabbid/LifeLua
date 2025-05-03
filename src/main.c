@@ -270,8 +270,7 @@ static int lua_unsafe(lua_State *L){
 }
 
 static int lua_bootparams(lua_State *L) {
-	if (!unsafe)
-		return luaL_error(L, "os.launchparams() requires unsafe mode to be activated from the HENkaku settings");
+	if (!unsafe) return luaL_error(L, "os.launchparams() requires unsafe mode to be activated from the HENkaku settings");
 	char bootparams[1024];
 	bootparams[0] = 0;
 	sceAppMgrGetAppParam(bootparams);
@@ -875,9 +874,9 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL);
-	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
-	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
-	luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
+	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEND);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEARCH);
@@ -1372,6 +1371,14 @@ static int lua_readsfo(lua_State *L) {
     return 1;
 }
 
+static void push_datetime(lua_State *L, const SceDateTime *dt) {
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d",
+             dt->year, dt->month, dt->day,
+             dt->hour, dt->minute, dt->second);
+    lua_pushstring(L, buffer);
+}
+
 static int lua_list(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     SceUID dir = sceIoDopen(path);
@@ -1396,6 +1403,15 @@ static int lua_list(lua_State *L) {
 
         lua_pushboolean(L, SCE_S_ISDIR(dirent.d_stat.st_mode));
         lua_setfield(L, -2, "isafolder");
+
+		push_datetime(L, &dirent.d_stat.st_ctime);
+        lua_setfield(L, -2, "created");
+
+        push_datetime(L, &dirent.d_stat.st_atime);
+        lua_setfield(L, -2, "accessed");
+
+        push_datetime(L, &dirent.d_stat.st_mtime);
+        lua_setfield(L, -2, "modified");
 
         lua_pushinteger(L, dirent.d_stat.st_size);
         lua_setfield(L, -2, "size");
@@ -1496,10 +1512,10 @@ void luaL_opennetwork(lua_State *L) {
 void luaL_lifelua_dofile(lua_State *L){
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
 		bool error = true;
-		if (vita_port != 0) {
-			ftpvita_fini();
-			vita_port = 0;
-		}
+		//if (vita_port != 0) {
+		//	ftpvita_fini();
+		//	vita_port = 0;
+		//}
 		//do {
 		//	sceCtrlPeekBufferPositive(0, &pad, 1);
 		//	sceKernelDelayThread(10000); // wait 10ms
@@ -1636,6 +1652,7 @@ int main(){
 	vita2d_fini();
 	vita2d_free_pgf(pgf);
 	vita2d_free_pvf(pvf);
+	vita2d_free_pvf(psexchar);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
