@@ -17,6 +17,7 @@ LifeLua is licenced under GPLv3, that meaning you're required to release the sou
 * TheFloW's VitaShell (?)
 * RegistryEditor MOD by devnoname120
 * Developers of vitasdk
+* Princess of Sleeping for reverse engeneering of `scePhotoImportDialog`
 * libvita2d & ftpvita by xerpi
 * Inspiration from [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by [Rinnegatamante](https://github.com/Rinnegatamante)
 * [Compound Assignment Operators](http://lua-users.org/files/wiki_insecure/power_patches/5.2/compound-5.2.2.patch) (Lua diff patch) by [SvenOlsen](http://lua-users.org/wiki/SvenOlsen)
