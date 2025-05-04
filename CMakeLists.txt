@@ -52,6 +52,8 @@ link_directories(
 # Add all the files needed to compile here
 add_executable(${PROJECT_NAME}
   src/main.c
+  src/lj_lifetimer.c
+  src/lj_lifemathext.c
   src/include/ftpvita.c
 )
 
@@ -76,13 +78,17 @@ target_link_libraries(${PROJECT_NAME}
     SceAppMgr_stub
     SceAppUtil_stub
     ScePromoterUtil_stub
+    SceKernelDmacMgr_stub
+    SceNetCtl_stub
     SceKernelModulemgr_stub
-    SceShellSvc_stub
+    SceNotificationUtil_stub
+    SceScreenShot_stub
     SceShutterSound_stub
     SceRegistryMgr_stub
-    SceScreenShot_stub
-    ScePower_stub 
+    ScePower_stub
     SceAudio_stub
+    SceNet_stub
+    SceHid_stub
     luajit-5.1
     dl
     taihen_stub
@@ -93,6 +99,7 @@ target_link_libraries(${PROJECT_NAME}
     c
     m
     z
+    k
     bz2
     pthread
 )
