@@ -1,3 +1,8 @@
+/*
+	LifeLua WIP, a PS Vita LuaJIT interpreter
+	by Harommel OddSock
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -21,25 +26,11 @@
 #define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 
-int string_ends_with(const char * str, const char * suffix){
-	int str_len = strlen(str);
-	int suffix_len = strlen(suffix);
+int string_ends_with(const char * str, const char * suffix);
 
-	return 
-	(str_len >= suffix_len) &&
-	(0 == strcmp(str + (str_len-suffix_len), suffix));
-}
+void utf2ascii(char* dst, uint16_t* src);
 
-void utf2ascii(char* dst, uint16_t* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*(src++))&0xFF;
-	*dst=0x00;
-}
-
-void ascii2utf(uint16_t* dst, char* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*src++);
-	*dst=0x00;
-}
+void ascii2utf(uint16_t* dst, char* src);
 
 void luaL_opentimer(lua_State *L);
+void luaL_extendmath(lua_State *L);

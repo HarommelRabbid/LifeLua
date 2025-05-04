@@ -23,6 +23,7 @@
 #include <vita2d.h>
 #include "include/ftpvita.h"
 
+#include "lj_lifeinit.h"
 #include <lua.h>
 #include <luajit.h>
 #include <lualib.h>
@@ -70,15 +71,6 @@ typedef struct {
     uint32_t param_max_len;
     uint32_t data_offset;
 } SFOEntry;
-
-typedef struct {
-    SceUInt64 start_time;
-    SceUInt64 stop_time;
-    SceUInt64 pause_time;
-    SceUInt64 total_paused;
-    int running;
-    int paused;
-} Timer;
 
 typedef struct {
     vita2d_texture *tex;
@@ -222,128 +214,6 @@ int file_exists(const char* path) {
 }
 
 // lua functions
-static int timer_new(lua_State *L) {
-    Timer *t = (Timer *)lua_newuserdata(L, sizeof(Timer));
-    t->start_time = 0;
-    t->stop_time = 0;
-    t->running = 0;
-
-    luaL_getmetatable(L, "timer");
-    lua_setmetatable(L, -2);
-    return 1;
-}
-
-static int lua_starttimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    t->start_time = sceKernelGetProcessTimeWide();
-    t->stop_time = 0;
-    t->pause_time = 0;
-    t->total_paused = 0;
-    t->running = 1;
-    t->paused = 0;
-    return 0;
-}
-
-static int lua_stoptimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && !t->paused) {
-        t->stop_time = sceKernelGetProcessTimeWide();
-    }
-    t->running = 0;
-    t->paused = 0;
-    return 0;
-}
-
-static int lua_pausetimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && !t->paused) {
-        t->pause_time = sceKernelGetProcessTimeWide();
-        t->paused = 1;
-    }
-    return 0;
-}
-
-static int lua_resumetimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && t->paused) {
-        SceUInt64 now = sceKernelGetProcessTimeWide();
-        t->total_paused += now - t->pause_time;
-        t->paused = 0;
-    }
-    return 0;
-}
-
-static int lua_timerelapsed(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    SceUInt64 now;
-    if (t->paused)
-        now = t->pause_time;
-    else if (!t->running)
-        now = t->stop_time;
-    else
-        now = sceKernelGetProcessTimeWide();
-
-    double elapsed = (double)(now - t->start_time - t->total_paused) / 1000000.0;
-    lua_pushnumber(L, elapsed);
-    return 1;
-}
-
-static int lua_settimer(lua_State *L){
-	Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-	t->start_time = starting_point;
-	return 0;
-}
-
-static int lua_resettimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-    t->start_time = starting_point;
-    t->stop_time = 0;
-    t->pause_time = 0;
-    t->total_paused = 0;
-    t->running = 0;
-    t->paused = 0;
-    return 0;
-}
-
-static int lua_istimerrunning(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    lua_pushboolean(L, t->running && !(t->paused));
-    return 1;
-}
-
-static const luaL_Reg timer_methods[] = {
-    {"start", lua_starttimer},
-    {"stop", lua_stoptimer},
-    {"pause", lua_pausetimer},
-    {"resume", lua_resumetimer},
-    {"elapsed", lua_timerelapsed},
-    {"reset", lua_resettimer},
-	{"set", lua_settimer},
-	{"isrunning", lua_istimerrunning},
-    {NULL, NULL}
-};
-
-static const luaL_Reg timer_lib[] = {
-    {"new", timer_new},
-    {NULL, NULL}
-};
-
-void luaL_opentimer(lua_State *L) {
-	luaL_newmetatable(L, "timer");
-
-    lua_pushvalue(L, -1);
-    lua_setfield(L, -2, "__index");
-
-    luaL_setfuncs(L, timer_methods, 0);
-    lua_pop(L, 1);
-
-	lua_newtable(L);
-	luaL_setfuncs(L, timer_lib, 0);
-	lua_setglobal(L, "timer");
-}
-
 static int lua_delay(lua_State *L) {
 	int secs = luaL_optinteger(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
@@ -884,6 +754,50 @@ static int lua_systemevent(lua_State *L){
 	return 1;
 }
 
+static int lua_cpu(lua_State *L){
+	if (lua_gettop(L) >= 1){
+		int freq = luaL_checkinteger(L, 1);
+		scePowerSetArmClockFrequency(freq);
+		return 0;
+	}else{
+		lua_pushinteger(L, scePowerGetArmClockFrequency());
+		return 1;
+	}
+}
+
+static int lua_bus(lua_State *L){
+	if (lua_gettop(L) >= 1){
+		int freq = luaL_checkinteger(L, 1);
+		scePowerSetBusClockFrequency(freq);
+		return 0;
+	}else{
+		lua_pushinteger(L, scePowerGetBusClockFrequency());
+		return 1;
+	}
+}
+
+static int lua_gpu(lua_State *L){
+	if (lua_gettop(L) >= 1){
+		int freq = luaL_checkinteger(L, 1);
+		scePowerSetGpuXbarClockFrequency(freq);
+		return 0;
+	}else{
+		lua_pushinteger(L, scePowerGetGpuClockFrequency());
+		return 1;
+	}
+}
+
+static int lua_xbar(lua_State *L){
+	if (lua_gettop(L) >= 1){
+		int freq = luaL_checkinteger(L, 1);
+		scePowerSetGpuClockFrequency(freq);
+		return 0;
+	}else{
+		lua_pushinteger(L, scePowerGetGpuXbarClockFrequency());
+		return 1;
+	}
+}
+
 static void strWChar16ncpy(SceWChar16* out, const char* str2, int len)
 {
     char* str1 = (char*) out;
@@ -962,7 +876,6 @@ static int lua_importphoto(lua_State *L){
 	}
 
 	scePhotoImportDialogTerm();
-
 	return 1;
 }
 
@@ -1013,6 +926,10 @@ static const struct luaL_Reg os_lib[] = {
 	{"powertick", lua_tick},
 	{"powerlock", lua_powerlock},
 	{"powerunlock", lua_powerunlock},
+	{"cpu", lua_cpu},
+	{"bus", lua_bus},
+	{"gpu", lua_gpu},
+	{"xbar", lua_xbar},
 	{"screenshot", lua_screenshot},
 	{"screenshotoverlay", lua_screenshotoverlay},
 	{"screenshotinfo", lua_screenshotinfo},
@@ -1111,32 +1028,6 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_PURCHASE);
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_NP_MESSAGE_ARRIVED);
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_REDEMPTION);
-}
-
-static int lua_range(lua_State *L) {
-	double num = luaL_checknumber(L, 1);
-	double lower = luaL_checknumber(L, 2);
-	double upper = luaL_checknumber(L, 3);
-	lua_pushnumber(L, fmin(upper, fmax(num, lower)));
-	return 1;
-}
-
-static const struct luaL_Reg math_lib[] = {
-    {"range", lua_range},
-    {NULL, NULL}
-};
-
-void luaL_extendmath(lua_State *L) {
-	lua_getglobal(L, "math");
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_setglobal(L, "math");
-		lua_getglobal(L, "math");
-	}
-
-	luaL_setfuncs(L, math_lib, 0); // extending the math library
-	lua_pop(L, 1);
 }
 
 static int lua_text(lua_State *L){
