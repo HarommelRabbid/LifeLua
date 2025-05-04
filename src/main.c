@@ -47,6 +47,14 @@ bool unsafe = true;
 char vita_ip[16];
 unsigned short int vita_port = 0;
 
+#define SCE_NOTIFICATION_UTIL_TEXT_MAX                     (0x3F)
+
+typedef struct SceNotificationUtilSendParam {
+    SceWChar16 text[SCE_NOTIFICATION_UTIL_TEXT_MAX];         // must be null-terminated
+    SceInt16 separator;                                      // must be 0
+    SceChar8 unknown[0x3F0];
+} SceNotificationUtilSendParam;
+
 typedef struct {
     char magic[4];       // "\0PSF"
     uint32_t version;
@@ -71,6 +79,10 @@ typedef struct {
     int running;
     int paused;
 } Timer;
+
+typedef struct {
+    vita2d_texture *tex;
+} Image;
 
 int string_ends_with(const char * str, const char * suffix){
 	int str_len = strlen(str);
@@ -753,9 +765,9 @@ static int lua_screenshotinfo(lua_State *L){
 	if (!lua_isnil(L, 1)) phototitle = luaL_checkstring(L, 1);
 	if (!lua_isnil(L, 2)) gametitle = luaL_checkstring(L, 2);
 	if (!lua_isnil(L, 3)) gamecomment = luaL_checkstring(L, 3);
-	if (!lua_isnil(L, 1)) param.photoTitle = (SceWChar32 *)phototitle;
-	if (!lua_isnil(L, 2)) param.gameTitle = (SceWChar32 *)gametitle;
-	if (!lua_isnil(L, 3)) param.gameComment = (SceWChar32 *)gamecomment;
+	if (!lua_isnil(L, 1)) param.photoTitle = (const SceWChar32 *)phototitle;
+	if (!lua_isnil(L, 2)) param.gameTitle = (const SceWChar32 *)gametitle;
+	if (!lua_isnil(L, 3)) param.gameComment = (const SceWChar32 *)gamecomment;
 	sceScreenShotSetParam(&param);
 	return 0;
 }
@@ -771,6 +783,28 @@ static int lua_systemevent(lua_State *L){
 	sceAppMgrReceiveSystemEvent(&sysevent);
 	lua_pushinteger(L, sysevent.systemEvent);
 	return 1;
+}
+
+static void strWChar16ncpy(SceWChar16* out, const char* str2, int len)
+{
+    char* str1 = (char*) out;
+
+    while (*str2 && len--)
+    {
+        *str1++ = *str2++;
+        *str1++ = '\0';
+    }
+}
+
+static int lua_notification(lua_State *L){
+	const char *text = luaL_checkstring(L, 1);
+	SceNotificationUtilSendParam param;
+	char buf[SCE_NOTIFICATION_UTIL_TEXT_MAX];
+	memset(&param, 0, sizeof(SceNotificationUtilSendParam));
+	snprintf(buf, sizeof(buf), text);
+	strWChar16ncpy(param.text, buf, SCE_NOTIFICATION_UTIL_TEXT_MAX);
+	sceNotificationUtilSendNotification((void*) &param);
+	return 0;
 }
 
 static const struct luaL_Reg os_lib[] = {
@@ -817,6 +851,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"screenshotinfo", lua_screenshotinfo},
 	{"unmountmountpoint", lua_mountpointunmount},
 	{"getsystemevent", lua_systemevent},
+	{"notification", lua_notification},
     {"exit", lua_exit},
     {NULL, NULL}
 };
@@ -1015,37 +1050,6 @@ static int lua_textheight(lua_State *L){
 	return 1;
 }
 
-static int lua_image(lua_State *L){
-	// not too good of a implementation, but too lazy to implement custom Lua variable types right now, so I think this'll suffice for now?
-	int argc = lua_gettop(L);
-	const char *filename = luaL_checkstring(L, 1);
-	int x = luaL_checkinteger(L, 2);
-	int y = luaL_checkinteger(L, 3);
-	unsigned int color;
-	vita2d_texture *image;
-	if(file_exists(filename)){
-		if(string_ends_with(filename, ".png")){
-			image = vita2d_load_PNG_file(filename);
-		}else if((string_ends_with(filename, ".jpeg")) || (string_ends_with(filename, ".jpg"))){
-			image = vita2d_load_JPEG_file(filename);
-		}else if(string_ends_with(filename, ".bmp")){
-			image = vita2d_load_BMP_file(filename);
-		}else{
-			return luaL_error(L, "Image file type isn't accepted (must be a .png, .jpeg/.jpg, or a .bmp)");
-		}
-	}else{
-		return luaL_error(L, "Image doesn't exist");
-	}
-	if(!(argc == 4)){
-		vita2d_draw_texture(image, x, y);
-	}else{
-		color = luaL_checkinteger(L, 4);
-		vita2d_draw_texture_tint(image, x, y, color);
-	}
-	//vita2d_free_texture(image);
-	return 0;
-}
-
 static const struct luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -1053,7 +1057,6 @@ static const struct luaL_Reg draw_lib[] = {
     {"rect", lua_rect},
     {"circle", lua_circle},
     {"line", lua_line},
-	{"image", lua_image},
     {"swapbuffers", lua_swapbuff},
     {NULL, NULL}
 };
@@ -1062,6 +1065,83 @@ void luaL_opendraw(lua_State *L) {
 	lua_newtable(L);
 	luaL_setfuncs(L, draw_lib, 0);
 	lua_setglobal(L, "draw");
+}
+
+int lua_imageload(lua_State *L) {
+    const char *filename = luaL_checkstring(L, 1);
+    Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+    
+    if(file_exists(filename)){
+		if(string_ends_with(filename, ".png")){
+			image->tex = vita2d_load_PNG_file(filename);
+		}else if((string_ends_with(filename, ".jpeg")) || (string_ends_with(filename, ".jpg"))){
+			image->tex = vita2d_load_JPEG_file(filename);
+		}else if(string_ends_with(filename, ".bmp")){
+			image->tex = vita2d_load_BMP_file(filename);
+		}else{
+			return luaL_error(L, "Image file type isn't accepted (must be a .png, .jpeg/.jpg, or a .bmp)");
+		}
+	}else{
+		return luaL_error(L, "Image doesn't exist: %s", filename);
+	}
+    if (!image->tex) return luaL_error(L, "Failed to load image: %s", filename);
+    
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+static int lua_imagedraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	int x = luaL_checkinteger(L, 2);
+	int y = luaL_checkinteger(L, 3);
+	unsigned int color;
+	if(argc <= 3){
+		vita2d_draw_texture(image->tex, x, y);
+	}else{
+		color = luaL_checkinteger(L, 4);
+		vita2d_draw_texture_tint(image->tex, x, y, color);
+	}
+	//vita2d_free_texture(image);
+	return 0;
+}
+
+static int lua_imagewidth(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	lua_pushinteger(L, vita2d_texture_get_width(image->tex));
+	return 1;
+}
+
+static int lua_imageheight(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	lua_pushinteger(L, vita2d_texture_get_height(image->tex));
+	return 1;
+}
+
+int lua_imagegc(lua_State *L) {
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
+    if (image->tex) {
+        vita2d_free_texture(image->tex);
+    }
+    return 0;
+}
+
+static const struct luaL_Reg image_lib[] = {
+    {"load", lua_imageload},
+    {"display", lua_imagedraw},
+	{"width", lua_imagewidth},
+	{"height", lua_imageheight},
+    {NULL, NULL}
+};
+
+void luaL_openimage(lua_State *L) {
+	luaL_newmetatable(L, "image");
+    lua_pushcfunction(L, lua_imagegc);
+    lua_setfield(L, -2, "__gc");
+	lua_newtable(L);
+	luaL_setfuncs(L, image_lib, 0);
+	lua_setglobal(L, "image");
 }
 
 static int lua_newcolor(lua_State *L) {
@@ -1397,6 +1477,11 @@ static int lua_list(lua_State *L) {
         lua_pushstring(L, dirent.d_name);
         lua_setfield(L, -2, "name");
 
+		char fullpath[1024];
+        snprintf(fullpath, sizeof(fullpath), "%s/%s", path, dirent.d_name);
+		lua_pushstring(L, fullpath);
+        lua_setfield(L, -2, "path");
+
         lua_pushboolean(L, SCE_S_ISDIR(dirent.d_stat.st_mode));
         lua_setfield(L, -2, "isafolder");
 
@@ -1501,23 +1586,7 @@ static int lua_editsfo(lua_State *L) {
 
 static int lua_deletefolder(lua_State *L){
 	const char* folder = luaL_checkstring(L, 1);
-	if(file_exists(folder)){
-		char dirname[512];
-		memset(dirname, 0x00, sizeof(dirname));
-
-		for(int i = 0; i < strlen(folder); i++) {
-			if(folder[i] == '/' || folder[i] == '\\') {
-				memset(dirname, 0, sizeof(dirname));
-				strncpy(dirname, folder, i);
-
-				if(file_exists(dirname)){
-					sceIoRmdir(dirname);
-				}	
-			}
-		}
-
-		sceIoRmdir(folder);
-	}
+	sceIoRmdir(folder);
 	return 0;
 }
 
@@ -1684,6 +1753,20 @@ void luaL_lifelua_dofile(lua_State *L){
 	}
 }
 
+void loadPAF(){
+	uint32_t ptr[0x100] = { 0 };
+	ptr[0] = 0;
+	ptr[1] = (uint32_t)&ptr[0];
+	uint32_t scepaf_argp[] = { 0x400000, 0xEA60, 0x40000, 0, 0 };
+	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(scepaf_argp), scepaf_argp, (SceSysmoduleOpt *)ptr);
+}
+
+void unloadPAF(){
+	SceSysmoduleOpt opt;
+	sceClibMemset(&opt.flags, 0, sizeof(opt));
+	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
+}
+
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
@@ -1693,10 +1776,12 @@ int main(){
 	sceMotionStartSampling();
 	sceMotionMagnetometerOn();
 
+	loadPAF();
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -1731,6 +1816,7 @@ int main(){
 	luaL_extendio(L);
 	luaL_opennetwork(L);
 	luaL_opentimer(L);
+	luaL_openimage(L);
 
 	vita2d_start_drawing();
     vita2d_clear_screen();
@@ -1751,6 +1837,9 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
+	unloadPAF();
+
 	sceMotionMagnetometerOff();
 	sceMotionStopSampling();
 	sceAppUtilShutdown();
