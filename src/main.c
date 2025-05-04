@@ -84,6 +84,95 @@ typedef struct {
     vita2d_texture *tex;
 } Image;
 
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT			(0x00000007U)
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_ALL		(0x00000001U)
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_CAMERA		(0x00000002U)
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_SCREENSHOT	(0x00000004U)
+
+#define SCE_PHOTOIMPORT_DIALOG_MAX_FS_PATH			(1024)
+
+#define SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_LENGTH		(64)
+
+#define SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_SIZE	(SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_LENGTH*4)
+
+#define SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM		(1)
+
+typedef enum ScePhotoImportDialogFormatType {
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_UNKNOWN = 0,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_JPEG,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_PNG,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_GIF,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_BMP,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_TIFF,
+	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_MPO
+} ScePhotoImportDialogFormatType;
+
+typedef SceInt32 ScePhotoImportDialogMode;
+#define SCE_PHOTOIMPORT_DIALOG_MODE_DEFAULT		(0)
+
+typedef enum ScePhotoImportDialogOrientation {
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_UNKNOWN = 0,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_TOP_LEFT,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_TOP_RIGHT,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_BOTTOM_RIGHT,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_BOTTOM_LEFT,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_LEFT_TOP,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_RIGHT_TOP,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_RIGHT_BOTTOM,
+	SCE_PHOTOIMPORT_DIALOG_ORIENTATION_LEFT_BOTTOM
+} ScePhotoImportDialogOrientation;
+
+typedef struct ScePhotoImportDialogFileDataSub {
+	SceUInt32 width;
+	SceUInt32 height;
+	ScePhotoImportDialogFormatType format;
+	ScePhotoImportDialogOrientation orientation;
+	SceChar8 reserved[32];
+} ScePhotoImportDialogFileDataSub;
+
+typedef struct ScePhotoImportDialogFileData {
+	SceChar8 fileName[SCE_PHOTOIMPORT_DIALOG_MAX_FS_PATH];
+	SceChar8 photoTitle[SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_SIZE];
+	SceChar8 reserved[32];
+} ScePhotoImportDialogFileData;
+
+typedef struct ScePhotoImportDialogItemData {
+	ScePhotoImportDialogFileData fileData;
+	ScePhotoImportDialogFileDataSub dataSub;
+	SceChar8 reserved[32];
+} ScePhotoImportDialogItemData;
+
+typedef struct ScePhotoImportDialogResult {
+	SceInt32 result;
+	SceUInt32 importedItemNum;
+	SceChar8 reserved[32];
+} ScePhotoImportDialogResult;
+
+typedef struct ScePhotoImportDialogParam {
+	SceUInt32 sdkVersion;
+	SceCommonDialogParam commonParam;
+	ScePhotoImportDialogMode mode;
+	SceUInt32 visibleCategory;
+	SceUInt32 itemCount;
+	ScePhotoImportDialogItemData *itemData;
+	SceChar8 reserved[32];
+} ScePhotoImportDialogParam;
+
+int scePhotoImportDialogInit( const ScePhotoImportDialogParam *param );
+SceCommonDialogStatus scePhotoImportDialogGetStatus( void );
+int scePhotoImportDialogGetResult( ScePhotoImportDialogResult* result );
+int scePhotoImportDialogTerm( void );
+int scePhotoImportDialogAbort( void );
+
+static inline void scePhotoImportDialogParamInit( ScePhotoImportDialogParam *param ){
+
+	memset( param, 0x0, sizeof(ScePhotoImportDialogParam) );
+	_sceCommonDialogSetMagicNumber( &param->commonParam );
+	param->sdkVersion = 0x03150021;
+}
+
+static ScePhotoImportDialogItemData s_itemData[SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM];
+
 int string_ends_with(const char * str, const char * suffix){
 	int str_len = strlen(str);
 	int suffix_len = strlen(suffix);
@@ -586,6 +675,16 @@ static int lua_abortmessage(lua_State *L){
 	return 0;
 }
 
+static int lua_closeime(lua_State *L){
+	sceImeClose();
+	return 0;
+}
+
+static int lua_abortime(lua_State *L){
+	sceImeDialogAbort();
+	return 0;
+}
+
 static int lua_realfirmware(lua_State *L) {
 	char fw_str[8];
 	SceKernelFwInfo info;
@@ -807,6 +906,71 @@ static int lua_notification(lua_State *L){
 	return 0;
 }
 
+static int lua_importphoto(lua_State *L){
+	int r = luaL_optinteger(L, 1, 0);
+	int g = luaL_optinteger(L, 2, 0);
+	int b = luaL_optinteger(L, 3, 0);
+	int a = luaL_optinteger(L, 4, 0xFF);
+	ScePhotoImportDialogParam pidParam;
+	scePhotoImportDialogParamInit(&pidParam);
+
+	pidParam.mode = SCE_PHOTOIMPORT_DIALOG_MODE_DEFAULT;
+	pidParam.itemData = s_itemData;
+	pidParam.visibleCategory = SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT;
+	pidParam.itemCount = 1;
+
+	SceCommonDialogColor BgColor;
+
+	BgColor.r = r;
+	BgColor.g = g;
+	BgColor.b = b;
+	BgColor.a = a;
+
+	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
+
+	scePhotoImportDialogInit(&pidParam);
+
+	while (scePhotoImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+		vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaPhotoImportDialog");
+		if (lua_isfunction(L, -1)) {
+			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
+
+ 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+	}
+
+	ScePhotoImportDialogResult pidResult;
+
+	memset(&pidResult, 0x0, sizeof(ScePhotoImportDialogResult));
+	scePhotoImportDialogGetResult(&pidResult);
+
+	if (pidResult.result == SCE_COMMON_DIALOG_RESULT_OK) {
+		for (int i = 0; i < pidResult.importedItemNum && i < SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM; ++i) {
+			lua_pushstring(L, s_itemData[i].fileData.fileName);
+		}
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED){
+		lua_pushnil(L);
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_ABORTED){
+		lua_pushnil(L);
+	}
+
+	scePhotoImportDialogTerm();
+
+	return 1;
+}
+
+static int lua_photodialogabort(lua_State *L){
+	scePhotoImportDialogAbort();
+	return 0;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -820,6 +984,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"closeapp", lua_closeotherapp},
 	{"infobar", lua_infobar},
 	{"keyboard", lua_keyboard},
+	{"ime", lua_keyboard},
 	{"message", lua_message},
 	{"systemmessage", lua_sysmessage},
 	{"errormessage", lua_errormessage},
@@ -829,6 +994,8 @@ static const struct luaL_Reg os_lib[] = {
 	{"incprogressmessage", lua_proginc},
 	{"closemessage", lua_closemessage},
 	{"abortmessage", lua_abortmessage},
+	{"closeime", lua_closeime},
+	{"abortime", lua_abortime},
 	{"shuttersound", lua_shuttersound},
 	{"lock", lua_lock},
 	{"runningapps", lua_runningapps},
@@ -851,6 +1018,8 @@ static const struct luaL_Reg os_lib[] = {
 	{"screenshotinfo", lua_screenshotinfo},
 	{"unmountmountpoint", lua_mountpointunmount},
 	{"getsystemevent", lua_systemevent},
+	{"importphoto", lua_importphoto},
+	{"abortphotoimport", lua_photodialogabort},
 	{"notification", lua_notification},
     {"exit", lua_exit},
     {NULL, NULL}
@@ -1164,22 +1333,6 @@ void luaL_opencolor(lua_State *L) {
 	lua_setglobal(L, "color");
 }
 
-static int lua_lockpsbutton(lua_State *L){
-	bool lock = lua_toboolean(L, 1);
-	bool lockq = lua_toboolean(L, 2);
-	if (lock){
-		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
-	}else{
-		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN));
-	}
-	if(lockq){
-		sceShellUtilLock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
-	}else{
-		sceShellUtilUnlock((SceShellUtilLockType)(SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU));
-	}
-	return 0;
-}
-
 static int lua_updatecontrols(lua_State *L){
 	int argc = lua_gettop(L);
 	bool ext = false;
@@ -1319,7 +1472,7 @@ static int lua_reartouch(lua_State *L){
 }
 
 static const struct luaL_Reg controls_lib[] = {
-    {"lock", lua_lockpsbutton},
+    //{"lock", lua_lockpsbutton},
 	{"update", lua_updatecontrols},
 	{"check", lua_check},
 	{"pressed", lua_pressed},
@@ -1792,6 +1945,7 @@ int main(){
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
 	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
 	sceShellUtilInitEvents(0);
+	sceAppUtilPhotoMount();
 
 	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
 	if(fd < 0){
@@ -1838,6 +1992,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
+	sceAppUtilPhotoUmount();
 	unloadPAF();
 
 	sceMotionMagnetometerOff();
