@@ -722,7 +722,9 @@ static int lua_screenshotoverlay(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
 	int offset_x = luaL_optinteger(L, 2, 0);
 	int offset_y = luaL_optinteger(L, 3, 0);
-	sceScreenShotSetOverlayImage(path, offset_x, offset_y);
+	sceScreenShotDisable();
+	if(sceScreenShotSetOverlayImage(path, offset_x, offset_y) < 0) return luaL_error(L, "Doesn't work");
+	sceScreenShotEnable();
 	return 0;
 }
 
@@ -1134,6 +1136,14 @@ static int lua_textheight(lua_State *L){
 	return 1;
 }
 
+static int lua_pixel(lua_State *L){
+	int x = luaL_checkinteger(L, 1);
+	int y = luaL_checkinteger(L, 2);
+	unsigned int color = luaL_checkinteger(L, 3);
+	vita2d_draw_pixel(x, y, color);
+	return 0;
+}
+
 static int lua_gradient(lua_State *L){
 	int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
@@ -1250,6 +1260,7 @@ static const struct luaL_Reg draw_lib[] = {
     {"rect", lua_rect},
     {"circle", lua_circle},
     {"line", lua_line},
+	{"pixel", lua_pixel},
 	{"gradientrect", lua_gradient},
 	{"hdoublegradientrect", lua_hdoublegradient},
 	{"vdoublegradientrect", lua_vdoublegradient},
@@ -1331,10 +1342,24 @@ static const struct luaL_Reg image_lib[] = {
     {NULL, NULL}
 };
 
+static const struct luaL_Reg image_methods[] = {
+    {"display", lua_imagedraw},
+	{"width", lua_imagewidth},
+	{"height", lua_imageheight},
+    {NULL, NULL}
+};
+
 void luaL_openimage(lua_State *L) {
 	luaL_newmetatable(L, "image");
     lua_pushcfunction(L, lua_imagegc);
     lua_setfield(L, -2, "__gc");
+
+	lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
+
+    luaL_setfuncs(L, image_methods, 0);
+    lua_pop(L, 1);
+
 	lua_newtable(L);
 	luaL_setfuncs(L, image_lib, 0);
 	lua_setglobal(L, "image");
@@ -1580,7 +1605,7 @@ static int lua_readsfo(lua_State *L) {
 
     SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
     if (fd < 0)
-        return luaL_error(L, "Failed to open SFO");
+        return luaL_error(L, "Failed to open .SFO");
 
     int file_size = sceIoLseek(fd, 0, SCE_SEEK_END);
     sceIoLseek(fd, 0, SCE_SEEK_SET);
@@ -1597,7 +1622,7 @@ static int lua_readsfo(lua_State *L) {
     SFOHeader *header = (SFOHeader *)buffer;
     if (memcmp(header->magic, "\0PSF", 4) != 0) {
         free(buffer);
-        return luaL_error(L, "Invalid SFO magic");
+        return luaL_error(L, "Invalid .SFO magic");
     }
 
     SFOEntry *entries = (SFOEntry *)(buffer + sizeof(SFOHeader));
@@ -1752,7 +1777,7 @@ static int lua_editsfo(lua_State *L) {
     if (!found) {
         free(buffer);
         sceIoClose(fd);
-        return luaL_error(L, "Parameter '%s' not found in SFO", param);
+        return luaL_error(L, "Parameter '%s' not found in .SFO", param);
     }
 
     sceIoLseek(fd, 0, SCE_SEEK_SET);
@@ -1770,6 +1795,43 @@ static int lua_deletefolder(lua_State *L){
 	return 0;
 }
 
+const char *get_filename(const char *path) {
+    const char *slash = strrchr(path, '/');
+    if (slash)
+        return slash + 1;
+    else
+        return path;
+}
+
+void get_directory(const char *path, char *out_dir, size_t out_size) {
+    const char *last_slash = strrchr(path, '/');
+    if (last_slash) {
+        size_t len = last_slash - path;
+        if (len >= out_size)
+            len = out_size - 1;
+        strncpy(out_dir, path, len);
+        out_dir[len] = '\0';
+    } else {
+        // No slash found, return empty string
+        out_dir[0] = '\0';
+    }
+}
+
+static int lua_getfilename(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+    const char *filename = get_filename(path);
+    lua_pushstring(L, filename);
+    return 1;
+}
+
+static int lua_getfolder(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+    char dir[512];
+    get_directory(path, dir, sizeof(dir));
+    lua_pushstring(L, dir);
+    return 1;
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -1777,6 +1839,8 @@ static const struct luaL_Reg io_lib[] = {
 	{"newfolder", lua_newfolder},
 	{"deletefolder", lua_deletefolder},
 	{"list", lua_list},
+	{"pathstrip", lua_getfilename},
+	{"filestrip", lua_getfolder},
     {NULL, NULL}
 };
 
@@ -1963,6 +2027,7 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_JSON);
 	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	scePromoterUtilityInit();
 	SceAppUtilInitParam appUtilParam;
@@ -2022,6 +2087,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_JSON);
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	sceAppUtilPhotoUmount();
