@@ -1,5 +1,5 @@
 ## This file is a quick tutorial on writing CMakeLists for targeting the Vita
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 ## This includes the Vita toolchain, must go before project definition
 # It is a convenience so you do not have to type
@@ -32,7 +32,7 @@ set(VITA_VERSION  "00.00")
 ## Flags and includes for building
 # Note that we make sure not to overwrite previous flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11")
 # Optional. You can specify more param.sfo flags this way.
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
@@ -60,6 +60,7 @@ add_executable(${PROJECT_NAME}
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
     vita2d
+    SceLibJson_stub
     SceDisplay_stub
     SceGxm_stub
     SceLibKernel_stub
@@ -89,6 +90,7 @@ target_link_libraries(${PROJECT_NAME}
     SceAudio_stub
     SceNet_stub
     SceHid_stub
+    SceAVConfig_stub
     luajit-5.1
     dl
     taihen_stub
@@ -105,10 +107,11 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 ## Create Vita files
-vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME} UNSAFE)
+#vita_create_self(safe_eboot.bin ${PROJECT_NAME})
+vita_create_self(eboot.bin ${PROJECT_NAME} UNSAFE)
 # The FILE directive lets you add additional files to the VPK, the syntax is
 # FILE src_path dst_path_in_vpk. In this case, we add the LiveArea paths.
-vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
+vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} eboot.bin
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
   #FILE sce_sys/icon0.png sce_sys/icon0.png
