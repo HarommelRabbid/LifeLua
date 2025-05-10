@@ -31,6 +31,7 @@
 #define str(str) #str
 #define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
 #define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
+#define luaL_pushglobalint_alsoas(L, value, var) do { luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var); } while(0)
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 
 lua_State *L;
@@ -711,6 +712,26 @@ static int lua_powerunlock(lua_State *L){
 	return 0;
 }
 
+static int lua_suspendneeded(lua_State *L){
+	lua_pushboolean(L, scePowerIsSuspendRequired());
+	return 1;
+}
+
+static int lua_restart(lua_State *L){
+	scePowerRequestColdReset();
+	return 0;
+}
+
+static int lua_standby(lua_State *L){
+	scePowerRequestStandby();
+	return 0;
+}
+
+static int lua_suspend(lua_State *L){
+	scePowerRequestSuspend();
+	return 0;
+}
+
 static int lua_screenshot(lua_State *L){
 	bool enable = lua_toboolean(L, 1);
 	if (!enable) sceScreenShotDisable();
@@ -907,6 +928,42 @@ static int lua_photodialogabort(lua_State *L){
 	return 0;
 }
 
+static int lua_vol(lua_State *L){
+	if(lua_gettop(L) >= 1){
+		int vol = luaL_checkinteger(L, 1);
+		if (vol < 0) return luaL_error(L, "Volume number must not be lower than 0");
+		else if(vol > 30) return luaL_error(L, "Volume number must not be greater than 30");
+		else sceAVConfigSetSystemVol(vol);
+		return 0;
+	}else{
+		int vol;
+		sceAVConfigGetSystemVol(&vol);
+		lua_pushinteger(L, vol);
+		return 1;
+	}
+}
+
+static int lua_mute(lua_State *L){
+	sceAVConfigMuteOn();
+	return 0;
+}
+
+static int lua_colorspace(lua_State *L){
+	int colorspace = luaL_optinteger(L, 1, SCE_AVCONFIG_COLOR_SPACE_MODE_DEFAULT);
+	sceAVConfigSetDisplayColorSpaceMode(colorspace);
+	return 0;
+}
+
+static int lua_displayon(lua_State *L){
+	scePowerRequestDisplayOn();
+	return 0;
+}
+
+static int lua_displayoff(lua_State *L){
+	scePowerRequestDisplayOff();
+	return 0;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -963,6 +1020,16 @@ static const struct luaL_Reg os_lib[] = {
 	{"getsystemevent", lua_systemevent},
 	{"importphoto", lua_importphoto},
 	{"abortphotoimport", lua_photodialogabort},
+	{"volume", lua_vol},
+	{"mute", lua_mute},
+	{"colorspace", lua_colorspace},
+	{"restart", lua_restart},
+	{"suspend", lua_suspend},
+	{"shutdown", lua_suspend},
+	{"standby", lua_standby},
+	{"suspendneeded", lua_suspendneeded},
+	{"displayon", lua_displayon},
+	{"displayoff", lua_displayoff},
 	{"notification", lua_notification},
     {"exit", lua_exit},
     {NULL, NULL}
@@ -979,18 +1046,12 @@ void luaL_extendos(lua_State *L) {
 
 	luaL_setfuncs(L, os_lib, 0); // extending the os library
 	lua_pop(L, 1);
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, "INFOBAR_VISIBILITY_INVISIBLE");
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE, "INFOBAR_VISIBILITY_VISIBLE");
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_BLACK);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_COLOR_BLACK, "INFOBAR_COLOR_BLACK");
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_COLOR_WHITE);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_COLOR_WHITE, "INFOBAR_COLOR_WHITE");
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE, "INFOBAR_TRANSPARENCY_OPAQUE");
-	luaL_pushglobalint(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT);
-	luaL_pushglobalint_as(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT, "INFOBAR_TRANSPARENCY_TRANSLUCENT");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, "INFOBAR_VISIBILITY_INVISIBLE");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE, "INFOBAR_VISIBILITY_VISIBLE");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_COLOR_BLACK, "INFOBAR_COLOR_BLACK");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_COLOR_WHITE, "INFOBAR_COLOR_WHITE");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE, "INFOBAR_TRANSPARENCY_OPAQUE");
+	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT, "INFOBAR_TRANSPARENCY_TRANSLUCENT");
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START);
 	luaL_pushglobalint(L, SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END);
@@ -1054,6 +1115,8 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_PURCHASE);
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_NP_MESSAGE_ARRIVED);
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_REDEMPTION);
+	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_DEFAULT);
+	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_HIGH_CONTRAST);
 }
 
 static int lua_text(lua_State *L){
@@ -2041,6 +2104,8 @@ int main(){
 	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
 	sceShellUtilInitEvents(0);
 	sceAppUtilPhotoMount();
+	sceAppUtilMusicMount();
+	sceAppUtilCacheMount();
 
 	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
 	if(fd < 0){
@@ -2090,6 +2155,8 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_JSON);
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
+	sceAppUtilCacheUmount();
+	sceAppUtilMusicUmount();
 	sceAppUtilPhotoUmount();
 	unloadPAF();
 
