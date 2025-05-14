@@ -77,6 +77,12 @@ typedef struct {
     vita2d_texture *tex;
 } Image;
 
+typedef struct {
+	vita2d_pgf *pgf;
+	vita2d_pvf *pvf;
+	vita2d_font *font;
+}
+
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT			(0x00000007U)
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_ALL		(0x00000001U)
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_CAMERA		(0x00000002U)
@@ -301,6 +307,7 @@ static int lua_keyboard(lua_State *L){
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -341,7 +348,7 @@ static int lua_message(lua_State *L) {
 
 	SceMsgDialogUserMessageParam msg_param;
 	SceMsgDialogButtonsParam button_param;
-  	memset(&msg_param, 0, sizeof(msg_param));
+  	sceClibMemset(&msg_param, 0, sizeof(msg_param));
 	if (type == SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS) memset(&button_param, 0, sizeof(button_param));
   	msg_param.buttonType = type;
   	msg_param.msg = (SceChar8 *)msg;
@@ -372,6 +379,7 @@ static int lua_message(lua_State *L) {
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -404,7 +412,7 @@ static int lua_sysmessage(lua_State *L) {
 	int type = luaL_checkinteger(L, 1);
 
 	SceMsgDialogSystemMessageParam msg_param;
-  	memset(&msg_param, 0, sizeof(msg_param));
+  	sceClibMemset(&msg_param, 0, sizeof(msg_param));
   	msg_param.sysMsgType = type;
 
   	SceMsgDialogParam param;
@@ -424,6 +432,7 @@ static int lua_sysmessage(lua_State *L) {
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -443,7 +452,7 @@ static int lua_errormessage(lua_State *L) {
 	int errorcode = luaL_checkinteger(L, 1);
 
 	SceMsgDialogErrorCodeParam msg_param;
-  	memset(&msg_param, 0, sizeof(msg_param));
+  	sceClibMemset(&msg_param, 0, sizeof(msg_param));
   	msg_param.errorCode = errorcode;
 
   	SceMsgDialogParam param;
@@ -463,6 +472,7 @@ static int lua_errormessage(lua_State *L) {
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -482,7 +492,7 @@ static int lua_progressmessage(lua_State *L) {
 	const char *msg = luaL_checkstring(L, 1);
 
 	SceMsgDialogProgressBarParam msg_param;
-  	memset(&msg_param, 0, sizeof(msg_param));
+  	sceClibMemset(&msg_param, 0, sizeof(msg_param));
 	msg_param.msg = (const SceChar8 *)msg;
 	msg_param.barType = SCE_MSG_DIALOG_PROGRESSBAR_TYPE_PERCENTAGE;
 
@@ -503,6 +513,7 @@ static int lua_progressmessage(lua_State *L) {
 
         vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -898,6 +909,7 @@ static int lua_importphoto(lua_State *L){
 
  		vita2d_end_drawing();
         vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
         vita2d_swap_buffers();
         sceDisplayWaitVblankStart();
 		vita2d_start_drawing();
@@ -2114,7 +2126,7 @@ int main(){
 		sceIoClose(fd);
 	}
 
-	vita2d_init();
+	vita2d_init_advanced_with_msaa((1 * 1024 * 1024), SCE_GXM_MULTISAMPLE_4X);
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
