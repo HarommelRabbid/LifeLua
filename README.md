@@ -11,7 +11,7 @@ mkdir build && cd build && cmake .. && make
 ```
 ## Credits
 * HENkaku by Team Molecule
-* TheFloW's VitaShell (?)
+* TheFloW's VitaShell for SHA1 hashing
 * RegistryEditor MOD by devnoname120
 * Developers of vitasdk
 * Princess of Sleeping for reverse engeneering of `scePhotoImportDialog`
