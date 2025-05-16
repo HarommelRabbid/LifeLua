@@ -31,7 +31,7 @@ set(VITA_VERSION  "00.00")
 
 ## Flags and includes for building
 # Note that we make sure not to overwrite previous flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -fno-lto")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11")
 # Optional. You can specify more param.sfo flags this way.
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
@@ -54,7 +54,9 @@ add_executable(${PROJECT_NAME}
   src/main.c
   src/lj_lifetimer.c
   src/lj_lifemathext.c
+  #src/lj_lifejson.c++
   src/include/ftpvita.c
+  src/include/sha1.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
@@ -71,6 +73,9 @@ target_link_libraries(${PROJECT_NAME}
     SceFios2_stub
     SceVshBridge_stub
     SceShellSvc_stub
+    SceMusicExport_stub
+    ScePhotoExport_stub
+    SceVideoExport_stub
     ScePspnetAdhoc_stub
     SceTouch_stub
     SceMotion_stub

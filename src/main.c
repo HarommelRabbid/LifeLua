@@ -16,12 +16,9 @@
 
 #include <vitasdk.h>
 #include <taihen.h>
-#include <psp2/ctrl.h>
-#include <psp2/touch.h>
-#include <psp2/motion.h>
-#include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
 #include "include/ftpvita.h"
+#include "include/sha1.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -976,6 +973,79 @@ static int lua_displayoff(lua_State *L){
 	return 0;
 }
 
+static int lua_exportphoto(lua_State *L){
+    char outPath[256];
+	const char *path = luaL_checkstring(L, 1);
+	static char buf[64 * 1024];
+
+    PhotoExportParam param;
+    memset(&param, 0, sizeof(PhotoExportParam));
+    int res = scePhotoExportFromFile(
+        path,
+        &param,
+        buf,
+        NULL,
+        NULL,
+        outPath,
+        sizeof(outPath)
+    );
+	if (res < 0) {
+		lua_pushboolean(L, false);
+    } else {
+		lua_pushboolean(L, true);
+    }
+
+	return 1;
+}
+
+static int lua_exportmusic(lua_State *L){
+    char outPath[256];
+	const char *path = luaL_checkstring(L, 1);
+	static char buf[64 * 1024];
+
+    MusicExportParam param;
+    memset(&param, 0, sizeof(MusicExportParam));
+    int res = sceMusicExportFromFile(
+        path,
+        &param,
+        buf,
+        NULL,
+        NULL,
+		NULL,
+        outPath,
+        sizeof(outPath)
+    );
+	if (res < 0) {
+		lua_pushboolean(L, false);
+    } else {
+		lua_pushboolean(L, true);
+    }
+
+	return 1;
+}
+
+static int lua_exportvideo(lua_State *L){
+	const char *path = luaL_checkstring(L, 1);
+	static char buf[64 * 1024];
+
+	VideoExportInputParam in_param;
+    memset(&in_param, 0, sizeof(VideoExportInputParam));
+    strncpy(in_param.path, path, 1024);
+    in_param.path[1024] = '\0';
+
+    VideoExportOutputParam out_param;
+    memset(&out_param, 0, sizeof(VideoExportOutputParam));
+
+    int res = sceVideoExportFromFile(&in_param, 1, buf, NULL, NULL, NULL, 0, &out_param);
+	if (res < 0) {
+		lua_pushboolean(L, false);
+    } else {
+		lua_pushboolean(L, true);
+    }
+
+	return 1;
+}
+
 static const struct luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1044,6 +1114,9 @@ static const struct luaL_Reg os_lib[] = {
 	{"displayoff", lua_displayoff},
 	{"notification", lua_notification},
     {"exit", lua_exit},
+	{"photoexport", lua_exportphoto},
+	{"musicexport", lua_exportmusic},
+	{"videoexport", lua_exportvideo},
     {NULL, NULL}
 };
 
@@ -1479,7 +1552,7 @@ static int lua_updatecontrols(lua_State *L){
 
 static int lua_check(lua_State *L){
 	int button = luaL_checkinteger(L, 1);
-	lua_pushboolean(L, (pad.buttons == button));
+	lua_pushboolean(L, pad.buttons & button);
 	return 1;
 }
 
@@ -1907,6 +1980,62 @@ static int lua_getfolder(lua_State *L) {
     return 1;
 }
 
+static int lua_sha1(lua_State *L){
+	const char *path = luaL_checkstring(L, 1);
+	uint8_t sha1out[20];
+	// Set up SHA1 context
+  	SHA1_CTX ctx;
+ 	sha1_init(&ctx);
+
+  	SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
+  	if (fd < 0) lua_pushnil(L);
+
+  	// Open up the buffer for copying data into
+  	void *buf = memalign(4096, (128 * 1024));
+
+  	// Actually take the SHA1 sum
+  	while (1) {
+    	int read = sceIoRead(fd, buf, (128 * 1024));
+
+    	if (read < 0) {
+      		free(buf);
+      		sceIoClose(fd);
+      		lua_pushnil(L);
+			return 1;
+    	}
+
+    	if (read == 0)
+      		break;
+
+    	sha1_update(&ctx, buf, read);
+	}
+
+	sha1_final(&ctx, sha1out);
+
+  	// Free up file buffer
+  	free(buf);
+
+  	// Close file properly
+  	sceIoClose(fd);
+
+	char sha1msg[42];
+  	memset(sha1msg, 0, sizeof(sha1msg));
+
+  	// Construct SHA1 sum string
+  	int i;
+  	for (i = 0; i < 20; i++) {
+    	char string[4];
+    	sprintf(string, "%02X", sha1out[i]);
+    	strcat(sha1msg, string);
+  	}
+
+  	//sha1msg[41] = '\0';
+
+	lua_pushstring(L, sha1msg);
+
+	return 1;
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -1916,6 +2045,7 @@ static const struct luaL_Reg io_lib[] = {
 	{"list", lua_list},
 	{"pathstrip", lua_getfilename},
 	{"filestrip", lua_getfolder},
+	{"sha1", lua_sha1},
     {NULL, NULL}
 };
 
@@ -2103,6 +2233,9 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_JSON);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_MUSIC_EXPORT);
+    sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
+    sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
 	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	scePromoterUtilityInit();
 	SceAppUtilInitParam appUtilParam;
@@ -2165,6 +2298,9 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_JSON);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_PHOTO_EXPORT);
+    sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
+    sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	sceAppUtilCacheUmount();

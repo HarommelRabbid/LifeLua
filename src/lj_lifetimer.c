@@ -16,10 +16,6 @@
 
 #include <vitasdk.h>
 #include <taihen.h>
-#include <psp2/ctrl.h>
-#include <psp2/touch.h>
-#include <psp2/motion.h>
-#include <psp2/kernel/processmgr.h>
 #include <vita2d.h>
 #include "include/ftpvita.h"
 
