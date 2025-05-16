@@ -81,7 +81,7 @@ typedef struct {
 	vita2d_pgf *pgf;
 	vita2d_pvf *pvf;
 	vita2d_font *font;
-}
+} Font;
 
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT			(0x00000007U)
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_ALL		(0x00000001U)
