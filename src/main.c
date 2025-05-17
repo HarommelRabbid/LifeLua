@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <zlib.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -73,6 +74,10 @@ typedef struct {
 typedef struct {
     vita2d_texture *tex;
 } Image;
+
+typedef struct {
+    unsigned int color;
+} Color;
 
 typedef struct {
 	vita2d_pgf *pgf;
@@ -219,7 +224,7 @@ int file_exists(const char* path) {
 
 // lua functions
 static int lua_delay(lua_State *L) {
-	int secs = luaL_optinteger(L, 1, 0);
+	int secs = luaL_optnumber(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
     return 0;
 }
@@ -1205,67 +1210,70 @@ void luaL_extendos(lua_State *L) {
 }
 
 static int lua_text(lua_State *L){
-	int x = luaL_checkinteger(L, 1);
-	int y = luaL_checkinteger(L, 2);
+	float x = luaL_checkinteger(L, 1);
+	float y = luaL_checkinteger(L, 2);
 	const char *text = luaL_checkstring(L, 3);
-	unsigned int color = luaL_checkinteger(L, 4);
+	Color *color = (Color *)luaL_checkudata(L, 4, "color");
 	float size = luaL_optnumber(L, 5, 1.0f);
 
-    vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color, size, text);
+    vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color->color, size, text);
 	return 0;
 }
 
 // Draw rectangle
 static int lua_rect(lua_State *L) {
 	int argc = lua_gettop(L);
-    int x = luaL_checkinteger(L, 1);
-    int y = luaL_checkinteger(L, 2);
-    int width = luaL_checkinteger(L, 3);
-    int height = luaL_checkinteger(L, 4);
-    unsigned int color = luaL_checkinteger(L, 5);
-	unsigned int outline;
-	if (argc == 6) outline = luaL_checkinteger(L, 6);
+    float x = luaL_checkinteger(L, 1);
+    float y = luaL_checkinteger(L, 2);
+    float width = luaL_checkinteger(L, 3);
+    float height = luaL_checkinteger(L, 4);
+    Color *color = (Color *)luaL_checkudata(L, 5, "color");
+	Color *outline;
+	if (argc == 6) outline = (Color *)luaL_checkudata(L, 6, "color");;
 
-    vita2d_draw_rectangle(x, y, width, height, color);
+    vita2d_draw_rectangle(x, y, width, height, color->color);
 	if (argc == 6){
-		vita2d_draw_line(x-1, y, x+width, y, outline);
-		vita2d_draw_line(x, y, x, y+height, outline);
-		vita2d_draw_line(width+x, y, width+x, y+height, outline);
-		vita2d_draw_line(x-1, y+height, x+width, y+height, outline);
+		vita2d_draw_line(x-1, y, x+width, y, outline->color);
+		vita2d_draw_line(x, y, x, y+height, outline->color);
+		vita2d_draw_line(width+x, y, width+x, y+height, outline->color);
+		vita2d_draw_line(x-1, y+height, x+width, y+height, outline->color);
 	}
     return 0;
 }
 
 // Draw circle
 static int lua_circle(lua_State *L) {
-    int x = luaL_checkinteger(L, 1);
-    int y = luaL_checkinteger(L, 2);
-    int radius = luaL_checkinteger(L, 3);
-    unsigned int color = luaL_checkinteger(L, 4);
+    float x = luaL_checkinteger(L, 1);
+    float y = luaL_checkinteger(L, 2);
+    float radius = luaL_checkinteger(L, 3);
+    Color *color = (Color *)luaL_checkudata(L, 4, "color");
 
-    vita2d_draw_fill_circle(x, y, radius, color);
+    vita2d_draw_fill_circle(x, y, radius, color->color);
     return 0;
 }
 
 // Draw line
 static int lua_line(lua_State *L) {
-    int x0 = luaL_checkinteger(L, 1);
-    int y0 = luaL_checkinteger(L, 2);
-    int x1 = luaL_checkinteger(L, 3);
-    int y1 = luaL_checkinteger(L, 4);
-    unsigned int color = luaL_checkinteger(L, 5);
+    float x0 = luaL_checkinteger(L, 1);
+    float y0 = luaL_checkinteger(L, 2);
+    float x1 = luaL_checkinteger(L, 3);
+    float y1 = luaL_checkinteger(L, 4);
+    Color *color = (Color *)luaL_checkudata(L, 5, "color");
 
-    vita2d_draw_line(x0, y0, x1, y1, color);
+    vita2d_draw_line(x0, y0, x1, y1, color->color);
     return 0;
 }
 
 static int lua_swapbuff(lua_State *L) {
-	int color = luaL_optinteger(L, 1, RGBA8(0, 0, 0, 255));
+	Color *color;
+	if (lua_gettop(L) >= 1) color = (Color *)luaL_checkudata(L, 5, "color");
     vita2d_end_drawing();
+	vita2d_common_dialog_update();
 	vita2d_wait_rendering_done();
     vita2d_swap_buffers();
     vita2d_start_drawing();
-	vita2d_set_clear_color(color);
+	if (lua_gettop(L) >= 1) vita2d_set_clear_color(color->color);
+	else vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
     vita2d_clear_screen(); // Clear for next frame
     return 0;
 }
@@ -1285,117 +1293,117 @@ static int lua_textheight(lua_State *L){
 }
 
 static int lua_pixel(lua_State *L){
-	int x = luaL_checkinteger(L, 1);
-	int y = luaL_checkinteger(L, 2);
-	unsigned int color = luaL_checkinteger(L, 3);
-	vita2d_draw_pixel(x, y, color);
+	float x = luaL_checkinteger(L, 1);
+	float y = luaL_checkinteger(L, 2);
+	Color *color = (Color *)luaL_checkudata(L, 3, "color");
+	vita2d_draw_pixel(x, y, color->color);
 	return 0;
 }
 
 static int lua_gradient(lua_State *L){
-	int x = luaL_checkinteger(L, 1);
-    int y = luaL_checkinteger(L, 2);
-    int width = luaL_checkinteger(L, 3);
-    int height = luaL_checkinteger(L, 4);
-    unsigned int top_left = luaL_checkinteger(L, 5);
-	unsigned int top_right = luaL_checkinteger(L, 6);
-	unsigned int bottom_left = luaL_checkinteger(L, 7);
-	unsigned int bottom_right = luaL_checkinteger(L, 8);
+	float x = luaL_checkinteger(L, 1);
+    float y = luaL_checkinteger(L, 2);
+    float width = luaL_checkinteger(L, 3);
+    float height = luaL_checkinteger(L, 4);
+    Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
+	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
+	Color *bottom_left = (Color *)luaL_checkudata(L, 7, "color");
+	Color *bottom_right = (Color *)luaL_checkudata(L, 8, "color");
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         6 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
 
     // Triangle 1: TL -> TR -> BL
-    vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left};
-    vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right};
-    vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left};
+    vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left->color};
+    vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+    vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
 
     // Triangle 2: TR -> BR -> BL
-    vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right};
-    vertices[4] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right};
-    vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left};
+    vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+    vertices[4] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right->color};
+    vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
 
     vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 6);
 	return 0;
 }
 
 static int lua_vdoublegradient(lua_State *L) {
-	int x = luaL_checkinteger(L, 1);
-	int y = luaL_checkinteger(L, 2);
-	int width = luaL_checkinteger(L, 3);
-	int height = luaL_checkinteger(L, 4);
+	float x = luaL_checkinteger(L, 1);
+	float y = luaL_checkinteger(L, 2);
+	float width = luaL_checkinteger(L, 3);
+	float height = luaL_checkinteger(L, 4);
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
 
 	// Expecting 12 colors: top_left, top_right, center_left, center_right, bottom_left, bottom_right
-	unsigned int top_left = luaL_checkinteger(L, 5);
-	unsigned int top_right = luaL_checkinteger(L, 6);
-	unsigned int center_left = luaL_checkinteger(L, 7);
-	unsigned int center_right = luaL_checkinteger(L, 8);
-	unsigned int bottom_left = luaL_checkinteger(L, 9);
-	unsigned int bottom_right = luaL_checkinteger(L, 10);
+	Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
+	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
+	Color *center_left = (Color *)luaL_checkudata(L, 7, "color");
+	Color *center_right = (Color *)luaL_checkudata(L, 8, "color");
+	Color *bottom_left = (Color *)luaL_checkudata(L, 9, "color");
+	Color *bottom_right = (Color *)luaL_checkudata(L, 10, "color");
 
 	int half = height / 2;
 
 	// Top half (TL -> TR -> CL) and (TR -> CR -> CL)
-	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left};
-	vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right};
-	vertices[2] = (vita2d_color_vertex){x, y + half, 0.5f, center_left};
+	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left->color};
+	vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+	vertices[2] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
 
-	vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right};
-	vertices[4] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right};
-	vertices[5] = (vita2d_color_vertex){x, y + half, 0.5f, center_left};
+	vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+	vertices[4] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[5] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
 
 	// Bottom half (CL -> CR -> BL) and (CR -> BR -> BL)
-	vertices[6] = (vita2d_color_vertex){x, y + half, 0.5f, center_left};
-	vertices[7] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right};
-	vertices[8] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left};
+	vertices[6] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
+	vertices[7] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[8] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
 
-	vertices[9] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right};
-	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right};
-	vertices[11] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left};
+	vertices[9] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right->color};
+	vertices[11] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
 
 	vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 12);
 	return 0;
 }
 
 static int lua_hdoublegradient(lua_State *L) {
-	int x = luaL_checkinteger(L, 1);
-	int y = luaL_checkinteger(L, 2);
-	int width = luaL_checkinteger(L, 3);
-	int height = luaL_checkinteger(L, 4);
+	float x = luaL_checkinteger(L, 1);
+	float y = luaL_checkinteger(L, 2);
+	float width = luaL_checkinteger(L, 3);
+	float height = luaL_checkinteger(L, 4);
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
 
 	// Expecting 12 colors: left_top, center_top, right_top, left_bottom, center_bottom, right_bottom
-	unsigned int left_top = luaL_checkinteger(L, 5);
-	unsigned int center_top = luaL_checkinteger(L, 6);
-	unsigned int right_top = luaL_checkinteger(L, 7);
-	unsigned int left_bottom = luaL_checkinteger(L, 8);
-	unsigned int center_bottom = luaL_checkinteger(L, 9);
-	unsigned int right_bottom = luaL_checkinteger(L, 10);
+	Color *left_top = (Color *)luaL_checkudata(L, 5, "color");
+	Color *center_top = (Color *)luaL_checkudata(L, 6, "color");
+	Color *right_top = (Color *)luaL_checkudata(L, 7, "color");
+	Color *left_bottom = (Color *)luaL_checkudata(L, 8, "color");
+	Color *center_bottom = (Color *)luaL_checkudata(L, 9, "color");
+	Color *right_bottom = (Color *)luaL_checkudata(L, 10, "color");
 
 	int half = width / 2;
 
 	// Left half (LT -> CT -> LB) and (CT -> CB -> LB)
-	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, left_top};
-	vertices[1] = (vita2d_color_vertex){x + half, y, 0.5f, center_top};
-	vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom};
+	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, left_top->color};
+	vertices[1] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom->color};
 
-	vertices[3] = (vita2d_color_vertex){x + half, y, 0.5f, center_top};
-	vertices[4] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom};
-	vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom};
+	vertices[3] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[4] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
+	vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom->color};
 
 	// Right half (CT -> RT -> CB) and (RT -> RB -> CB)
-	vertices[6] = (vita2d_color_vertex){x + half, y, 0.5f, center_top};
-	vertices[7] = (vita2d_color_vertex){x + width, y, 0.5f, right_top};
-	vertices[8] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom};
+	vertices[6] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[7] = (vita2d_color_vertex){x + width, y, 0.5f, right_top->color};
+	vertices[8] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
 
-	vertices[9] = (vita2d_color_vertex){x + width, y, 0.5f, right_top};
-	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, right_bottom};
-	vertices[11] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom};
+	vertices[9] = (vita2d_color_vertex){x + width, y, 0.5f, right_top->color};
+	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, right_bottom->color};
+	vertices[11] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
 
 	vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 12);
 	return 0;
@@ -1449,14 +1457,14 @@ int lua_imageload(lua_State *L) {
 static int lua_imagedraw(lua_State *L){
 	int argc = lua_gettop(L);
 	Image *image = (Image *)luaL_checkudata(L, 1, "image");
-	int x = luaL_checkinteger(L, 2);
-	int y = luaL_checkinteger(L, 3);
-	unsigned int color;
+	float x = luaL_checkinteger(L, 2);
+	float y = luaL_checkinteger(L, 3);
+	Color *color;
 	if(argc <= 3){
 		vita2d_draw_texture(image->tex, x, y);
 	}else{
-		color = luaL_checkinteger(L, 4);
-		vita2d_draw_texture_tint(image->tex, x, y, color);
+		color = (Color *)luaL_checkudata(L, 4, "color");
+		vita2d_draw_texture_tint(image->tex, x, y, color->color);
 	}
 	//vita2d_free_texture(image);
 	return 0;
@@ -1518,7 +1526,10 @@ static int lua_newcolor(lua_State *L) {
 	int g = luaL_checkinteger(L, 2);
 	int b = luaL_checkinteger(L, 3);
 	int a = luaL_optinteger(L, 4, 255);
-	lua_pushinteger(L, RGBA8(r, g, b, a));
+	Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
+	color->color = RGBA8(r, g, b, a);
+	luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
 	return 1;
 }
 
@@ -1528,6 +1539,7 @@ static const struct luaL_Reg color_lib[] = {
 };
 
 void luaL_opencolor(lua_State *L) {
+	luaL_newmetatable(L, "color");
 	lua_newtable(L);
 	luaL_setfuncs(L, color_lib, 0);
 	lua_setglobal(L, "color");
@@ -1558,19 +1570,19 @@ static int lua_check(lua_State *L){
 
 static int lua_pressed(lua_State *L){
 	int button = luaL_checkinteger(L, 1);
-	lua_pushboolean(L, (pad.buttons == button) && !(oldpad.buttons == button));
+	lua_pushboolean(L, (pad.buttons & button) && !(oldpad.buttons & button));
 	return 1;
 }
 
 static int lua_held(lua_State *L){
 	int button = luaL_checkinteger(L, 1);
-	lua_pushboolean(L, (pad.buttons == button) && (oldpad.buttons == button));
+	lua_pushboolean(L, (pad.buttons & button) && (oldpad.buttons & button));
 	return 1;
 }
 
 static int lua_released(lua_State *L){
 	int button = luaL_checkinteger(L, 1);
-	lua_pushboolean(L, !(pad.buttons == button) && (oldpad.buttons == button));
+	lua_pushboolean(L, !(pad.buttons & button) && (oldpad.buttons & button));
 	return 1;
 }
 static int lua_analogl(lua_State *L){
@@ -1897,7 +1909,7 @@ static int lua_editsfo(lua_State *L) {
                 if (value_type != LUA_TSTRING) {
                     free(buffer);
                     sceIoClose(fd);
-                    return luaL_error(L, "Expected a string value for field '%s'", param);
+                    return luaL_error(L, "Expected a string value for parameter '%s'", param);
                 }
                 const char *newstr = lua_tostring(L, 3);
                 memset(data, 0, entries[i].param_max_len); // clear
@@ -1908,7 +1920,7 @@ static int lua_editsfo(lua_State *L) {
                 if (!lua_isnumber(L, 3)) {
                     free(buffer);
                     sceIoClose(fd);
-                    return luaL_error(L, "Expected an integer value for field '%s'", param);
+                    return luaL_error(L, "Expected an integer value for parameter '%s'", param);
                 }
                 uint32_t intval = (uint32_t)lua_tonumber(L, 3);
                 memcpy(data, &intval, sizeof(uint32_t));
@@ -2036,6 +2048,15 @@ static int lua_sha1(lua_State *L){
 	return 1;
 }
 
+static int lua_crc32(lua_State *L) {
+	uLong crc = crc32(0L, Z_NULL, 0);
+    const char *str = luaL_checkstring(L, 1);
+	uInt len = strlen(str);
+    crc = crc32(crc, (const Bytef *)str, len);
+    lua_pushnumber(L, crc);
+    return 1;
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -2046,6 +2067,7 @@ static const struct luaL_Reg io_lib[] = {
 	{"pathstrip", lua_getfilename},
 	{"filestrip", lua_getfolder},
 	{"sha1", lua_sha1},
+	{"crc32", lua_crc32},
     {NULL, NULL}
 };
 
@@ -2217,7 +2239,7 @@ void unloadPAF(){
 	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
 }
 
-int main(){
+int main(void){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
@@ -2282,10 +2304,10 @@ int main(){
 
 	luaL_lifelua_dofile(L);
 
-	//vita2d_end_drawing();
-	//vita2d_common_dialog_update();
-    //vita2d_swap_buffers();
-	//sceDisplayWaitVblankStart();
+	vita2d_end_drawing();
+	vita2d_common_dialog_update();
+    vita2d_swap_buffers();
+	sceDisplayWaitVblankStart();
 
 	lua_close(L);
 	vita2d_fini();

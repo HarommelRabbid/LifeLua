@@ -38,7 +38,7 @@ void ascii2utf(uint16_t* dst, char* src);
 
 void luaL_opentimer(lua_State *L);
 void luaL_extendmath(lua_State *L);
-void luaL_openjson(lua_State *L);
+//void luaL_openjson(lua_State *L);
 
 #ifdef __cplusplus
 }
