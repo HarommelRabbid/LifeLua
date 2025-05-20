@@ -1,4 +1,4 @@
-os.message("This is a message!")
+os.message("This is a message")
 local msg = os.message("This is a 2 button message\nClick to see the magic", SCE_MSG_DIALOG_BUTTON_TYPE_YESNO)
 while true do
 if msg then

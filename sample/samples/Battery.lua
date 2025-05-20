@@ -8,6 +8,8 @@ draw.text(10, 110, "Battery cycle count: "..os.batterycyclecount(), white)
 draw.text(10, 130, "Battery temperature: "..os.batterytemperature().."°C", white)
 draw.text(10, 150, "Battery capacity: "..os.batterycapacity().." mAh", white)
 draw.text(10, 170, "Remaining battery capacity: "..os.remainingbatterycapacity().." mAh", white)
+draw.text(10, 190, "Is battery low: "..tostring(os.isbatterylow()), white)
+draw.text(10, 210, "External battery (true on PSTV): "..tostring(os.externalbattery()), white)
 controls.update()
 if controls.released(SCE_CTRL_START) then controls.update() break end
 draw.swapbuffers()
