@@ -2184,6 +2184,9 @@ static int lua_download(lua_State *L){
 	int fh = sceIoOpen(path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
 	unsigned char data[16*1024];
 	int read;
+	int luaread = 0, luawrote = 0;
+	uint64_t size = 0;
+	int size1 = sceHttpGetResponseContentLength(req, &size);
 
 	// read data until finished
 	while ((read = sceHttpReadData(req, &data, sizeof(data))) > 0) {
@@ -2194,11 +2197,15 @@ static int lua_download(lua_State *L){
 		//psvDebugScreenPrintf("wrote %d bytes\n", write);
 		lua_getglobal(L, "LifeLuaNetworkDownload");
 		if (lua_isfunction(L, -1)) {
+			lua_pushnumber(L, luaread+=read);
+			lua_pushnumber(L, luawrote+=written);
+			lua_pushnumber(L, size);
 			lua_pushnumber(L, read);
 			lua_pushnumber(L, written);
-			if (lua_pcall(L, 2, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			if (lua_pcall(L, 5, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
 		}
 	}
+	sceIoClose(fh);
 	return 1;
 }
 

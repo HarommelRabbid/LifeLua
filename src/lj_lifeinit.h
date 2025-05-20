@@ -24,6 +24,7 @@
 #define str(str) #str
 #define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
 #define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
+#define luaL_pushglobalint_alsoas(L, value, var) do { luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var); } while(0)
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 
 #ifdef __cplusplus
@@ -37,7 +38,6 @@ void utf2ascii(char* dst, uint16_t* src);
 void ascii2utf(uint16_t* dst, char* src);
 
 void luaL_opentimer(lua_State *L);
-void luaL_extendmath(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
 #ifdef __cplusplus

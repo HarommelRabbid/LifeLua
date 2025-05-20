@@ -53,7 +53,7 @@ link_directories(
 add_executable(${PROJECT_NAME}
   src/main.c
   src/lj_lifetimer.c
-  src/lj_lifemathext.c
+  #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/include/ftpvita.c
   src/include/sha1.c
@@ -85,6 +85,9 @@ target_link_libraries(${PROJECT_NAME}
     SceAppUtil_stub
     ScePromoterUtil_stub
     SceKernelDmacMgr_stub
+    SceHttp_stub
+    SceSsl_stub
+    SceNet_stub
     SceNetCtl_stub
     SceKernelModulemgr_stub
     SceNotificationUtil_stub
@@ -93,7 +96,6 @@ target_link_libraries(${PROJECT_NAME}
     SceRegistryMgr_stub
     ScePower_stub
     SceAudio_stub
-    SceNet_stub
     SceHid_stub
     SceAVConfig_stub
     luajit-5.1
