@@ -224,7 +224,7 @@ int file_exists(const char* path) {
 
 // lua functions
 static int lua_delay(lua_State *L) {
-	int secs = luaL_optnumber(L, 1, 0);
+	float secs = luaL_optnumber(L, 1, 0);
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
     return 0;
 }
@@ -300,7 +300,7 @@ static int lua_keyboard(lua_State *L){
 	sceImeDialogInit(&param);
 
 	while (sceImeDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        vita2d_start_drawing();
+        //vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaIMEDialog");
 		if (lua_isfunction(L, -1)) {
@@ -372,7 +372,7 @@ static int lua_message(lua_State *L) {
 	sceMsgDialogInit(&param);
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        vita2d_start_drawing();
+        //vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaMessageDialog");
 		if (lua_isfunction(L, -1)) {
@@ -425,7 +425,7 @@ static int lua_sysmessage(lua_State *L) {
 	sceMsgDialogInit(&param);
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        vita2d_start_drawing();
+        //vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaSystemMessageDialog");
 		if (lua_isfunction(L, -1)) {
@@ -465,7 +465,7 @@ static int lua_errormessage(lua_State *L) {
 	sceMsgDialogInit(&param);
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        vita2d_start_drawing();
+        //vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaErrorCodeDialog");
 		if (lua_isfunction(L, -1)) {
@@ -506,7 +506,7 @@ static int lua_progressmessage(lua_State *L) {
 	sceMsgDialogInit(&param);
 
 	while (sceMsgDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-        vita2d_start_drawing();
+        //vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaProgressMessageDialog");
 		if (lua_isfunction(L, -1)) {
@@ -641,12 +641,12 @@ static int lua_lock(lua_State *L){
 static int lua_runningapps(lua_State *L){
 	int max = luaL_optinteger(L, 1, 100);
 	int runningapps[] = {};
-	int runningappsint = sceAppMgrGetRunningAppIdListForShell(runningapps, max);
+	int runningappsint = sceAppMgrGetRunningAppIdListForShell(&runningapps, max);
 	lua_newtable(L);
 	for(int i = 0; i <= runningappsint; i++){
 		SceUID pid = sceAppMgrGetProcessIdByAppIdForShell(runningapps[i]);
 		char titleid[64];
-		sceAppMgrGetNameById(pid, titleid);
+		sceAppMgrGetNameById(pid, &titleid);
 		lua_pushstring(L, titleid);
 		lua_rawseti(L, -2, i+1);
 	}
@@ -1210,8 +1210,8 @@ void luaL_extendos(lua_State *L) {
 }
 
 static int lua_text(lua_State *L){
-	float x = luaL_checkinteger(L, 1);
-	float y = luaL_checkinteger(L, 2);
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
 	const char *text = luaL_checkstring(L, 3);
 	Color *color = (Color *)luaL_checkudata(L, 4, "color");
 	float size = luaL_optnumber(L, 5, 1.0f);
@@ -1223,10 +1223,10 @@ static int lua_text(lua_State *L){
 // Draw rectangle
 static int lua_rect(lua_State *L) {
 	int argc = lua_gettop(L);
-    float x = luaL_checkinteger(L, 1);
-    float y = luaL_checkinteger(L, 2);
-    float width = luaL_checkinteger(L, 3);
-    float height = luaL_checkinteger(L, 4);
+    float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
     Color *color = (Color *)luaL_checkudata(L, 5, "color");
 	Color *outline;
 	if (argc == 6) outline = (Color *)luaL_checkudata(L, 6, "color");;
@@ -1243,9 +1243,9 @@ static int lua_rect(lua_State *L) {
 
 // Draw circle
 static int lua_circle(lua_State *L) {
-    float x = luaL_checkinteger(L, 1);
-    float y = luaL_checkinteger(L, 2);
-    float radius = luaL_checkinteger(L, 3);
+    float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float radius = luaL_checknumber(L, 3);
     Color *color = (Color *)luaL_checkudata(L, 4, "color");
 
     vita2d_draw_fill_circle(x, y, radius, color->color);
@@ -1254,10 +1254,10 @@ static int lua_circle(lua_State *L) {
 
 // Draw line
 static int lua_line(lua_State *L) {
-    float x0 = luaL_checkinteger(L, 1);
-    float y0 = luaL_checkinteger(L, 2);
-    float x1 = luaL_checkinteger(L, 3);
-    float y1 = luaL_checkinteger(L, 4);
+    float x0 = luaL_checknumber(L, 1);
+    float y0 = luaL_checknumber(L, 2);
+    float x1 = luaL_checknumber(L, 3);
+    float y1 = luaL_checknumber(L, 4);
     Color *color = (Color *)luaL_checkudata(L, 5, "color");
 
     vita2d_draw_line(x0, y0, x1, y1, color->color);
@@ -1293,18 +1293,18 @@ static int lua_textheight(lua_State *L){
 }
 
 static int lua_pixel(lua_State *L){
-	float x = luaL_checkinteger(L, 1);
-	float y = luaL_checkinteger(L, 2);
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
 	Color *color = (Color *)luaL_checkudata(L, 3, "color");
 	vita2d_draw_pixel(x, y, color->color);
 	return 0;
 }
 
 static int lua_gradient(lua_State *L){
-	float x = luaL_checkinteger(L, 1);
-    float y = luaL_checkinteger(L, 2);
-    float width = luaL_checkinteger(L, 3);
-    float height = luaL_checkinteger(L, 4);
+	float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
     Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
 	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
 	Color *bottom_left = (Color *)luaL_checkudata(L, 7, "color");
@@ -1328,10 +1328,10 @@ static int lua_gradient(lua_State *L){
 }
 
 static int lua_vdoublegradient(lua_State *L) {
-	float x = luaL_checkinteger(L, 1);
-	float y = luaL_checkinteger(L, 2);
-	float width = luaL_checkinteger(L, 3);
-	float height = luaL_checkinteger(L, 4);
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	float width = luaL_checknumber(L, 3);
+	float height = luaL_checknumber(L, 4);
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
@@ -1369,10 +1369,10 @@ static int lua_vdoublegradient(lua_State *L) {
 }
 
 static int lua_hdoublegradient(lua_State *L) {
-	float x = luaL_checkinteger(L, 1);
-	float y = luaL_checkinteger(L, 2);
-	float width = luaL_checkinteger(L, 3);
-	float height = luaL_checkinteger(L, 4);
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	float width = luaL_checknumber(L, 3);
+	float height = luaL_checknumber(L, 4);
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
@@ -1457,8 +1457,8 @@ int lua_imageload(lua_State *L) {
 static int lua_imagedraw(lua_State *L){
 	int argc = lua_gettop(L);
 	Image *image = (Image *)luaL_checkudata(L, 1, "image");
-	float x = luaL_checkinteger(L, 2);
-	float y = luaL_checkinteger(L, 3);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
 	Color *color;
 	if(argc <= 3){
 		vita2d_draw_texture(image->tex, x, y);
@@ -1643,16 +1643,16 @@ static int lua_fronttouch(lua_State *L){
 	for (int i = 0; i < fronttouch.reportNum; i++) {
 		lua_newtable(L);
 
-		lua_pushinteger(L, lerp(fronttouch.report[i].x, 1920, 960));
+		lua_pushnumber(L, lerp(fronttouch.report[i].x, 1920, 960));
 		lua_setfield(L, -2, "x");
 
-		lua_pushinteger(L, lerp(fronttouch.report[i].y, 1285, 855));
+		lua_pushnumber(L, lerp(fronttouch.report[i].y, 1285, 855));
 		lua_setfield(L, -2, "y");
 
-		lua_pushinteger(L, fronttouch.report[i].id);
+		lua_pushnumber(L, fronttouch.report[i].id);
         lua_setfield(L, -2, "id");
 
-        lua_pushinteger(L, fronttouch.report[i].force);
+        lua_pushnumber(L, fronttouch.report[i].force);
         lua_setfield(L, -2, "force");
 
 		lua_rawseti(L, -2, i+1);
@@ -1666,16 +1666,16 @@ static int lua_reartouch(lua_State *L){
 	for (int i = 0; i < reartouch.reportNum; i++) {
 		lua_newtable(L);
 
-		lua_pushinteger(L, lerp(reartouch.report[i].x, 1920, 960));
+		lua_pushnumber(L, lerp(reartouch.report[i].x, 1920, 960));
 		lua_setfield(L, -2, "x");
 
-		lua_pushinteger(L, lerp(reartouch.report[i].y, 1285, 855));
+		lua_pushnumber(L, lerp(reartouch.report[i].y, 1285, 855));
 		lua_setfield(L, -2, "y");
 
-		lua_pushinteger(L, reartouch.report[i].id);
+		lua_pushnumber(L, reartouch.report[i].id);
         lua_setfield(L, -2, "id");
 
-        lua_pushinteger(L, reartouch.report[i].force);
+        lua_pushnumber(L, reartouch.report[i].force);
         lua_setfield(L, -2, "force");
 
 		lua_rawseti(L, -2, i+1);
@@ -2129,10 +2129,87 @@ static int lua_ftp_del(lua_State *L){
 	return 1;
 }
 
+static int lua_wifi(lua_State *L){
+	int state;
+	sceNetCtlInetGetState(&state);
+	lua_pushboolean(L, state);
+	return 1;
+}
+
+static int lua_ip(lua_State *L){
+	SceNetCtlInfo info;
+	if (sceNetCtlInetGetInfo(SCE_NETCTL_INFO_GET_IP_ADDRESS, &info) < 0) strcpy(vita_ip, "127.0.0.1");
+	else strcpy(vita_ip, info.ip_address);
+	lua_pushstring(L, vita_ip);
+	return 1;
+}
+
+static int lua_mac(lua_State *L) {
+	SceNetEtherAddr mac;
+	char macAddress[32];
+	sceNetGetMacAddress(&mac, 0);	
+	sprintf(macAddress, "%02X:%02X:%02X:%02X:%02X:%02X", mac.data[0], mac.data[1], mac.data[2], mac.data[3], mac.data[4], mac.data[5]);
+	lua_pushstring(L, macAddress);
+	return 1;
+}
+
+static int lua_download(lua_State *L){
+	SceUInt64 length = 0;
+	const char *url = luaL_checkstring(L, 1);
+	const char *path = luaL_checkstring(L, 2);
+	const char *template = luaL_optstring(L, 3, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+	int tpl = sceHttpCreateTemplate(template, SCE_HTTP_VERSION_1_1, SCE_TRUE);
+	if(tpl < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+	int conn = sceHttpCreateConnectionWithURL(tpl, url, SCE_TRUE);
+	if(conn < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int req = sceHttpCreateRequestWithURL(conn, SCE_HTTP_METHOD_GET, url, 0);
+	if(req < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int res = sceHttpSendRequest(req, NULL, 0);
+	if(res < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int fh = sceIoOpen(path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+	unsigned char data[16*1024];
+	int read;
+
+	// read data until finished
+	while ((read = sceHttpReadData(req, &data, sizeof(data))) > 0) {
+		//psvDebugScreenPrintf("read %d bytes\n", read);
+
+		// writing the count of read bytes from the data buffer to the file
+		int written = sceIoWrite(fh, data, read);
+		//psvDebugScreenPrintf("wrote %d bytes\n", write);
+		lua_getglobal(L, "LifeLuaNetworkDownload");
+		if (lua_isfunction(L, -1)) {
+			lua_pushnumber(L, read);
+			lua_pushnumber(L, written);
+			if (lua_pcall(L, 2, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+		}
+	}
+	return 1;
+}
+
 static const struct luaL_Reg network_lib[] = {
 	{"ftp", lua_ftp},
 	{"ftpadddevice", lua_ftp_add},
 	{"ftpremovedevice", lua_ftp_del},
+	{"wifi", lua_wifi},
+	{"ip", lua_ip},
+	{"mac", lua_mac},
+	{"download", lua_download},
     {NULL, NULL}
 };
 
@@ -2239,6 +2316,29 @@ void unloadPAF(){
 	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
 }
 
+void luaL_extend(lua_State *L){
+	luaL_dostring(L, "function math.range(num, min, max) return math.min(math.max(num, min), max) end\n\
+					  function table.find(value, table) --Checks if an item is in an array\n\
+ 				      	for i, v in ipairs(table) do\n\
+  							if v == value then\n\
+   								return true\n\
+  							end\n\
+ 						end\n\
+ 						return false\n\
+						end\n\
+						function table.removefirst(value, table1) --Removes the first instance of an item in an array\n\
+ 							for i, v in ipairs(table1) do\n\
+  								if v == value then\n\
+   									return table.remove(table1, i)\n\
+  								end\n\
+ 							end\n\
+						function math.round(num, idp)\n\
+  							local mult = 10^(idp or 0)\n\
+  							return math.floor(num * mult + 0.5) / mult\n\
+						end\n\
+						end");
+}
+
 int main(){
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG_WIDE);
 	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
@@ -2250,6 +2350,7 @@ int main(){
 
 	loadPAF();
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
@@ -2273,6 +2374,14 @@ int main(){
 	sceAppUtilPhotoMount();
 	sceAppUtilMusicMount();
 	sceAppUtilCacheMount();
+	SceNetInitParam netInitParam;
+	netInitParam.memory = malloc(1*1024*1024);
+	netInitParam.size = 1*1024*1024;
+	netInitParam.flags = 0;
+	sceNetInit(&netInitParam);
+	sceNetCtlInit();
+	sceHttpInit(1*1024*1024);
+	sceSslInit(1*1024*1024);
 
 	SceUID fd = sceIoOpen("os0:/psp2bootconfig.skprx", SCE_O_RDONLY, 0777);
 	if(fd < 0){
@@ -2289,8 +2398,8 @@ int main(){
 
 	L = luaL_newstate();
 	luaL_openlibs(L);
+	luaL_extend(L);
 	luaL_extendos(L);
-	luaL_extendmath(L);
 	luaL_opendraw(L);
 	luaL_opencolor(L);
 	luaL_opencontrols(L);
@@ -2304,17 +2413,22 @@ int main(){
 
 	luaL_lifelua_dofile(L);
 
-	vita2d_end_drawing();
-	vita2d_common_dialog_update();
-    vita2d_swap_buffers();
-	sceDisplayWaitVblankStart();
+	//vita2d_end_drawing();
+	//vita2d_common_dialog_update();
+    //vita2d_swap_buffers();
+	//sceDisplayWaitVblankStart();
 
 	lua_close(L);
 	vita2d_fini();
 	vita2d_free_pgf(pgf);
 	vita2d_free_pvf(pvf);
 	vita2d_free_pvf(psexchar);
+	sceSslTerm();
+	sceHttpTerm();
+	sceNetCtlTerm();
+	sceNetTerm();
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
