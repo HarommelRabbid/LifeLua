@@ -1234,8 +1234,8 @@ static int lua_rect(lua_State *L) {
     vita2d_draw_rectangle(x, y, width, height, color->color);
 	if (argc == 6){
 		vita2d_draw_line(x-1, y, x+width, y, outline->color);
-		vita2d_draw_line(x, y, x, y+height, outline->color);
-		vita2d_draw_line(width+x, y, width+x, y+height, outline->color);
+		vita2d_draw_line(x, y, x, y+height-1, outline->color);
+		vita2d_draw_line(width+x, y, width+x, y+height-1, outline->color);
 		vita2d_draw_line(x-1, y+height, x+width, y+height, outline->color);
 	}
     return 0;
