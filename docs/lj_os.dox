@@ -1,0 +1,5 @@
+/**
+ * @file
+ * @defgroup os os
+ * @brief Extension of the Lua OS library with PSVita specific functions
+*/
