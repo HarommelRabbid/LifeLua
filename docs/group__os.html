@@ -262,12 +262,12 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Locks some shell functionality (e. g. the PS button, the quick menu, the power off menu, USB connection etc.) </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">flag</td><td>Optional, will default to <code>0xFFFFF</code> if not set </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Locks some shell functionality (e. g. the PS button, the quick menu, the power off menu, USB connection etc.) </p><dl class="section note"><dt>Note</dt><dd>After <code>lock</code> has been defined, you can add as many <code>SceShellUtilLockType</code> values as you want as the next arguments </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">os.lock(<span class="keyword">true</span>, <a class="code hl_variable" href="#ga5b1932b9c415d474ed6d9ea6c78150d0">SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN</a>, <a class="code hl_variable" href="#ga5f0bfeedc7b2ee6dc0329793a439d350">SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU</a>, <a class="code hl_variable" href="#ga9ae74e288783d9d37316ebbcf21ca314">SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION</a>)</div>
+<div class="ttc" id="agroup__os_html_ga5b1932b9c415d474ed6d9ea6c78150d0"><div class="ttname"><a href="#ga5b1932b9c415d474ed6d9ea6c78150d0">SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN</a></div><div class="ttdeci">SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN</div><div class="ttdef"><b>Definition</b> lj_os.dox:11</div></div>
+<div class="ttc" id="agroup__os_html_ga5f0bfeedc7b2ee6dc0329793a439d350"><div class="ttname"><a href="#ga5f0bfeedc7b2ee6dc0329793a439d350">SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU</a></div><div class="ttdeci">SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU</div><div class="ttdef"><b>Definition</b> lj_os.dox:12</div></div>
+<div class="ttc" id="agroup__os_html_ga9ae74e288783d9d37316ebbcf21ca314"><div class="ttname"><a href="#ga9ae74e288783d9d37316ebbcf21ca314">SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION</a></div><div class="ttdeci">SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION</div><div class="ttdef"><b>Definition</b> lj_os.dox:15</div></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
