@@ -1,5 +1,22 @@
 /**
  * @file
  * @defgroup os os
- * @brief Extension of the Lua OS library with PSVita specific functions
+ * Lua OS library with added PS Vita features
+ * @brief Extension of the Lua OS library with PS Vita specific functions
+ * @{
 */
+/** 
+ * Delay the app for a certain time
+ * @param seconds: Will default to 0 if not set
+*/
+nil delay(number seconds) {}
+/** 
+ * Exits the app
+*/
+nil exit() {}
+/** 
+ * Opens an URI
+ * @param flag: Optional, will default to `0xFFFFF` if not set
+*/
+nil uri(string uri, number flag) {}
+/** @} */

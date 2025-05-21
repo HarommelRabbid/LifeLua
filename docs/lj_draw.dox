@@ -6,23 +6,23 @@
  * @{
 */
 /** 
- * Swaps the buffers
- * @param color optional color, default will be black
+ * Swaps the buffers. Needed for the drawing functions above it to show.
+ * @param color Optional color, default will be black
 */
 nil swapbuffers(color color) {}
 /** 
  * Draws text on the screen
- * @param number size: The size argument can be also a font, if so, then the size will be the next argument
+ * @param size: The size argument can be also a font, if so, then the size will be the next argument
 */
 nil text(number x, number y, string text, color color, number size, font font) {}
 /** 
  * Gets the text width as displayed on the screen
- * @param number size: The size argument can be also a font, if so, then the size will be the next argument
+ * @param size: The size argument can be also a font, if so, then the size will be the next argument
 */
 nil textwidth(string text, number size, font font) {}
 /** 
  * Gets the text height as displayed on the screen
- * @param number size: The size argument can be also a font, if so, then the size will be the next argument
+ * @param size: The size argument can be also a font, if so, then the size will be the next argument
 */
 nil textheight(string text, number size, font font) {}
 /** 
@@ -63,7 +63,7 @@ nil hdoublegradientrect(number x, number y, number width, number height, color t
 */
 /** 
  * Creates a new color
- * @param number a: Alpha is optional, will default to 255 (maximum)
+ * @param a: Alpha is optional, will default to 255 (maximum)
 */
 color new(number r, number g, number b, number a) {}
 /** @} */
