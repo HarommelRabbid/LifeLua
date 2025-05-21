@@ -50,7 +50,12 @@ nil shuttersound(SceShutterSoundType shuttertype) {}
 nil infobar(SceAppMgrInfoBarVisibility state, SceAppMgrInfoBarColor color, SceAppMgrInfoBarTransparency transparency) {}
 /** 
  * Locks some shell functionality (e. g. the PS button, the quick menu, the power off menu, USB connection etc.)
- * @param flag: Optional, will default to `0xFFFFF` if not set
+ * > [!note]
+ * After `lock` has been defined, you can add as many `SceShellUtilLockType` values as you want as the next arguments
+ * @par Example:
+ * @code
+ * os.lock(true, SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN, SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU, SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION)
+ * @endcode
 */
 nil lock(boolean lock, SceShellUtilLockType type, ...) {}
 /** @} */
