@@ -5,6 +5,27 @@
  * @brief Extension of the Lua OS library with PS Vita specific functions
  * @{
 */
+SceShutterSoundType SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE;
+SceShutterSoundType SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START;
+SceShutterSoundType SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_POWEROFF_MENU;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK8;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_MC_INSERTED;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_MC_REMOVED;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK80;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK100;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK200;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_MUSIC_PLAYER;
+SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2;
+SceAppMgrInfoBarVisibility SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE;
+SceAppMgrInfoBarVisibility SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE;
+SceAppMgrInfoBarColor SCE_APPMGR_INFOBAR_COLOR_BLACK;
+SceAppMgrInfoBarColor SCE_APPMGR_INFOBAR_COLOR_WHITE;
+SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE;
+SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT;
 /** 
  * Delay the app for a certain time
  * @param seconds: Will default to 0 if not set
@@ -19,4 +40,17 @@ nil exit() {}
  * @param flag: Optional, will default to `0xFFFFF` if not set
 */
 nil uri(string uri, number flag) {}
+/** 
+ * Play a shutter sound
+*/
+nil shuttersound(SceShutterSoundType shuttertype) {}
+/** 
+ * Sets the state of the infobar
+*/
+nil infobar(SceAppMgrInfoBarVisibility state, SceAppMgrInfoBarColor color, SceAppMgrInfoBarTransparency transparency) {}
+/** 
+ * Locks some shell functionality (e. g. the PS button, the quick menu, the power off menu, USB connection etc.)
+ * @param flag: Optional, will default to `0xFFFFF` if not set
+*/
+nil lock(boolean lock, SceShellUtilLockType type, ...) {}
 /** @} */
