@@ -8,7 +8,7 @@ var group__draw =
     [ "rect", "group__draw.html#ga36d82f094ffe95e9fd56c94094a0f5e1", null ],
     [ "swapbuffers", "group__draw.html#ga46d891ce66f64810f4aee043cd8f2051", null ],
     [ "text", "group__draw.html#gae15141c771a01d254a75823ad2f5981e", null ],
-    [ "textheight", "group__draw.html#gafeba10256a64bb583391df83feee9372", null ],
-    [ "textwidth", "group__draw.html#ga8556b367f45425fe726fe0ad07fe9afd", null ],
+    [ "textheight", "group__draw.html#ga205ab4d51ea5735d7526c39d222dd9da", null ],
+    [ "textwidth", "group__draw.html#gaa8f1b02c5638d18396c0941933f57e0a", null ],
     [ "vdoublegradientrect", "group__draw.html#gab362bf48c23f1029785cf7ea353e1eaa", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pixel_0',['pixel',['../group__draw.html#ga1817944c0a62bfb3ad5b3fb299063168',1,'lj_draw.dox']]]
+  ['new_0',['new',['../group__color.html#ga0cb0f31a669033271a751a1879d9a176',1,'lj_draw.dox']]]
 ];
