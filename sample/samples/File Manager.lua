@@ -35,7 +35,7 @@ if controls.pressed(SCE_CTRL_UP) then filescroll:up() end
 if controls.pressed(SCE_CTRL_DOWN) then filescroll:down() end
 if controls.released(SCE_CTRL_CROSS) then 
 if files[filescroll.sel].isafolder then
-if #files > 1 then
+if #io.list(files[filescroll.sel].path) >= 1 then
 files = io.list(files[filescroll.sel].path)
 filescroll:set(files, 26) 
 end

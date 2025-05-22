@@ -15,13 +15,17 @@ draw.text(480-draw.textwidth("LifeLua Showcase Menu")/2, 20, "LifeLua Showcase M
 local y = 65
 for i=scroll.ini, scroll.lim do
 draw.hdoublegradientrect(5, y, 480-5, 50, white, blue, white, white, blue, white)
+--draw.hdoublegradientrect(480+5, y, 480-10, 50, white, blue, white, white, blue, white)
 if i==scroll.sel then
 draw.hdoublegradientrect(5, y, 480-5, 50, color.new(0, 0, 255, 255/2), color.new(0, 0, 0, 0), color.new(0, 0, 255, 255/2), color.new(0, 0, 255, 255/2), color.new(0, 0, 0, 0), color.new(0, 0, 255, 255/2))
 if selpressed then 
 draw.rect(5, y, 480-5, 50, color.new(255, 255, 255, 0), white)
 end
 end
-draw.text(480/2-50, y+15, samples[i], white)
+draw.enableclip(true)
+draw.cliprect(5, y, 480, y+50)
+draw.text(480/2-draw.textwidth(samples[i])/2, y+15, samples[i], white)
+draw.enableclip(false)
 y = y+55
 end
 draw.rect(0, 544-39, 960, 39, blue)
