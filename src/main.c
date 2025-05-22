@@ -902,7 +902,7 @@ static int lua_importphoto(lua_State *L){
 	scePhotoImportDialogInit(&pidParam);
 
 	while (scePhotoImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
-		vita2d_start_drawing();
+		//vita2d_start_drawing();
 
 		lua_getglobal(L, "LifeLuaPhotoImportDialog");
 		if (lua_isfunction(L, -1)) {
@@ -1409,6 +1409,22 @@ static int lua_hdoublegradient(lua_State *L) {
 	return 0;
 }
 
+static int lua_enableclip(lua_State *L){
+	bool enable = lua_toboolean(L, 1);
+	if(enable) vita2d_enable_clipping();
+	else vita2d_disable_clipping();
+	return 0;
+}
+
+static int lua_cliprect(lua_State *L){
+	int minx = luaL_checkinteger(L, 1);
+	int miny = luaL_checkinteger(L, 2);
+	int maxx = luaL_checkinteger(L, 3);
+	int maxy = luaL_checkinteger(L, 4);
+	vita2d_set_clip_rectangle(minx, miny, maxx, maxy);
+	return 0;
+}
+
 static const struct luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -1420,14 +1436,14 @@ static const struct luaL_Reg draw_lib[] = {
 	{"gradientrect", lua_gradient},
 	{"hdoublegradientrect", lua_hdoublegradient},
 	{"vdoublegradientrect", lua_vdoublegradient},
+	{"enableclip", lua_enableclip},
+	{"cliprect", lua_cliprect},
     {"swapbuffers", lua_swapbuff},
     {NULL, NULL}
 };
 
 void luaL_opendraw(lua_State *L) {
-	lua_newtable(L);
-	luaL_setfuncs(L, draw_lib, 0);
-	lua_setglobal(L, "draw");
+	luaL_openlib(L, "draw", draw_lib, 0);
 }
 
 int lua_imageload(lua_State *L) {
@@ -1516,9 +1532,7 @@ void luaL_openimage(lua_State *L) {
     luaL_setfuncs(L, image_methods, 0);
     lua_pop(L, 1);
 
-	lua_newtable(L);
-	luaL_setfuncs(L, image_lib, 0);
-	lua_setglobal(L, "image");
+	luaL_openlib(L, "image", image_lib, 0);
 }
 
 static int lua_newcolor(lua_State *L) {
@@ -1540,9 +1554,7 @@ static const struct luaL_Reg color_lib[] = {
 
 void luaL_opencolor(lua_State *L) {
 	luaL_newmetatable(L, "color");
-	lua_newtable(L);
-	luaL_setfuncs(L, color_lib, 0);
-	lua_setglobal(L, "color");
+	luaL_openlib(L, "color", color_lib, 0);
 }
 
 static int lua_updatecontrols(lua_State *L){
@@ -1702,9 +1714,7 @@ static const struct luaL_Reg controls_lib[] = {
 };
 
 void luaL_opencontrols(lua_State *L) {
-	lua_newtable(L);
-	luaL_setfuncs(L, controls_lib, 0);
-	lua_setglobal(L, "controls");
+	luaL_openlib(L, "controls", controls_lib, 0);
 	luaL_pushglobalint(L, SCE_CTRL_UP);
 	luaL_pushglobalint(L, SCE_CTRL_DOWN);
 	luaL_pushglobalint(L, SCE_CTRL_LEFT);
@@ -2221,9 +2231,7 @@ static const struct luaL_Reg network_lib[] = {
 };
 
 void luaL_opennetwork(lua_State *L) {
-	lua_newtable(L);
-	luaL_setfuncs(L, network_lib, 0);
-	lua_setglobal(L, "network");
+	luaL_openlib(L, "network", network_lib, 0);
 }
 
 void luaL_lifelua_dofile(lua_State *L){
@@ -2414,7 +2422,7 @@ int main(){
 	luaL_opennetwork(L);
 	luaL_opentimer(L);
 	luaL_openimage(L);
-
+	
 	vita2d_start_drawing();
     vita2d_clear_screen();
 

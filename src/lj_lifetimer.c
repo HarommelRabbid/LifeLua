@@ -155,7 +155,5 @@ void luaL_opentimer(lua_State *L) {
     luaL_setfuncs(L, timer_methods, 0);
     lua_pop(L, 1);
 
-	lua_newtable(L);
-	luaL_setfuncs(L, timer_lib, 0);
-	lua_setglobal(L, "timer");
+	luaL_openlib(L, "timer", timer_lib, 0);
 }
