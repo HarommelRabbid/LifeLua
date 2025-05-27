@@ -56,22 +56,6 @@ typedef struct SceNotificationUtilSendParam {
 } SceNotificationUtilSendParam;
 
 typedef struct {
-    char magic[4];       // "\0PSF"
-    uint32_t version;
-    uint32_t key_table_offset;
-    uint32_t data_table_offset;
-    uint32_t tables_entries;
-} SFOHeader;
-
-typedef struct {
-    uint16_t key_offset;
-    uint16_t param_fmt;
-    uint32_t param_len;
-    uint32_t param_max_len;
-    uint32_t data_offset;
-} SFOEntry;
-
-typedef struct {
     vita2d_texture *tex;
 } Image;
 
@@ -228,6 +212,13 @@ static int lua_delay(lua_State *L) {
     sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
     return 0;
 }
+
+static int lua_delaycb(lua_State *L) {
+	float secs = luaL_optnumber(L, 1, 0);
+    sceKernelDelayThreadCB(secs * 1000000); // this converts microsecs to secs
+    return 0;
+}
+
 static int lua_exit(lua_State *L) {
     sceKernelExitProcess(0);
     return 0;
@@ -269,8 +260,8 @@ static int lua_selfexecute(lua_State *L){
 }
 
 static int lua_keyboard(lua_State *L){
-	char* title1 = (char*)luaL_checkstring(L, 1);
-	char* default_text = (char*)luaL_optstring(L, 2, "");
+	const char* title1 = luaL_checkstring(L, 1);
+	const char* default_text = luaL_optstring(L, 2, "");
 	SceUInt32 type = luaL_optinteger(L, 3, SCE_IME_TYPE_DEFAULT);
 	SceUInt32 mode = luaL_optinteger(L, 4, SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT);
 	SceUInt32 option = luaL_optinteger(L, 5, 0);
@@ -320,7 +311,7 @@ static int lua_keyboard(lua_State *L){
 	sceClibMemset(&result, 0, sizeof(SceImeDialogResult));
     sceImeDialogGetResult(&result);
 
-    if (!((option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) || (option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER))) {
+    if (!((option & SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) || (option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER))) {
 		lua_pushnil(L);
 	}else{
 		char res[SCE_IME_DIALOG_MAX_TEXT_LENGTH+1];
@@ -1122,20 +1113,12 @@ static const struct luaL_Reg os_lib[] = {
 	{"photoexport", lua_exportphoto},
 	{"musicexport", lua_exportmusic},
 	{"videoexport", lua_exportvideo},
+	{"delaycb", lua_delaycb},
     {NULL, NULL}
 };
 
 void luaL_extendos(lua_State *L) {
-	lua_getglobal(L, "os"); // Get existing os table
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_setglobal(L, "os");
-		lua_getglobal(L, "os");
-	}
-
-	luaL_setfuncs(L, os_lib, 0); // extending the os library
-	lua_pop(L, 1);
+	luaL_openlib(L, "os", os_lib, 0);
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, "INFOBAR_VISIBILITY_INVISIBLE");
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE, "INFOBAR_VISIBILITY_VISIBLE");
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_COLOR_BLACK, "INFOBAR_COLOR_BLACK");
@@ -1217,12 +1200,18 @@ static int lua_text(lua_State *L){
 	float size;
 	Font *font;
 
-	if(lua_isuserdata(L, 5)){
+	if(lua_isuserdata(L, 5) && !lua_isnil(L, 5)){
 		font = (Font *)luaL_checkudata(L, 5, "font");
 		size = luaL_optnumber(L, 6, 1.0f);
-		if(font->pgf) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
-		else if(font->pvf) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
-		else if(font->font) vita2d_font_draw_text(font->font, x, y+17.402 * size, color->color, size, text);
+		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
+		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
+		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, y + size*16, color->color, size*16, text);
+	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6)) && !lua_isnil(L, 6)){
+		font = (Font *)luaL_checkudata(L, 6, "font");
+		size = luaL_optnumber(L, 5, 1.0f);
+		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
+		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
+		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, y + size*16, color->color, size*16, text);
 	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
 		size = luaL_optnumber(L, 5, 1.0f);
 		vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color->color, size, text);
@@ -1293,15 +1282,51 @@ static int lua_swapbuff(lua_State *L) {
 
 static int lua_textwidth(lua_State *L){
 	const char *text = luaL_checkstring(L, 1);
-	float size = luaL_optnumber(L, 2, 1.0f);
-	lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+	float size;
+	Font *font;
+	if(lua_isuserdata(L, 2) && !lua_isnil(L, 2)){
+		font = (Font *)luaL_checkudata(L, 2, "font");
+		size = luaL_optnumber(L, 3, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*16, text));
+	}else if((lua_isnumber(L, 2) && (lua_isuserdata(L, 3) && !lua_isnone(L, 3))) && !lua_isnil(L, 3)){
+		font = (Font *)luaL_checkudata(L, 3, "font");
+		size = luaL_optnumber(L, 2, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*16, text));
+	}else if(lua_isnumber(L, 2) || lua_isnone(L, 2)){
+		size = luaL_optnumber(L, 2, 1.0f);
+		lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+	}else{
+		return luaL_typerror(L, 2, "number or font");
+	}
 	return 1;
 }
 
 static int lua_textheight(lua_State *L){
 	const char *text = luaL_checkstring(L, 1);
-	float size = luaL_optnumber(L, 2, 1.0f);
-	lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+	float size;
+	Font *font;
+	if(lua_isuserdata(L, 5)){
+		font = (Font *)luaL_checkudata(L, 5, "font");
+		size = luaL_optnumber(L, 6, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*16, text));
+	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6))){
+		font = (Font *)luaL_checkudata(L, 6, "font");
+		size = luaL_optnumber(L, 5, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*16, text));
+	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
+		size = luaL_optnumber(L, 5, 1.0f);
+		lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+	}else{
+		return luaL_typerror(L, 5, "number or font");
+	}
 	return 1;
 }
 
@@ -1483,6 +1508,16 @@ int lua_imageload(lua_State *L) {
     return 1;
 }
 
+int lua_screenimage(lua_State *L) {
+    Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+
+	image->tex = vita2d_get_current_fb();
+    
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
 static int lua_imagedraw(lua_State *L){
 	int argc = lua_gettop(L);
 	Image *image = (Image *)luaL_checkudata(L, 1, "image");
@@ -1494,6 +1529,24 @@ static int lua_imagedraw(lua_State *L){
 	}else{
 		color = (Color *)luaL_checkudata(L, 4, "color");
 		vita2d_draw_texture_tint(image->tex, x, y, color->color);
+	}
+	//vita2d_free_texture(image);
+	return 0;
+}
+
+static int lua_imagescaledraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+	float scalex = luaL_checknumber(L, 4);
+	float scaley = luaL_checknumber(L, 5);
+	Color *color;
+	if(argc <= 5){
+		vita2d_draw_texture_scale(image->tex, x, y, scalex, scaley);
+	}else{
+		color = (Color *)luaL_checkudata(L, 6, "color");
+		vita2d_draw_texture_tint_scale(image->tex, x, y, scalex, scaley, color->color);
 	}
 	//vita2d_free_texture(image);
 	return 0;
@@ -1521,7 +1574,9 @@ int lua_imagegc(lua_State *L) {
 
 static const struct luaL_Reg image_lib[] = {
     {"load", lua_imageload},
+	{"screen", lua_screenimage},
     {"display", lua_imagedraw},
+	{"scaledisplay", lua_imagescaledraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
     {NULL, NULL}
@@ -1529,6 +1584,7 @@ static const struct luaL_Reg image_lib[] = {
 
 static const struct luaL_Reg image_methods[] = {
     {"display", lua_imagedraw},
+	{"scaledisplay", lua_imagescaledraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
     {NULL, NULL}
@@ -1551,6 +1607,7 @@ void luaL_openimage(lua_State *L) {
 static int lua_loadfont(lua_State *L){
 	const char *filename = luaL_checkstring(L, 1);
     Font *font = (Font *)lua_newuserdata(L, sizeof(Font));
+	memset(font, 0, sizeof(Font));
 	if(file_exists(filename)){
 		if(string_ends_with(filename, ".pgf")){
 			font->pgf = vita2d_load_custom_pgf(filename);
@@ -1573,11 +1630,11 @@ static int lua_loadfont(lua_State *L){
 
 static int lua_fontgc(lua_State *L){
 	Font *font = (Font *)luaL_checkudata(L, 1, "font");
-    if (font->pgf) {
+    if (font->pgf != NULL) {
         vita2d_free_pgf(font->pgf);
-    }else if(font->pvf){
+    }else if(font->pvf != NULL){
 		vita2d_free_pvf(font->pvf);
-	}else if(font->font){
+	}else if(font->font != NULL){
 		vita2d_free_font(font->font);
 	}
 	return 0;
@@ -1802,498 +1859,6 @@ void luaL_opencontrols(lua_State *L) {
 	luaL_pushglobalint(L, SCE_CTRL_HEADPHONE);
 }
 
-static int lua_fileexist(lua_State *L){
-	const char* path = luaL_checkstring(L, 1);
-	if (file_exists(path)) lua_pushboolean(L, true);
-	else lua_pushboolean(L, false);
-	return 1;
-}
-
-static int lua_newfolder(lua_State *L){
-	const char* path = luaL_checkstring(L, 1);
-	if(!file_exists(path)){
-		char dirname[512];
-		memset(dirname, 0x00, sizeof(dirname));
-
-		for(int i = 0; i < strlen(path); i++) {
-			if(path[i] == '/' || path[i] == '\\') {
-				memset(dirname, 0, sizeof(dirname));
-				strncpy(dirname, path, i);
-
-				if(!file_exists(dirname)){
-					sceIoMkdir(dirname, 0777);
-				}	
-			}
-		}
-
-		sceIoMkdir(path, 0777);
-	}
-	return 0;
-}
-
-static int lua_readsfo(lua_State *L) {
-    const char *path = luaL_checkstring(L, 1);
-
-    SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
-    if (fd < 0)
-        return luaL_error(L, "Failed to open .SFO");
-
-    int file_size = sceIoLseek(fd, 0, SCE_SEEK_END);
-    sceIoLseek(fd, 0, SCE_SEEK_SET);
-
-    void *buffer = malloc(file_size);
-    if (!buffer) {
-        sceIoClose(fd);
-        return luaL_error(L, "Failed to allocate memory");
-    }
-
-    sceIoRead(fd, buffer, file_size);
-    sceIoClose(fd);
-
-    SFOHeader *header = (SFOHeader *)buffer;
-    if (memcmp(header->magic, "\0PSF", 4) != 0) {
-        free(buffer);
-        return luaL_error(L, "Invalid .SFO magic");
-    }
-
-    SFOEntry *entries = (SFOEntry *)(buffer + sizeof(SFOHeader));
-    const char *key_table = (const char *)buffer + header->key_table_offset;
-    const char *data_table = (const char *)buffer + header->data_table_offset;
-
-    lua_newtable(L);
-
-    for (int i = 0; i < header->tables_entries; i++) {
-        const char *key = key_table + entries[i].key_offset;
-        const void *data = data_table + entries[i].data_offset;
-
-        if (entries[i].param_fmt == 0x0204) { // string
-            lua_pushstring(L, (const char *)data);
-        } else if (entries[i].param_fmt == 0x0404) { // int32
-            uint32_t value;
-            memcpy(&value, data, sizeof(uint32_t));
-            lua_pushinteger(L, value);
-        } else {
-            lua_pushnil(L); // unsupported type
-        }
-
-        lua_setfield(L, -2, key);
-    }
-
-    free(buffer);
-    return 1;
-}
-
-static void push_datetime(lua_State *L, const SceDateTime *dt) {
-    char buffer[20];
-    snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d",
-             dt->year, dt->month, dt->day,
-             dt->hour, dt->minute, dt->second);
-    lua_pushstring(L, buffer);
-}
-
-static int lua_list(lua_State *L) {
-    const char *path = luaL_checkstring(L, 1);
-    SceUID dir = sceIoDopen(path);
-    if (dir < 0) {
-        lua_pushnil(L);
-        return 1;
-    }
-
-    lua_newtable(L); // files table
-    int i = 1;
-
-    SceIoDirent dirent;
-    while (1) {
-        memset(&dirent, 0, sizeof(SceIoDirent));
-        int res = sceIoDread(dir, &dirent);
-        if (res <= 0) break;
-
-        lua_newtable(L); // single file entry
-
-        lua_pushstring(L, dirent.d_name);
-        lua_setfield(L, -2, "name");
-
-		char fullpath[1024];
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", path, dirent.d_name);
-		lua_pushstring(L, fullpath);
-        lua_setfield(L, -2, "path");
-
-        lua_pushboolean(L, SCE_S_ISDIR(dirent.d_stat.st_mode));
-        lua_setfield(L, -2, "isafolder");
-
-		push_datetime(L, &dirent.d_stat.st_ctime);
-        lua_setfield(L, -2, "created");
-
-        push_datetime(L, &dirent.d_stat.st_atime);
-        lua_setfield(L, -2, "accessed");
-
-        push_datetime(L, &dirent.d_stat.st_mtime);
-        lua_setfield(L, -2, "modified");
-
-        lua_pushinteger(L, dirent.d_stat.st_size);
-        lua_setfield(L, -2, "size");
-
-        lua_rawseti(L, -2, i++);
-    }
-
-    sceIoDclose(dir);
-    return 1;
-}
-
-static int lua_editsfo(lua_State *L) {
-    const char *path = luaL_checkstring(L, 1);
-    const char *param = luaL_checkstring(L, 2);
-
-    // Get the new value (could be string or number)
-    int value_type = lua_type(L, 3);
-
-    // Open file
-    SceUID fd = sceIoOpen(path, SCE_O_RDWR, 0);
-    if (fd < 0)
-        return luaL_error(L, "Failed to open .SFO for writing");
-
-    int file_size = sceIoLseek(fd, 0, SCE_SEEK_END);
-    sceIoLseek(fd, 0, SCE_SEEK_SET);
-
-    void *buffer = malloc(file_size);
-    if (!buffer) {
-        sceIoClose(fd);
-        return luaL_error(L, "Failed to allocate memory");
-    }
-
-    sceIoRead(fd, buffer, file_size);
-
-    SFOHeader *header = (SFOHeader *)buffer;
-    SFOEntry *entries = (SFOEntry *)(buffer + sizeof(SFOHeader));
-    char *key_table = (char *)buffer + header->key_table_offset;
-    char *data_table = (char *)buffer + header->data_table_offset;
-
-    int found = 0;
-
-    for (int i = 0; i < header->tables_entries; i++) {
-        const char *key = key_table + entries[i].key_offset;
-
-        if (strcmp(key, param) == 0) {
-            char *data = data_table + entries[i].data_offset;
-
-            if (entries[i].param_fmt == 0x0204) { // string
-                if (value_type != LUA_TSTRING) {
-                    free(buffer);
-                    sceIoClose(fd);
-                    return luaL_error(L, "Expected a string value for parameter '%s'", param);
-                }
-                const char *newstr = lua_tostring(L, 3);
-                memset(data, 0, entries[i].param_max_len); // clear
-                strncpy(data, newstr, entries[i].param_max_len - 1);
-                found = 1;
-                break;
-            } else if (entries[i].param_fmt == 0x0404) { // int32
-                if (!lua_isnumber(L, 3)) {
-                    free(buffer);
-                    sceIoClose(fd);
-                    return luaL_error(L, "Expected an integer value for parameter '%s'", param);
-                }
-                uint32_t intval = (uint32_t)lua_tonumber(L, 3);
-                memcpy(data, &intval, sizeof(uint32_t));
-                found = 1;
-                break;
-            } else {
-                free(buffer);
-                sceIoClose(fd);
-                return luaL_error(L, "Unsupported .SFO field type for '%s'", param);
-            }
-        }
-    }
-
-    if (!found) {
-        free(buffer);
-        sceIoClose(fd);
-        return luaL_error(L, "Parameter '%s' not found in .SFO", param);
-    }
-
-    sceIoLseek(fd, 0, SCE_SEEK_SET);
-    sceIoWrite(fd, buffer, file_size);
-
-    sceIoClose(fd);
-    free(buffer);
-
-    return 0;
-}
-
-static int lua_deletefolder(lua_State *L){
-	const char* folder = luaL_checkstring(L, 1);
-	sceIoRmdir(folder);
-	return 0;
-}
-
-const char *get_filename(const char *path) {
-    const char *slash = strrchr(path, '/');
-    if (slash)
-        return slash + 1;
-    else
-        return path;
-}
-
-void get_directory(const char *path, char *out_dir, size_t out_size) {
-    const char *last_slash = strrchr(path, '/');
-    if (last_slash) {
-        size_t len = last_slash - path;
-        if (len >= out_size)
-            len = out_size - 1;
-        strncpy(out_dir, path, len);
-        out_dir[len] = '\0';
-    } else {
-        // No slash found, return empty string
-        out_dir[0] = '\0';
-    }
-}
-
-static int lua_getfilename(lua_State *L) {
-    const char *path = luaL_checkstring(L, 1);
-    const char *filename = get_filename(path);
-    lua_pushstring(L, filename);
-    return 1;
-}
-
-static int lua_getfolder(lua_State *L) {
-    const char *path = luaL_checkstring(L, 1);
-    char dir[512];
-    get_directory(path, dir, sizeof(dir));
-    lua_pushstring(L, dir);
-    return 1;
-}
-
-static int lua_sha1(lua_State *L){
-	const char *path = luaL_checkstring(L, 1);
-	uint8_t sha1out[20];
-	// Set up SHA1 context
-  	SHA1_CTX ctx;
- 	sha1_init(&ctx);
-
-  	SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
-  	if (fd < 0) lua_pushnil(L);
-
-  	// Open up the buffer for copying data into
-  	void *buf = memalign(4096, (128 * 1024));
-
-  	// Actually take the SHA1 sum
-  	while (1) {
-    	int read = sceIoRead(fd, buf, (128 * 1024));
-
-    	if (read < 0) {
-      		free(buf);
-      		sceIoClose(fd);
-      		lua_pushnil(L);
-			return 1;
-    	}
-
-    	if (read == 0)
-      		break;
-
-    	sha1_update(&ctx, buf, read);
-	}
-
-	sha1_final(&ctx, sha1out);
-
-  	// Free up file buffer
-  	free(buf);
-
-  	// Close file properly
-  	sceIoClose(fd);
-
-	char sha1msg[42];
-  	memset(sha1msg, 0, sizeof(sha1msg));
-
-  	// Construct SHA1 sum string
-  	int i;
-  	for (i = 0; i < 20; i++) {
-    	char string[4];
-    	sprintf(string, "%02X", sha1out[i]);
-    	strcat(sha1msg, string);
-  	}
-
-  	//sha1msg[41] = '\0';
-
-	lua_pushstring(L, sha1msg);
-
-	return 1;
-}
-
-static int lua_crc32(lua_State *L) {
-	uLong crc = crc32(0L, Z_NULL, 0);
-    const char *str = luaL_checkstring(L, 1);
-	uInt len = strlen(str);
-    crc = crc32(crc, (const Bytef *)str, len);
-    lua_pushnumber(L, crc);
-    return 1;
-}
-
-static const struct luaL_Reg io_lib[] = {
-	{"readsfo", lua_readsfo},
-	{"editsfo", lua_editsfo},
-	{"exists", lua_fileexist},
-	{"newfolder", lua_newfolder},
-	{"deletefolder", lua_deletefolder},
-	{"list", lua_list},
-	{"pathstrip", lua_getfilename},
-	{"filestrip", lua_getfolder},
-	{"sha1", lua_sha1},
-	{"crc32", lua_crc32},
-    {NULL, NULL}
-};
-
-void luaL_extendio(lua_State *L) {
-	lua_getglobal(L, "io");
-	if (!lua_istable(L, -1)) {
-		lua_pop(L, 1);
-		lua_newtable(L);
-		lua_setglobal(L, "io");
-		lua_getglobal(L, "io");
-	}
-
-	luaL_setfuncs(L, io_lib, 0);
-	lua_pop(L, 1);
-}
-
-static int lua_ftp(lua_State *L){
-	bool enable = lua_toboolean(L, 1);
-	if (enable){
-		if (vita_port == 0){
-			ftpvita_init(vita_ip, &vita_port);
-			lua_newtable(L);
-			lua_pushstring(L, vita_ip);
-			lua_setfield(L, -2, "ip");
-			lua_pushinteger(L, vita_port);
-			lua_setfield(L, -2, "port");
-		}else{
-			return luaL_error(L, "FTP was already started once");
-		}
-	}else{
-		if (vita_port != 0) {
-			ftpvita_fini();
-			vita_port = 0;
-			return 0;
-		}else{
-			return luaL_error(L, "FTP was already finished once");
-		}
-	}
-	return 1;
-}
-
-static int lua_ftp_add(lua_State *L){
-	if (vita_port != 0){
-		const char* device = luaL_checkstring(L, 1);
-		ftpvita_add_device(device);
-	}else{
-		return luaL_error(L, "FTP isn't running");
-	}
-	return 1;
-}
-
-static int lua_ftp_del(lua_State *L){
-	if (vita_port != 0){
-		const char* device = luaL_checkstring(L, 1);
-		ftpvita_del_device(device);
-	}else{
-		return luaL_error(L, "FTP isn't running");
-	}
-	return 1;
-}
-
-static int lua_wifi(lua_State *L){
-	int state;
-	sceNetCtlInetGetState(&state);
-	lua_pushboolean(L, state);
-	return 1;
-}
-
-static int lua_ip(lua_State *L){
-	SceNetCtlInfo info;
-	if (sceNetCtlInetGetInfo(SCE_NETCTL_INFO_GET_IP_ADDRESS, &info) < 0) strcpy(vita_ip, "127.0.0.1");
-	else strcpy(vita_ip, info.ip_address);
-	lua_pushstring(L, vita_ip);
-	return 1;
-}
-
-static int lua_mac(lua_State *L) {
-	SceNetEtherAddr mac;
-	char macAddress[32];
-	sceNetGetMacAddress(&mac, 0);	
-	sprintf(macAddress, "%02X:%02X:%02X:%02X:%02X:%02X", mac.data[0], mac.data[1], mac.data[2], mac.data[3], mac.data[4], mac.data[5]);
-	lua_pushstring(L, macAddress);
-	return 1;
-}
-
-static int lua_download(lua_State *L){
-	const char *url = luaL_checkstring(L, 1);
-	const char *path = luaL_checkstring(L, 2);
-	const char *template = luaL_optstring(L, 3, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
-	int tpl = sceHttpCreateTemplate(template, SCE_HTTP_VERSION_1_1, SCE_TRUE);
-	if(tpl < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-	int conn = sceHttpCreateConnectionWithURL(tpl, url, SCE_TRUE);
-	if(conn < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-
-	int req = sceHttpCreateRequestWithURL(conn, SCE_HTTP_METHOD_GET, url, 0);
-	if(req < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-
-	int res = sceHttpSendRequest(req, NULL, 0);
-	if(res < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-
-	int fh = sceIoOpen(path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
-	unsigned char data[16*1024];
-	int read;
-	int luaread = 0, luawrote = 0;
-	uint64_t size = 0;
-	sceHttpGetResponseContentLength(req, &size);
-
-	// read data until finished
-	while ((read = sceHttpReadData(req, &data, sizeof(data))) > 0) {
-		//psvDebugScreenPrintf("read %d bytes\n", read);
-
-		// writing the count of read bytes from the data buffer to the file
-		int written = sceIoWrite(fh, data, read);
-		//psvDebugScreenPrintf("wrote %d bytes\n", write);
-		lua_getglobal(L, "LifeLuaNetworkDownload");
-		if (lua_isfunction(L, -1)) {
-			lua_pushnumber(L, luaread+=read);
-			lua_pushnumber(L, luawrote+=written);
-			lua_pushnumber(L, size);
-			lua_pushnumber(L, read);
-			lua_pushnumber(L, written);
-			if (lua_pcall(L, 5, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
-		}
-	}
-	sceIoClose(fh);
-	return 1;
-}
-
-static const struct luaL_Reg network_lib[] = {
-	{"ftp", lua_ftp},
-	{"ftpadddevice", lua_ftp_add},
-	{"ftpremovedevice", lua_ftp_del},
-	{"wifi", lua_wifi},
-	{"ip", lua_ip},
-	{"mac", lua_mac},
-	{"download", lua_download},
-    {NULL, NULL}
-};
-
-void luaL_opennetwork(lua_State *L) {
-	luaL_openlib(L, "network", network_lib, 0);
-}
-
 void luaL_lifelua_dofile(lua_State *L){
 	bool error = false;
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
@@ -2411,7 +1976,7 @@ void luaL_extend(lua_State *L){
   							local mult = 10^(idp or 0)\n\
   							return math.floor(num * mult + 0.5) / mult\n\
 						end\n\
-						end");
+						function math.inrange(num, min, max) return num >= min and num <= max end");
 }
 
 int main(){
