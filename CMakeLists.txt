@@ -31,8 +31,8 @@ set(VITA_VERSION  "00.00")
 
 ## Flags and includes for building
 # Note that we make sure not to overwrite previous flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -fno-lto")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wl,-q -g -fno-lto")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11 -fno-exceptions")
 # Optional. You can specify more param.sfo flags this way.
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
@@ -53,6 +53,8 @@ link_directories(
 add_executable(${PROJECT_NAME}
   src/main.c
   src/lj_lifetimer.c
+  src/lj_lifeio.c
+  src/lj_lifenetwork.c
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/include/ftpvita.c
@@ -97,6 +99,7 @@ target_link_libraries(${PROJECT_NAME}
     ScePower_stub
     SceAudio_stub
     SceHid_stub
+    SceUdcd_stub
     SceAVConfig_stub
     luajit-5.1
     dl
