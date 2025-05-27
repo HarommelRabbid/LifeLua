@@ -3,6 +3,9 @@
 	by Harommel OddSock
 */
 
+#ifndef LJ_LIFEINIT_H
+#define LJ_LIFEINIT_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,15 +34,24 @@
 extern "C" {
 #endif
 
+extern char vita_ip[16];
+extern unsigned short int vita_port;
+
 int string_ends_with(const char * str, const char * suffix);
+
+int file_exists(const char* path);
 
 void utf2ascii(char* dst, uint16_t* src);
 
 void ascii2utf(uint16_t* dst, char* src);
 
 void luaL_opentimer(lua_State *L);
+void luaL_extendio(lua_State *L);
+void luaL_opennetwork(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
