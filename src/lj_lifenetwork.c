@@ -1,6 +1,6 @@
 /*
-	LifeLua WIP, a PS Vita LuaJIT interpreter
-	by Harommel OddSock
+    LifeLua WIP
+    Network library
 */
 
 #include <stdio.h>
