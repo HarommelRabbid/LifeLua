@@ -57,6 +57,11 @@ static int lua_ftp(lua_State *L){
 	return 1;
 }
 
+static int lua_ftpinit(lua_State *L){
+	lua_pushboolean(L, ftpvita_is_initialized());
+	return 1;
+}
+
 static int lua_ftp_add(lua_State *L){
 	if (vita_port != 0){
 		const char* device = luaL_checkstring(L, 1);
@@ -158,6 +163,7 @@ static int lua_download(lua_State *L){
 
 static const struct luaL_Reg network_lib[] = {
 	{"ftp", lua_ftp},
+    {"ftpinit", lua_ftpinit},
 	{"ftpadddevice", lua_ftp_add},
 	{"ftpremovedevice", lua_ftp_del},
 	{"wifi", lua_wifi},

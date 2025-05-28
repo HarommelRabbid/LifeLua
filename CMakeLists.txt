@@ -51,10 +51,11 @@ link_directories(
 ## Build and link
 # Add all the files needed to compile here
 add_executable(${PROJECT_NAME}
-  src/main.c
+  src/lj_lifemain.c
   src/lj_lifetimer.c
   src/lj_lifeio.c
   src/lj_lifenetwork.c
+  src/lj_lifecontrols.c
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/include/ftpvita.c
