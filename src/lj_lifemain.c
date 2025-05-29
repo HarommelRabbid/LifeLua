@@ -237,7 +237,7 @@ static int lua_unsafe(lua_State *L){
 }
 
 static int lua_bootparams(lua_State *L) {
-	if (!unsafe) return luaL_error(L, "os.launchparams() requires unsafe mode to be activated from the HENkaku settings");
+	//if (!unsafe) return luaL_error(L, "os.launchparams() requires unsafe mode to be activated from the HENkaku settings");
 	char bootparams[1024];
 	bootparams[0] = 0;
 	sceAppMgrGetAppParam(bootparams);
