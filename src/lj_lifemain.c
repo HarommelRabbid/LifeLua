@@ -227,7 +227,7 @@ static int lua_exit(lua_State *L) {
 static int lua_uri(lua_State *L) {
 	const char *uri_string = luaL_checkstring(L, 1);
 	int flag = luaL_optinteger(L, 2, 0xFFFFF);
-	sceAppMgrLaunchAppByUri(flag, (char*)uri_string);
+	sceAppMgrLaunchAppByUri(flag, uri_string);
 	return 0;
 }
 
@@ -247,15 +247,16 @@ static int lua_bootparams(lua_State *L) {
 
 static int lua_shuttersound(lua_State *L) {
 	uint32_t type = (uint32_t)luaL_checkinteger(L, 1);
-	if ((type > 2) || (type < 0))
-		return luaL_error(L, "Invalid shutter ID");
+	/*if ((type > 2) || (type < 0))
+		return luaL_error(L, "Invalid shutter ID");*/
 	sceShutterSoundPlay(type);
 	return 0;
 }
 
 static int lua_selfexecute(lua_State *L){
 	const char* path = luaL_checkstring(L, 1);
-	sceAppMgrLoadExec(path, NULL, NULL);
+	const char* argv = luaL_optstring(L, 2, NULL);
+	sceAppMgrLoadExec(path, argv, NULL);
 	return 0;
 }
 
