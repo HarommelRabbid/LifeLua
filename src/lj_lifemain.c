@@ -1678,6 +1678,8 @@ void luaL_opencolor(lua_State *L) {
 void luaL_lifelua_dofile(lua_State *L){
 	bool error = false;
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
+		vita2d_end_drawing();
+    	vita2d_swap_buffers();
 		sceAppMgrSetInfobarState(SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, SCE_APPMGR_INFOBAR_COLOR_BLACK, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
 		error = true;
 		if (vita_port != 0) {
