@@ -20,11 +20,17 @@ SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK100;
 SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_UNK200;
 SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_MUSIC_PLAYER;
 SceShellUtilLockType SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2;
+/** @brief `INFOBAR_VISIBILITY_INVISIBLE` for short */
 SceAppMgrInfoBarVisibility SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE;
+/** @brief `INFOBAR_VISIBILITY_VISIBLE` for short */
 SceAppMgrInfoBarVisibility SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE;
+/** @brief `INFOBAR_COLOR_BLACK` for short */
 SceAppMgrInfoBarColor SCE_APPMGR_INFOBAR_COLOR_BLACK;
+/** @brief `INFOBAR_COLOR_WHITE` for short */
 SceAppMgrInfoBarColor SCE_APPMGR_INFOBAR_COLOR_WHITE;
+/** @brief `INFOBAR_TRANSPARENCY_OPAQUE` for short */
 SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE;
+/** @brief `INFOBAR_TRANSPARENCY_TRANSLUCENT` for short */
 SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT;
 /** 
  * Delay the app for a certain time
@@ -51,11 +57,15 @@ nil infobar(SceAppMgrInfoBarVisibility state, SceAppMgrInfoBarColor color, SceAp
 /** 
  * Locks some shell functionality (e. g. the PS button, the quick menu, the power off menu, USB connection etc.)
  * > [!note]
- * After `lock` has been defined, you can add as many `SceShellUtilLockType` values as you want as the next arguments
+ * After `lock` has been defined as a boolean, you can add as many `SceShellUtilLockType` values as you want as the next arguments
  * @par Example:
  * @code
  * os.lock(true, SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN, SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU, SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION)
  * @endcode
 */
 nil lock(boolean lock, SceShellUtilLockType type, ...) {}
+/** 
+ * Sends a notification
+*/
+nil notification(string text) {}
 /** @} */
