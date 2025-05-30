@@ -225,7 +225,7 @@
       <enums visible="yes" title=""/>
       <enumvalues visible="yes" title=""/>
       <functions visible="yes" title=""/>
-      <variables visible="yes" title=""/>
+      <variables visible="no" title=""/>
       <signals visible="yes" title=""/>
       <publicslots visible="yes" title=""/>
       <protectedslots visible="yes" title=""/>
