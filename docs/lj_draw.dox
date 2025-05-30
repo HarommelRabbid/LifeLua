@@ -55,6 +55,21 @@ nil vdoublegradientrect(number x, number y, number width, number height, color t
  * Draws a double horizontal gradient rectangle on the screen
 */
 nil hdoublegradientrect(number x, number y, number width, number height, color top, color center, color bottom) {}
+/** 
+ * Enables or disables clipping
+*/
+nil enableclip(boolean enable) {}
+/** 
+ * Clips a rectangle, useful for clipping text
+ * @par Example:
+ * @code
+ * draw.enableclip(true)
+ * draw.clip(0, 0, 25, 10)
+ * draw.text(0, 0 "This is some text", ...)
+ * draw.enableclip(false)
+ * @endcode
+*/
+nil cliprect(number x, number y, number width, number height) {}
 /** @} */
 
 /**
@@ -69,3 +84,29 @@ nil hdoublegradientrect(number x, number y, number width, number height, color t
 */
 color new(number r, number g, number b, number a) {}
 /** @} */
+
+/**
+ * @file
+ * @defgroup font font
+ * @brief Font library
+ * @{
+*/
+/** 
+ * Loads a font, can be a .PGF, .PVF, .TTF or a .WOFF
+*/
+font load(string path) {}
+/** @} */
+
+/*
+/**
+ * @file
+ * @defgroup image image
+ * @brief Image library
+ * @{
+*/
+/** 
+ * Loads an image, can be a .PNG, .BMP, or a .JPG/.JPEG
+*/
+image imageload(string path) {}
+/** @} */
+*/
