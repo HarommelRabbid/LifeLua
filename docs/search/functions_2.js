@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exit_0',['exit',['../group__os.html#ga1cd155f1a8f197288909c286ad6b327d',1,'lj_os.dox']]]
+  ['delay_0',['delay',['../group__os.html#ga7500ac0df3f17471561bde0a62a2155c',1,'lj_os.dox']]]
 ];

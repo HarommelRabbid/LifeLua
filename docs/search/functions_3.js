@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['gradientrect_0',['gradientrect',['../group__draw.html#ga1888b28477fb74906be082dcb34f169c',1,'lj_draw.dox']]]
+  ['enableclip_0',['enableclip',['../group__draw.html#gaa7e60d8b7e4128223e66eb5923990b91',1,'lj_draw.dox']]],
+  ['exit_1',['exit',['../group__os.html#ga1cd155f1a8f197288909c286ad6b327d',1,'lj_os.dox']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['inner_5fcam_0',['INNER_CAM',['../group___camera.html#ggaf7eb92b45c5f7f64f02821f87c385ebba7418c4028f5ea3c169bf0ece96e0f8d5',1,'lj_draw.c']]]
+  ['delay_0',['delay',['../group__os.html#gga3f3d2903c7f533d4714d065386a9e6e8a5e14a979358fed591dc52376e043d852',1,'lj_os.dox']]]
 ];

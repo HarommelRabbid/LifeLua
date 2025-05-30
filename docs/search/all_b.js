@@ -1,26 +1,5 @@
 var searchData=
 [
-  ['sce_5fappmgr_5finfobar_5fcolor_5fblack_0',['SCE_APPMGR_INFOBAR_COLOR_BLACK',['../group__os.html#gaf4a8ea0d8dc346fed83fdbab52396335',1,'lj_os.dox']]],
-  ['sce_5fappmgr_5finfobar_5fcolor_5fwhite_1',['SCE_APPMGR_INFOBAR_COLOR_WHITE',['../group__os.html#gac24f634d7cb1162d24c8eeac1743527a',1,'lj_os.dox']]],
-  ['sce_5fappmgr_5finfobar_5ftransparency_5fopaque_2',['SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE',['../group__os.html#gae46d761fc459a44478186bf069ff3e48',1,'lj_os.dox']]],
-  ['sce_5fappmgr_5finfobar_5ftransparency_5ftranslucent_3',['SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT',['../group__os.html#ga0cf439122c8388ff37e7f48cb9b14e4b',1,'lj_os.dox']]],
-  ['sce_5fappmgr_5finfobar_5fvisibility_5finvisible_4',['SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE',['../group__os.html#gab1d42e96019c197fc58c9bf8e5218763',1,'lj_os.dox']]],
-  ['sce_5fappmgr_5finfobar_5fvisibility_5fvisible_5',['SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE',['../group__os.html#gadad6cfcf406755b5fe835619030a1253',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fmc_5finserted_6',['SCE_SHELL_UTIL_LOCK_TYPE_MC_INSERTED',['../group__os.html#ga36b2986a9ec758fae09bedb24b8d01d1',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fmc_5fremoved_7',['SCE_SHELL_UTIL_LOCK_TYPE_MC_REMOVED',['../group__os.html#gae4ab7dcbd234583d0c470e9fc598347e',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fmusic_5fplayer_8',['SCE_SHELL_UTIL_LOCK_TYPE_MUSIC_PLAYER',['../group__os.html#gab8ee0954a2fc6481f8162d0eb0b76865',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fpoweroff_5fmenu_9',['SCE_SHELL_UTIL_LOCK_TYPE_POWEROFF_MENU',['../group__os.html#ga5bd4c6d9046641575d371bb5ae5b9455',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fps_5fbtn_10',['SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN',['../group__os.html#ga5b1932b9c415d474ed6d9ea6c78150d0',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fps_5fbtn_5f2_11',['SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN_2',['../group__os.html#ga802ce9cc7656563e8572cd95eda5c163',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fquick_5fmenu_12',['SCE_SHELL_UTIL_LOCK_TYPE_QUICK_MENU',['../group__os.html#ga5f0bfeedc7b2ee6dc0329793a439d350',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5funk100_13',['SCE_SHELL_UTIL_LOCK_TYPE_UNK100',['../group__os.html#gaac2811a260f37f6fa205661e86c329f4',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5funk200_14',['SCE_SHELL_UTIL_LOCK_TYPE_UNK200',['../group__os.html#gaa0166c56a91c0b86f4a66cf6d1646127',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5funk8_15',['SCE_SHELL_UTIL_LOCK_TYPE_UNK8',['../group__os.html#gad71e26b1da9cf590af1665e92dff0fed',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5funk80_16',['SCE_SHELL_UTIL_LOCK_TYPE_UNK80',['../group__os.html#ga37b25dc4ec0a4c675b5b73ae25ffa520',1,'lj_os.dox']]],
-  ['sce_5fshell_5futil_5flock_5ftype_5fusb_5fconnection_17',['SCE_SHELL_UTIL_LOCK_TYPE_USB_CONNECTION',['../group__os.html#ga9ae74e288783d9d37316ebbcf21ca314',1,'lj_os.dox']]],
-  ['sce_5fshutter_5fsound_5ftype_5fsave_5fimage_18',['SCE_SHUTTER_SOUND_TYPE_SAVE_IMAGE',['../group__os.html#ga6197596bb3564e50ea8b2203c122e2ee',1,'lj_os.dox']]],
-  ['sce_5fshutter_5fsound_5ftype_5fsave_5fvideo_5fend_19',['SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_END',['../group__os.html#gab2fa3d238542b40d4a602323877ba851',1,'lj_os.dox']]],
-  ['sce_5fshutter_5fsound_5ftype_5fsave_5fvideo_5fstart_20',['SCE_SHUTTER_SOUND_TYPE_SAVE_VIDEO_START',['../group__os.html#ga9a0329ad75ce23e8450945fad7b10d01',1,'lj_os.dox']]],
-  ['shuttersound_21',['shuttersound',['../group__os.html#ga9379e122ae6ec18f407b13be35f38199',1,'lj_os.dox']]],
-  ['swapbuffers_22',['swapbuffers',['../group__draw.html#ga46d891ce66f64810f4aee043cd8f2051',1,'lj_draw.dox']]]
+  ['pixel_0',['pixel',['../group__draw.html#ga1817944c0a62bfb3ad5b3fb299063168',1,'lj_draw.dox']]],
+  ['pressed_1',['pressed',['../group__controls.html#ga60906e198535713745498960f479a654',1,'lj_controls.dox']]]
 ];

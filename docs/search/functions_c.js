@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['uri_0',['uri',['../group__os.html#ga524406f87c9b7b5692ab0d714e2bbf57',1,'lj_os.dox']]]
+  ['shuttersound_0',['shuttersound',['../group__os.html#ga9379e122ae6ec18f407b13be35f38199',1,'lj_os.dox']]],
+  ['swapbuffers_1',['swapbuffers',['../group__draw.html#ga46d891ce66f64810f4aee043cd8f2051',1,'lj_draw.dox']]]
 ];

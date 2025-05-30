@@ -131,6 +131,10 @@ Functions</h2></td></tr>
 <tr class="separator:gab362bf48c23f1029785cf7ea353e1eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae5d2e95e08cb6f9259bf159960eff974" id="r_gae5d2e95e08cb6f9259bf159960eff974"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae5d2e95e08cb6f9259bf159960eff974">hdoublegradientrect</a> (number x, number y, number width, number height, color top, color center, color bottom)</td></tr>
 <tr class="separator:gae5d2e95e08cb6f9259bf159960eff974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa7e60d8b7e4128223e66eb5923990b91" id="r_gaa7e60d8b7e4128223e66eb5923990b91"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa7e60d8b7e4128223e66eb5923990b91">enableclip</a> (boolean enable)</td></tr>
+<tr class="separator:gaa7e60d8b7e4128223e66eb5923990b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00fad587bd01242e0e689cfc656c7086" id="r_ga00fad587bd01242e0e689cfc656c7086"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga00fad587bd01242e0e689cfc656c7086">cliprect</a> (number x, number y, number width, number height)</td></tr>
+<tr class="separator:ga00fad587bd01242e0e689cfc656c7086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Uses vita2d </p>
@@ -164,6 +168,60 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Draws a circle on the screen </p>
+
+</div>
+</div>
+<a id="ga00fad587bd01242e0e689cfc656c7086" name="ga00fad587bd01242e0e689cfc656c7086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga00fad587bd01242e0e689cfc656c7086">&#9670;&#160;</a></span>cliprect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil cliprect </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Clips a rectangle, useful for clipping text </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.enableclip(<span class="keyword">true</span>)</div>
+<div class="line">draw.clip(0, 0, 25, 10)</div>
+<div class="line">draw.text(0, 0 <span class="stringliteral">&quot;This is some text&quot;</span>, ...)</div>
+<div class="line">draw.enableclip(<span class="keyword">false</span>)</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gaa7e60d8b7e4128223e66eb5923990b91" name="gaa7e60d8b7e4128223e66eb5923990b91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa7e60d8b7e4128223e66eb5923990b91">&#9670;&#160;</a></span>enableclip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil enableclip </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Enables or disables clipping </p>
 
 </div>
 </div>

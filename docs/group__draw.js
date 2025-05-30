@@ -1,6 +1,8 @@
 var group__draw =
 [
     [ "circle", "group__draw.html#ga1940078da7aab1ce71e00011976faa8a", null ],
+    [ "cliprect", "group__draw.html#ga00fad587bd01242e0e689cfc656c7086", null ],
+    [ "enableclip", "group__draw.html#gaa7e60d8b7e4128223e66eb5923990b91", null ],
     [ "gradientrect", "group__draw.html#ga1888b28477fb74906be082dcb34f169c", null ],
     [ "hdoublegradientrect", "group__draw.html#gae5d2e95e08cb6f9259bf159960eff974", null ],
     [ "line", "group__draw.html#gad1fc018b66fe0e362d38b9f6987b91c2", null ],

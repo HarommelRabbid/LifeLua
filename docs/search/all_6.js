@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['license_0',['License',['../index.html#autotoc_md0',1,'']]],
-  ['lifelua_20documentation_1',['LifeLua Documentation',['../index.html',1,'']]],
-  ['line_2',['line',['../group__draw.html#gad1fc018b66fe0e362d38b9f6987b91c2',1,'lj_draw.dox']]],
-  ['lock_3',['lock',['../group__os.html#gac86b79dd133a6e971f191e9765870167',1,'lj_os.dox']]]
+  ['hdoublegradientrect_0',['hdoublegradientrect',['../group__draw.html#gae5d2e95e08cb6f9259bf159960eff974',1,'lj_draw.dox']]],
+  ['held_1',['held',['../group__controls.html#gab3f8c57f5f311f00f52321a3096335a8',1,'lj_controls.dox']]]
 ];
