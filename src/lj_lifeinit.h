@@ -41,6 +41,8 @@ extern SceCtrlData pad, oldpad;
 extern SceTouchData fronttouch, reartouch;
 extern SceMotionSensorState motion;
 
+extern bool unsafe;
+
 int string_ends_with(const char * str, const char * suffix);
 
 int file_exists(const char* path);
@@ -51,6 +53,7 @@ void ascii2utf(uint16_t* dst, char* src);
 
 void luaL_opentimer(lua_State *L);
 void luaL_extendio(lua_State *L);
+void luaL_extendos(lua_State *L);
 void luaL_opennetwork(lua_State *L);
 void luaL_opencontrols(lua_State *L);
 //void luaL_openjson(lua_State *L);
