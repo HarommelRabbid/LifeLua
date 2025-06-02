@@ -416,6 +416,26 @@ static int lua_crc32(lua_State *L) {
     return 1;
 }
 
+static int lua_workpath(lua_State *L) {
+    if(!lua_isnone(L, 1)){
+        const char *path = luaL_checkstring(L, 1);
+
+        // Try changing the working directory
+        if (chdir(path) != 0) {
+            return luaL_error(L, "Failed to change directory to: %s", path);
+        }
+
+        return 0; // no return value
+    }else{
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) == NULL) {
+            return luaL_error(L, "Failed to get current working directory");
+        }
+        lua_pushstring(L, cwd);
+        return 1;
+    }
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -427,6 +447,7 @@ static const struct luaL_Reg io_lib[] = {
 	{"filestrip", lua_getfolder},
 	{"sha1", lua_sha1},
 	{"crc32", lua_crc32},
+    {"workpath", lua_workpath},
     {NULL, NULL}
 };
 
