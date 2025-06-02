@@ -36,7 +36,6 @@ SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT;
  * Delay the app for a certain amount of time
  * @param seconds The number of seconds to delay (defaults to 0)
  */
-// NIL os.delay(number seconds)
 nil delay(number seconds) {}
 /** 
  * Exits the app
