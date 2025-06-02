@@ -18,13 +18,11 @@ nil text(number x, number y, string text, color color, number size, font font) {
 /** 
  * Gets the text width as displayed on the screen
  * @param size: The size argument can be also a font, if so, then the size will be the next argument
- * @return Text height
 */
 number textwidth(string text, number size, font font) {}
 /** 
  * Gets the text height as displayed on the screen
  * @param size: The size argument can be also a font, if so, then the size will be the next argument
- * @return Text height
 */
 number textheight(string text, number size, font font) {}
 /** 
@@ -97,7 +95,6 @@ color new(number r, number g, number b, number a) {}
 font load(string path) {}
 /** @} */
 
-/*
 /**
  * @file
  * @defgroup image image
@@ -109,4 +106,3 @@ font load(string path) {}
 */
 image imageload(string path) {}
 /** @} */
-*/

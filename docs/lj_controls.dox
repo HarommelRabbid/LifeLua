@@ -58,7 +58,7 @@ boolean check(SceCtrlButtons button) {}
 SceCtrlButtons cancelbutton() {}
 /** 
  * Gets the accept button
- * @return SCE_CTRL_CROSSS or SCE_CTRL_CIRCLE
+ * @return SCE_CTRL_CROSS or SCE_CTRL_CIRCLE
 */
 SceCtrlButtons acceptbutton() {}
 /** 
