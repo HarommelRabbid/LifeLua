@@ -24,4 +24,5 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"Libraries",url:"topics.html"}]}
+{text:"Libraries",url:"topics.html"},
+{text:"Examples",url:"examples.html"}]}

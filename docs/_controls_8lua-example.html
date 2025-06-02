@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LifeLua: Test List</title>
+<title>LifeLua: Controls.lua</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;20-05-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;30-05-2025</span>
    </div>
    <div id="projectbrief">Documentation for LifeLua</div>
   </td>
@@ -72,7 +72,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('test.html',''); initResizable(true); });
+$(function(){initNavTree('_controls_8lua-example.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,16 +97,33 @@ $(function(){initNavTree('test.html',''); initResizable(true); });
 </div>
 </div>
 
-<div><div class="header">
-  <div class="headertitle"><div class="title">Test List</div></div>
+<div class="header">
+  <div class="headertitle"><div class="title">Controls.lua</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="reflist">
-<dt>Module <a class="el" href="group__draw.html">draw</a>  </dt>
-<dd><a class="anchor" id="_test000001"></a>hello </dd>
-</dl>
-</div></div><!-- contents -->
-</div><!-- PageDoc -->
+<div class="fragment"><div class="line">white = color.new(255, 255, 255) -- no need to define the same thing multiple times</div>
+<div class="line">while true do</div>
+<div class="line">    controls.update()</div>
+<div class="line">    lx, ly = controls.leftanalog()</div>
+<div class="line">    rx, ry = controls.rightanalog()</div>
+<div class="line">    acc, gyro = controls.accelerometer(), controls.gyroscope()</div>
+<div class="line">    fronttouch, reartouch = controls.fronttouch(), controls.reartouch()</div>
+<div class="line">    draw.text(10, 10, &quot;Cross &quot;..tostring(controls.pressed(SCE_CTRL_CROSS)):gsub(&quot;true&quot;, &quot;pressed&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t pressed&quot;), white)</div>
+<div class="line">    draw.text(10, 30, &quot;Square &quot;..tostring(controls.held(SCE_CTRL_SQUARE)):gsub(&quot;true&quot;, &quot;held&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t held&quot;), white)</div>
+<div class="line">    draw.text(10, 50, &quot;Circle &quot;..tostring(controls.pressed(SCE_CTRL_CIRCLE)):gsub(&quot;true&quot;, &quot;released&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t released&quot;), white)</div>
+<div class="line">    draw.text(10, 70, &quot;Left analog stick: X: &quot;..lx..&quot;, Y:&quot;..ly, white)</div>
+<div class="line">    draw.text(10, 90, &quot;Right analog stick: X: &quot;..rx..&quot;, Y:&quot;..ry, white)</div>
+<div class="line">    draw.text(10, 110, &quot;Accelerometer: X: &quot;..acc.x..&quot; Y: &quot;..acc.y..&quot; Z: &quot;..acc.z, white)</div>
+<div class="line">    draw.text(10, 130, &quot;Gyroscope: X: &quot;..gyro.x..&quot; Y: &quot;..gyro.y..&quot; Z: &quot;..gyro.z, white)</div>
+<div class="line">    for i=1, #reartouch do</div>
+<div class="line">        draw.circle(reartouch[i].x, reartouch[i].y, 35, blue)</div>
+<div class="line">    end</div>
+<div class="line">    for i=1, #fronttouch do</div>
+<div class="line">        draw.circle(fronttouch[i].x, fronttouch[i].y, 35, white)</div>
+<div class="line">    end</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
