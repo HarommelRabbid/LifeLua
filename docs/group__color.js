@@ -1,4 +1,4 @@
 var group__color =
 [
-    [ "new", "group__color.html#ga0cb0f31a669033271a751a1879d9a176", null ]
+    [ "color.new", "group__color.html#ga8e6f48c98c84556e37616d1f5ac050cc", null ]
 ];

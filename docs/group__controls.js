@@ -1,16 +1,14 @@
 var group__controls =
 [
-    [ "accelerometer", "group__controls.html#ga04506fae667c6d392c24f8a16eb90c11", null ],
-    [ "acceptbutton", "group__controls.html#ga8f6626c2fbca718cb96d4e2c8d30543a", null ],
-    [ "cancelbutton", "group__controls.html#ga7f490e68a60da5ed17a39eb225a9cf8b", null ],
-    [ "check", "group__controls.html#ga0eca984a207c1b5a5a3b39bbc992d097", null ],
-    [ "fronttouch", "group__controls.html#ga0ddab6f30bc126c09201a5a65495084f", null ],
-    [ "gyroscope", "group__controls.html#gae3b814ab1ca9e54fc1f0cce81c4f2c19", null ],
-    [ "held", "group__controls.html#gab3f8c57f5f311f00f52321a3096335a8", null ],
-    [ "leftanalog", "group__controls.html#gab9c881bafdad5d3a762fdcb59b8ca320", null ],
-    [ "pressed", "group__controls.html#ga60906e198535713745498960f479a654", null ],
-    [ "reartouch", "group__controls.html#gac84bf56e88c14055a7ec5c69ee293a10", null ],
-    [ "released", "group__controls.html#ga4d85ecf139624312964e3222b56c605d", null ],
-    [ "rightanalog", "group__controls.html#gae1e184047395173e48813780a765b670", null ],
-    [ "update", "group__controls.html#gab2632b32208570d6ddb00205a64d9d9b", null ]
+    [ "controls.accelerometer", "group__controls.html#gaef4d3a099d76d2dd82a74eb8674ad9d9", null ],
+    [ "controls.check", "group__controls.html#ga28a3af35d2a6f433e218c88266e2c0fe", null ],
+    [ "controls.fronttouch", "group__controls.html#ga590c2839b488a29b0c22274bf44d9c5f", null ],
+    [ "controls.gyroscope", "group__controls.html#ga4bd576edc2be3e7a6c5a54264a015a02", null ],
+    [ "controls.held", "group__controls.html#ga658f662b18b96f5394f003cc40b20c90", null ],
+    [ "controls.leftanalog", "group__controls.html#ga5421461c6946ac9995f8701b6944dd46", null ],
+    [ "controls.pressed", "group__controls.html#gae726649b4905dd7204df840eec400f81", null ],
+    [ "controls.reartouch", "group__controls.html#gaf5546ab22da442a8be2c008ab894111c", null ],
+    [ "controls.released", "group__controls.html#ga636d420e4a25e096da37a17a8d0ff279", null ],
+    [ "controls.rightanalog", "group__controls.html#ga4b9d1633aadaa5a0bb461d8ffd6e44f3", null ],
+    [ "controls.update", "group__controls.html#ga66cefe5ee05c1466962114c8fff2431b", null ]
 ];

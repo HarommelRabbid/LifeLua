@@ -1,5 +1,17 @@
 var searchData=
 [
-  ['accelerometer_0',['accelerometer',['../group__controls.html#ga04506fae667c6d392c24f8a16eb90c11',1,'lj_controls.dox']]],
-  ['acceptbutton_1',['acceptbutton',['../group__controls.html#ga8f6626c2fbca718cb96d4e2c8d30543a',1,'lj_controls.dox']]]
+  ['color.new_0',['color.new',['../group__color.html#ga8e6f48c98c84556e37616d1f5ac050cc',1,'lj_draw.h']]],
+  ['color_1',['color',['../group__color.html',1,'']]],
+  ['controls.accelerometer_2',['controls.accelerometer',['../group__controls.html#gaef4d3a099d76d2dd82a74eb8674ad9d9',1,'lj_controls.h']]],
+  ['controls.check_3',['controls.check',['../group__controls.html#ga28a3af35d2a6f433e218c88266e2c0fe',1,'lj_controls.h']]],
+  ['controls.fronttouch_4',['controls.fronttouch',['../group__controls.html#ga590c2839b488a29b0c22274bf44d9c5f',1,'lj_controls.h']]],
+  ['controls.gyroscope_5',['controls.gyroscope',['../group__controls.html#ga4bd576edc2be3e7a6c5a54264a015a02',1,'lj_controls.h']]],
+  ['controls.held_6',['controls.held',['../group__controls.html#ga658f662b18b96f5394f003cc40b20c90',1,'lj_controls.h']]],
+  ['controls.leftanalog_7',['controls.leftanalog',['../group__controls.html#ga5421461c6946ac9995f8701b6944dd46',1,'lj_controls.h']]],
+  ['controls.pressed_8',['controls.pressed',['../group__controls.html#gae726649b4905dd7204df840eec400f81',1,'lj_controls.h']]],
+  ['controls.reartouch_9',['controls.reartouch',['../group__controls.html#gaf5546ab22da442a8be2c008ab894111c',1,'lj_controls.h']]],
+  ['controls.released_10',['controls.released',['../group__controls.html#ga636d420e4a25e096da37a17a8d0ff279',1,'lj_controls.h']]],
+  ['controls.rightanalog_11',['controls.rightanalog',['../group__controls.html#ga4b9d1633aadaa5a0bb461d8ffd6e44f3',1,'lj_controls.h']]],
+  ['controls.update_12',['controls.update',['../group__controls.html#ga66cefe5ee05c1466962114c8fff2431b',1,'lj_controls.h']]],
+  ['controls_13',['controls',['../group__controls.html',1,'']]]
 ];

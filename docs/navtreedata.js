@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "LifeLua", "index.html", [
     [ "LifeLua Documentation", "index.html", null ],
+    [ "Todo List", "todo.html", null ],
     [ "Libraries", "topics.html", "topics" ],
     [ "Examples", "examples.html", "examples" ]
   ] ]

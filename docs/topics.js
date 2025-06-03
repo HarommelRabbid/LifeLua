@@ -5,5 +5,8 @@ var topics =
     [ "color", "group__color.html", "group__color" ],
     [ "font", "group__font.html", "group__font" ],
     [ "image", "group__image.html", "group__image" ],
-    [ "os", "group__os.html", "group__os" ]
+    [ "io", "group__io.html", "group__io" ],
+    [ "math", "group__math.html", "group__math" ],
+    [ "os", "group__os.html", "group__os" ],
+    [ "table", "group__table.html", "group__table" ]
 ];

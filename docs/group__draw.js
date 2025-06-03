@@ -1,16 +1,16 @@
 var group__draw =
 [
-    [ "circle", "group__draw.html#ga1940078da7aab1ce71e00011976faa8a", null ],
-    [ "cliprect", "group__draw.html#ga00fad587bd01242e0e689cfc656c7086", null ],
-    [ "enableclip", "group__draw.html#gaa7e60d8b7e4128223e66eb5923990b91", null ],
-    [ "gradientrect", "group__draw.html#ga1888b28477fb74906be082dcb34f169c", null ],
-    [ "hdoublegradientrect", "group__draw.html#gae5d2e95e08cb6f9259bf159960eff974", null ],
-    [ "line", "group__draw.html#gad1fc018b66fe0e362d38b9f6987b91c2", null ],
-    [ "pixel", "group__draw.html#ga1817944c0a62bfb3ad5b3fb299063168", null ],
-    [ "rect", "group__draw.html#ga36d82f094ffe95e9fd56c94094a0f5e1", null ],
-    [ "swapbuffers", "group__draw.html#ga46d891ce66f64810f4aee043cd8f2051", null ],
-    [ "text", "group__draw.html#gae15141c771a01d254a75823ad2f5981e", null ],
-    [ "textheight", "group__draw.html#ga205ab4d51ea5735d7526c39d222dd9da", null ],
-    [ "textwidth", "group__draw.html#gaa8f1b02c5638d18396c0941933f57e0a", null ],
-    [ "vdoublegradientrect", "group__draw.html#gab362bf48c23f1029785cf7ea353e1eaa", null ]
+    [ "draw.circle", "group__draw.html#gad4924525978b3011935786fb7c214089", null ],
+    [ "draw.cliprect", "group__draw.html#gadd7dea97db4db19d8c9cdf1a34ea8fac", null ],
+    [ "draw.enableclip", "group__draw.html#gae997a12d36c849100a07b24b80a0b42d", null ],
+    [ "draw.gradientrect", "group__draw.html#ga93157a35e20bbe326436f845667044ab", null ],
+    [ "draw.hdoublegradientrect", "group__draw.html#gadd9f1c13c18c0016a75a0a7cf23a4dbe", null ],
+    [ "draw.line", "group__draw.html#gada9481b124d24c6ae394ba1d7c180901", null ],
+    [ "draw.pixel", "group__draw.html#ga36a0c1ea27ab8da394779a09eb3ea297", null ],
+    [ "draw.rect", "group__draw.html#ga84ba9beb6f78b2748266a821ee21b58c", null ],
+    [ "draw.swapbuffers", "group__draw.html#ga18669948830cc9b7f4f2c8320c258caf", null ],
+    [ "draw.text", "group__draw.html#gaf521cfc477a3fa4c98ed5b10438a603e", null ],
+    [ "draw.textheight", "group__draw.html#ga54d762db97215b915214d68949bd591d", null ],
+    [ "draw.textwidth", "group__draw.html#gaa63faab337734380228371ab18603478", null ],
+    [ "draw.vdoublegradientrect", "group__draw.html#ga87bd97838ec89b985fd538d1e50bd94a", null ]
 ];

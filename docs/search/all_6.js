@@ -1,5 +1,19 @@
 var searchData=
 [
-  ['hdoublegradientrect_0',['hdoublegradientrect',['../group__draw.html#gae5d2e95e08cb6f9259bf159960eff974',1,'lj_draw.dox']]],
-  ['held_1',['held',['../group__controls.html#gab3f8c57f5f311f00f52321a3096335a8',1,'lj_controls.dox']]]
+  ['os.delay_0',['os.delay',['../group__os.html#gab0b0a8035b901862633440effc414753',1,'lj_os.h']]],
+  ['os.exit_1',['os.exit',['../group__os.html#gaa5f633885f9b75b31d44c79c9aba7821',1,'lj_os.h']]],
+  ['os.infobar_2',['os.infobar',['../group__os.html#ga74617315eebed5a05a3a64c03c9064cf',1,'lj_os.h']]],
+  ['os.lock_3',['os.lock',['../group__os.html#ga295bf709298aaf34448cb894d233636f',1,'lj_os.h']]],
+  ['os.musicexport_4',['os.musicexport',['../group__os.html#ga254b01cc259eeaf2607929801822e278',1,'lj_os.h']]],
+  ['os.notification_5',['os.notification',['../group__os.html#gab8148050015b0f14022c5f98082db8c5',1,'lj_os.h']]],
+  ['os.photoexport_6',['os.photoexport',['../group__os.html#ga28e9899961b89cfcbb60e9455cb89b58',1,'lj_os.h']]],
+  ['os.restart_7',['os.restart',['../group__os.html#ga500538edc673871336c9320d8a8f7a8e',1,'lj_os.h']]],
+  ['os.shutdown_8',['os.shutdown',['../group__os.html#ga749a893aef68d337a5da3fd003f3b111',1,'lj_os.h']]],
+  ['os.shuttersound_9',['os.shuttersound',['../group__os.html#ga8b7d939ccca3c32f724f60fdfeb209c5',1,'lj_os.h']]],
+  ['os.standby_10',['os.standby',['../group__os.html#ga01530503bcf96250d92bbf00cf861f7d',1,'lj_os.h']]],
+  ['os.title_11',['os.title',['../group__os.html#ga0cbf47b918371dedab65243fed705f2c',1,'lj_os.h']]],
+  ['os.titleid_12',['os.titleid',['../group__os.html#ga337a9ca15478aa0fd03d32db96ce0716',1,'lj_os.h']]],
+  ['os.uri_13',['os.uri',['../group__os.html#gaeca6b50622a9568bb8b9818a3b4281e3',1,'lj_os.h']]],
+  ['os.videoexport_14',['os.videoexport',['../group__os.html#ga5342758af5b34d72c161bef924106567',1,'lj_os.h']]],
+  ['os_15',['os',['../group__os.html',1,'']]]
 ];

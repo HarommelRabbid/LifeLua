@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['hdoublegradientrect_0',['hdoublegradientrect',['../group__draw.html#gae5d2e95e08cb6f9259bf159960eff974',1,'lj_draw.dox']]],
-  ['held_1',['held',['../group__controls.html#gab3f8c57f5f311f00f52321a3096335a8',1,'lj_controls.dox']]]
+  ['table.find_0',['table.find',['../group__table.html#gad53bbb6c21636c0b7d43375bcf2ac915',1,'lj_table.h']]],
+  ['table.removefirst_1',['table.removefirst',['../group__table.html#ga67ede0520b3bdb4b2b24be9175060112',1,'lj_table.h']]]
 ];
