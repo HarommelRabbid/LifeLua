@@ -158,7 +158,7 @@ static int lua_line(lua_State *L) {
 
 static int lua_swapbuff(lua_State *L) {
 	Color *color;
-	if (lua_gettop(L) >= 1) color = (Color *)luaL_checkudata(L, 5, "color");
+	if (lua_gettop(L) >= 1) color = (Color *)luaL_checkudata(L, 1, "color");
     vita2d_end_drawing();
 	vita2d_common_dialog_update();
 	vita2d_wait_rendering_done();
@@ -477,19 +477,17 @@ static const struct luaL_Reg image_methods[] = {
 	{"scaledisplay", lua_imagescaledraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
+	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
 
 void luaL_openimage(lua_State *L) {
 	luaL_newmetatable(L, "image");
-    lua_pushcfunction(L, lua_imagegc);
-    lua_setfield(L, -2, "__gc");
-
-	lua_pushvalue(L, -1);
-    lua_setfield(L, -2, "__index");
-
-    luaL_setfuncs(L, image_methods, 0);
-    lua_pop(L, 1);
+	lua_pushstring(L, "__index");
+    lua_pushvalue(L, -2);  /* pushes the metatable */
+    lua_settable(L, -3);  /* metatable.__index = metatable */
+    
+    luaL_openlib(L, NULL, image_methods, 0);
 
 	luaL_openlib(L, "image", image_lib, 0);
 }
@@ -544,12 +542,66 @@ void luaL_openfont(lua_State *L){
 }
 
 static int lua_newcolor(lua_State *L) {
-	int r = luaL_checkinteger(L, 1);
-	int g = luaL_checkinteger(L, 2);
-	int b = luaL_checkinteger(L, 3);
-	int a = luaL_optinteger(L, 4, 255);
+	unsigned int r = luaL_checkinteger(L, 1);
+	unsigned int g = luaL_checkinteger(L, 2);
+	unsigned int b = luaL_checkinteger(L, 3);
+	unsigned int a = luaL_optinteger(L, 4, 255);
 	Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
-	color->color = RGBA8(r, g, b, a);
+	color->color = RGBA8(CLAMP(r, 0, 255), CLAMP(g, 0, 255), CLAMP(b, 0, 255), CLAMP(a, 0, 255));
+	luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
+	return 1;
+}
+
+static int lua_colorr(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+	lua_pushnumber(L, color->color & 0xFF);
+	return 1;
+}
+
+static int lua_colorg(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+	lua_pushnumber(L, (color->color >> 8) & 0xFF);
+	return 1;
+}
+
+static int lua_colorb(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+	lua_pushnumber(L, (color->color >> 16) & 0xFF);
+	return 1;
+}
+
+static int lua_colora(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+	lua_pushnumber(L, (color->color >> 24) & 0xFF);
+	return 1;
+}
+
+static int lua_coloradd(lua_State *L){
+	Color *color1 = (Color *)luaL_checkudata(L, 1, "color");
+	Color *color2 = (Color *)luaL_checkudata(L, 2, "color");
+
+	Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
+	color->color = RGBA8(
+		CLAMP((color1->color & 0xFF)+(color2->color & 0xFF), 0, 255), //r
+		CLAMP(((color1->color >> 8) & 0xFF)+((color2->color >> 8) & 0xFF), 0, 255), //g
+		CLAMP(((color1->color >> 16) & 0xFF)+((color2->color >> 16) & 0xFF), 0, 255), //b
+		CLAMP(((color1->color >> 24) & 0xFF)+((color2->color >> 24) & 0xFF), 0, 255));
+	luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
+	return 1;
+}
+
+static int lua_colorsub(lua_State *L){
+	Color *color1 = (Color *)luaL_checkudata(L, 1, "color");
+	Color *color2 = (Color *)luaL_checkudata(L, 2, "color");
+
+	Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
+	color->color = RGBA8(
+		CLAMP((color1->color & 0xFF)-(color2->color & 0xFF), 0, 255), //r
+		CLAMP(((color1->color >> 8) & 0xFF)-((color2->color >> 8) & 0xFF), 0, 255), //g
+		CLAMP(((color1->color >> 16) & 0xFF)-((color2->color >> 16) & 0xFF), 0, 255), //b
+		CLAMP(((color1->color >> 24) & 0xFF)-((color2->color >> 24) & 0xFF), 0, 255));
 	luaL_getmetatable(L, "color");
     lua_setmetatable(L, -2);
 	return 1;
@@ -557,11 +609,35 @@ static int lua_newcolor(lua_State *L) {
 
 static const struct luaL_Reg color_lib[] = {
     {"new", lua_newcolor},
+	{"r", lua_colorr},
+	{"g", lua_colorg},
+	{"b", lua_colorb},
+	{"a", lua_colora},
+	{"add", lua_coloradd},
+	{"sub", lua_colorsub},
+    {NULL, NULL}
+};
+
+static const struct luaL_Reg color_methods[] = {
+	{"r", lua_colorr},
+	{"g", lua_colorg},
+	{"b", lua_colorb},
+	{"a", lua_colora},
+	{"add", lua_coloradd},
+	{"sub", lua_colorsub},
+	{"__add", lua_coloradd},
+	{"__sub", lua_colorsub},
     {NULL, NULL}
 };
 
 void luaL_opencolor(lua_State *L) {
 	luaL_newmetatable(L, "color");
+	lua_pushstring(L, "__index");
+    lua_pushvalue(L, -2);  /* pushes the metatable */
+    lua_settable(L, -3);  /* metatable.__index = metatable */
+    
+    luaL_openlib(L, NULL, color_methods, 0);
+
 	luaL_openlib(L, "color", color_lib, 0);
 }
 
