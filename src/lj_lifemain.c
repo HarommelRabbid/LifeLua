@@ -870,6 +870,8 @@ int main(){
     sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
     sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
 	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
+    sqlite3_rw_init();
 	scePromoterUtilityInit();
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
@@ -913,6 +915,7 @@ int main(){
 	luaL_opentimer(L);
 	luaL_openimage(L);
 	luaL_openfont(L);
+	luaL_opensqlite3(L);
 	
 	vita2d_start_drawing();
     vita2d_clear_screen();
@@ -933,6 +936,7 @@ int main(){
 	sceHttpTerm();
 	sceNetCtlTerm();
 	sceNetTerm();
+	sqlite3_rw_exit();
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
@@ -943,6 +947,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_PHOTO_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
+    sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	sceAppUtilCacheUmount();

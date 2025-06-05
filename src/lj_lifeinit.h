@@ -57,6 +57,7 @@ void luaL_extendio(lua_State *L);
 void luaL_extendos(lua_State *L);
 void luaL_opennetwork(lua_State *L);
 void luaL_opencontrols(lua_State *L);
+void luaL_opensqlite3(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
 #endif

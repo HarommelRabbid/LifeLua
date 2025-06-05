@@ -54,8 +54,10 @@ add_executable(${PROJECT_NAME}
   src/lj_lifemain.c
   src/lj_lifetimer.c
   src/lj_lifeio.c
+  src/lj_lifeos.c
   src/lj_lifenetwork.c
   src/lj_lifecontrols.c
+  src/lj_lifesqlite.c
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/include/ftpvita.c
@@ -65,6 +67,7 @@ add_executable(${PROJECT_NAME}
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
     vita2d
+    sqlite
     SceLibJson_stub
     SceDisplay_stub
     SceGxm_stub
@@ -102,6 +105,7 @@ target_link_libraries(${PROJECT_NAME}
     SceHid_stub
     SceUdcd_stub
     SceAVConfig_stub
+    SceSqlite_stub
     luajit-5.1
     dl
     taihen_stub
