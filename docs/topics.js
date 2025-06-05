@@ -8,5 +8,6 @@ var topics =
     [ "io", "group__io.html", "group__io" ],
     [ "math", "group__math.html", "group__math" ],
     [ "os", "group__os.html", "group__os" ],
+    [ "sqlite3", "group__sqlite3.html", "group__sqlite3" ],
     [ "table", "group__table.html", "group__table" ]
 ];

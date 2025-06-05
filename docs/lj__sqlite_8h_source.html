@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LifeLua: LifeLua Documentation</title>
+<title>LifeLua: lj_sqlite.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('index.html',''); initResizable(true); });
+$(function(){initNavTree('lj__sqlite_8h_source.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -97,34 +97,29 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 </div>
 
-<div><div class="header">
-  <div class="headertitle"><div class="title">LifeLua Documentation </div></div>
+<div class="header">
+  <div class="headertitle"><div class="title">lj_sqlite.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo</a></b></dt><dd>Expand this page and finish documenting the libraries, and also fix the common dialog functions (IME, message, etc.) from crashing/not rendering often, send a pull request if you manage to fix it</dd></dl>
-<p>This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. Since this is an interpreter, you don't need any compilation, just modify Lua files and boom.</p>
-<p>It has a lot of customizability and also a lot of useful features. Since this is still a work in progress, don't expect a ton.</p>
-<p>Any other Lua function &amp;/or library that isn't documented here is documented in every Lua programming <a href="https://www.lua.org/manual/">documentation</a>.</p>
-<h2><a class="anchor" id="autotoc_md0"></a>
-License</h2>
-<p>LifeLua is released under the <a href="https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE">GPLv3 license</a>.</p>
-<dl class="section note"><dt>Note</dt><dd>When using the safe <code>eboot.bin</code> in your app instead of the unsafe one, you'll have a few limitations:<br  />
-<br  />
-<ul>
-<li>Can only open files inside of <b>ux0:/data</b> and <b>app0:/</b>.</li>
-<li>Cannot intercept the <b>SCE_CTRL_VOLUP</b>, <b>SCE_CTRL_VOLDOWN</b>, <b>SCE_CTRL_POWER</b>, <b>SCE_CTRL_PSBUTTON</b>, <b>SCE_CTRL_HEADPHONE</b> inputs.</li>
-</ul>
-</dd></dl>
-<hr  />
-<p>Source code: <a href="https://github.com/HarommelRabbid/LifeLua">https://github.com/HarommelRabbid/LifeLua</a><br  />
-</p>
-</div></div><!-- PageDoc -->
-<a href="doxygen_crawl.html"></a>
-</div><!-- contents -->
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>number SQLITE_OPEN_READONLY;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>number SQLITE_OPEN_READWRITE;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>number SQLITE_OPEN_CREATE;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>number SQLITE_OPEN_URI;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>number SQLITE_OPEN_NOMUTEX;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>number SQLITE_OPEN_FULLMUTEX;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0">   17</a></span>sqlite3 <a class="code hl_function" href="group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0">sqlite3․open</a>(<span class="keywordtype">string</span> path, number mode) {}</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="group__sqlite3.html#ga2cc873534b24f3514b6dc5a096b00bab">   21</a></span>nil <a class="code hl_function" href="group__sqlite3.html#ga2cc873534b24f3514b6dc5a096b00bab">sqlite3․query</a>(sqlite3 db, <span class="keywordtype">string</span> query) {}</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34">   25</a></span>nil <a class="code hl_function" href="group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34">sqlite3․close</a>(sqlite3 db) {}</div>
+<div class="ttc" id="agroup__sqlite3_html_ga2cc873534b24f3514b6dc5a096b00bab"><div class="ttname"><a href="group__sqlite3.html#ga2cc873534b24f3514b6dc5a096b00bab">sqlite3․query</a></div><div class="ttdeci">nil sqlite3․query(sqlite3 db, string query)</div><div class="ttdef"><b>Definition</b> lj_sqlite.h:21</div></div>
+<div class="ttc" id="agroup__sqlite3_html_ga73ecbcf17ba031f524567d9ecdae0bc0"><div class="ttname"><a href="group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0">sqlite3․open</a></div><div class="ttdeci">sqlite3 sqlite3․open(string path, number mode)</div><div class="ttdef"><b>Definition</b> lj_sqlite.h:17</div></div>
+<div class="ttc" id="agroup__sqlite3_html_gaab70791ebec5752c5605b6a8f911be34"><div class="ttname"><a href="group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34">sqlite3․close</a></div><div class="ttdeci">nil sqlite3․close(sqlite3 db)</div><div class="ttdef"><b>Definition</b> lj_sqlite.h:25</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><b>lj_sqlite.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
