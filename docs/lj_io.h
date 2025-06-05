@@ -26,6 +26,10 @@ boolean io․exists(string path) {}
  */
 nil io․newfolder(string path) {}
 /**
+ * Deletes a file or a folder
+ */
+nil io․delete(string path) {}
+/**
  * Reads a .SFO file
  * @return A table with the keys & values of the .SFO
  */
@@ -37,8 +41,8 @@ nil io․editsfo(string path) {}
 /**
  * Lists a directory
  * @return A list of tables that represent a file/folder with these keys:
- * * **"name"**: boolean
- * * **"path"**: boolean
+ * * **"name"**: string
+ * * **"path"**: string
  * * **"isafolder"**: boolean
  * * **"created"**: string
  * * **"modified"**: string
@@ -46,4 +50,12 @@ nil io․editsfo(string path) {}
  * * **"size"**: number
  */
 table io․list(string path) {}
+/**
+ * Strips the last file/directory from a path
+ */
+string io․filestrip(string path) {}
+/**
+ * Strips the files/directories from a path besides the last one
+ */
+string io․pathstrip(string path) {}
 /** @} */

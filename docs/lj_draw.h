@@ -73,6 +73,7 @@ nil draw․cliprect(number x, number y, number width, number height) {}
 /**
  * @file
  * @defgroup color color
+ * Method calling will work on most of the functions here (e. g. `color:a`, `color:sub`, etc.)
  * @brief Color library
  * @{
 */
@@ -81,6 +82,42 @@ nil draw․cliprect(number x, number y, number width, number height) {}
  * @param a: Alpha is optional, will default to 255 (maximum)
 */
 color color․new(number r, number g, number b, number a) {}
+/** 
+ * Gets or sets the red in a color
+ * @param r: Optional, new value for the red in the color
+*/
+number color․r(color color, number r) {}
+/** 
+ * Gets or sets the green in a color
+ * @param g: Optional, new value for the green in the color
+*/
+number color․g(color color, number g) {}
+/** 
+ * Gets or sets the blue in a color
+ * @param b: Optional, new value for the blue in the color
+*/
+number color․b(color color, number b) {}
+/** 
+ * Gets or sets the alpha in a color
+ * @param a: Optional, new value for the alpha in the color
+*/
+number color․a(color color, number a) {}
+/** 
+ * Sum 2 colors
+*/
+color color․add(color color1, color color2) {}
+/** 
+ * Subtract 2 colors
+*/
+color color․sub(color color1, color color2) {}
+/** 
+ * Blends 2 colors
+*/
+color color․blend(color color1, color color2) {}
+/** 
+ * Blends 2 colors by 2 percentages
+*/
+color color․mix(color color1, color color2, number p1, number p2) {}
 /** @} */
 
 /**
@@ -98,6 +135,7 @@ font font․load(string path) {}
 /**
  * @file
  * @defgroup image image
+ * Method calling will work on most of the functions here (e. g. `image:display`, `image:width`, etc.)
  * @brief Image library
  * @{
 */

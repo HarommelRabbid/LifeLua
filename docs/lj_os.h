@@ -1,6 +1,7 @@
 /**
  * @file
  * @defgroup os os
+ * @todo Add the rest of the functions & variables
  * @brief Lua OS library extension
  * @{
 */
