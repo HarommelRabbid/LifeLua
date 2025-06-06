@@ -1,19 +1,12 @@
 var searchData=
 [
-  ['os.delay_0',['os.delay',['../group__os.html#gab0b0a8035b901862633440effc414753',1,'lj_os.h']]],
-  ['os.exit_1',['os.exit',['../group__os.html#gaa5f633885f9b75b31d44c79c9aba7821',1,'lj_os.h']]],
-  ['os.infobar_2',['os.infobar',['../group__os.html#ga74617315eebed5a05a3a64c03c9064cf',1,'lj_os.h']]],
-  ['os.lock_3',['os.lock',['../group__os.html#ga295bf709298aaf34448cb894d233636f',1,'lj_os.h']]],
-  ['os.musicexport_4',['os.musicexport',['../group__os.html#ga254b01cc259eeaf2607929801822e278',1,'lj_os.h']]],
-  ['os.notification_5',['os.notification',['../group__os.html#gab8148050015b0f14022c5f98082db8c5',1,'lj_os.h']]],
-  ['os.photoexport_6',['os.photoexport',['../group__os.html#ga28e9899961b89cfcbb60e9455cb89b58',1,'lj_os.h']]],
-  ['os.restart_7',['os.restart',['../group__os.html#ga500538edc673871336c9320d8a8f7a8e',1,'lj_os.h']]],
-  ['os.shutdown_8',['os.shutdown',['../group__os.html#ga749a893aef68d337a5da3fd003f3b111',1,'lj_os.h']]],
-  ['os.shuttersound_9',['os.shuttersound',['../group__os.html#ga8b7d939ccca3c32f724f60fdfeb209c5',1,'lj_os.h']]],
-  ['os.standby_10',['os.standby',['../group__os.html#ga01530503bcf96250d92bbf00cf861f7d',1,'lj_os.h']]],
-  ['os.title_11',['os.title',['../group__os.html#ga0cbf47b918371dedab65243fed705f2c',1,'lj_os.h']]],
-  ['os.titleid_12',['os.titleid',['../group__os.html#ga337a9ca15478aa0fd03d32db96ce0716',1,'lj_os.h']]],
-  ['os.uri_13',['os.uri',['../group__os.html#gaeca6b50622a9568bb8b9818a3b4281e3',1,'lj_os.h']]],
-  ['os.videoexport_14',['os.videoexport',['../group__os.html#ga5342758af5b34d72c161bef924106567',1,'lj_os.h']]],
-  ['os_15',['os',['../group__os.html',1,'']]]
+  ['network.download_0',['network.download',['../group__network.html#ga2ca94aa1f5ef5af3c3733c93255883e7',1,'lj_network.h']]],
+  ['network.ftp_1',['network.ftp',['../group__network.html#ga2a1d65affac3ea55c84a5561350f81e8',1,'lj_network.h']]],
+  ['network.ftpadddevice_2',['network.ftpadddevice',['../group__network.html#ga3baf96fcd98ed21a10fa9e87f249a7bb',1,'lj_network.h']]],
+  ['network.ftpinit_3',['network.ftpinit',['../group__network.html#ga1c727c1a58a2995c829c436be0042a27',1,'lj_network.h']]],
+  ['network.ftpremovedevice_4',['network.ftpremovedevice',['../group__network.html#ga9cf97022e27769549b040a97f4faffb6',1,'lj_network.h']]],
+  ['network.ip_5',['network.ip',['../group__network.html#ga0c1b5e90bc6678f325451bb6510e3103',1,'lj_network.h']]],
+  ['network.mac_6',['network.mac',['../group__network.html#gafd1a07e4e7466ce18cbba9decef97052',1,'lj_network.h']]],
+  ['network.wifi_7',['network.wifi',['../group__network.html#ga00b6b3b94499356610f5f9c1920da798',1,'lj_network.h']]],
+  ['network_8',['network',['../group__network.html',1,'']]]
 ];

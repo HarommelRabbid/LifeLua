@@ -14,6 +14,6 @@ var searchData=
   ['io.newfolder_11',['io.newfolder',['../group__io.html#gafe60a7e298936384e2528ce4237ad7a5',1,'lj_io.h']]],
   ['io.pathstrip_12',['io.pathstrip',['../group__io.html#gad20a05587bc53ee6de36ee4aab112f65',1,'lj_io.h']]],
   ['io.readsfo_13',['io.readsfo',['../group__io.html#gaacf5cd1aaec1db088e10fedce89df175',1,'lj_io.h']]],
-  ['io.sha1_14',['io.sha1',['../group__io.html#ga97b8af3ef43f9a5fc5fbff786c67688b',1,'lj_io.h']]],
+  ['io.sha1_14',['io.sha1',['../group__io.html#ga5dc99f8dbac76cffac970c9062820251',1,'lj_io.h']]],
   ['io.workpath_15',['io.workpath',['../group__io.html#gaf67b3029ca2b4f32f350b4fe6dd5b9f5',1,'lj_io.h']]]
 ];

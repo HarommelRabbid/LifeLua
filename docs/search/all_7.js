@@ -1,13 +1,19 @@
 var searchData=
 [
-  ['sce_5fappmgr_5finfobar_5fcolor_5fblack_0',['SCE_APPMGR_INFOBAR_COLOR_BLACK',['../group__os.html#gaf4a8ea0d8dc346fed83fdbab52396335',1,'lj_os.h']]],
-  ['sce_5fappmgr_5finfobar_5fcolor_5fwhite_1',['SCE_APPMGR_INFOBAR_COLOR_WHITE',['../group__os.html#gac24f634d7cb1162d24c8eeac1743527a',1,'lj_os.h']]],
-  ['sce_5fappmgr_5finfobar_5ftransparency_5fopaque_2',['SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE',['../group__os.html#gae46d761fc459a44478186bf069ff3e48',1,'lj_os.h']]],
-  ['sce_5fappmgr_5finfobar_5ftransparency_5ftranslucent_3',['SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT',['../group__os.html#ga0cf439122c8388ff37e7f48cb9b14e4b',1,'lj_os.h']]],
-  ['sce_5fappmgr_5finfobar_5fvisibility_5finvisible_4',['SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE',['../group__os.html#gab1d42e96019c197fc58c9bf8e5218763',1,'lj_os.h']]],
-  ['sce_5fappmgr_5finfobar_5fvisibility_5fvisible_5',['SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE',['../group__os.html#gadad6cfcf406755b5fe835619030a1253',1,'lj_os.h']]],
-  ['sqlite3.close_6',['sqlite3.close',['../group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34',1,'lj_sqlite.h']]],
-  ['sqlite3.open_7',['sqlite3.open',['../group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0',1,'lj_sqlite.h']]],
-  ['sqlite3.query_8',['sqlite3.query',['../group__sqlite3.html#ga2cc873534b24f3514b6dc5a096b00bab',1,'lj_sqlite.h']]],
-  ['sqlite3_9',['sqlite3',['../group__sqlite3.html',1,'']]]
+  ['os.delay_0',['os.delay',['../group__os.html#gab0b0a8035b901862633440effc414753',1,'lj_os.h']]],
+  ['os.exit_1',['os.exit',['../group__os.html#gaa5f633885f9b75b31d44c79c9aba7821',1,'lj_os.h']]],
+  ['os.infobar_2',['os.infobar',['../group__os.html#ga74617315eebed5a05a3a64c03c9064cf',1,'lj_os.h']]],
+  ['os.lock_3',['os.lock',['../group__os.html#ga295bf709298aaf34448cb894d233636f',1,'lj_os.h']]],
+  ['os.musicexport_4',['os.musicexport',['../group__os.html#ga254b01cc259eeaf2607929801822e278',1,'lj_os.h']]],
+  ['os.notification_5',['os.notification',['../group__os.html#gab8148050015b0f14022c5f98082db8c5',1,'lj_os.h']]],
+  ['os.photoexport_6',['os.photoexport',['../group__os.html#ga28e9899961b89cfcbb60e9455cb89b58',1,'lj_os.h']]],
+  ['os.restart_7',['os.restart',['../group__os.html#ga500538edc673871336c9320d8a8f7a8e',1,'lj_os.h']]],
+  ['os.shutdown_8',['os.shutdown',['../group__os.html#ga749a893aef68d337a5da3fd003f3b111',1,'lj_os.h']]],
+  ['os.shuttersound_9',['os.shuttersound',['../group__os.html#ga8b7d939ccca3c32f724f60fdfeb209c5',1,'lj_os.h']]],
+  ['os.standby_10',['os.standby',['../group__os.html#ga01530503bcf96250d92bbf00cf861f7d',1,'lj_os.h']]],
+  ['os.title_11',['os.title',['../group__os.html#ga0cbf47b918371dedab65243fed705f2c',1,'lj_os.h']]],
+  ['os.titleid_12',['os.titleid',['../group__os.html#ga337a9ca15478aa0fd03d32db96ce0716',1,'lj_os.h']]],
+  ['os.uri_13',['os.uri',['../group__os.html#gaeca6b50622a9568bb8b9818a3b4281e3',1,'lj_os.h']]],
+  ['os.videoexport_14',['os.videoexport',['../group__os.html#ga5342758af5b34d72c161bef924106567',1,'lj_os.h']]],
+  ['os_15',['os',['../group__os.html',1,'']]]
 ];
