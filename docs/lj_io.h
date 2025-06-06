@@ -11,10 +11,10 @@ number io․crc32(string string) {}
 /**
  * Gets the SHA1 hash of a file
  */
-number io․sha1(string path) {}
+string io․sha1(string path) {}
 /**
  * Gets or sets the working path
- * @param path If defined then the work path will be set to the defined path
+ * @param path If defined, the work path will be set to the defined path
  */
 nil or boolean io․workpath(string path) {}
 /**
