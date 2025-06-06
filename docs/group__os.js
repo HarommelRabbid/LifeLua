@@ -1,8 +1,22 @@
 var group__os =
 [
+    [ "os.abortimportphoto", "group__os.html#ga177fc4d03908452206c4435ab8a760e9", null ],
+    [ "os.appexists", "group__os.html#ga8c999a1747aa735a2cb7f9916e8ca96f", null ],
+    [ "os.bus", "group__os.html#gadb1ebcf2b6959b7f59821d836146ad83", null ],
+    [ "os.closeapp", "group__os.html#ga5f489016045dfdba82444070ba5b9962", null ],
+    [ "os.closeotherapps", "group__os.html#gaf65779d7b31c23700b0871e7ef08a36d", null ],
+    [ "os.cpu", "group__os.html#ga3f4072f01848bfd77ee19f9176c9cba8", null ],
     [ "os.delay", "group__os.html#gab0b0a8035b901862633440effc414753", null ],
+    [ "os.delaycb", "group__os.html#gadf538541ca87b30e86c259e4682be4c0", null ],
+    [ "os.displayoff", "group__os.html#ga1e987ca8aa3b43d99655f6684a6c6755", null ],
+    [ "os.displayon", "group__os.html#ga2484d5bf88be0ae4d5118518ac9be682", null ],
+    [ "os.execute", "group__os.html#ga1a758aba9585187b4caf92eb1ea09f57", null ],
     [ "os.exit", "group__os.html#gaa5f633885f9b75b31d44c79c9aba7821", null ],
+    [ "os.gpu", "group__os.html#ga88ec7100d9f8dbec7ac436bf25527f66", null ],
+    [ "os.importphoto", "group__os.html#gaecb5ff7da74f917ce20e7d8a3257084d", null ],
     [ "os.infobar", "group__os.html#ga74617315eebed5a05a3a64c03c9064cf", null ],
+    [ "os.isbatterylow", "group__os.html#ga5dba117f64b1c490afab61f430f1459d", null ],
+    [ "os.launchparams", "group__os.html#ga0288a1aee55e618f4d757388aa725c8f", null ],
     [ "os.lock", "group__os.html#ga295bf709298aaf34448cb894d233636f", null ],
     [ "os.musicexport", "group__os.html#ga254b01cc259eeaf2607929801822e278", null ],
     [ "os.notification", "group__os.html#gab8148050015b0f14022c5f98082db8c5", null ],
@@ -13,6 +27,8 @@ var group__os =
     [ "os.standby", "group__os.html#ga01530503bcf96250d92bbf00cf861f7d", null ],
     [ "os.title", "group__os.html#ga0cbf47b918371dedab65243fed705f2c", null ],
     [ "os.titleid", "group__os.html#ga337a9ca15478aa0fd03d32db96ce0716", null ],
+    [ "os.unsafe", "group__os.html#ga482cf184e1ea89deb12664a6c5fd1312", null ],
     [ "os.uri", "group__os.html#gaeca6b50622a9568bb8b9818a3b4281e3", null ],
-    [ "os.videoexport", "group__os.html#ga5342758af5b34d72c161bef924106567", null ]
+    [ "os.videoexport", "group__os.html#ga5342758af5b34d72c161bef924106567", null ],
+    [ "os.xbar", "group__os.html#ga4173abecd5950de9d87fcffeb02c39ff", null ]
 ];
