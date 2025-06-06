@@ -58,4 +58,12 @@ string io․filestrip(string path) {}
  * Strips the files/directories from a path besides the last one
  */
 string io․pathstrip(string path) {}
+/**
+ * Gets the free space of a partition
+ */
+number io․freespace(string partition) {}
+/**
+ * Gets the size of a partition
+ */
+number io․totalspace(string partition) {}
 /** @} */
