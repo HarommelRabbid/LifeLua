@@ -1,6 +1,8 @@
 var group__controls =
 [
     [ "controls.accelerometer", "group__controls.html#gaef4d3a099d76d2dd82a74eb8674ad9d9", null ],
+    [ "controls.check", "group__controls.html#ga869f525dc70b0d0b1e182993c76da786", null ],
+    [ "controls.check", "group__controls.html#gaa6631570bb568e2f97a45173f701388c", null ],
     [ "controls.check", "group__controls.html#ga28a3af35d2a6f433e218c88266e2c0fe", null ],
     [ "controls.fronttouch", "group__controls.html#ga590c2839b488a29b0c22274bf44d9c5f", null ],
     [ "controls.gyroscope", "group__controls.html#ga4bd576edc2be3e7a6c5a54264a015a02", null ],

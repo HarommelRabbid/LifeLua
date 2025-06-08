@@ -152,8 +152,12 @@ Functions</h2></td></tr>
 <tr class="separator:ga5dba117f64b1c490afab61f430f1459d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga482cf184e1ea89deb12664a6c5fd1312" id="r_ga482cf184e1ea89deb12664a6c5fd1312"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga482cf184e1ea89deb12664a6c5fd1312">os.unsafe</a> ()</td></tr>
 <tr class="separator:ga482cf184e1ea89deb12664a6c5fd1312"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8c999a1747aa735a2cb7f9916e8ca96f" id="r_ga8c999a1747aa735a2cb7f9916e8ca96f"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8c999a1747aa735a2cb7f9916e8ca96f">os.appexists</a> ()</td></tr>
-<tr class="separator:ga8c999a1747aa735a2cb7f9916e8ca96f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga08fa59739d7cb42c418d577d82eb336a" id="r_ga08fa59739d7cb42c418d577d82eb336a"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08fa59739d7cb42c418d577d82eb336a">os.appexists</a> (string titleid)</td></tr>
+<tr class="separator:ga08fa59739d7cb42c418d577d82eb336a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae615899efbae3a2b474e28ef07a9b4a3" id="r_gae615899efbae3a2b474e28ef07a9b4a3"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae615899efbae3a2b474e28ef07a9b4a3">os.installdir</a> (string path)</td></tr>
+<tr class="separator:gae615899efbae3a2b474e28ef07a9b4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga063c216428ad16135c3cc3761aedc3a9" id="r_ga063c216428ad16135c3cc3761aedc3a9"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga063c216428ad16135c3cc3761aedc3a9">os.appdelete</a> (string titleid)</td></tr>
+<tr class="separator:ga063c216428ad16135c3cc3761aedc3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0288a1aee55e618f4d757388aa725c8f" id="r_ga0288a1aee55e618f4d757388aa725c8f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0288a1aee55e618f4d757388aa725c8f">os.launchparams</a> ()</td></tr>
 <tr class="separator:ga0288a1aee55e618f4d757388aa725c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaecb5ff7da74f917ce20e7d8a3257084d" id="r_gaecb5ff7da74f917ce20e7d8a3257084d"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaecb5ff7da74f917ce20e7d8a3257084d">os.importphoto</a> (number r, number g, number b, number a)</td></tr>
@@ -266,8 +270,26 @@ SceAppMgrInfoBarTransparency&#160;</td><td class="memItemRight" valign="bottom">
 
 </div>
 </div>
-<a id="ga8c999a1747aa735a2cb7f9916e8ca96f" name="ga8c999a1747aa735a2cb7f9916e8ca96f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8c999a1747aa735a2cb7f9916e8ca96f">&#9670;&#160;</a></span>os.appexists()</h2>
+<a id="ga063c216428ad16135c3cc3761aedc3a9" name="ga063c216428ad16135c3cc3761aedc3a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga063c216428ad16135c3cc3761aedc3a9">&#9670;&#160;</a></span>os.appdelete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil os.appdelete </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>titleid</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deletes an app </p>
+
+</div>
+</div>
+<a id="ga08fa59739d7cb42c418d577d82eb336a" name="ga08fa59739d7cb42c418d577d82eb336a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga08fa59739d7cb42c418d577d82eb336a">&#9670;&#160;</a></span>os.appexists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,7 +297,7 @@ SceAppMgrInfoBarTransparency&#160;</td><td class="memItemRight" valign="bottom">
         <tr>
           <td class="memname">boolean os.appexists </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>titleid</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -298,7 +320,7 @@ SceAppMgrInfoBarTransparency&#160;</td><td class="memItemRight" valign="bottom">
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets or sets the BUS's clock speed </p>
+<p>Gets or sets the BUS' clock speed </p>
 
 </div>
 </div>
@@ -527,6 +549,7 @@ SceAppMgrInfoBarTransparency&#160;</td><td class="memItemRight" valign="bottom">
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Path of the photo </dd></dl>
 
 </div>
 </div>
@@ -554,6 +577,24 @@ SceAppMgrInfoBarTransparency&#160;</td><td class="memItemRight" valign="bottom">
       </table>
 </div><div class="memdoc">
 <p>Sets the state of the infobar </p>
+
+</div>
+</div>
+<a id="gae615899efbae3a2b474e28ef07a9b4a3" name="gae615899efbae3a2b474e28ef07a9b4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae615899efbae3a2b474e28ef07a9b4a3">&#9670;&#160;</a></span>os.installdir()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil os.installdir </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Installs a folder app (not a .VPK, but an app in a directory with what a .VPK includes) </p>
 
 </div>
 </div>

@@ -1,7 +1,8 @@
 var group__os =
 [
     [ "os.abortimportphoto", "group__os.html#ga177fc4d03908452206c4435ab8a760e9", null ],
-    [ "os.appexists", "group__os.html#ga8c999a1747aa735a2cb7f9916e8ca96f", null ],
+    [ "os.appdelete", "group__os.html#ga063c216428ad16135c3cc3761aedc3a9", null ],
+    [ "os.appexists", "group__os.html#ga08fa59739d7cb42c418d577d82eb336a", null ],
     [ "os.bus", "group__os.html#gadb1ebcf2b6959b7f59821d836146ad83", null ],
     [ "os.closeapp", "group__os.html#ga5f489016045dfdba82444070ba5b9962", null ],
     [ "os.closeotherapps", "group__os.html#gaf65779d7b31c23700b0871e7ef08a36d", null ],
@@ -15,6 +16,7 @@ var group__os =
     [ "os.gpu", "group__os.html#ga88ec7100d9f8dbec7ac436bf25527f66", null ],
     [ "os.importphoto", "group__os.html#gaecb5ff7da74f917ce20e7d8a3257084d", null ],
     [ "os.infobar", "group__os.html#ga74617315eebed5a05a3a64c03c9064cf", null ],
+    [ "os.installdir", "group__os.html#gae615899efbae3a2b474e28ef07a9b4a3", null ],
     [ "os.isbatterylow", "group__os.html#ga5dba117f64b1c490afab61f430f1459d", null ],
     [ "os.launchparams", "group__os.html#ga0288a1aee55e618f4d757388aa725c8f", null ],
     [ "os.lock", "group__os.html#ga295bf709298aaf34448cb894d233636f", null ],

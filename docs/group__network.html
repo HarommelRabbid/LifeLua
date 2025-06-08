@@ -149,7 +149,7 @@ Functions</h2></td></tr>
 <p>Downloads a file to a specified path </p><dl class="section remark"><dt>Remarks</dt><dd>This function can call <code>LifeLuaNetworkDownload</code> if it exists. Arguments' names don't matter. </dd></dl>
 <dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaNetworkDownload(read, wrote, size, speed)</div>
 <div class="line">draw.text(10, 10, read, white)</div>
-<div class="line">draw.text(10, 30, math.floor((wrote*100)/size)..<span class="stringliteral">&quot;%&quot;</span>, white)</div>
+<div class="line">draw.text(10, 30, math.floor((wrote*100)/size)..<span class="stringliteral">&quot;% completed&quot;</span>, white)</div>
 <div class="line">draw.text(10, 50, size..<span class="stringliteral">&quot; B&quot;</span>, white)</div>
 <div class="line">draw.gradientrect(0, 544-39, (wrote*960)/size, 39, white, blue, white, blue)</div>
 <div class="line">draw.swapbuffers()</div>

@@ -111,10 +111,14 @@ $(function(){initNavTree('group__image.html',''); initResizable(true); });
 Functions</h2></td></tr>
 <tr class="memitem:gae64395a9ba650ea9028450ab3b41030c" id="r_gae64395a9ba650ea9028450ab3b41030c"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae64395a9ba650ea9028450ab3b41030c">image.load</a> (string path)</td></tr>
 <tr class="separator:gae64395a9ba650ea9028450ab3b41030c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa622f5e5146f62db02194895cda3f487" id="r_gaa622f5e5146f62db02194895cda3f487"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa622f5e5146f62db02194895cda3f487">image.new</a> (number w, number h, color color)</td></tr>
+<tr class="separator:gaa622f5e5146f62db02194895cda3f487"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga522e8008939d0abb96b809157971fd7c" id="r_ga522e8008939d0abb96b809157971fd7c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga522e8008939d0abb96b809157971fd7c">image.display</a> (image image, number x, number y, color tint)</td></tr>
 <tr class="separator:ga522e8008939d0abb96b809157971fd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4de5f0cd213fc65a0ba00e456ff3b465" id="r_ga4de5f0cd213fc65a0ba00e456ff3b465"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4de5f0cd213fc65a0ba00e456ff3b465">image.scaledisplay</a> (image image, number x, number y, number scale_x, number scale_y, color tint)</td></tr>
 <tr class="separator:ga4de5f0cd213fc65a0ba00e456ff3b465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga22457e38643ff5a4ef46c7cae3864fc5" id="r_ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga22457e38643ff5a4ef46c7cae3864fc5">image.rotatedisplay</a> (image image, number x, number y, number radius, color tint)</td></tr>
+<tr class="separator:ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga13827329a6a0eb5be13e4aabf91ffc58" id="r_ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga13827329a6a0eb5be13e4aabf91ffc58">image.width</a> (image image)</td></tr>
 <tr class="separator:ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c172f644892fe4895de414d2ceb6ef7" id="r_ga6c172f644892fe4895de414d2ceb6ef7"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6c172f644892fe4895de414d2ceb6ef7">image.height</a> (image image)</td></tr>
@@ -193,6 +197,80 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Loads an image, can be a .PNG, .BMP, or a .JPG/.JPEG </p>
+
+</div>
+</div>
+<a id="gaa622f5e5146f62db02194895cda3f487" name="gaa622f5e5146f62db02194895cda3f487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa622f5e5146f62db02194895cda3f487">&#9670;&#160;</a></span>image.new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">image image.new </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>color</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Creates a new image </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>Optional, will default to white </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga22457e38643ff5a4ef46c7cae3864fc5" name="ga22457e38643ff5a4ef46c7cae3864fc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga22457e38643ff5a4ef46c7cae3864fc5">&#9670;&#160;</a></span>image.rotatedisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.rotatedisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

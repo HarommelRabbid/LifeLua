@@ -10,7 +10,7 @@ var searchData=
   ['color.r_7',['color.r',['../group__color.html#ga2dcbc9501100787a137c61913c77f56b',1,'lj_draw.h']]],
   ['color.sub_8',['color.sub',['../group__color.html#ga373cded3eb3a64ef99d2d588827ca7f2',1,'lj_draw.h']]],
   ['controls.accelerometer_9',['controls.accelerometer',['../group__controls.html#gaef4d3a099d76d2dd82a74eb8674ad9d9',1,'lj_controls.h']]],
-  ['controls.check_10',['controls.check',['../group__controls.html#ga28a3af35d2a6f433e218c88266e2c0fe',1,'lj_controls.h']]],
+  ['controls.check_10',['controls.check',['../group__controls.html#ga28a3af35d2a6f433e218c88266e2c0fe',1,'controls.check(SceCtrlButtons button):&#160;lj_controls.h'],['../group__controls.html#ga869f525dc70b0d0b1e182993c76da786',1,'controls.check(number min, number max, number port):&#160;lj_controls.h'],['../group__controls.html#gaa6631570bb568e2f97a45173f701388c',1,'controls.check(number r, number g, number b, number port):&#160;lj_controls.h']]],
   ['controls.fronttouch_11',['controls.fronttouch',['../group__controls.html#ga590c2839b488a29b0c22274bf44d9c5f',1,'lj_controls.h']]],
   ['controls.gyroscope_12',['controls.gyroscope',['../group__controls.html#ga4bd576edc2be3e7a6c5a54264a015a02',1,'lj_controls.h']]],
   ['controls.held_13',['controls.held',['../group__controls.html#ga658f662b18b96f5394f003cc40b20c90',1,'lj_controls.h']]],
