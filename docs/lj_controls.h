@@ -31,8 +31,8 @@ SceCtrlButtons SCE_CTRL_VOLDOWN;
 SceCtrlButtons SCE_CTRL_POWER;
 /** 
  * Updates the controls
- * @param ext Extended controls, will update even if there are common dialogs running (IME, message etc.)
- * @param bind Binds the LTRIGGER & RTRIGGER to L1 & R1 respectively
+ * @param ext Extended controls, will update even if there are common dialogs running (IME keyboard, message etc.), optional
+ * @param bind Binds the LTRIGGER & RTRIGGER to L1 & R1 respectively, optional
 */
 nil controls․update(boolean ext, boolean bind) {}
 /** 
@@ -51,6 +51,16 @@ boolean controls․released(SceCtrlButtons button) {}
  * Checks if a button was triggered
 */
 boolean controls․check(SceCtrlButtons button) {}
+/** 
+ * Sets the vibration intensity on a DualShock controller
+ * @param port Optional
+*/
+nil controls․check(number min, number max, number port) {}
+/** 
+ * Sets the light bar color on a DualShock 4 controller
+ * @param port Optional
+*/
+nil controls․check(number r, number g, number b, number port) {}
 /** 
  * Left analog stick input
  * @par Example:

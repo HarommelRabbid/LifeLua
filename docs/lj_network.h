@@ -39,7 +39,7 @@ string network․mac() {}
  * ```
 function LifeLuaNetworkDownload(read, wrote, size, speed)
 draw.text(10, 10, read, white)
-draw.text(10, 30, math.floor((wrote*100)/size).."%", white)
+draw.text(10, 30, math.floor((wrote*100)/size).."% completed", white)
 draw.text(10, 50, size.." B", white)
 draw.gradientrect(0, 544-39, (wrote*960)/size, 39, white, blue, white, blue)
 draw.swapbuffers()

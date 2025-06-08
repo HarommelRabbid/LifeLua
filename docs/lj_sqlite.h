@@ -18,7 +18,7 @@ sqlite3 sqlite3․open(string path, number mode) {}
 /** 
  * Executes a query in an open database
 */
-nil sqlite3․query(sqlite3 db, string query) {}
+table sqlite3․query(sqlite3 db, string query) {}
 /** 
  * Closes an open database (also done automatically via garbage collecting)
 */

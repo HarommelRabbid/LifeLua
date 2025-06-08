@@ -144,6 +144,11 @@ font font․load(string path) {}
 */
 image image․load(string path) {}
 /** 
+ * Creates a new image
+ * @param color Optional, will default to white
+*/
+image image․new(number w, number h, color color) {}
+/** 
  * Displays an image to the screen
  * @param tint optional
 */
@@ -153,6 +158,11 @@ nil image․display(image image, number x, number y, color tint) {}
  * @param tint optional
 */
 nil image․scaledisplay(image image, number x, number y, number scale_x, number scale_y, color tint) {}
+/** 
+ * Displays a rotated image to the screen
+ * @param tint optional
+*/
+nil image․rotatedisplay(image image, number x, number y, number radius, color tint) {}
 /** 
  * Gets width of an image
 */
