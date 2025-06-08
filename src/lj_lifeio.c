@@ -436,6 +436,36 @@ static int lua_workpath(lua_State *L) {
     }
 }
 
+static int lua_freespace(lua_State *L) {
+	uint64_t free_storage = 0;
+	uint64_t dummy;
+	const char *dev_name = luaL_checkstring(L, 1);
+	SceIoDevInfo info;
+	sceClibMemset(&info, 0, sizeof(SceIoDevInfo));
+	int res = sceIoDevctl(dev_name, 0x3001, NULL, 0, &info, sizeof(SceIoDevInfo));
+	if (res >= 0)
+		free_storage = info.free_size;
+	else
+		sceAppMgrGetDevInfo(dev_name, &dummy, &free_storage);
+	lua_pushnumber(L, free_storage);
+	return 1;
+}
+
+static int lua_totalspace(lua_State *L) {
+	uint64_t total_storage = 0;
+	uint64_t dummy;
+	const char *dev_name = luaL_checkstring(L, 1);
+	SceIoDevInfo info;
+	sceClibMemset(&info, 0, sizeof(SceIoDevInfo));
+	int res = sceIoDevctl(dev_name, 0x3001, NULL, 0, &info, sizeof(SceIoDevInfo));
+	if (res >= 0)
+		total_storage = info.max_size;
+	else
+		sceAppMgrGetDevInfo(dev_name, &total_storage, &dummy);
+	lua_pushnumber(L, total_storage);
+	return 1;
+}
+
 static const struct luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -448,6 +478,8 @@ static const struct luaL_Reg io_lib[] = {
 	{"sha1", lua_sha1},
 	{"crc32", lua_crc32},
     {"workpath", lua_workpath},
+    {"freespace", lua_freespace},
+    {"fullspace", lua_totalspace},
     {NULL, NULL}
 };
 

@@ -782,6 +782,36 @@ static int lua_appexists(lua_State *L){
 	return 1;
 }
 
+static int lua_deleteapp(lua_State *L) {
+	const char *titleid = luaL_checkstring(L, 1);
+	scePromoterUtilityDeletePkg(titleid);
+	
+	int state = 0;
+	do {
+		int ret = scePromoterUtilityGetState(&state);
+		if (ret < 0)
+			break;
+		sceKernelDelayThread(150 * 1000);
+	} while (state);
+	
+	return 0;
+}
+
+static int lua_installdir(lua_State *L) {
+	const char *dir = luaL_checkstring(L, 1);
+	scePromoterUtilityPromotePkgWithRif(dir, 0);
+	
+	int state = 0;
+	do {
+		int ret = scePromoterUtilityGetState(&state);
+		if (ret < 0)
+			break;
+		sceKernelDelayThread(150 * 1000);
+	} while (state);
+
+	return 0;
+}
+
 static void strWChar16ncpy(SceWChar16* out, const char* str2, int len)
 {
     char* str1 = (char*) out;
@@ -1025,6 +1055,8 @@ static const struct luaL_Reg os_lib[] = {
 	{"gpu", lua_gpu},
 	{"xbar", lua_xbar},
 	{"appexists", lua_appexists},
+    {"appdelete", lua_deleteapp},
+    {"installdir", lua_installdir},
 	{"title", lua_title},
 	{"titleid", lua_titleid},
 	{"screenshot", lua_screenshot},

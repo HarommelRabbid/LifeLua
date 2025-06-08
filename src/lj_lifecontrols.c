@@ -147,8 +147,26 @@ static int lua_reartouch(lua_State *L){
 	return 1;
 }
 
+static int lua_actuator(lua_State *L){
+	uint8_t int_small = luaL_checkinteger(L, 1);
+	uint8_t int_large = luaL_checkinteger(L, 2);
+    int port = luaL_optinteger(L, 3, 1);
+	actuators[port-1].small = int_small;
+	actuators[port-1].small = int_large;
+	sceCtrlSetActuator(port, &actuators[port-1]);
+	return 0;
+}
+
+static int lua_lightbar(lua_State *L){
+	SceUInt8 r = luaL_checkinteger(L, 1);
+    SceUInt8 g = luaL_checkinteger(L, 2);
+    SceUInt8 b = luaL_checkinteger(L, 3);
+    int port = luaL_optinteger(L, 4, 1);
+	sceCtrlSetLightBar(port, r, g, b);
+	return 0;
+}
+
 static const struct luaL_Reg controls_lib[] = {
-    //{"lock", lua_lockpsbutton},
 	{"update", lua_updatecontrols},
 	{"check", lua_check},
 	{"pressed", lua_pressed},
@@ -156,12 +174,12 @@ static const struct luaL_Reg controls_lib[] = {
 	{"released", lua_released},
 	{"leftanalog", lua_analogl},
 	{"rightanalog", lua_analogr},
-	//{"enterbutton", lua_enterbutton},
-	//{"cancelbutton", lua_cancelbutton},
 	{"accelerometer", lua_accelerometer},
 	{"gyroscope", lua_gyroscope},
 	{"fronttouch", lua_fronttouch},
 	{"reartouch", lua_reartouch},
+    {"vibrate", lua_actuator},
+    {"lightbar", lua_lightbar},
     {NULL, NULL}
 };
 

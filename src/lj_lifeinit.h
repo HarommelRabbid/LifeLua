@@ -39,6 +39,7 @@ extern char vita_ip[16];
 extern unsigned short int vita_port;
 
 extern SceCtrlData pad, oldpad;
+extern SceCtrlActuator actuators[4];
 extern SceTouchData fronttouch, reartouch;
 extern SceMotionSensorState motion;
 
