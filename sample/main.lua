@@ -3,6 +3,7 @@ psexchar = font.load("sa0:data/font/pvf/psexchar.pvf")
 deff = font.load("app0:font.ttf")
 white = color.new(255, 255, 255)
 blue = color.new(0, 0, 255)
+bg = image.load("app0:llbg.png")
 icons = {}
 local sel = 1
 local samples = {"Hello World", "Controls", ".SFO Reader", "Message", "Keyboard", "3 Button Message", "Progress Message", "Battery", "Image", "File Manager", "App Launcher", "Timer", "FTP", "Network", "SHA1 & CRC32 Hashing"}
@@ -18,6 +19,7 @@ if (controls.held(button) and tick <= time) then tick = tick + 1 end
 if tick >= time or controls.pressed(button) then tick = 0 return true end
 end
 while true do
+bg:display(0, 0)
 draw.gradientrect(0, 0, 960, 60, white, blue, blue, white)
 draw.text(480-draw.textwidth("LifeLua Showcase Menu", deff)/2, 20, "LifeLua Showcase Menu", white, deff)
 local y = 65
