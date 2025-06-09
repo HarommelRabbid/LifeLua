@@ -1,6 +1,6 @@
 # LifeLua
-<img src="LifeLua.svg" width=200px align="right"></img>
 LifeLuaJIT is an open-source LuaJIT interpreter for the PSVita which combines ease with advanceability.
+<img src="bg0.png"></img>
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
 ## Samples
