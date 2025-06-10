@@ -799,7 +799,8 @@ static int lua_deleteapp(lua_State *L) {
 
 static int lua_installdir(lua_State *L) {
 	const char *dir = luaL_checkstring(L, 1);
-	scePromoterUtilityPromotePkgWithRif(dir, 0);
+    makeHeadBin(dir);
+	scePromoterUtilityPromotePkgWithRif(dir, 1);
 	
 	int state = 0;
 	do {

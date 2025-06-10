@@ -110,7 +110,7 @@ static int lua_fronttouch(lua_State *L){
 		lua_pushnumber(L, lerp(fronttouch.report[i].x, 1920, 960));
 		lua_setfield(L, -2, "x");
 
-		lua_pushnumber(L, lerp(fronttouch.report[i].y, 1285, 855));
+		lua_pushnumber(L, lerp(fronttouch.report[i].y, 1315, 855));
 		lua_setfield(L, -2, "y");
 
 		lua_pushnumber(L, fronttouch.report[i].id);

@@ -48,8 +48,8 @@ static int lua_opendb(lua_State *L){
     int mode = luaL_optinteger(L, 2, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
 	sqlite3 **db = (sqlite3 **)lua_newuserdata(L, sizeof(sqlite3 *));
 	if (sqlite3_open_v2(file, db, mode, NULL) != SQLITE_OK){
-        sqlite3_close(db);
-		return luaL_error(L, sqlite3_errmsg(db));
+        sqlite3_close(*db);
+		return luaL_error(L, sqlite3_errmsg(*db));
 	}
 	luaL_getmetatable(L, "sqlite3");
     lua_setmetatable(L, -2);
