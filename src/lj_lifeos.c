@@ -799,8 +799,22 @@ static int lua_deleteapp(lua_State *L) {
 
 static int lua_installdir(lua_State *L) {
 	const char *dir = luaL_checkstring(L, 1);
-    bool headbin = lua_toboolean(L, 2);
-    if(!headbin) makeHeadBin(dir);
+    makeHeadBin(dir);
+	scePromoterUtilityPromotePkgWithRif(dir, 1);
+	
+	int state = 0;
+	do {
+		int ret = scePromoterUtilityGetState(&state);
+		if (ret < 0)
+			break;
+		sceKernelDelayThread(150 * 1000);
+	} while (state);
+
+	return 0;
+}
+
+static int lua_installdirnohead(lua_State *L) {
+	const char *dir = luaL_checkstring(L, 1);
 	scePromoterUtilityPromotePkgWithRif(dir, 1);
 	
 	int state = 0;
@@ -1059,6 +1073,7 @@ static const struct luaL_Reg os_lib[] = {
 	{"appexists", lua_appexists},
     {"appdelete", lua_deleteapp},
     {"installdir", lua_installdir},
+    {"installdirnohead", lua_installdirnohead},
 	{"title", lua_title},
 	{"titleid", lua_titleid},
 	{"screenshot", lua_screenshot},
