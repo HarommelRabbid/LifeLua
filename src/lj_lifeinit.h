@@ -19,6 +19,7 @@
 
 #include <vitasdk.h>
 #include <taihen.h>
+#include <vita2d.h>
 
 #ifdef __cplusplus
 #include <lua.hpp>
@@ -45,6 +46,19 @@ extern SceMotionSensorState motion;
 
 extern bool unsafe;
 
+extern vita2d_pgf *pgf;
+extern vita2d_pvf *pvf;
+
+typedef struct {
+    unsigned int color;
+} Color;
+
+typedef struct {
+	vita2d_pgf *pgf;
+	vita2d_pvf *pvf;
+	vita2d_font *font;
+} Font;
+
 int string_ends_with(const char * str, const char * suffix);
 
 int file_exists(const char* path);
@@ -61,6 +75,10 @@ void luaL_extendos(lua_State *L);
 void luaL_opennetwork(lua_State *L);
 void luaL_opencontrols(lua_State *L);
 void luaL_opensqlite3(lua_State *L);
+void luaL_opendraw(lua_State *L);
+void luaL_opencolor(lua_State *L);
+void luaL_openimage(lua_State *L);
+void luaL_openfont(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
 #endif

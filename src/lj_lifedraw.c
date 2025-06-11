@@ -1,0 +1,318 @@
+/*
+    LifeLua WIP
+    Draw library
+*/
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <math.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <zlib.h>
+
+#include <vitasdk.h>
+#include <taihen.h>
+#include <vita2d.h>
+
+#include "lj_lifeinit.h"
+#include <lua.h>
+#include <luajit.h>
+#include <lualib.h>
+#include <lauxlib.h>
+
+static int lua_text(lua_State *L){
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	const char *text = luaL_checkstring(L, 3);
+	Color *color = (Color *)luaL_checkudata(L, 4, "color");
+	float size;
+	Font *font;
+
+	if(lua_isuserdata(L, 5) && !lua_isnil(L, 5)){
+		font = (Font *)luaL_checkudata(L, 5, "font");
+		size = luaL_optnumber(L, 6, 1.0f);
+		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
+		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
+		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, (y-6) + size*24, color->color, size*24, text);
+	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6)) && !lua_isnil(L, 6)){
+		font = (Font *)luaL_checkudata(L, 6, "font");
+		size = luaL_optnumber(L, 5, 1.0f);
+		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
+		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
+		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, (y-6) + size*24, color->color, size*24, text);
+	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
+		size = luaL_optnumber(L, 5, 1.0f);
+		vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color->color, size, text);
+	}else{
+		return luaL_typerror(L, 5, "number or font");
+	}
+	
+	return 0;
+}
+
+// Draw rectangle
+static int lua_rect(lua_State *L) {
+	int argc = lua_gettop(L);
+    float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
+    Color *color = (Color *)luaL_checkudata(L, 5, "color");
+	Color *outline;
+	if (argc == 6) outline = (Color *)luaL_checkudata(L, 6, "color");
+
+    vita2d_draw_rectangle(x, y, width, height, color->color);
+	if (argc == 6){
+		vita2d_draw_line(x-1, y, x+width, y, outline->color);
+		vita2d_draw_line(x, y, x, y+height-1, outline->color);
+		vita2d_draw_line(width+x, y, width+x, y+height-1, outline->color);
+		vita2d_draw_line(x-1, y+height, x+width, y+height, outline->color);
+	}
+    return 0;
+}
+
+// Draw circle
+static int lua_circle(lua_State *L) {
+    float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float radius = luaL_checknumber(L, 3);
+    Color *color = (Color *)luaL_checkudata(L, 4, "color");
+
+    vita2d_draw_fill_circle(x, y, radius, color->color);
+    return 0;
+}
+
+// Draw line
+static int lua_line(lua_State *L) {
+    float x0 = luaL_checknumber(L, 1);
+    float y0 = luaL_checknumber(L, 2);
+    float x1 = luaL_checknumber(L, 3);
+    float y1 = luaL_checknumber(L, 4);
+    Color *color = (Color *)luaL_checkudata(L, 5, "color");
+
+    vita2d_draw_line(x0, y0, x1, y1, color->color);
+    return 0;
+}
+
+static int lua_swapbuff(lua_State *L) {
+	Color *color;
+	if (lua_gettop(L) >= 1) color = (Color *)luaL_checkudata(L, 1, "color");
+    vita2d_end_drawing();
+	vita2d_common_dialog_update();
+	vita2d_wait_rendering_done();
+    vita2d_swap_buffers();
+    vita2d_start_drawing();
+	if (lua_gettop(L) >= 1) vita2d_set_clear_color(color->color);
+	else vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+    vita2d_clear_screen(); // Clear for next frame
+    return 0;
+}
+
+static int lua_textwidth(lua_State *L){
+	const char *text = luaL_checkstring(L, 1);
+	float size;
+	Font *font;
+	if(lua_isuserdata(L, 2) && !lua_isnil(L, 2)){
+		font = (Font *)luaL_checkudata(L, 2, "font");
+		size = luaL_optnumber(L, 3, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*24, text));
+	}else if((lua_isnumber(L, 2) && (lua_isuserdata(L, 3) && !lua_isnone(L, 3))) && !lua_isnil(L, 3)){
+		font = (Font *)luaL_checkudata(L, 3, "font");
+		size = luaL_optnumber(L, 2, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*24, text));
+	}else if(lua_isnumber(L, 2) || lua_isnone(L, 2)){
+		size = luaL_optnumber(L, 2, 1.0f);
+		lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+	}else{
+		return luaL_typerror(L, 2, "number or font");
+	}
+	return 1;
+}
+
+static int lua_textheight(lua_State *L){
+	const char *text = luaL_checkstring(L, 1);
+	float size;
+	Font *font;
+	if(lua_isuserdata(L, 5)){
+		font = (Font *)luaL_checkudata(L, 5, "font");
+		size = luaL_optnumber(L, 6, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*20, text));
+	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6))){
+		font = (Font *)luaL_checkudata(L, 6, "font");
+		size = luaL_optnumber(L, 5, 1.0f);
+		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
+		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
+		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*20, text));
+	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
+		size = luaL_optnumber(L, 5, 1.0f);
+		lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+	}else{
+		return luaL_typerror(L, 5, "number or font");
+	}
+	return 1;
+}
+
+static int lua_pixel(lua_State *L){
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	Color *color = (Color *)luaL_checkudata(L, 3, "color");
+	vita2d_draw_pixel(x, y, color->color);
+	return 0;
+}
+
+static int lua_gradient(lua_State *L){
+	float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
+    Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
+	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
+	Color *bottom_left = (Color *)luaL_checkudata(L, 7, "color");
+	Color *bottom_right = (Color *)luaL_checkudata(L, 8, "color");
+
+	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        6 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+    // Triangle 1: TL -> TR -> BL
+    vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left->color};
+    vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+    vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
+
+    // Triangle 2: TR -> BR -> BL
+    vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+    vertices[4] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right->color};
+    vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
+
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 6);
+	return 0;
+}
+
+static int lua_vdoublegradient(lua_State *L) {
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	float width = luaL_checknumber(L, 3);
+	float height = luaL_checknumber(L, 4);
+
+	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+	// Expecting 12 colors: top_left, top_right, center_left, center_right, bottom_left, bottom_right
+	Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
+	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
+	Color *center_left = (Color *)luaL_checkudata(L, 7, "color");
+	Color *center_right = (Color *)luaL_checkudata(L, 8, "color");
+	Color *bottom_left = (Color *)luaL_checkudata(L, 9, "color");
+	Color *bottom_right = (Color *)luaL_checkudata(L, 10, "color");
+
+	int half = height / 2;
+
+	// Top half (TL -> TR -> CL) and (TR -> CR -> CL)
+	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, top_left->color};
+	vertices[1] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+	vertices[2] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
+
+	vertices[3] = (vita2d_color_vertex){x + width, y, 0.5f, top_right->color};
+	vertices[4] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[5] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
+
+	// Bottom half (CL -> CR -> BL) and (CR -> BR -> BL)
+	vertices[6] = (vita2d_color_vertex){x, y + half, 0.5f, center_left->color};
+	vertices[7] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[8] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
+
+	vertices[9] = (vita2d_color_vertex){x + width, y + half, 0.5f, center_right->color};
+	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, bottom_right->color};
+	vertices[11] = (vita2d_color_vertex){x, y + height, 0.5f, bottom_left->color};
+
+	vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 12);
+	return 0;
+}
+
+static int lua_hdoublegradient(lua_State *L) {
+	float x = luaL_checknumber(L, 1);
+	float y = luaL_checknumber(L, 2);
+	float width = luaL_checknumber(L, 3);
+	float height = luaL_checknumber(L, 4);
+
+	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+	// Expecting 12 colors: left_top, center_top, right_top, left_bottom, center_bottom, right_bottom
+	Color *left_top = (Color *)luaL_checkudata(L, 5, "color");
+	Color *center_top = (Color *)luaL_checkudata(L, 6, "color");
+	Color *right_top = (Color *)luaL_checkudata(L, 7, "color");
+	Color *left_bottom = (Color *)luaL_checkudata(L, 8, "color");
+	Color *center_bottom = (Color *)luaL_checkudata(L, 9, "color");
+	Color *right_bottom = (Color *)luaL_checkudata(L, 10, "color");
+
+	int half = width / 2;
+
+	// Left half (LT -> CT -> LB) and (CT -> CB -> LB)
+	vertices[0] = (vita2d_color_vertex){x, y, 0.5f, left_top->color};
+	vertices[1] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[2] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom->color};
+
+	vertices[3] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[4] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
+	vertices[5] = (vita2d_color_vertex){x, y + height, 0.5f, left_bottom->color};
+
+	// Right half (CT -> RT -> CB) and (RT -> RB -> CB)
+	vertices[6] = (vita2d_color_vertex){x + half, y, 0.5f, center_top->color};
+	vertices[7] = (vita2d_color_vertex){x + width, y, 0.5f, right_top->color};
+	vertices[8] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
+
+	vertices[9] = (vita2d_color_vertex){x + width, y, 0.5f, right_top->color};
+	vertices[10] = (vita2d_color_vertex){x + width, y + height, 0.5f, right_bottom->color};
+	vertices[11] = (vita2d_color_vertex){x + half, y + height, 0.5f, center_bottom->color};
+
+	vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 12);
+	return 0;
+}
+
+static int lua_enableclip(lua_State *L){
+	bool enable = lua_toboolean(L, 1);
+	if(enable) vita2d_enable_clipping();
+	else vita2d_disable_clipping();
+	return 0;
+}
+
+static int lua_cliprect(lua_State *L){
+	int minx = luaL_checkinteger(L, 1);
+	int miny = luaL_checkinteger(L, 2);
+	int maxx = luaL_checkinteger(L, 3);
+	int maxy = luaL_checkinteger(L, 4);
+	vita2d_set_clip_rectangle(minx, miny, maxx, maxy);
+	return 0;
+}
+
+static const struct luaL_Reg draw_lib[] = {
+    {"text", lua_text},
+	{"textwidth", lua_textwidth},
+	{"textheight", lua_textheight},
+    {"rect", lua_rect},
+    {"circle", lua_circle},
+    {"line", lua_line},
+	{"pixel", lua_pixel},
+	{"gradientrect", lua_gradient},
+	{"hdoublegradientrect", lua_hdoublegradient},
+	{"vdoublegradientrect", lua_vdoublegradient},
+	{"enableclip", lua_enableclip},
+	{"cliprect", lua_cliprect},
+    {"swapbuffers", lua_swapbuff},
+    {NULL, NULL}
+};
+
+void luaL_opendraw(lua_State *L) {
+	luaL_openlib(L, "draw", draw_lib, 0);
+}
