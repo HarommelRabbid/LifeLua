@@ -25,10 +25,6 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-typedef struct {
-    vita2d_texture *tex;
-} Image;
-
 int lua_imageload(lua_State *L) {
     const char *filename = luaL_checkstring(L, 1);
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));

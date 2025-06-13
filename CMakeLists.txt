@@ -62,7 +62,8 @@ add_executable(${PROJECT_NAME}
   src/lj_lifeimage.c
   src/lj_lifecolor.c
   src/lj_lifefont.c
-  src/lj_lifeimgui.c++
+  src/lj_lifecamera.c
+  #src/lj_lifeimgui.c++
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/include/ftpvita.c
@@ -81,6 +82,7 @@ target_link_libraries(${PROJECT_NAME}
     SceLibKernel_stub
     SceSysmodule_stub
     SceCtrl_stub
+    SceCamera_stub
     SceCommonDialog_stub
     SceIme_stub
     SceFios2_stub

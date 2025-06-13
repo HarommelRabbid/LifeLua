@@ -63,6 +63,10 @@ typedef struct {
 	vita2d_font *font;
 } Font;
 
+typedef struct {
+    vita2d_texture *tex;
+} Image;
+
 int string_ends_with(const char * str, const char * suffix);
 
 int file_exists(const char* path);
@@ -83,7 +87,8 @@ void luaL_opendraw(lua_State *L);
 void luaL_opencolor(lua_State *L);
 void luaL_openimage(lua_State *L);
 void luaL_openfont(lua_State *L);
-void luaL_openimgui(lua_State *L);
+void luaL_opencamera(lua_State *L);
+//void luaL_openimgui(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
 #ifdef __cplusplus
