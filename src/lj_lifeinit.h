@@ -36,6 +36,10 @@
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char vita_ip[16];
 extern unsigned short int vita_port;
 
@@ -79,6 +83,10 @@ void luaL_opendraw(lua_State *L);
 void luaL_opencolor(lua_State *L);
 void luaL_openimage(lua_State *L);
 void luaL_openfont(lua_State *L);
+void luaL_openimgui(lua_State *L);
 //void luaL_openjson(lua_State *L);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

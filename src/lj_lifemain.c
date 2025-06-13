@@ -255,6 +255,7 @@ int main(){
 	luaL_openimage(L);
 	luaL_openfont(L);
 	luaL_opensqlite3(L);
+	luaL_openimgui(L);
 	
 	vita2d_start_drawing();
     vita2d_clear_screen();

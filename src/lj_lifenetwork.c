@@ -153,6 +153,49 @@ static int lua_download(lua_State *L){
 		}
 	}
 	sceIoClose(fh);
+    if (req >= 0) sceHttpDeleteRequest(req);
+    if (conn >= 0) sceHttpDeleteConnection(conn);
+    if (tpl >= 0) sceHttpDeleteTemplate(tpl);
+	return 1;
+}
+
+static int lua_header(lua_State *L){
+    char *header;
+    unsigned int headerSize;
+	const char *url = luaL_checkstring(L, 1);
+	const char *template = luaL_optstring(L, 2, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+	int tpl = sceHttpCreateTemplate(template, SCE_HTTP_VERSION_1_1, SCE_TRUE);
+	if(tpl < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+	int conn = sceHttpCreateConnectionWithURL(tpl, url, SCE_TRUE);
+	if(conn < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int req = sceHttpCreateRequestWithURL(conn, SCE_HTTP_METHOD_GET, url, 0);
+	if(req < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	int res = sceHttpSendRequest(req, NULL, 0);
+	if(res < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+
+	res = sceHttpGetAllResponseHeaders(req, &header, &headerSize);
+    if(res < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+    lua_pushlstring(L, header, headerSize);
+    if (req >= 0) sceHttpDeleteRequest(req);
+    if (conn >= 0) sceHttpDeleteConnection(conn);
+    if (tpl >= 0) sceHttpDeleteTemplate(tpl);
 	return 1;
 }
 
@@ -165,6 +208,7 @@ static const struct luaL_Reg network_lib[] = {
 	{"ip", lua_ip},
 	{"mac", lua_mac},
 	{"download", lua_download},
+    {"header", lua_header},
     {NULL, NULL}
 };
 
