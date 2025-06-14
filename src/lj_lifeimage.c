@@ -59,7 +59,7 @@ int lua_newimage(lua_State *L) {
 
 	image->tex = vita2d_create_empty_texture_rendertarget(w, h, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
 	if(lua_gettop(L) >= 3){
-		Color *color = (Color *)luaL_checkudata(L, 3, "color");
+		Color *color = lua_tocolor(L, 3);
 		sceClibMemset(vita2d_texture_get_datap(image->tex), color->color, vita2d_texture_get_stride(image->tex) * h);
 	}else sceClibMemset(vita2d_texture_get_datap(image->tex), 0xFFFFFFFF, vita2d_texture_get_stride(image->tex) * h);
 
@@ -77,7 +77,7 @@ static int lua_imagedraw(lua_State *L){
 	if(argc <= 3){
 		vita2d_draw_texture(image->tex, x, y);
 	}else{
-		color = (Color *)luaL_checkudata(L, 4, "color");
+		color = lua_tocolor(L, 4);
 		vita2d_draw_texture_tint(image->tex, x, y, color->color);
 	}
 	//vita2d_free_texture(image);
@@ -95,7 +95,7 @@ static int lua_imagescaledraw(lua_State *L){
 	if(argc <= 5){
 		vita2d_draw_texture_scale(image->tex, x, y, scalex, scaley);
 	}else{
-		color = (Color *)luaL_checkudata(L, 6, "color");
+		color = lua_tocolor(L, 6);
 		vita2d_draw_texture_tint_scale(image->tex, x, y, scalex, scaley, color->color);
 	}
 	//vita2d_free_texture(image);
@@ -112,7 +112,7 @@ static int lua_imagerotatedraw(lua_State *L){
 	if(argc <= 5){
 		vita2d_draw_texture_rotate(image->tex, x, y, radius);
 	}else{
-		color = (Color *)luaL_checkudata(L, 6, "color");
+		color = lua_tocolor(L, 5);
 		vita2d_draw_texture_tint_rotate(image->tex, x, y, radius, color->color);
 	}
 	//vita2d_free_texture(image);
@@ -161,13 +161,14 @@ static const luaL_Reg image_methods[] = {
     {NULL, NULL}
 };
 
-void luaL_openimage(lua_State *L) {
+LUALIB_API int luaL_openimage(lua_State *L) {
 	luaL_newmetatable(L, "image");
 	lua_pushstring(L, "__index");
     lua_pushvalue(L, -2);  /* pushes the metatable */
     lua_settable(L, -3);  /* metatable.__index = metatable */
     
-    luaL_openlib(L, NULL, image_methods, 0);
+    luaL_register(L, NULL, image_methods);
 
-	luaL_openlib(L, "image", image_lib, 0);
+	luaL_register(L, "image", image_lib);
+    return 1;
 }

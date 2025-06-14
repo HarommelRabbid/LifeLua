@@ -354,8 +354,8 @@ static const luaL_Reg imgui_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_openimgui(lua_State *L) {
-	luaL_openlib(L, "imgui", imgui_lib, 0);
+LUALIB_API int luaL_openimgui(lua_State *L) {
+	luaL_register(L, "imgui", imgui_lib);
     luaL_pushglobalint(L, ImGuiMouseCursor_None);
     luaL_pushglobalint(L, ImGuiMouseCursor_Hand);
     luaL_pushglobalint(L, ImGuiMouseCursor_NotAllowed);
@@ -397,4 +397,5 @@ void luaL_openimgui(lua_State *L) {
     luaL_pushglobalint(L, ImGuiWindowFlags_ChildMenu);
     luaL_pushglobalint(L, ImGuiWindowFlags_AlwaysUseWindowPadding);
     luaL_pushglobalint(L, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+    return 1;
 }

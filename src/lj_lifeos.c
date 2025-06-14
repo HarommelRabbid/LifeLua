@@ -1086,8 +1086,8 @@ static const luaL_Reg os_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_extendos(lua_State *L) {
-	luaL_openlib(L, "os", os_lib, 0);
+LUALIB_API int luaL_extendos(lua_State *L) {
+	luaL_register(L, "os", os_lib);
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, "INFOBAR_VISIBILITY_INVISIBLE");
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_VISIBILITY_VISIBLE, "INFOBAR_VISIBILITY_VISIBLE");
 	luaL_pushglobalint_alsoas(L, SCE_APPMGR_INFOBAR_COLOR_BLACK, "INFOBAR_COLOR_BLACK");
@@ -1159,4 +1159,5 @@ void luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_REDEMPTION);
 	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_DEFAULT);
 	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_HIGH_CONTRAST);
+    return 1;
 }

@@ -88,19 +88,20 @@ static const luaL_Reg sqlite3_methods[] = {
     {NULL, NULL}
 };
 
-void luaL_opensqlite3(lua_State *L) {
+LUALIB_API int luaL_opensqlite3(lua_State *L) {
 	luaL_newmetatable(L, "sqlite3");
 	lua_pushstring(L, "__index");
     lua_pushvalue(L, -2);  /* pushes the metatable */
     lua_settable(L, -3);  /* metatable.__index = metatable */
     
-    luaL_openlib(L, NULL, sqlite3_methods, 0);
+    luaL_register(L, NULL, sqlite3_methods);
 
-	luaL_openlib(L, "sqlite3", sqlite3_lib, 0);
+	luaL_register(L, "sqlite3", sqlite3_lib);
     luaL_pushglobalint(L, SQLITE_OPEN_READONLY);
     luaL_pushglobalint(L, SQLITE_OPEN_READWRITE);
     luaL_pushglobalint(L, SQLITE_OPEN_CREATE);
     luaL_pushglobalint(L, SQLITE_OPEN_URI);
     luaL_pushglobalint(L, SQLITE_OPEN_NOMUTEX);
     luaL_pushglobalint(L, SQLITE_OPEN_FULLMUTEX);
+    return 1;
 }

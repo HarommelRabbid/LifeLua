@@ -470,6 +470,7 @@ static const luaL_Reg io_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_extendio(lua_State *L) {
-	luaL_openlib(L, "io", io_lib, 0);
+LUALIB_API int luaL_extendio(lua_State *L) {
+	luaL_register(L, "io", io_lib);
+    return 1;
 }

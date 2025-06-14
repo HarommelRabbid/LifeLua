@@ -67,10 +67,11 @@ static const luaL_Reg font_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_openfont(lua_State *L){
+LUALIB_API int luaL_openfont(lua_State *L){
 	luaL_newmetatable(L, "font");
     lua_pushcfunction(L, lua_fontgc);
     lua_setfield(L, -2, "__gc");
 
-	luaL_openlib(L, "font", font_lib, 0);
+	luaL_register(L, "font", font_lib);
+    return 1;
 }

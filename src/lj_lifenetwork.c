@@ -212,6 +212,7 @@ static const luaL_Reg network_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_opennetwork(lua_State *L) {
-	luaL_openlib(L, "network", network_lib, 0);
+LUALIB_API int luaL_opennetwork(lua_State *L) {
+	luaL_register(L, "network", network_lib);
+    return 1;
 }

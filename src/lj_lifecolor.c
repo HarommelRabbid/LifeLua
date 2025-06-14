@@ -25,6 +25,29 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+Color *lua_tocolor(lua_State *L, int n) {
+    Color *color = (Color *)luaL_testudata(L, n, "color");
+    if (color) return color;
+    if (lua_isnumber(L, n)) {
+        unsigned int col = luaL_checknumber(L, n);
+        Color *newcolor = (Color *)lua_newuserdata(L, sizeof(Color));
+        newcolor->color = RGBA8(col & 0xFF, (col >> 8) & 0xFF, (col >> 16) & 0xFF, (col >> 24) & 0xFF); //ABGR to RGBA
+        luaL_getmetatable(L, "color");
+        lua_setmetatable(L, -2);
+        return newcolor;
+    }
+    return (Color *)luaL_typerror(L, n, "color");
+}
+
+static int lua_tocolortype(lua_State *L){
+	unsigned int col = luaL_checknumber(L, 1);
+    Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
+    color->color = RGBA8(col & 0xFF, (col >> 8) & 0xFF, (col >> 16) & 0xFF, (col >> 24) & 0xFF); //ABGR to RGBA
+    luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
+	return 1;
+}
+
 static int lua_newcolor(lua_State *L) {
 	unsigned int r = luaL_checkinteger(L, 1);
 	unsigned int g = luaL_checkinteger(L, 2);
@@ -200,13 +223,15 @@ static const luaL_Reg color_methods[] = {
     {NULL, NULL}
 };
 
-void luaL_opencolor(lua_State *L) {
+LUALIB_API int luaL_opencolor(lua_State *L) {
 	luaL_newmetatable(L, "color");
 	lua_pushstring(L, "__index");
     lua_pushvalue(L, -2);  /* pushes the metatable */
     lua_settable(L, -3);  /* metatable.__index = metatable */
     
-    luaL_openlib(L, NULL, color_methods, 0);
+    luaL_register(L, NULL, color_methods);
 
-	luaL_openlib(L, "color", color_lib, 0);
+	luaL_register(L, "color", color_lib);
+	lua_register(L, "tocolor", lua_tocolortype);
+    return 1;
 }

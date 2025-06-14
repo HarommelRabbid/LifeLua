@@ -29,7 +29,7 @@ static int lua_text(lua_State *L){
 	float x = luaL_checknumber(L, 1);
 	float y = luaL_checknumber(L, 2);
 	const char *text = luaL_checkstring(L, 3);
-	Color *color = (Color *)luaL_checkudata(L, 4, "color");
+	Color *color = lua_tocolor(L, 4);
 	float size;
 	Font *font;
 
@@ -62,9 +62,9 @@ static int lua_rect(lua_State *L) {
     float y = luaL_checknumber(L, 2);
     float width = luaL_checknumber(L, 3);
     float height = luaL_checknumber(L, 4);
-    Color *color = (Color *)luaL_checkudata(L, 5, "color");
+    Color *color = lua_tocolor(L, 5);
 	Color *outline;
-	if (argc == 6) outline = (Color *)luaL_checkudata(L, 6, "color");
+	if (argc == 6) outline = lua_tocolor(L, 6);
 
     vita2d_draw_rectangle(x, y, width, height, color->color);
 	if (argc == 6){
@@ -81,7 +81,7 @@ static int lua_circle(lua_State *L) {
     float x = luaL_checknumber(L, 1);
     float y = luaL_checknumber(L, 2);
     float radius = luaL_checknumber(L, 3);
-    Color *color = (Color *)luaL_checkudata(L, 4, "color");
+    Color *color = lua_tocolor(L, 4);
 
     vita2d_draw_fill_circle(x, y, radius, color->color);
     return 0;
@@ -93,7 +93,7 @@ static int lua_line(lua_State *L) {
     float y0 = luaL_checknumber(L, 2);
     float x1 = luaL_checknumber(L, 3);
     float y1 = luaL_checknumber(L, 4);
-    Color *color = (Color *)luaL_checkudata(L, 5, "color");
+    Color *color = lua_tocolor(L, 5);
 
     vita2d_draw_line(x0, y0, x1, y1, color->color);
     return 0;
@@ -101,7 +101,7 @@ static int lua_line(lua_State *L) {
 
 static int lua_swapbuff(lua_State *L) {
 	Color *color;
-	if (lua_gettop(L) >= 1) color = (Color *)luaL_checkudata(L, 1, "color");
+	if (lua_gettop(L) >= 1) color = lua_tocolor(L, 1);
     vita2d_end_drawing();
 	vita2d_common_dialog_update();
 	vita2d_wait_rendering_done();
@@ -166,7 +166,7 @@ static int lua_textheight(lua_State *L){
 static int lua_pixel(lua_State *L){
 	float x = luaL_checknumber(L, 1);
 	float y = luaL_checknumber(L, 2);
-	Color *color = (Color *)luaL_checkudata(L, 3, "color");
+	Color *color = lua_tocolor(L, 3);
 	vita2d_draw_pixel(x, y, color->color);
 	return 0;
 }
@@ -176,10 +176,10 @@ static int lua_gradient(lua_State *L){
     float y = luaL_checknumber(L, 2);
     float width = luaL_checknumber(L, 3);
     float height = luaL_checknumber(L, 4);
-    Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
-	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
-	Color *bottom_left = (Color *)luaL_checkudata(L, 7, "color");
-	Color *bottom_right = (Color *)luaL_checkudata(L, 8, "color");
+    Color *top_left = lua_tocolor(L, 5);
+	Color *top_right = lua_tocolor(L, 6);
+	Color *bottom_left = lua_tocolor(L, 7);
+	Color *bottom_right = lua_tocolor(L, 8);
 
 	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
         6 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
@@ -208,12 +208,12 @@ static int lua_vdoublegradient(lua_State *L) {
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
 
 	// Expecting 12 colors: top_left, top_right, center_left, center_right, bottom_left, bottom_right
-	Color *top_left = (Color *)luaL_checkudata(L, 5, "color");
-	Color *top_right = (Color *)luaL_checkudata(L, 6, "color");
-	Color *center_left = (Color *)luaL_checkudata(L, 7, "color");
-	Color *center_right = (Color *)luaL_checkudata(L, 8, "color");
-	Color *bottom_left = (Color *)luaL_checkudata(L, 9, "color");
-	Color *bottom_right = (Color *)luaL_checkudata(L, 10, "color");
+	Color *top_left = lua_tocolor(L, 5);
+	Color *top_right = lua_tocolor(L, 6);
+	Color *center_left = lua_tocolor(L, 7);
+	Color *center_right = lua_tocolor(L, 8);
+	Color *bottom_left = lua_tocolor(L, 9);
+	Color *bottom_right = lua_tocolor(L, 10);
 
 	int half = height / 2;
 
@@ -249,12 +249,12 @@ static int lua_hdoublegradient(lua_State *L) {
         12 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
 
 	// Expecting 12 colors: left_top, center_top, right_top, left_bottom, center_bottom, right_bottom
-	Color *left_top = (Color *)luaL_checkudata(L, 5, "color");
-	Color *center_top = (Color *)luaL_checkudata(L, 6, "color");
-	Color *right_top = (Color *)luaL_checkudata(L, 7, "color");
-	Color *left_bottom = (Color *)luaL_checkudata(L, 8, "color");
-	Color *center_bottom = (Color *)luaL_checkudata(L, 9, "color");
-	Color *right_bottom = (Color *)luaL_checkudata(L, 10, "color");
+	Color *left_top = lua_tocolor(L, 5);
+	Color *center_top = lua_tocolor(L, 6);
+	Color *right_top = lua_tocolor(L, 7);
+	Color *left_bottom = lua_tocolor(L, 8);
+	Color *center_bottom = lua_tocolor(L, 9);
+	Color *right_bottom = lua_tocolor(L, 10);
 
 	int half = width / 2;
 
@@ -313,6 +313,7 @@ static const luaL_Reg draw_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_opendraw(lua_State *L) {
-	luaL_openlib(L, "draw", draw_lib, 0);
+LUALIB_API int luaL_opendraw(lua_State *L) {
+	luaL_register(L, "draw", draw_lib);
+    return 1;
 }

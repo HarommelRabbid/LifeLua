@@ -183,8 +183,8 @@ static const luaL_Reg controls_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_opencontrols(lua_State *L) {
-	luaL_openlib(L, "controls", controls_lib, 0);
+LUALIB_API int luaL_opencontrols(lua_State *L) {
+	luaL_register(L, "controls", controls_lib);
 	luaL_pushglobalint(L, SCE_CTRL_UP);
 	luaL_pushglobalint(L, SCE_CTRL_DOWN);
 	luaL_pushglobalint(L, SCE_CTRL_LEFT);
@@ -219,4 +219,5 @@ void luaL_opencontrols(lua_State *L) {
 		luaL_pushglobalint_as(L, SCE_CTRL_CIRCLE, "SCE_CTRL_ACCEPT"); 
 		luaL_pushglobalint_as(L, SCE_CTRL_CROSS, "SCE_CTRL_CANCEL");
 	}
+    return 1;
 }

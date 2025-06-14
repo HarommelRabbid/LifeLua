@@ -141,14 +141,15 @@ static const luaL_Reg timer_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_opentimer(lua_State *L) {
+LUALIB_API int luaL_opentimer(lua_State *L) {
 	luaL_newmetatable(L, "timer");
 
     lua_pushstring(L, "__index");
     lua_pushvalue(L, -2);  /* pushes the metatable */
     lua_settable(L, -3);  /* metatable.__index = metatable */
     
-    luaL_openlib(L, NULL, timer_methods, 0);
+    luaL_register(L, NULL, timer_methods);
 
-	luaL_openlib(L, "timer", timer_lib, 0);
+	luaL_register(L, "timer", timer_lib);
+    return 1;
 }

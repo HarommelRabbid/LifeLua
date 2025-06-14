@@ -375,8 +375,8 @@ static const luaL_Reg camera_lib[] = {
     {NULL, NULL}
 };
 
-void luaL_opencamera(lua_State *L){
-    luaL_openlib(L, "camera", camera_lib, 0);
+LUALIB_API int luaL_opencamera(lua_State *L){
+    luaL_register(L, "camera", camera_lib);
     luaL_pushglobalint(L, SCE_CAMERA_DEVICE_FRONT);
     luaL_pushglobalint(L, SCE_CAMERA_DEVICE_BACK);
     luaL_pushglobalint(L, SCE_CAMERA_RESOLUTION_0_0);
@@ -468,4 +468,5 @@ void luaL_opencamera(lua_State *L){
 	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_LESS10);
 	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_LESS100);
 	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_OVER100);
+    return 1;
 }
