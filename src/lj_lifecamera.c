@@ -27,8 +27,6 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-#define FRAMERATES_NUM 9 // Number of available framerates
-
 SceCameraInfo cam_info;
 SceCameraRead cam_info_read;
 Image *camerabuf;
@@ -135,7 +133,7 @@ static int lua_stop(lua_State *L){
 	camera = false;
 	sceCameraStop(cam_type);
 	sceCameraClose(cam_type);
-	vita2d_free_texture(camerabuf->tex);
+	//vita2d_free_texture(camerabuf->tex);
 	return 0;
 }
 
@@ -181,12 +179,198 @@ static int lua_zoom(lua_State *L){
     return 1;
 }
 
+static int lua_brightness(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    int level = luaL_checkinteger(L, 1);
+	    sceCameraSetBrightness(cam_type, CLAMP(level, 0, 255));
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetBrightness(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_saturation(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraSaturation level = luaL_checkinteger(L, 1);
+	    sceCameraSetSaturation(cam_type, level);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetSaturation(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_sharpness(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraSharpness level = luaL_checkinteger(L, 1);
+	    sceCameraSetSharpness(cam_type, level);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetSharpness(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_contrast(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    int level = luaL_checkinteger(L, 1);
+	    sceCameraSetContrast(cam_type, CLAMP(level, 0, 255));
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetContrast(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_ev(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraExposureCompensation level = luaL_checkinteger(L, 1);
+	    sceCameraSetEV(cam_type, level);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetEV(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_antiflicker(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraAntiFlicker mode = luaL_checkinteger(L, 1);
+	    sceCameraSetAntiFlicker(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetAntiFlicker(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_iso(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraISO mode = luaL_checkinteger(L, 1);
+	    sceCameraSetISO(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetISO(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_gain(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraGain mode = luaL_checkinteger(L, 1);
+	    sceCameraSetGain(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetGain(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_whitebalance(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraWhiteBalance mode = luaL_checkinteger(L, 1);
+	    sceCameraSetWhiteBalance(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetWhiteBalance(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_backlight(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraBacklight mode = luaL_checkinteger(L, 1);
+	    sceCameraSetBacklight(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetBacklight(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_nightmode(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+	    SceCameraNightmode mode = luaL_checkinteger(L, 1);
+	    sceCameraSetNightmode(cam_type, mode);
+	    return 0;
+    }else{
+        int val;
+	    sceCameraGetNightmode(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_noisereduction(lua_State *L){
+    if (!camera) return luaL_error(L, "Camera wasn't started");
+    if(!lua_isnone(L, 1)){
+        int level = luaL_checkinteger(L, 1);
+        sceCameraSetNoiseReduction(cam_type, level);
+        return 0;
+    }else{
+        int val;
+	    sceCameraGetNoiseReduction(cam_type, &val);
+	    lua_pushinteger(L, val);
+    }
+    return 1;
+}
+
+static int lua_active(lua_State *L){
+    lua_pushboolean(L, sceCameraIsActive(cam_type));
+    return 1;
+}
+
 static const struct luaL_Reg camera_lib[] = {
     {"start", lua_start},
     {"output", lua_output},
     {"reverse", lua_reverse},
     {"effect", lua_effect},
     {"zoom", lua_zoom},
+    {"brightness", lua_brightness},
+    {"saturation", lua_saturation},
+    {"sharpness", lua_sharpness},
+    {"contrast", lua_contrast},
+    {"exposure", lua_ev},
+    {"antiflicker", lua_antiflicker},
+    {"iso", lua_iso},
+    {"gain", lua_gain},
+    {"whitebalance", lua_whitebalance},
+    {"backlight", lua_backlight},
+    {"nightmode", lua_nightmode},
+    {"noisereduction", lua_noisereduction},
+    {"active", lua_active},
     {"stop", lua_stop},
     {NULL, NULL}
 };
@@ -223,4 +407,65 @@ void luaL_opencamera(lua_State *L){
 	luaL_pushglobalint(L, SCE_CAMERA_EFFECT_BLUE);
 	luaL_pushglobalint(L, SCE_CAMERA_EFFECT_RED);
 	luaL_pushglobalint(L, SCE_CAMERA_EFFECT_GREEN);
+    luaL_pushglobalint(L, SCE_CAMERA_SATURATION_0);
+    luaL_pushglobalint(L, SCE_CAMERA_SATURATION_5);
+	luaL_pushglobalint(L, SCE_CAMERA_SATURATION_10);
+	luaL_pushglobalint(L, SCE_CAMERA_SATURATION_20);
+	luaL_pushglobalint(L, SCE_CAMERA_SATURATION_30);
+	luaL_pushglobalint(L, SCE_CAMERA_SATURATION_40);
+    luaL_pushglobalint(L, SCE_CAMERA_SHARPNESS_100);
+	luaL_pushglobalint(L, SCE_CAMERA_SHARPNESS_200);
+	luaL_pushglobalint(L, SCE_CAMERA_SHARPNESS_300);
+	luaL_pushglobalint(L, SCE_CAMERA_SHARPNESS_400);
+    luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_20);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_17);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_15);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_13);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_10);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_7);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_5);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_NEGATIVE_3);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_0);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_3);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_5);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_7);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_10);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_13);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_15);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_17);
+	luaL_pushglobalint(L, SCE_CAMERA_EV_POSITIVE_20);
+    luaL_pushglobalint(L, SCE_CAMERA_ANTIFLICKER_AUTO);
+	luaL_pushglobalint(L, SCE_CAMERA_ANTIFLICKER_50HZ);
+	luaL_pushglobalint(L, SCE_CAMERA_ANTIFLICKER_60HZ);
+    luaL_pushglobalint(L, SCE_CAMERA_ISO_AUTO);
+	luaL_pushglobalint(L, SCE_CAMERA_ISO_100);
+	luaL_pushglobalint(L, SCE_CAMERA_ISO_200);
+	luaL_pushglobalint(L, SCE_CAMERA_ISO_400);
+    luaL_pushglobalint(L, SCE_CAMERA_GAIN_AUTO);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_1);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_2);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_3);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_4);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_5);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_6);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_7);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_8);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_9);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_10);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_11);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_12);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_13);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_14);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_15);
+	luaL_pushglobalint(L, SCE_CAMERA_GAIN_16);
+    luaL_pushglobalint(L, SCE_CAMERA_WB_AUTO);
+	luaL_pushglobalint(L, SCE_CAMERA_WB_DAY);
+	luaL_pushglobalint(L, SCE_CAMERA_WB_CWF);
+	luaL_pushglobalint(L, SCE_CAMERA_WB_SLSA);
+    luaL_pushglobalint(L, SCE_CAMERA_BACKLIGHT_OFF);
+	luaL_pushglobalint(L, SCE_CAMERA_BACKLIGHT_ON);
+    luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_OFF);
+	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_LESS10);
+	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_LESS100);
+	luaL_pushglobalint(L, SCE_CAMERA_NIGHTMODE_OVER100);
 }
