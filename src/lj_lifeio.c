@@ -391,7 +391,7 @@ static int lua_md5(lua_State *L){
     struct MD5Context ctx;
 
     MD5Init(&ctx);
-    MD5Update(&ctx, (const unsigned char *)input, (unsigned)len);
+    MD5Update(&ctx, (const uint8_t *)input, (unsigned)len);
     MD5Final(digest, &ctx);
 
     char hex[33];
