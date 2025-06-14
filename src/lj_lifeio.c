@@ -19,6 +19,7 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/sha1.h"
+#include "include/md5.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -352,58 +353,24 @@ static int lua_getfolder(lua_State *L) {
 }
 
 static int lua_sha1(lua_State *L){
-	const char *path = luaL_checkstring(L, 1);
+	const char *input = luaL_checkstring(L, 1);
+	size_t len = strlen(input);
+
 	uint8_t sha1out[20];
+
 	// Set up SHA1 context
-  	SHA1_CTX ctx;
- 	sha1_init(&ctx);
-
-  	SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
-  	if (fd < 0) lua_pushnil(L);
-
-  	// Open up the buffer for copying data into
-  	void *buf = memalign(4096, (128 * 1024));
-
-  	// Actually take the SHA1 sum
-  	while (1) {
-    	int read = sceIoRead(fd, buf, (128 * 1024));
-
-    	if (read < 0) {
-      		free(buf);
-      		sceIoClose(fd);
-      		lua_pushnil(L);
-			return 1;
-    	}
-
-    	if (read == 0)
-      		break;
-
-    	sha1_update(&ctx, buf, read);
-	}
-
+	SHA1_CTX ctx;
+	sha1_init(&ctx);
+	sha1_update(&ctx, (const uint8_t *)input, len);
 	sha1_final(&ctx, sha1out);
 
-  	// Free up file buffer
-  	free(buf);
-
-  	// Close file properly
-  	sceIoClose(fd);
-
-	char sha1msg[42];
-  	memset(sha1msg, 0, sizeof(sha1msg));
-
-  	// Construct SHA1 sum string
-  	int i;
-  	for (i = 0; i < 20; i++) {
-    	char string[4];
-    	sprintf(string, "%02X", sha1out[i]);
-    	strcat(sha1msg, string);
-  	}
-
-  	//sha1msg[41] = '\0';
+	// Convert SHA1 result to hex string
+	char sha1msg[42]; // 40 chars + null terminator
+	for (int i = 0; i < 20; i++) {
+		sprintf(sha1msg + i * 2, "%02X", sha1out[i]);
+	}
 
 	lua_pushstring(L, sha1msg);
-
 	return 1;
 }
 
@@ -413,6 +380,25 @@ static int lua_crc32(lua_State *L) {
 	uInt len = strlen(str);
     crc = crc32(crc, (const Bytef *)str, len);
     lua_pushnumber(L, crc);
+    return 1;
+}
+
+static int lua_md5(lua_State *L){
+    size_t len;
+    const char *input = luaL_checklstring(L, 1, &len);
+
+    unsigned char digest[16];
+    struct MD5Context ctx;
+
+    MD5Init(&ctx);
+    MD5Update(&ctx, (const unsigned char *)input, (unsigned)len);
+    MD5Final(digest, &ctx);
+
+    char hex[33];
+    for (int i = 0; i < 16; ++i)
+        sprintf(hex + i * 2, "%02X", digest[i]);
+
+    lua_pushstring(L, hex);
     return 1;
 }
 
@@ -477,6 +463,7 @@ static const luaL_Reg io_lib[] = {
 	{"filestrip", lua_getfolder},
 	{"sha1", lua_sha1},
 	{"crc32", lua_crc32},
+    {"md5", lua_md5},
     {"workpath", lua_workpath},
     {"freespace", lua_freespace},
     {"fullspace", lua_totalspace},
