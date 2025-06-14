@@ -6,7 +6,8 @@ https://harommelrabbid.github.io/LifeLua
 ## Samples
 For a showcase of LifeLua's features go to the repository's `sample` folder.
 ## Compiling
-Install [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
+* [libsqlite](https://github.com/VitaSmith/libsqlite): run `cd libsqlite && make`, move the library (ends with` *.a`) in the folder where the libraries are stored in the vitasdk, and run `make install`, see https://github.com/VitaSmith/libsqlite?tab=readme-ov-file#compiling
+* Install [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
 ```
 mkdir build && cd build && cmake .. && make
 ```
