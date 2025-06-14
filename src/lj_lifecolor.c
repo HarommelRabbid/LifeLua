@@ -172,7 +172,7 @@ static int lua_colormix(lua_State *L) {
     return 1;
 }
 
-static const struct luaL_Reg color_lib[] = {
+static const luaL_Reg color_lib[] = {
     {"new", lua_newcolor},
 	{"r", lua_colorr},
 	{"g", lua_colorg},
@@ -185,7 +185,7 @@ static const struct luaL_Reg color_lib[] = {
     {NULL, NULL}
 };
 
-static const struct luaL_Reg color_methods[] = {
+static const luaL_Reg color_methods[] = {
 	{"r", lua_colorr},
 	{"g", lua_colorg},
 	{"b", lua_colorb},

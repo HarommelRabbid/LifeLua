@@ -166,7 +166,7 @@ static int lua_lightbar(lua_State *L){
 	return 0;
 }
 
-static const struct luaL_Reg controls_lib[] = {
+static const luaL_Reg controls_lib[] = {
 	{"update", lua_updatecontrols},
 	{"check", lua_check},
 	{"pressed", lua_pressed},

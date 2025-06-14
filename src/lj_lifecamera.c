@@ -352,7 +352,7 @@ static int lua_active(lua_State *L){
     return 1;
 }
 
-static const struct luaL_Reg camera_lib[] = {
+static const luaL_Reg camera_lib[] = {
     {"start", lua_start},
     {"output", lua_output},
     {"reverse", lua_reverse},

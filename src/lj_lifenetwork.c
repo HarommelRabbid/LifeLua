@@ -199,7 +199,7 @@ static int lua_header(lua_State *L){
 	return 1;
 }
 
-static const struct luaL_Reg network_lib[] = {
+static const luaL_Reg network_lib[] = {
 	{"ftp", lua_ftp},
     {"ftpinit", lua_ftpinit},
 	{"ftpadddevice", lua_ftp_add},

@@ -1010,7 +1010,7 @@ static int lua_exportvideo(lua_State *L){
 	return 1;
 }
 
-static const struct luaL_Reg os_lib[] = {
+static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
 	{"unsafe", lua_unsafe},

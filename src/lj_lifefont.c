@@ -62,7 +62,7 @@ static int lua_fontgc(lua_State *L){
 	return 0;
 }
 
-static const struct luaL_Reg font_lib[] = {
+static const luaL_Reg font_lib[] = {
     {"load", lua_loadfont},
     {NULL, NULL}
 };

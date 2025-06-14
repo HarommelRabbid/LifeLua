@@ -30,9 +30,9 @@
 #include <lauxlib.h>
 #endif
 #define str(str) #str
-#define luaL_pushglobalint(L, value) do { lua_pushinteger(L, value); lua_setglobal (L, str(value)); } while(0)
-#define luaL_pushglobalint_as(L, value, var) do { lua_pushinteger(L, value); lua_setglobal (L, var); } while(0)
-#define luaL_pushglobalint_alsoas(L, value, var) do { luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var); } while(0)
+#define luaL_pushglobalint(L, value) lua_pushinteger(L, value); lua_setglobal (L, #value);
+#define luaL_pushglobalint_as(L, value, var) lua_pushinteger(L, value); lua_setglobal (L, var);
+#define luaL_pushglobalint_alsoas(L, value, var) luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var);
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 

@@ -74,14 +74,14 @@ static int lua_query(lua_State *L){
 	return 1;
 }
 
-static const struct luaL_Reg sqlite3_lib[] = {
+static const luaL_Reg sqlite3_lib[] = {
     {"open", lua_opendb},
     {"query", lua_query},
     {"close", lua_closedb},
     {NULL, NULL}
 };
 
-static const struct luaL_Reg sqlite3_methods[] = {
+static const luaL_Reg sqlite3_methods[] = {
     {"query", lua_query},
     {"close", lua_closedb},
     {"__gc", lua_closedb},

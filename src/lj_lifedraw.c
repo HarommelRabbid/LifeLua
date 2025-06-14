@@ -296,7 +296,7 @@ static int lua_cliprect(lua_State *L){
 	return 0;
 }
 
-static const struct luaL_Reg draw_lib[] = {
+static const luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
 	{"textheight", lua_textheight},

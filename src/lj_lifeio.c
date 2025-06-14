@@ -466,7 +466,7 @@ static int lua_totalspace(lua_State *L) {
 	return 1;
 }
 
-static const struct luaL_Reg io_lib[] = {
+static const luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
 	{"exists", lua_fileexist},

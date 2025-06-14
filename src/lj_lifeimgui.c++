@@ -311,7 +311,7 @@ static int lua_progressbar(lua_State *L) {
 	return 0;
 }
 
-static const struct luaL_Reg imgui_lib[] = {
+static const luaL_Reg imgui_lib[] = {
 	{"init", lua_iminit},
     {"shutdown", lua_imshutdown},
     {"renderinit", lua_renderinit},

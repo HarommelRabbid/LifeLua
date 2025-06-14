@@ -139,7 +139,7 @@ int lua_imagegc(lua_State *L) {
     return 0;
 }
 
-static const struct luaL_Reg image_lib[] = {
+static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
 	//{"screen", lua_screenimage},
@@ -151,7 +151,7 @@ static const struct luaL_Reg image_lib[] = {
     {NULL, NULL}
 };
 
-static const struct luaL_Reg image_methods[] = {
+static const luaL_Reg image_methods[] = {
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
