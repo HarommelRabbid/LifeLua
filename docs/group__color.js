@@ -8,5 +8,6 @@ var group__color =
     [ "color.mix", "group__color.html#ga3dc37ba6d27550de74c66690f27deb53", null ],
     [ "color.new", "group__color.html#ga8e6f48c98c84556e37616d1f5ac050cc", null ],
     [ "color.r", "group__color.html#ga2dcbc9501100787a137c61913c77f56b", null ],
-    [ "color.sub", "group__color.html#ga373cded3eb3a64ef99d2d588827ca7f2", null ]
+    [ "color.sub", "group__color.html#ga373cded3eb3a64ef99d2d588827ca7f2", null ],
+    [ "tocolor", "group__color.html#gaf2fe59a2e8f4920d64bf2f7ec1feb2fe", null ]
 ];

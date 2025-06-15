@@ -1,5 +1,6 @@
 var topics =
 [
+    [ "camera", "group__camera.html", "group__camera" ],
     [ "controls", "group__controls.html", "group__controls" ],
     [ "draw", "group__draw.html", "group__draw" ],
     [ "color", "group__color.html", "group__color" ],

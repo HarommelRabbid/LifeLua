@@ -136,6 +136,10 @@ Functions</h2></td></tr>
 <tr class="separator:ga590c2839b488a29b0c22274bf44d9c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf5546ab22da442a8be2c008ab894111c" id="r_gaf5546ab22da442a8be2c008ab894111c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf5546ab22da442a8be2c008ab894111c">controls.reartouch</a> ()</td></tr>
 <tr class="separator:gaf5546ab22da442a8be2c008ab894111c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9808aaec1c644321e593118f22e9a805" id="r_ga9808aaec1c644321e593118f22e9a805"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9808aaec1c644321e593118f22e9a805">controls.lightbar</a> (number r, number g, number b)</td></tr>
+<tr class="separator:ga9808aaec1c644321e593118f22e9a805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga259b600e0f50f986554d3aa0e142f436" id="r_ga259b600e0f50f986554d3aa0e142f436"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga259b600e0f50f986554d3aa0e142f436">controls.vibrate</a> (number small, number large, number port)</td></tr>
+<tr class="separator:ga259b600e0f50f986554d3aa0e142f436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -211,6 +215,12 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_VO
 <tr class="memitem:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" id="r_ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memItemLeft" align="right" valign="top"><a id="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" name="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_POWER</b></td></tr>
 <tr class="separator:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9976ea92afcfb52288d80d3d6e58ec3d" id="r_ga9976ea92afcfb52288d80d3d6e58ec3d"><td class="memItemLeft" align="right" valign="top"><a id="ga9976ea92afcfb52288d80d3d6e58ec3d" name="ga9976ea92afcfb52288d80d3d6e58ec3d"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_ACCEPT</b></td></tr>
+<tr class="separator:ga9976ea92afcfb52288d80d3d6e58ec3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga757bda12a8c863abf44d0cab21b50993" id="r_ga757bda12a8c863abf44d0cab21b50993"><td class="memItemLeft" align="right" valign="top"><a id="ga757bda12a8c863abf44d0cab21b50993" name="ga757bda12a8c863abf44d0cab21b50993"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CANCEL</b></td></tr>
+<tr class="separator:ga757bda12a8c863abf44d0cab21b50993"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Controls, touch &amp; motion </p>
@@ -405,6 +415,33 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_PO
 
 </div>
 </div>
+<a id="ga9808aaec1c644321e593118f22e9a805" name="ga9808aaec1c644321e593118f22e9a805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9808aaec1c644321e593118f22e9a805">&#9670;&#160;</a></span>controls.lightbar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil controls.lightbar </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>g</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the lightbar on DualShock 4s </p>
+
+</div>
+</div>
 <a id="gae726649b4905dd7204df840eec400f81" name="gae726649b4905dd7204df840eec400f81"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae726649b4905dd7204df840eec400f81">&#9670;&#160;</a></span>controls.pressed()</h2>
 
@@ -506,6 +543,38 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_PO
   <table class="params">
     <tr><td class="paramname">ext</td><td>Extended controls, will update even if there are common dialogs running (IME keyboard, message etc.), optional </td></tr>
     <tr><td class="paramname">bind</td><td>Binds the LTRIGGER &amp; RTRIGGER to L1 &amp; R1 respectively, optional </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga259b600e0f50f986554d3aa0e142f436" name="ga259b600e0f50f986554d3aa0e142f436"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga259b600e0f50f986554d3aa0e142f436">&#9670;&#160;</a></span>controls.vibrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil controls.vibrate </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>small</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>large</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the vibration intensity on DualShock controllers </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td>optional </td></tr>
   </table>
   </dd>
 </dl>
