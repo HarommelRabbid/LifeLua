@@ -10,9 +10,9 @@
 
 This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. Since this is an interpreter, you don't need any compilation, just modify Lua files and boom.
 
-It has a lot of customizability and also a lot of useful features. Since this is still a work in progress, don't expect absolutely everything to be on here.
+It has a lot of customizability and also a lot of useful features. The documentation is incomplete, so for features not documented here yet, look into the source code or the samples.
 
-Any other Lua function &/or library that isn't documented here is documented in every Lua programming [documentation](https://www.lua.org/manual/).
+Any other Lua function &/or library that isn't documented here is documented in any [documentation](https://www.lua.org/manual/) of Lua.
 
 ## License ##
 LifeLua is released under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).

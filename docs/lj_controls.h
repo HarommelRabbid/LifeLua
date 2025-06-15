@@ -29,6 +29,8 @@ SceCtrlButtons SCE_CTRL_HEADPHONE;
 SceCtrlButtons SCE_CTRL_VOLUP;
 SceCtrlButtons SCE_CTRL_VOLDOWN;
 SceCtrlButtons SCE_CTRL_POWER;
+SceCtrlButtons SCE_CTRL_ACCEPT;
+SceCtrlButtons SCE_CTRL_CANCEL;
 /** 
  * Updates the controls
  * @param ext Extended controls, will update even if there are common dialogs running (IME keyboard, message etc.), optional
@@ -123,4 +125,13 @@ number controls․fronttouch() {}
  * @return Tables with the X, Y, force and ID of the touch
 */
 number controls․reartouch() {}
+/** 
+ * Sets the lightbar on DualShock 4s
+*/
+nil controls․lightbar(number r, number g, number b) {}
+/** 
+ * Sets the vibration intensity on DualShock controllers
+ * @param port optional
+*/
+nil controls․vibrate(number small, number large, number port) {}
 /** @} */

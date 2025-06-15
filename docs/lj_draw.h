@@ -118,6 +118,10 @@ color color․blend(color color1, color color2) {}
  * Blends 2 colors by 2 percentages
 */
 color color․mix(color color1, color color2, number p1, number p2) {}
+/** 
+ * Converts an integer (e. g. 0xFFFF0000) to a color
+*/
+color tocolor(color color1, color color2, number p1, number p2) {}
 /** @} */
 
 /**

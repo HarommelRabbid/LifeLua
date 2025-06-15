@@ -9,9 +9,13 @@
  */
 number io․crc32(string string) {}
 /**
- * Gets the SHA1 hash of a file
+ * Gets the SHA1 hash of a string
  */
-string io․sha1(string path) {}
+string io․sha1(string string) {}
+/**
+ * Gets the MD5 hash of a string
+ */
+string io․md5(string string) {}
 /**
  * Gets or sets the working path
  * @param path If defined, the work path will be set to the defined path
