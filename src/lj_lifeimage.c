@@ -80,7 +80,6 @@ static int lua_imagedraw(lua_State *L){
 		color = lua_tocolor(L, 4);
 		vita2d_draw_texture_tint(image->tex, x, y, color->color);
 	}
-	//vita2d_free_texture(image);
 	return 0;
 }
 
@@ -98,7 +97,6 @@ static int lua_imagescaledraw(lua_State *L){
 		color = lua_tocolor(L, 6);
 		vita2d_draw_texture_tint_scale(image->tex, x, y, scalex, scaley, color->color);
 	}
-	//vita2d_free_texture(image);
 	return 0;
 }
 
@@ -115,7 +113,6 @@ static int lua_imagerotatedraw(lua_State *L){
 		color = lua_tocolor(L, 5);
 		vita2d_draw_texture_tint_rotate(image->tex, x, y, radius, color->color);
 	}
-	//vita2d_free_texture(image);
 	return 0;
 }
 
@@ -134,7 +131,68 @@ static int lua_imagescalerotatedraw(lua_State *L){
 		color = lua_tocolor(L, 5);
 		vita2d_draw_texture_tint_scale_rotate(image->tex, x, y, scalex, scaley, radius, color->color);
 	}
-	//vita2d_free_texture(image);
+	return 0;
+}
+
+static int lua_imagepartdraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+    float tex_x = luaL_checknumber(L, 4);
+    float tex_y = luaL_checknumber(L, 5);
+    float tex_w = luaL_checknumber(L, 6);
+    float tex_h = luaL_checknumber(L, 7);
+	Color *color;
+	if(argc <= 7){
+		vita2d_draw_texture_part(image->tex, x, y, tex_x, tex_y, tex_w, tex_h);
+	}else{
+		color = lua_tocolor(L, 8);
+		vita2d_draw_texture_tint_part(image->tex, x, y, tex_x, tex_y, tex_w, tex_h, color->color);
+	}
+	return 0;
+}
+
+static int lua_imagepartscaledraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+    float tex_x = luaL_checknumber(L, 4);
+    float tex_y = luaL_checknumber(L, 5);
+    float tex_w = luaL_checknumber(L, 6);
+    float tex_h = luaL_checknumber(L, 7);
+    float scalex = luaL_checknumber(L, 8);
+	float scaley = luaL_checknumber(L, 9);
+	Color *color;
+	if(argc <= 9){
+		vita2d_draw_texture_part_scale(image->tex, x, y, tex_x, tex_y, tex_w, tex_h, scalex, scaley);
+	}else{
+		color = lua_tocolor(L, 10);
+		vita2d_draw_texture_tint_part_scale(image->tex, x, y, tex_x, tex_y, tex_w, tex_h, scalex, scaley, color->color);
+	}
+	return 0;
+}
+
+static int lua_imagepartscalerotatedraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+    float tex_x = luaL_checknumber(L, 4);
+    float tex_y = luaL_checknumber(L, 5);
+    float tex_w = luaL_checknumber(L, 6);
+    float tex_h = luaL_checknumber(L, 7);
+    float scalex = luaL_checknumber(L, 8);
+	float scaley = luaL_checknumber(L, 9);
+    float rad = luaL_checknumber(L, 10);
+	Color *color;
+	if(argc <= 10){
+		vita2d_draw_texture_part_scale_rotate(image->tex, x, y, tex_x, tex_y, tex_w, tex_h, scalex, scaley, rad);
+	}else{
+		color = lua_tocolor(L, 11);
+		vita2d_draw_texture_part_tint_scale_rotate(image->tex, x, y, tex_x, tex_y, tex_w, tex_h, scalex, scaley, rad, color->color);
+	}
 	return 0;
 }
 
@@ -166,6 +224,9 @@ static const luaL_Reg image_lib[] = {
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
     {"scalerotatedisplay", lua_imagescalerotatedraw},
+    {"partdisplay", lua_imagepartdraw},
+    {"scalepartdisplay", lua_imagepartscaledraw},
+    {"scalerotatepartdisplay", lua_imagepartscalerotatedraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
     {NULL, NULL}
@@ -175,6 +236,10 @@ static const luaL_Reg image_methods[] = {
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
+    {"scalerotatedisplay", lua_imagescalerotatedraw},
+    {"partdisplay", lua_imagepartdraw},
+    {"scalepartdisplay", lua_imagepartscaledraw},
+    {"scalerotatepartdisplay", lua_imagepartscalerotatedraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
 	{"__gc", lua_imagegc},
