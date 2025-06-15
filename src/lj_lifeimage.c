@@ -119,6 +119,25 @@ static int lua_imagerotatedraw(lua_State *L){
 	return 0;
 }
 
+static int lua_imagescalerotatedraw(lua_State *L){
+	int argc = lua_gettop(L);
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+    float scalex = luaL_checknumber(L, 4);
+	float scaley = luaL_checknumber(L, 5);
+	float radius = luaL_checknumber(L, 6);
+	Color *color;
+	if(argc <= 5){
+		vita2d_draw_texture_scale_rotate(image->tex, x, y, scalex, scaley, radius);
+	}else{
+		color = lua_tocolor(L, 5);
+		vita2d_draw_texture_tint_scale_rotate(image->tex, x, y, scalex, scaley, radius, color->color);
+	}
+	//vita2d_free_texture(image);
+	return 0;
+}
+
 static int lua_imagewidth(lua_State *L){
 	Image *image = (Image *)luaL_checkudata(L, 1, "image");
 	lua_pushinteger(L, vita2d_texture_get_width(image->tex));
@@ -146,6 +165,7 @@ static const luaL_Reg image_lib[] = {
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
+    {"scalerotatedisplay", lua_imagescalerotatedraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
     {NULL, NULL}
