@@ -1322,6 +1322,13 @@ static int lua_exportvideo(lua_State *L){
 	return 1;
 }
 
+static int lua_language(lua_State *L){
+    int lang;
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &lang);
+	lua_pushinteger(L, lang);
+    return 1;
+}
+
 static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1401,6 +1408,7 @@ static const luaL_Reg os_lib[] = {
 	{"musicexport", lua_exportmusic},
 	{"videoexport", lua_exportvideo},
 	{"delaycb", lua_delaycb},
+    {"language", lua_language},
     {NULL, NULL}
 };
 
@@ -1477,5 +1485,25 @@ LUALIB_API int luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_APPMGR_SYSTEMEVENT_ON_STORE_REDEMPTION);
 	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_DEFAULT);
 	luaL_pushglobalint(L, SCE_AVCONFIG_COLOR_SPACE_MODE_HIGH_CONTRAST);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_JAPANESE);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_ENGLISH_US);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_FRENCH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_SPANISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_GERMAN);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_ITALIAN);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_DUTCH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_PORTUGUESE_PT);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_RUSSIAN);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_KOREAN);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_CHINESE_T);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_CHINESE_S);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_FINNISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_SWEDISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_DANISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_NORWEGIAN);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_POLISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_PORTUGUESE_BR);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_ENGLISH_GB);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_TURKISH);
     return 1;
 }
