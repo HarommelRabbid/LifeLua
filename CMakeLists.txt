@@ -112,6 +112,7 @@ target_link_libraries(${PROJECT_NAME}
     SceRegistryMgr_stub
     ScePower_stub
     SceAudio_stub
+    SceAtrac_stub
     SceHid_stub
     SceUdcd_stub
     SceAVConfig_stub

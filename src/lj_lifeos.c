@@ -34,18 +34,19 @@ typedef struct SceNotificationUtilSendParam {
     SceChar8 unknown[0x3F0];
 } SceNotificationUtilSendParam;
 
-#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT			(0x00000007U)
-#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_ALL		(0x00000001U)
+//photo import dialog
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT				(0x00000007U)
+#define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_ALL			(0x00000001U)
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_CAMERA		(0x00000002U)
 #define SCE_PHOTOIMPORT_DIALOG_CATEGORY_ALBUM_SCREENSHOT	(0x00000004U)
 
-#define SCE_PHOTOIMPORT_DIALOG_MAX_FS_PATH			(1024)
+#define SCE_PHOTOIMPORT_DIALOG_MAX_FS_PATH					(1024)
 
 #define SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_LENGTH		(64)
 
-#define SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_SIZE	(SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_LENGTH*4)
+#define SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_SIZE			(SCE_PHOTOIMPORT_DIALOG_MAX_PHOTO_TITLE_LENGTH*4)
 
-#define SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM		(1)
+#define SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM					(1)
 
 typedef enum ScePhotoImportDialogFormatType {
 	SCE_PHOTOIMPORT_DIALOG_FORMAT_TYPE_UNKNOWN = 0,
@@ -108,20 +109,155 @@ typedef struct ScePhotoImportDialogParam {
 	SceChar8 reserved[32];
 } ScePhotoImportDialogParam;
 
-int scePhotoImportDialogInit( const ScePhotoImportDialogParam *param );
-SceCommonDialogStatus scePhotoImportDialogGetStatus( void );
-int scePhotoImportDialogGetResult( ScePhotoImportDialogResult* result );
-int scePhotoImportDialogTerm( void );
-int scePhotoImportDialogAbort( void );
-
-static inline void scePhotoImportDialogParamInit( ScePhotoImportDialogParam *param ){
-
-	memset( param, 0x0, sizeof(ScePhotoImportDialogParam) );
+static inline
+void scePhotoImportDialogParamInit( ScePhotoImportDialogParam *param ){
+	sceClibMemset( param, 0x0, sizeof(ScePhotoImportDialogParam) );
 	_sceCommonDialogSetMagicNumber( &param->commonParam );
 	param->sdkVersion = 0x03150021;
 }
 
+SceInt32 scePhotoImportDialogInit( const ScePhotoImportDialogParam *param );
+
+SceCommonDialogStatus scePhotoImportDialogGetStatus( void );
+
+SceInt32 scePhotoImportDialogGetResult( ScePhotoImportDialogResult* result );
+
+SceInt32 scePhotoImportDialogTerm( void );
+
+SceInt32 scePhotoImportDialogAbort( void );
+
 static ScePhotoImportDialogItemData s_itemData[SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM];
+
+//video import dialog
+typedef SceInt32 SceVideoImportDialogMode;
+#define SCE_VIDEOIMPORT_DIALOG_MODE_DEFAULT		(0)
+
+#define SCE_VIDEOIMPORT_DIALOG_CATEGORY_DEFAULT				(0x00000003U)
+#define SCE_VIDEOIMPORT_DIALOG_CATEGORY_ALL					(0x00000001U)
+#define SCE_VIDEOIMPORT_DIALOG_CATEGORY_FOLDER				(0x00000002U)
+
+#define SCE_VIDEOIMPORT_DIALOG_FILTER_NONE				(0x00000000U)
+#define SCE_VIDEOIMPORT_DIALOG_FILTER_SELF_RECORDING	(0x00000001U)
+#define SCE_VIDEOIMPORT_DIALOG_FILTER_TITLE_ID			(0x00000002U)
+
+
+#define SCE_VIDEOIMPORT_DIALOG_MAX_TITLE_ID_FILTER_NUM			(10)
+#define SCE_VIDEOIMPORT_DIALOG_TITLE_ID_DATA_SIZE			(10)
+#define SCE_VIDEOIMPORT_DIALOG_MAX_FS_PATH					(1024)
+#define SCE_VIDEOIMPORT_DIALOG_MAX_VIDEO_TITLE_LENGTH		(128)
+#define SCE_VIDEOIMPORT_DIALOG_MAX_VIDEO_TITLE_SIZE			(SCE_VIDEOIMPORT_DIALOG_MAX_VIDEO_TITLE_LENGTH*4)
+#define SCE_VIDEOIMPORT_DIALOG_MAX_ITEM_NUM					(1)
+typedef struct SceVideoImportDialogItemData {
+	SceChar8 fileName[SCE_VIDEOIMPORT_DIALOG_MAX_FS_PATH];
+	SceChar8 videoTitle[SCE_VIDEOIMPORT_DIALOG_MAX_VIDEO_TITLE_SIZE];
+	SceUInt32 width;
+	SceUInt32 height;
+	SceUInt32 fileSize;
+	SceUInt32 duration;
+	SceUInt64 updated;
+	SceChar8 titleId[SCE_VIDEOIMPORT_DIALOG_TITLE_ID_DATA_SIZE];
+	SceChar8 reserved[38];
+} SceVideoImportDialogItemData;
+typedef struct SceVideoImportDialogResult {
+	SceInt32 result;
+	SceUInt32 importedItemNum;
+	SceChar8 reserved[32];
+} SceVideoImportDialogResult;
+typedef struct SceVideoImportDialogParam {
+	SceUInt32 sdkVersion;
+	SceCommonDialogParam commonParam;
+	SceVideoImportDialogMode mode;
+	SceUInt32 visibleCategory;
+	SceUInt32 itemCount;
+	SceUInt32 filterType;
+	SceUInt32 filterTitleIdNum;
+	SceChar8 filterTitleId[SCE_VIDEOIMPORT_DIALOG_MAX_TITLE_ID_FILTER_NUM][SCE_VIDEOIMPORT_DIALOG_TITLE_ID_DATA_SIZE];
+	SceVideoImportDialogItemData *itemData;
+	SceChar8 reserved[32];
+} SceVideoImportDialogParam;
+static inline
+void sceVideoImportDialogParamInit( SceVideoImportDialogParam *param )
+{
+	sceClibMemset( param, 0x0, sizeof(SceVideoImportDialogParam) );
+	_sceCommonDialogSetMagicNumber( &param->commonParam );
+	param->sdkVersion = 0x03150021;
+}
+SceInt32 sceVideoImportDialogInit( const SceVideoImportDialogParam *param );
+SceCommonDialogStatus sceVideoImportDialogGetStatus( void );
+SceInt32 sceVideoImportDialogGetResult( SceVideoImportDialogResult* result );
+SceInt32 sceVideoImportDialogTerm( void );
+SceInt32 sceVideoImportDialogAbort( void );
+static SceVideoImportDialogItemData s_itemData1[SCE_VIDEOIMPORT_DIALOG_MAX_ITEM_NUM];
+
+//photo review
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_DECODE							0x80103701
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_NO_SPACE						0x80103702
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_REGISTRATION					0x80103703
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_INTERNAL						0x80103704
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_UNSUPPORTED_FILE				0x80103705
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_FILE_CORRUPTED					0x80103706
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_MEMORY							0x80103707
+#define SCE_PHOTOREVIEW_DIALOG_ERROR_REQUIRED_PRX_IS_NOT_LOADED		0x80103708
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH			(1024)
+
+#define SCE_PHOTOREVIEW_DIALOG_DEFAULT_WORKMEMORY_SIZE	(6 * 1024 * 1024)
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_PHOTO_TITLE_LENGTH	(64)
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_PHOTO_TITLE_SIZE	(SCE_PHOTOREVIEW_DIALOG_MAX_PHOTO_TITLE_LENGTH*4)
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_GAME_TITLE_LENGTH	(64)
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_GAME_COMMENT_LENGTH	(128)
+
+#define SCE_PHOTOREVIEW_DIALOG_MAX_GAME_COMMENT_SIZE	(SCE_PHOTOREVIEW_DIALOG_MAX_GAME_COMMENT_LENGTH*4)
+
+typedef SceInt32 ScePhotoReviewDialogMode;
+#define SCE_PHOTOREVIEW_DIALOG_MODE_DEFAULT			(0)
+#define SCE_PHOTOREVIEW_DIALOG_MODE_ONLY_REVIEW		(1)
+
+typedef struct ScePhotoReviewDialogExportParam {
+	const SceChar8			*photoTitle;
+	const SceChar8			*gameTitle;
+	const SceChar8			*gameComment;
+	SceChar8				reserved[32];
+} ScePhotoReviewDialogExportParam;
+
+typedef struct ScePhotoReviewDialogParam {
+	SceUInt32 sdkVersion;
+	SceCommonDialogParam commonParam;
+	ScePhotoReviewDialogMode mode;
+	SceChar8 fileName[SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH];
+	ScePVoid workMemory;
+	SceUInt32 workMemorySize;
+	const ScePhotoReviewDialogExportParam *exportParam;
+	SceChar8 reserved[28];
+} ScePhotoReviewDialogParam;
+
+typedef struct ScePhotoReviewDialogResult {
+	SceInt32 result;
+	SceChar8 reserved[32];
+} ScePhotoReviewDialogResult;
+
+
+static inline
+void scePhotoReviewDialogParamInit( ScePhotoReviewDialogParam *param ){
+	sceClibMemset( param, 0x0, sizeof(ScePhotoReviewDialogParam) );
+	_sceCommonDialogSetMagicNumber( &param->commonParam );
+	param->sdkVersion = 0x03150021;
+	param->mode = SCE_PHOTOREVIEW_DIALOG_MODE_DEFAULT;
+}
+
+SceInt32 scePhotoReviewDialogInit( const ScePhotoReviewDialogParam *param );
+
+SceCommonDialogStatus scePhotoReviewDialogGetStatus( void );
+
+SceInt32 scePhotoReviewDialogGetResult( ScePhotoReviewDialogResult* result );
+
+SceInt32 scePhotoReviewDialogTerm( void );
+
+SceInt32 scePhotoReviewDialogAbort( void );
 
 static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
@@ -231,7 +367,7 @@ static int lua_keyboard(lua_State *L){
 
 		lua_getglobal(L, "LifeLuaIMEDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
         vita2d_end_drawing();
@@ -303,7 +439,7 @@ static int lua_message(lua_State *L) {
 
 		lua_getglobal(L, "LifeLuaMessageDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
         vita2d_end_drawing();
@@ -356,7 +492,7 @@ static int lua_sysmessage(lua_State *L) {
 
 		lua_getglobal(L, "LifeLuaSystemMessageDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
         vita2d_end_drawing();
@@ -396,7 +532,7 @@ static int lua_errormessage(lua_State *L) {
 
 		lua_getglobal(L, "LifeLuaErrorCodeDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
         vita2d_end_drawing();
@@ -437,7 +573,7 @@ static int lua_progressmessage(lua_State *L) {
 
 		lua_getglobal(L, "LifeLuaProgressMessageDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
         vita2d_end_drawing();
@@ -691,17 +827,60 @@ static int lua_screenshotoverlay(lua_State *L){
 
 static int lua_screenshotinfo(lua_State *L){
 	SceScreenShotParam param;
+    sceClibMemset(&param, 0, sizeof(SceScreenShotParam));
 	const char *phototitle;
 	const char *gametitle;
 	const char *gamecomment;
-	if (!lua_isnil(L, 1)) phototitle = luaL_checkstring(L, 1);
-	if (!lua_isnil(L, 2)) gametitle = luaL_checkstring(L, 2);
-	if (!lua_isnil(L, 3)) gamecomment = luaL_checkstring(L, 3);
-	if (!lua_isnil(L, 1)) param.photoTitle = (const SceWChar32 *)phototitle;
-	if (!lua_isnil(L, 2)) param.gameTitle = (const SceWChar32 *)gametitle;
-	if (!lua_isnil(L, 3)) param.gameComment = (const SceWChar32 *)gamecomment;
+	if (!lua_isnoneornil(L, 1)) phototitle = luaL_checkstring(L, 1);
+	if (!lua_isnoneornil(L, 2)) gametitle = luaL_checkstring(L, 2);
+	if (!lua_isnoneornil(L, 3)) gamecomment = luaL_checkstring(L, 3);
+	if (!lua_isnoneornil(L, 1)) param.photoTitle = (const SceWChar32 *)phototitle;
+	if (!lua_isnoneornil(L, 2)) param.gameTitle = (const SceWChar32 *)gametitle;
+	if (!lua_isnoneornil(L, 3)) param.gameComment = (const SceWChar32 *)gamecomment;
 	sceScreenShotSetParam(&param);
 	return 0;
+}
+
+/* Mode for screenshot capture */
+typedef enum SceScreenShotCaptureMode {
+	SCE_SCREENSHOT_CAPTURE_MODE_NORMAL           = 0,
+	SCE_SCREENSHOT_CAPTURE_MODE_FORCE_CAPTURE    = 1,
+} SceScreenShotCaptureMode;
+
+/* Screenshot capture file information */
+typedef struct SceScreenShotCaptureFileInfo {
+	SceChar8 path[SCE_SCREENSHOT_MAX_FS_PATH];    /* path of capture file */
+} SceScreenShotCaptureFileInfo;
+
+/* Disable screenshot notification */
+SceInt32 sceScreenShotDisableNotification(void);
+
+/* Enable screenshot notification */
+SceInt32 sceScreenShotEnableNotification(void);
+
+/* Callback function */
+typedef SceBool (*SceScreenShotCaptureCancelFunc)(void*);
+
+/* Capture screenshot */
+SceInt32 sceScreenShotCapture(
+	SceScreenShotCaptureMode mode,
+	SceScreenShotCaptureFileInfo *captureFileInfo,
+	SceScreenShotCaptureCancelFunc cancelFunc,
+	void *userdata);
+
+static int lua_screenshotnotif(lua_State *L){
+    bool enable = lua_toboolean(L, 1);
+    if (enable) sceScreenShotEnableNotification();
+    else sceScreenShotDisableNotification();
+    return 0;
+}
+
+static int lua_screenshotcapture(lua_State *L){
+    SceScreenShotCaptureMode mode = luaL_optinteger(L, 1, SCE_SCREENSHOT_CAPTURE_MODE_FORCE_CAPTURE);
+    SceScreenShotCaptureFileInfo captureFileInfo;
+    sceClibMemset(&captureFileInfo, 0, sizeof(SceScreenShotCaptureFileInfo));
+    sceScreenShotCapture(mode, &captureFileInfo, 0, 0);
+    return 0;
 }
 
 static int lua_mountpointunmount(lua_State *L){
@@ -865,7 +1044,7 @@ static int lua_importphoto(lua_State *L){
 
 		lua_getglobal(L, "LifeLuaPhotoImportDialog");
 		if (lua_isfunction(L, -1)) {
-			if (lua_pcall(L, 0, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 0, 0);
 		}
 
  		vita2d_end_drawing();
@@ -896,9 +1075,142 @@ static int lua_importphoto(lua_State *L){
 	return 1;
 }
 
+
 static int lua_photodialogabort(lua_State *L){
 	scePhotoImportDialogAbort();
 	return 0;
+}
+
+static int lua_importvideo(lua_State *L){
+	int r = luaL_optinteger(L, 1, 0);
+	int g = luaL_optinteger(L, 2, 0);
+	int b = luaL_optinteger(L, 3, 0);
+	int a = luaL_optinteger(L, 4, 0xFF);
+	SceVideoImportDialogParam pidParam;
+	sceVideoImportDialogParamInit(&pidParam);
+
+	pidParam.mode = SCE_VIDEOIMPORT_DIALOG_MODE_DEFAULT;
+	pidParam.itemData = s_itemData1;
+	pidParam.visibleCategory = SCE_VIDEOIMPORT_DIALOG_CATEGORY_DEFAULT;
+	pidParam.itemCount = 1;
+
+	SceCommonDialogColor BgColor;
+
+	BgColor.r = r;
+	BgColor.g = g;
+	BgColor.b = b;
+	BgColor.a = a;
+
+	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
+
+	sceVideoImportDialogInit(&pidParam);
+
+	while (sceVideoImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+		//vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaVideoImportDialog");
+		if (lua_isfunction(L, -1)) {
+			lua_call(L, 0, 0);
+		}
+
+ 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+	}
+
+	SceVideoImportDialogResult pidResult;
+
+	memset(&pidResult, 0x0, sizeof(SceVideoImportDialogResult));
+	sceVideoImportDialogGetResult(&pidResult);
+
+	if (pidResult.result == SCE_COMMON_DIALOG_RESULT_OK) {
+		for (int i = 0; i < pidResult.importedItemNum && i < SCE_VIDEOIMPORT_DIALOG_MAX_ITEM_NUM; ++i) {
+			lua_pushstring(L, s_itemData1[i].fileName);
+		}
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED){
+		lua_pushnil(L);
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_ABORTED){
+		lua_pushnil(L);
+	}
+
+	sceVideoImportDialogTerm();
+	return 1;
+}
+
+static int lua_videodialogabort(lua_State *L){
+	sceVideoImportDialogAbort();
+	return 0;
+}
+
+static int lua_photoreview(lua_State *L){
+    const char *path = luaL_checkstring(L, 1);
+	int r = luaL_optinteger(L, 2, 0);
+	int g = luaL_optinteger(L, 3, 0);
+	int b = luaL_optinteger(L, 4, 0);
+	int a = luaL_optinteger(L, 5, 0xFF);
+
+    static ScePVoid s_workMemory = 0;
+    static SceUID s_heapId = 0;
+
+    s_heapId = sceKernelAllocMemBlock("LifeLuaPhotoReviewHeap", SCE_KERNEL_MEMBLOCK_TYPE_USER_RW, SCE_PHOTOREVIEW_DIALOG_DEFAULT_WORKMEMORY_SIZE, NULL);
+    sceKernelGetMemBlockBase( s_heapId, &s_workMemory );
+
+	ScePhotoReviewDialogParam prdParam;
+	scePhotoReviewDialogParamInit(&prdParam);
+
+	prdParam.mode = SCE_PHOTOREVIEW_DIALOG_MODE_DEFAULT;
+    strncpy(prdParam.fileName, path, SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH);
+	prdParam.workMemory = s_workMemory;
+	prdParam.workMemorySize = SCE_PHOTOREVIEW_DIALOG_DEFAULT_WORKMEMORY_SIZE;
+
+	SceCommonDialogColor BgColor;
+
+	BgColor.r = r;
+	BgColor.g = g;
+	BgColor.b = b;
+	BgColor.a = a;
+
+	prdParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
+
+	scePhotoReviewDialogInit(&prdParam);
+
+	while (scePhotoReviewDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+		//vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaPhotoReviewDialog");
+		if (lua_isfunction(L, -1)) {
+			lua_call(L, 0, 0);
+		}
+
+ 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+	}
+
+	ScePhotoReviewDialogResult pidResult;
+
+	memset(&pidResult, 0x0, sizeof(SceVideoImportDialogResult));
+	scePhotoReviewDialogGetResult(&pidResult);
+
+	scePhotoReviewDialogTerm();
+    if (s_heapId) {
+		sceKernelFreeMemBlock(s_heapId);
+		s_heapId = 0;
+	}
+	return 1;
+}
+
+static int lua_abortphotoreview(lua_State *L){
+    scePhotoReviewDialogAbort();
+    return 0;
 }
 
 static int lua_vol(lua_State *L){
@@ -1064,10 +1376,16 @@ static const luaL_Reg os_lib[] = {
 	{"screenshot", lua_screenshot},
 	{"screenshotoverlay", lua_screenshotoverlay},
 	{"screenshotinfo", lua_screenshotinfo},
+    {"screenshotnotification", lua_screenshotnotif},
+    {"screenshotcapture", lua_screenshotcapture},
 	{"unmountmountpoint", lua_mountpointunmount},
 	{"getsystemevent", lua_systemevent},
 	{"importphoto", lua_importphoto},
 	{"abortphotoimport", lua_photodialogabort},
+    {"importvideo", lua_importvideo},
+    {"abortimportvideo", lua_videodialogabort},
+    {"photoreview", lua_photoreview},
+    {"abortphotoreview", lua_abortphotoreview},
 	{"volume", lua_vol},
 	{"mute", lua_mute},
 	{"colorspace", lua_colorspace},

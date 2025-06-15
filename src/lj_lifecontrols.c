@@ -148,11 +148,11 @@ static int lua_reartouch(lua_State *L){
 }
 
 static int lua_actuator(lua_State *L){
-	uint8_t int_small = luaL_checkinteger(L, 1);
-	uint8_t int_large = luaL_checkinteger(L, 2);
+	uint8_t small = luaL_checkinteger(L, 1);
+	uint8_t large = luaL_checkinteger(L, 2);
     int port = luaL_optinteger(L, 3, 1);
-	actuators[port-1].small = int_small;
-	actuators[port-1].small = int_large;
+	actuators[port-1].small = small;
+	actuators[port-1].small = large;
 	sceCtrlSetActuator(port, &actuators[port-1]);
 	return 0;
 }

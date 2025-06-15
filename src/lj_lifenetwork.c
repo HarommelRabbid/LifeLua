@@ -149,7 +149,7 @@ static int lua_download(lua_State *L){
 			lua_pushnumber(L, size);
 			lua_pushnumber(L, read);
 			lua_pushnumber(L, written);
-			if (lua_pcall(L, 5, 0, 0) != LUA_OK) return luaL_error(L, lua_tostring(L, -1));
+			lua_call(L, 5, 0);
 		}
 	}
 	sceIoClose(fh);

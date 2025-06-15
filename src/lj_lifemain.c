@@ -20,6 +20,7 @@
 #include <vita2d.h>
 #include "include/ftpvita.h"
 #include "include/sha1.h"
+#include "include/sound.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -233,6 +234,7 @@ int main(){
 	sceNetCtlInit();
 	sceHttpInit(1*1024*1024);
 	sceSslInit(1*1024*1024);
+	soundInit();
 
 	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030) unsafe = false;
 
@@ -278,6 +280,7 @@ int main(){
 	sceNetCtlTerm();
 	sceNetTerm();
 	sqlite3_rw_exit();
+	soundTerm();
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
