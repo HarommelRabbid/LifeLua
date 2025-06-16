@@ -31,7 +31,7 @@ typedef struct {
     lua_State *L;      // Main Lua state (for reference)
 } Thread;
 
-static int lua_thread(SceSize args, void *argp) {
+SceKernelThreadEntry lua_thread(SceSize args, void *argp) {
     Thread *thread_data = (Thread *)argp;
 
     // Create a new coroutine from the main Lua state
@@ -63,7 +63,7 @@ static int lua_new(lua_State *L) {
 
 static int lua_start(lua_State *L){
     Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
-    int res = sceKernelStartThread(thread->thread, sizeof(Thread), thread);
+    int res = sceKernelStartThread(thread->thread, sizeof(Thread), (void *)thread);
     if (res < 0) {
         return luaL_error(L, "Failed to start thread (err: 0x%08X)", res);
     }

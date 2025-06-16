@@ -30,11 +30,15 @@ int lua_imageload(lua_State *L) {
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
     
     if(file_exists(filename)){
-		if(string_ends_with(filename, ".png")){
+        SceUID file = sceIoOpen(filename, SCE_O_RDONLY, 0777);
+	    uint16_t magic;
+	    sceIoRead(file, &magic, 2);
+	    sceIoClose(file);
+		if(magic == 0x5089){
 			image->tex = vita2d_load_PNG_file(filename);
-		}else if((string_ends_with(filename, ".jpeg")) || (string_ends_with(filename, ".jpg"))){
+		}else if(magic == 0xD8FF){
 			image->tex = vita2d_load_JPEG_file(filename);
-		}else if(string_ends_with(filename, ".bmp")){
+		}else if(magic == 0x4D42){
 			image->tex = vita2d_load_BMP_file(filename);
 		}else{
 			lua_pushnil(L);
