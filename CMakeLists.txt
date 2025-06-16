@@ -63,6 +63,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifecolor.c
   src/lj_lifefont.c
   src/lj_lifecamera.c
+  src/lj_lifethread.c
   #src/lj_lifeimgui.c++
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++

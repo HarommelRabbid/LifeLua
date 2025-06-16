@@ -30,8 +30,8 @@
 #include <lauxlib.h>
 #endif
 #define str(str) #str
-#define luaL_pushglobalint(L, value) lua_pushinteger(L, value); lua_setglobal (L, #value);
-#define luaL_pushglobalint_as(L, value, var) lua_pushinteger(L, value); lua_setglobal (L, var);
+#define luaL_pushglobalint(L, value) lua_pushinteger(L, value); lua_setglobal(L, #value);
+#define luaL_pushglobalint_as(L, value, var) lua_pushinteger(L, value); lua_setglobal(L, var);
 #define luaL_pushglobalint_alsoas(L, value, var) luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var);
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
@@ -90,6 +90,7 @@ LUALIB_API int luaL_opencolor(lua_State *L);
 LUALIB_API int luaL_openimage(lua_State *L);
 LUALIB_API int luaL_openfont(lua_State *L);
 LUALIB_API int luaL_opencamera(lua_State *L);
+LUALIB_API int luaL_openthread(lua_State *L);
 //LUALIB_API int luaL_openimgui(lua_State *L);
 //LUALIB_API int luaL_openjson(lua_State *L);
 
