@@ -1038,7 +1038,6 @@ static int lua_notification(lua_State *L){
 }
 
 static int lua_importphoto(lua_State *L){
-	loadPAF();
 	int r = luaL_optinteger(L, 1, 0);
 	int g = luaL_optinteger(L, 2, 0);
 	int b = luaL_optinteger(L, 3, 0);
@@ -1060,8 +1059,7 @@ static int lua_importphoto(lua_State *L){
 
 	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
 
-	SceInt32 res = scePhotoImportDialogInit(&pidParam);
-	if(res < 0) sceClibPrintf("scePhotoImportDialogInit() FAILED: 0x%08X", res);
+	scePhotoImportDialogInit(&pidParam);
 
 	while (scePhotoImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
 		//vita2d_start_drawing();
@@ -1096,7 +1094,6 @@ static int lua_importphoto(lua_State *L){
 	}
 
 	scePhotoImportDialogTerm();
-	unloadPAF();
 	return 1;
 }
 

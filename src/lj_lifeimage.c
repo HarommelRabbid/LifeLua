@@ -212,7 +212,7 @@ static int lua_imageheight(lua_State *L){
 	return 1;
 }
 
-int lua_imagegc(lua_State *L) {
+static int lua_imagegc(lua_State *L) {
     Image *image = (Image *)luaL_checkudata(L, 1, "image");
     if (image->tex) {
         vita2d_free_texture(image->tex);
