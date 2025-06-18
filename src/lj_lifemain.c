@@ -151,20 +151,6 @@ void luaL_lifelua_dofile(lua_State *L){
 	}
 }
 
-void loadPAF(){
-	uint32_t ptr[0x100] = { 0 };
-	ptr[0] = 0;
-	ptr[1] = (uint32_t)&ptr[0];
-	uint32_t scepaf_argp[] = { 0x400000, 0xEA60, 0x40000, 0, 0 };
-	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(scepaf_argp), scepaf_argp, (SceSysmoduleOpt *)ptr);
-}
-
-void unloadPAF(){
-	SceSysmoduleOpt opt;
-	sceClibMemset(&opt.flags, 0, sizeof(opt));
-	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
-}
-
 void luaL_extend(lua_State *L){
 	luaL_dostring(L, "function math.range(num, min, max) return math.min(math.max(num, min), max) end\n\
 					  function table.find(value, table) --Checks if an item is in an array\n\
@@ -197,7 +183,6 @@ int main(){
 	sceMotionStartSampling();
 	sceMotionMagnetometerOn();
 
-	loadPAF();
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
@@ -208,10 +193,8 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_MUSIC_EXPORT);
     sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
     sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
-	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
     sqlite3_rw_init();
-	scePromoterUtilityInit();
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -290,12 +273,9 @@ int main(){
     sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
-	scePromoterUtilityExit();
-	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	sceAppUtilCacheUmount();
 	sceAppUtilMusicUmount();
 	sceAppUtilPhotoUmount();
-	unloadPAF();
 
 	sceMotionMagnetometerOff();
 	sceMotionStopSampling();

@@ -113,7 +113,7 @@ static inline
 void scePhotoImportDialogParamInit( ScePhotoImportDialogParam *param ){
 	sceClibMemset( param, 0x0, sizeof(ScePhotoImportDialogParam) );
 	_sceCommonDialogSetMagicNumber( &param->commonParam );
-	param->sdkVersion = 0x03150021;
+	param->sdkVersion = PSP2_SDK_VERSION;
 }
 
 SceInt32 scePhotoImportDialogInit( const ScePhotoImportDialogParam *param );
@@ -180,7 +180,7 @@ void sceVideoImportDialogParamInit( SceVideoImportDialogParam *param )
 {
 	sceClibMemset( param, 0x0, sizeof(SceVideoImportDialogParam) );
 	_sceCommonDialogSetMagicNumber( &param->commonParam );
-	param->sdkVersion = 0x03150021;
+	param->sdkVersion = PSP2_SDK_VERSION;
 }
 SceInt32 sceVideoImportDialogInit( const SceVideoImportDialogParam *param );
 SceCommonDialogStatus sceVideoImportDialogGetStatus( void );
@@ -245,7 +245,7 @@ static inline
 void scePhotoReviewDialogParamInit( ScePhotoReviewDialogParam *param ){
 	sceClibMemset( param, 0x0, sizeof(ScePhotoReviewDialogParam) );
 	_sceCommonDialogSetMagicNumber( &param->commonParam );
-	param->sdkVersion = 0x03150021;
+	param->sdkVersion = PSP2_SDK_VERSION;
 	param->mode = SCE_PHOTOREVIEW_DIALOG_MODE_DEFAULT;
 }
 
@@ -281,6 +281,24 @@ void firmware_string(char string[8], unsigned int version) {
 		string[4] = '0' + d;
 		string[5] = '\0';
 	}
+}
+
+void loadPromoter() {
+	uint32_t ptr[0x100] = { 0 };
+	ptr[0] = 0;
+	ptr[1] = (uint32_t)&ptr[0];
+	uint32_t scepaf_argp[] = { 0x400000, 0xEA60, 0x40000, 0, 0 };
+	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(scepaf_argp), scepaf_argp, (SceSysmoduleOpt *)ptr);
+	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
+	scePromoterUtilityInit();
+}
+
+void unloadPromoter() {
+	scePromoterUtilityExit();
+	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
+	SceSysmoduleOpt opt;
+	sceClibMemset(&opt.flags, 0, sizeof(opt));
+	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
 }
 
 static int lua_delay(lua_State *L) {
@@ -955,13 +973,16 @@ static int lua_titleid(lua_State *L){
 }
 
 static int lua_appexists(lua_State *L){
+	loadPromoter();
 	const char *titleid = luaL_checkstring(L, 1);
 	int res;
 	lua_pushboolean(L, !scePromoterUtilityCheckExist(titleid, &res));
+	unloadPromoter();
 	return 1;
 }
 
 static int lua_deleteapp(lua_State *L) {
+	loadPromoter();
 	const char *titleid = luaL_checkstring(L, 1);
 	scePromoterUtilityDeletePkg(titleid);
 	
@@ -972,11 +993,12 @@ static int lua_deleteapp(lua_State *L) {
 			break;
 		sceKernelDelayThread(150 * 1000);
 	} while (state);
-	
+	unloadPromoter();
 	return 0;
 }
 
 static int lua_installdir(lua_State *L) {
+	loadPromoter();
 	const char *dir = luaL_checkstring(L, 1);
     bool headbin = lua_toboolean(L, 2);
     if(!headbin) makeHeadBin(dir);
@@ -989,7 +1011,7 @@ static int lua_installdir(lua_State *L) {
 			break;
 		sceKernelDelayThread(150 * 1000);
 	} while (state);
-
+	unloadPromoter();
 	return 0;
 }
 
@@ -1016,6 +1038,7 @@ static int lua_notification(lua_State *L){
 }
 
 static int lua_importphoto(lua_State *L){
+	loadPAF();
 	int r = luaL_optinteger(L, 1, 0);
 	int g = luaL_optinteger(L, 2, 0);
 	int b = luaL_optinteger(L, 3, 0);
@@ -1037,7 +1060,8 @@ static int lua_importphoto(lua_State *L){
 
 	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
 
-	scePhotoImportDialogInit(&pidParam);
+	SceInt32 res = scePhotoImportDialogInit(&pidParam);
+	if(res < 0) sceClibPrintf("scePhotoImportDialogInit() FAILED: 0x%08X", res);
 
 	while (scePhotoImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
 		//vita2d_start_drawing();
@@ -1072,6 +1096,7 @@ static int lua_importphoto(lua_State *L){
 	}
 
 	scePhotoImportDialogTerm();
+	unloadPAF();
 	return 1;
 }
 

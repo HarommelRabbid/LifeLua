@@ -155,7 +155,7 @@ static int lua_list(lua_State *L) {
         lua_setfield(L, -2, "name");
 
 		char fullpath[1024];
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", path, dirent.d_name);
+        sprintf(fullpath, "%s/%s", path, dirent.d_name);
 		lua_pushstring(L, fullpath);
         lua_setfield(L, -2, "path");
 
