@@ -302,6 +302,43 @@ static int lua_triangle(lua_State *L) {
     return 0;
 }
 
+static int lua_radialcircle(lua_State *L) {
+    float cx = luaL_checknumber(L, 1);
+    float cy = luaL_checknumber(L, 2);
+    float radius = luaL_checknumber(L, 3);
+    Color *center = lua_tocolor(L, 4);
+    Color *edge = lua_tocolor(L, 5);
+    int steps = luaL_optinteger(L, 6, 64); // Smoothness (higher = smoother)
+
+    if (steps < 3) steps = 3;
+
+    // Allocate vertex array (1 center + steps + 1 for wraparound)
+    int total = steps + 2;
+    vita2d_color_vertex *vertices = vita2d_pool_memalign(
+        total * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+    // Center point
+    vertices[0].x = cx;
+    vertices[0].y = cy;
+    vertices[0].z = 0.5f;
+    vertices[0].color = center->color;
+
+    // Edge points
+    for (int i = 0; i <= steps; i++) {
+        float angle = (i * 2.0f * M_PI) / steps;
+        float x = cx + cosf(angle) * radius;
+        float y = cy + sinf(angle) * radius;
+
+        vertices[i + 1].x = x;
+        vertices[i + 1].y = y;
+        vertices[i + 1].z = 0.5f;
+        vertices[i + 1].color = edge->color;
+    }
+
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_FAN, vertices, total);
+    return 0;
+}
+
 static int lua_enableclip(lua_State *L){
 	bool enable = lua_toboolean(L, 1);
 	if(enable) vita2d_enable_clipping();
@@ -325,6 +362,7 @@ static const luaL_Reg draw_lib[] = {
     {"rect", lua_rect},
     {"circle", lua_circle},
 	{"triangle", lua_triangle},
+	{"radialcircle", lua_radialcircle},
     {"line", lua_line},
 	{"pixel", lua_pixel},
 	{"gradientrect", lua_gradient},
