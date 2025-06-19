@@ -228,6 +228,26 @@ static int lua_imageheight(lua_State *L){
 	return 1;
 }
 
+static int lua_imagefilters(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	SceGxmTextureFilter min = luaL_checkinteger(L, 2);
+	SceGxmTextureFilter mag = luaL_checkinteger(L, 3);
+	vita2d_texture_set_filters(image->tex, min, mag);
+	return 0;
+}
+
+static int lua_imagemin(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	lua_pushinteger(L, vita2d_texture_get_min_filter(image->tex));
+	return 1;
+}
+
+static int lua_imagemag(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	lua_pushinteger(L, vita2d_texture_get_mag_filter(image->tex));
+	return 1;
+}
+
 static int lua_imagegc(lua_State *L) {
     Image *image = (Image *)luaL_checkudata(L, 1, "image");
     if (image->tex) {
@@ -249,6 +269,9 @@ static const luaL_Reg image_lib[] = {
     {"scalerotatepartdisplay", lua_imagepartscalerotatedraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
+	{"filter", lua_imagefilters},
+	{"min", lua_imagemin},
+	{"mag", lua_imagemag},
     {NULL, NULL}
 };
 
@@ -262,6 +285,9 @@ static const luaL_Reg image_methods[] = {
     {"scalerotatepartdisplay", lua_imagepartscalerotatedraw},
 	{"width", lua_imagewidth},
 	{"height", lua_imageheight},
+	{"filter", lua_imagefilters},
+	{"min", lua_imagemin},
+	{"mag", lua_imagemag},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
@@ -275,5 +301,9 @@ LUALIB_API int luaL_openimage(lua_State *L) {
     luaL_register(L, NULL, image_methods);
 
 	luaL_register(L, "image", image_lib);
+	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_POINT);
+	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_LINEAR);
+	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_MIPMAP_LINEAR);
+	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_MIPMAP_POINT);
     return 1;
 }

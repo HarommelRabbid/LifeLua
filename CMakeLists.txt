@@ -67,6 +67,7 @@ add_executable(${PROJECT_NAME}
   #src/lj_lifeimgui.c++
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
+  src/ext/lutf8lib.c
   src/include/ftpvita.c
   src/include/sha1.c
   src/include/md5.c
