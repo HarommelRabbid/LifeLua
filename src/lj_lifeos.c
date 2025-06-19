@@ -18,7 +18,6 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
-#include "include/sha1.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -1038,10 +1037,6 @@ static int lua_notification(lua_State *L){
 }
 
 static int lua_importphoto(lua_State *L){
-	int r = luaL_optinteger(L, 1, 0);
-	int g = luaL_optinteger(L, 2, 0);
-	int b = luaL_optinteger(L, 3, 0);
-	int a = luaL_optinteger(L, 4, 0xFF);
 	ScePhotoImportDialogParam pidParam;
 	scePhotoImportDialogParamInit(&pidParam);
 
@@ -1049,15 +1044,6 @@ static int lua_importphoto(lua_State *L){
 	pidParam.itemData = s_itemData;
 	pidParam.visibleCategory = SCE_PHOTOIMPORT_DIALOG_CATEGORY_DEFAULT;
 	pidParam.itemCount = 1;
-
-	SceCommonDialogColor BgColor;
-
-	BgColor.r = r;
-	BgColor.g = g;
-	BgColor.b = b;
-	BgColor.a = a;
-
-	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
 
 	scePhotoImportDialogInit(&pidParam);
 
@@ -1097,17 +1083,12 @@ static int lua_importphoto(lua_State *L){
 	return 1;
 }
 
-
 static int lua_photodialogabort(lua_State *L){
 	scePhotoImportDialogAbort();
 	return 0;
 }
 
 static int lua_importvideo(lua_State *L){
-	int r = luaL_optinteger(L, 1, 0);
-	int g = luaL_optinteger(L, 2, 0);
-	int b = luaL_optinteger(L, 3, 0);
-	int a = luaL_optinteger(L, 4, 0xFF);
 	SceVideoImportDialogParam pidParam;
 	sceVideoImportDialogParamInit(&pidParam);
 
@@ -1115,15 +1096,6 @@ static int lua_importvideo(lua_State *L){
 	pidParam.itemData = s_itemData1;
 	pidParam.visibleCategory = SCE_VIDEOIMPORT_DIALOG_CATEGORY_DEFAULT;
 	pidParam.itemCount = 1;
-
-	SceCommonDialogColor BgColor;
-
-	BgColor.r = r;
-	BgColor.g = g;
-	BgColor.b = b;
-	BgColor.a = a;
-
-	pidParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
 
 	sceVideoImportDialogInit(&pidParam);
 
@@ -1170,10 +1142,6 @@ static int lua_videodialogabort(lua_State *L){
 
 static int lua_photoreview(lua_State *L){
     const char *path = luaL_checkstring(L, 1);
-	int r = luaL_optinteger(L, 2, 0);
-	int g = luaL_optinteger(L, 3, 0);
-	int b = luaL_optinteger(L, 4, 0);
-	int a = luaL_optinteger(L, 5, 0xFF);
 
     static ScePVoid s_workMemory = 0;
     static SceUID s_heapId = 0;
@@ -1188,15 +1156,6 @@ static int lua_photoreview(lua_State *L){
     strncpy(prdParam.fileName, path, SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH);
 	prdParam.workMemory = s_workMemory;
 	prdParam.workMemorySize = SCE_PHOTOREVIEW_DIALOG_DEFAULT_WORKMEMORY_SIZE;
-
-	SceCommonDialogColor BgColor;
-
-	BgColor.r = r;
-	BgColor.g = g;
-	BgColor.b = b;
-	BgColor.a = a;
-
-	prdParam.commonParam.bgColor = (SceCommonDialogColor*)&BgColor;
 
 	scePhotoReviewDialogInit(&prdParam);
 

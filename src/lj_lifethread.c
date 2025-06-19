@@ -31,7 +31,7 @@ typedef struct {
     lua_State *L;      // Main Lua state (for reference)
 } Thread;
 
-SceKernelThreadEntry lua_thread(SceSize args, void *argp) {
+static int lua_thread(SceSize args, void *argp) {
     Thread *thread_data = (Thread *)argp;
 
     // Create a new coroutine from the main Lua state

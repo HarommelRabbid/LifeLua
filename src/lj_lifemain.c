@@ -228,6 +228,7 @@ int main(){
 	L = luaL_newstate();
 	luaL_openlibs(L);
 	luaL_extend(L);
+	luaL_openutf8(L);
 	luaL_extendos(L);
 	luaL_opendraw(L);
 	luaL_opencolor(L);
