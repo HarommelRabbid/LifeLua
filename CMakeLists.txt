@@ -129,7 +129,6 @@ target_link_libraries(${PROJECT_NAME}
     m
     z
     #k
-    stdc++
     bz2
     pthread
 )

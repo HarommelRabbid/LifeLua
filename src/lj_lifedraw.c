@@ -280,6 +280,28 @@ static int lua_hdoublegradient(lua_State *L) {
 	return 0;
 }
 
+static int lua_triangle(lua_State *L) {
+    float x1 = luaL_checknumber(L, 1);
+    float y1 = luaL_checknumber(L, 2);
+    float x2 = luaL_checknumber(L, 3);
+    float y2 = luaL_checknumber(L, 4);
+    float x3 = luaL_checknumber(L, 5);
+    float y3 = luaL_checknumber(L, 6);
+    Color *color = lua_tocolor(L, 7);
+	Color *color1 = NULL; if(!lua_isnone(L, 8)) color1 = lua_tocolor(L, 8);
+	Color *color2 = NULL; if(!lua_isnone(L, 9)) color2 = lua_tocolor(L, 9);
+
+	vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        3 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+	vertices[0] = (vita2d_color_vertex){x1, y1, 0.5f, color->color};
+	vertices[1] = (vita2d_color_vertex){x2, y2, 0.5f, color1 ? color1->color : color->color};
+	vertices[2] = (vita2d_color_vertex){x3, y3, 0.5f, color2 ? color2->color : color->color};
+
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLES, vertices, 3);
+    return 0;
+}
+
 static int lua_enableclip(lua_State *L){
 	bool enable = lua_toboolean(L, 1);
 	if(enable) vita2d_enable_clipping();
@@ -302,6 +324,7 @@ static const luaL_Reg draw_lib[] = {
 	{"textheight", lua_textheight},
     {"rect", lua_rect},
     {"circle", lua_circle},
+	{"triangle", lua_triangle},
     {"line", lua_line},
 	{"pixel", lua_pixel},
 	{"gradientrect", lua_gradient},
