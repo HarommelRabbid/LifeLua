@@ -25,7 +25,7 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-int lua_imageload(lua_State *L) {
+static int lua_imageload(lua_State *L) {
     const char *filename = luaL_checkstring(L, 1);
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
     
@@ -54,7 +54,7 @@ int lua_imageload(lua_State *L) {
     return 1;
 }
 
-int lua_newimage(lua_State *L) {
+static int lua_newimage(lua_State *L) {
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
 	unsigned int w = luaL_checkinteger(L, 1);
 	unsigned int h = luaL_checkinteger(L, 2);
@@ -66,6 +66,22 @@ int lua_newimage(lua_State *L) {
 		Color *color = lua_tocolor(L, 3);
 		sceClibMemset(vita2d_texture_get_datap(image->tex), color->color, vita2d_texture_get_stride(image->tex) * h);
 	}else sceClibMemset(vita2d_texture_get_datap(image->tex), 0xFFFFFFFF, vita2d_texture_get_stride(image->tex) * h);
+
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+static int lua_screenimage(lua_State *L) {
+    Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+	// Get framebuffer (ABGR)
+    uint32_t *fb = (uint32_t *)vita2d_get_current_fb();
+
+    // Create a texture (RGBA8)
+	image->tex = vita2d_create_empty_texture_rendertarget(960, 544, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
+
+    // Copy framebuffer into texture
+    sceClibMemcpy(vita2d_texture_get_datap(image->tex), fb, 960 * 544 * sizeof(uint32_t));
 
     luaL_getmetatable(L, "image");
     lua_setmetatable(L, -2);
@@ -223,7 +239,7 @@ static int lua_imagegc(lua_State *L) {
 static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
-	//{"screen", lua_screenimage},
+	{"screen", lua_screenimage},
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
