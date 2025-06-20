@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <zlib.h>
+#include <quirc.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -256,6 +257,66 @@ static int lua_imagegc(lua_State *L) {
     return 0;
 }
 
+static int lua_qrscan(lua_State *L) {
+    Image *img = (Image *)luaL_checkudata(L, 1, "image");
+    if (!img || !img->tex) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    int width = vita2d_texture_get_width(img->tex);
+    int height = vita2d_texture_get_height(img->tex);
+    uint32_t *pixels = vita2d_texture_get_datap(img->tex);
+
+    struct quirc *qr = quirc_new();
+    if (!qr) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    if (quirc_resize(qr, width, height) < 0) {
+        quirc_destroy(qr);
+        lua_pushnil(L);
+        return 1;
+    }
+
+    uint8_t *gray = quirc_begin(qr, &width, &height);
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            uint32_t pixel = pixels[y * width + x];
+            uint8_t r = (pixel >> 0) & 0xFF;
+            uint8_t g = (pixel >> 8) & 0xFF;
+            uint8_t b = (pixel >> 16) & 0xFF;
+            gray[y * width + x] = (r * 299 + g * 587 + b * 114) / 1000;
+        }
+    }
+
+    quirc_end(qr);
+
+    int num_codes = quirc_count(qr);
+    if (num_codes <= 0) {
+        quirc_destroy(qr);
+        lua_pushnil(L);
+        return 1;
+    }
+
+    struct quirc_code code;
+    struct quirc_data data;
+
+    quirc_extract(qr, 0, &code);
+    quirc_decode_error_t err = quirc_decode(&code, &data);
+    quirc_destroy(qr);
+
+    if (err != QUIRC_SUCCESS) {
+        lua_pushnil(L);
+    } else {
+        lua_pushstring(L, (const char *)data.payload);
+    }
+
+    return 1;
+}
+
 static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
@@ -272,6 +333,7 @@ static const luaL_Reg image_lib[] = {
 	{"filter", lua_imagefilters},
 	{"min", lua_imagemin},
 	{"mag", lua_imagemag},
+	{"qrscan", lua_qrscan},
     {NULL, NULL}
 };
 
@@ -288,6 +350,7 @@ static const luaL_Reg image_methods[] = {
 	{"filter", lua_imagefilters},
 	{"min", lua_imagemin},
 	{"mag", lua_imagemag},
+	{"qrscan", lua_qrscan},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };

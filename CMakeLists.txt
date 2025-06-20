@@ -79,6 +79,7 @@ add_executable(${PROJECT_NAME}
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
+    quirc
     vita2d
     sqlite
     imgui_vita2d
