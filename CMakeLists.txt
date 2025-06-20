@@ -72,6 +72,9 @@ add_executable(${PROJECT_NAME}
   src/include/sha1.c
   src/include/md5.c
   src/include/makeheadbin.c
+  src/include/ioapi.c
+  src/include/zip.c
+  src/include/unzip.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.

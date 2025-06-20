@@ -20,6 +20,8 @@
 #include <vita2d.h>
 #include "include/sha1.h"
 #include "include/md5.h"
+#include "include/unzip.h"
+#include "include/zip.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -331,6 +333,7 @@ void get_directory(const char *path, char *out_dir, size_t out_size) {
             len = out_size - 1;
         strncpy(out_dir, path, len);
         out_dir[len] = '\0';
+        if(out_dir[strlen(out_dir)] == '/') out_dir[strlen(out_dir)] = '\0';
     } else {
         // No slash found, return empty string
         out_dir[0] = '\0';
@@ -452,6 +455,263 @@ static int lua_totalspace(lua_State *L) {
 	return 1;
 }
 
+int recursive_folders(const char* path) {
+	if(file_exists(path)) return false;
+	
+	char dirname[512];
+	memset(dirname, 0x00, sizeof(dirname));
+	
+	for(int i = 0; i < strlen(path); i++) {
+		if(path[i] == '/' || path[i] == '\\') {
+			memset(dirname, 0, sizeof(dirname));
+			strncpy(dirname, path, i);
+
+			if(!file_exists(dirname)){
+				sceIoMkdir(dirname, 0777);
+			}	
+		}
+	}
+	
+	return sceIoMkdir(path, 0777);
+}
+
+static int lua_extract(lua_State *L) {
+    const char *zip_path = luaL_checkstring(L, 1);
+    const char *out_path = luaL_checkstring(L, 2);
+
+    unzFile zip = unzOpen(zip_path);
+    if (!zip)
+        return luaL_error(L, "Failed to open ZIP file");
+
+    if (unzGoToFirstFile(zip) != UNZ_OK) {
+        unzClose(zip);
+        return luaL_error(L, "ZIP file is empty or corrupted");
+    }
+
+    unz_global_info global_info;
+    unzGetGlobalInfo(zip, &global_info);
+
+    int f_i = 1;
+
+    do {
+        char filename_inzip[256];
+        unz_file_info file_info;
+        if (unzGetCurrentFileInfo(zip, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0) != UNZ_OK)
+            continue;
+
+        lua_getglobal(L, "LifeLuaArchiveExtracting");
+        if (lua_isfunction(L, -1)) {
+            lua_pushstring(L, filename_inzip);
+            lua_pushinteger(L, f_i++); //curr file
+            lua_pushnumber(L, global_info.number_entry); //total number of archive entries
+            lua_pushnumber(L, file_info.compressed_size); //curr size
+            lua_pushnumber(L, file_info.uncompressed_size); //total size
+            lua_pushnumber(L, file_info.crc); //crc32
+            lua_call(L, 6, 0);
+        }
+
+        char full_path[512];
+        snprintf(full_path, sizeof(full_path), "%s/%s", out_path, filename_inzip);
+
+        if (filename_inzip[strlen(filename_inzip) - 1] == '/') {
+            recursive_folders(full_path);
+            continue;
+        } else {
+            char folder_only[512];
+            strncpy(folder_only, full_path, sizeof(folder_only));
+            char *last_slash = strrchr(folder_only, '/');
+            if (last_slash) {
+                *last_slash = '\0';
+                recursive_folders(folder_only); // make sure parent dirs exist
+            }
+
+            // Then open file and extract it
+            SceUID fd = sceIoOpen(full_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+            if (fd < 0) {
+                unzCloseCurrentFile(zip);
+                unzClose(zip);
+                return luaL_error(L, "Failed to open output file: %s", full_path);
+            }
+        }
+
+        if (unzOpenCurrentFile(zip) != UNZ_OK)
+            continue;
+
+        SceUID fd = sceIoOpen(full_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+        if (fd < 0) {
+            unzCloseCurrentFile(zip);
+            unzClose(zip);
+            return luaL_error(L, "Failed to open output file: %s", full_path);
+        }
+
+        char buffer[4096];
+        int bytes;
+        while ((bytes = unzReadCurrentFile(zip, buffer, 4096)) > 0) {
+            sceIoWrite(fd, buffer, bytes);
+        }
+
+        sceIoClose(fd);
+        unzCloseCurrentFile(zip);
+
+    } while (unzGoToNextFile(zip) == UNZ_OK);
+
+    unzClose(zip);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+void convertUtcToLocalTime(SceDateTime *time_local, SceDateTime *time_utc) {
+  // sceRtcGetTick and other sceRtc functions fails with year > 9999
+  int year_utc = time_utc->year;
+  int year_delta = year_utc < 9999 ? 0 : year_utc - 9998;
+  time_utc->year -= year_delta;
+
+  SceRtcTick tick;
+  sceRtcGetTick(time_utc, &tick);
+  time_utc->year = year_utc;
+
+  sceRtcConvertUtcToLocalTime(&tick, &tick);
+  sceRtcSetTick(time_local, &tick);  
+  time_local->year += year_delta;
+}
+
+void convertLocalTimeToUtc(SceDateTime *time_utc, SceDateTime *time_local) {
+  // sceRtcGetTick and other sceRtc functions fails with year > 9999
+  int year_local = time_local->year;
+  int year_delta = year_local < 9999 ? 0 : year_local - 9998;
+  time_local->year -= year_delta;
+
+  SceRtcTick tick;
+  sceRtcGetTick(time_local, &tick);
+  time_local->year = year_local;
+
+  sceRtcConvertLocalTimeToUtc(&tick, &tick);
+  sceRtcSetTick(time_utc, &tick);  
+  time_utc->year += year_delta;
+}
+
+// Add a single file to the zip (src_path on disk, zip_path inside zip)
+static int add_file_to_zip(zipFile zip, const char *src_path, const char *zip_path) {
+    zip_fileinfo zi = {0};
+
+    // Get file modification time for the ZIP header
+    SceIoStat stat;
+    if (sceIoGetstat(src_path, &stat) >= 0) {
+        SceDateTime time_local;
+        SceDateTime *t = &stat.st_mtime;
+        convertUtcToLocalTime(&time_local, t);
+        zi.tmz_date.tm_year = time_local.year;
+        zi.tmz_date.tm_mon  = time_local.month - 1;
+        zi.tmz_date.tm_mday = time_local.day;
+        zi.tmz_date.tm_hour = time_local.hour;
+        zi.tmz_date.tm_min  = time_local.minute;
+        zi.tmz_date.tm_sec  = time_local.second;
+    }
+
+    if (zipOpenNewFileInZip(zip, zip_path, &zi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION) != ZIP_OK)
+        return 0;
+
+    SceUID fd = sceIoOpen(src_path, SCE_O_RDONLY, 0);
+    if (fd < 0) {
+        zipCloseFileInZip(zip);
+        return 0;
+    }
+
+    char buffer[4096];
+    int bytes;
+    while ((bytes = sceIoRead(fd, buffer, 4096)) > 0) {
+        if (zipWriteInFileInZip(zip, buffer, bytes) != ZIP_OK) {
+            sceIoClose(fd);
+            zipCloseFileInZip(zip);
+            return 0;
+        }
+    }
+
+    sceIoClose(fd);
+    zipCloseFileInZip(zip);
+    return 1;
+}
+
+// Recursively add files from a folder
+static int add_folder_recursive(zipFile zip, const char *real_path, const char *zip_root) {
+    SceUID dir = sceIoDopen(real_path);
+    if (dir < 0) return 0;
+
+    SceIoDirent entry;
+    memset(&entry, 0, sizeof(SceIoDirent));
+
+    while (sceIoDread(dir, &entry) > 0) {
+        if (entry.d_name[0] == '.') continue;
+
+        char full_path[512];
+        snprintf(full_path, sizeof(full_path), "%s/%s", real_path, entry.d_name);
+
+        char relative_zip_path[512];
+        if (zip_root && strlen(zip_root) > 0)
+            snprintf(relative_zip_path, sizeof(relative_zip_path), "%s/%s", zip_root, entry.d_name);
+        else
+            snprintf(relative_zip_path, sizeof(relative_zip_path), "%s", entry.d_name);
+
+        if (SCE_S_ISDIR(entry.d_stat.st_mode)) {
+            add_folder_recursive(zip, full_path, relative_zip_path);
+        } else {
+            if (!add_file_to_zip(zip, full_path, relative_zip_path)) {
+                sceIoDclose(dir);
+                return 0;
+            }
+        }
+    }
+
+    sceIoDclose(dir);
+    return 1;
+}
+
+static int lua_create(lua_State *L) {
+    const char *zip_path = luaL_checkstring(L, 2);
+
+    zipFile zip = zipOpen(zip_path, APPEND_STATUS_CREATE);
+    if (!zip)
+        return luaL_error(L, "Failed to create zip: %s", zip_path);
+
+    if (lua_type(L, 1) == LUA_TTABLE) {
+        // Table-based manual file listing
+        lua_pushnil(L);
+        while (lua_next(L, 1) != 0) {
+            const char *src_path = luaL_checkstring(L, -2);
+            const char *zip_name = luaL_checkstring(L, -1);
+
+            if (!add_file_to_zip(zip, src_path, zip_name)) {
+                zipClose(zip, NULL);
+                return luaL_error(L, "Failed to add file: %s", src_path);
+            }
+
+            lua_pop(L, 1);
+        }
+    } else if (lua_type(L, 2) == LUA_TSTRING) {
+        // Folder-based automatic ZIP
+        const char *folder = luaL_checkstring(L, 1);
+        char base_path[256];
+        const char *slash = strrchr(folder, '/');
+        if (slash)
+            strncpy(base_path, slash + 1, sizeof(base_path));
+        else
+            strncpy(base_path, folder, sizeof(base_path));
+        base_path[sizeof(base_path) - 1] = '\0'; // ensure null-terminated
+
+        if (!add_folder_recursive(zip, folder, "")) {
+            zipClose(zip, NULL);
+            return luaL_error(L, "Failed to zip folder: %s", folder);
+        }
+    } else {
+        zipClose(zip, NULL);
+        return luaL_typerror(L, 1, "table or string");
+    }
+
+    zipClose(zip, NULL);
+    lua_pushboolean(L, true);
+    return 1;
+}
+
 static const luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -467,6 +727,8 @@ static const luaL_Reg io_lib[] = {
     {"workpath", lua_workpath},
     {"freespace", lua_freespace},
     {"fullspace", lua_totalspace},
+    {"extract", lua_extract},
+    {"archive", lua_create},
     {NULL, NULL}
 };
 
