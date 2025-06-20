@@ -15,8 +15,8 @@ mkdir build && cd build && cmake .. && make
 * HENkaku by Team Molecule
 * TheFloW's VitaShell for SHA1 hashing
 * RegistryEditor MOD by devnoname120
-* Developers of vitasdk
-* Princess of Sleeping for reverse engineering of `scePhotoImportDialog`
+* vitasdk contributors
+* [quirc-vita](https://github.com/cxziaho/quirc-vita) by [cxziaho](https://github.com/cxziaho)
 * libvita2d & ftpvita by xerpi
 * Inspiration from [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by [Rinnegatamante](https://github.com/Rinnegatamante)
 * [luautf8](https://github.com/starwing/luautf8) by [starwing](https://github.com/starwing)
