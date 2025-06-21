@@ -49,25 +49,6 @@ int string_ends_with(const char * str, const char * suffix){
 	(0 == strcmp(str + (str_len-suffix_len), suffix));
 }
 
-void utf2ascii(char* dst, uint16_t* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*(src++))&0xFF;
-	*dst=0x00;
-}
-
-void ascii2utf(uint16_t* dst, char* src){
-	if(!src || !dst)return;
-	while(*src)*(dst++)=(*src++);
-	*dst=0x00;
-}
-
-int file_exists(const char* path) {
-	SceIoStat stat;
-	int res = sceIoGetstat(path, &stat);
-	if(res >= 0) return 1;
-	else return 0;
-}
-
 void luaL_lifelua_dofile(lua_State *L){
 	bool error = false;
 	if (luaL_dofile(L, "app0:main.lua") != LUA_OK) {
@@ -152,6 +133,7 @@ void luaL_lifelua_dofile(lua_State *L){
 }
 
 void luaL_extend(lua_State *L){
+	if(
 	luaL_dostring(L, "function math.range(num, min, max) return math.min(math.max(num, min), max) end\n\
 					  function table.find(value, table) --Checks if an item is in an array\n\
  				      	for i, v in ipairs(table) do\n\
@@ -167,6 +149,7 @@ void luaL_extend(lua_State *L){
    									return table.remove(table1, i)\n\
   								end\n\
  							end\n\
+						end\n\
 						function math.round(num, idp)\n\
   							local mult = 10^(idp or 0)\n\
   							return math.floor(num * mult + 0.5) / mult\n\
@@ -175,7 +158,7 @@ void luaL_extend(lua_State *L){
 						function os.installvpk(path, head)\n\
 							io.extract(path, \"ux0:data/ll_temp\")\n\
 							os.installdir(\"ux0:data/ll_temp\", head or true)\n\
-						end");
+						end") != LUA_OK) sceClibPrintf("LL error: %s", lua_tostring(L, -1));
 }
 
 int main(){

@@ -262,6 +262,25 @@ static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
 
+void utf2ascii(char* dst, uint16_t* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*(src++))&0xFF;
+	*dst=0x00;
+}
+
+void ascii2utf(uint16_t* dst, char* src){
+	if(!src || !dst)return;
+	while(*src)*(dst++)=(*src++);
+	*dst=0x00;
+}
+
+int file_exists(const char* path) {
+	SceIoStat stat;
+	int res = sceIoGetstat(path, &stat);
+	if(res >= 0) return 1;
+	else return 0;
+}
+
 // Taken from modoru, thanks to TheFloW
 void firmware_string(char string[8], unsigned int version) {
 	char a = (version >> 24) & 0xf;
