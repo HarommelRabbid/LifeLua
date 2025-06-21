@@ -17,6 +17,7 @@ mkdir build && cd build && cmake .. && make
 * RegistryEditor MOD by devnoname120
 * vitasdk contributors
 * [quirc-vita](https://github.com/cxziaho/quirc-vita) by [cxziaho](https://github.com/cxziaho)
+* [QR-Code-generator](https://github.com/nayuki/QR-Code-generator) by [nayuki](https://github.com/nayuki)
 * libvita2d & ftpvita by xerpi
 * Inspiration from [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by [Rinnegatamante](https://github.com/Rinnegatamante)
 * [luautf8](https://github.com/starwing/luautf8) by [starwing](https://github.com/starwing)
