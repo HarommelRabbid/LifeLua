@@ -1334,6 +1334,34 @@ static int lua_language(lua_State *L){
     return 1;
 }
 
+static int lua_getreg(lua_State *L){
+	char buf[256];
+	int val;
+	const char *cat = luaL_checkstring(L, 1);
+	const char *name = luaL_checkstring(L, 2);
+	if(sceRegMgrGetKeyStr(cat, name, buf, 256) >= 0) lua_pushstring(L, buf);
+	else if(sceRegMgrGetKeyBin(cat, name, buf, 256) >= 0) lua_pushlstring(L, buf, 256);
+	else if(sceRegMgrGetKeyInt(cat, name, &val) >= 0) lua_pushinteger(L, val);
+	else lua_pushnil(L);
+	return 1;
+}
+
+static int lua_setreg(lua_State *L){
+	char *buf;
+	int val;
+	const char *cat = luaL_checkstring(L, 1);
+	const char *name = luaL_checkstring(L, 2);
+	size_t size = luaL_optinteger(L, 4, 0);
+	if(lua_isnumber(L, 3)){
+		val = luaL_checkinteger(L, 3);
+		sceRegMgrSetKeyInt(cat, name, val);
+	}else if(lua_isstring(L, 3)){
+		buf = size ? luaL_checkstring(L, 3) : luaL_checklstring(L, 3, &size);
+		if(sceRegMgrSetKeyStr(cat, name, buf, size) < 0) sceRegMgrSetKeyBin(cat, name, buf, size);
+	}else return luaL_typerror(L, 3, "number or string");
+	return 0;
+}
+
 static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1414,6 +1442,8 @@ static const luaL_Reg os_lib[] = {
 	{"videoexport", lua_exportvideo},
 	{"delaycb", lua_delaycb},
     {"language", lua_language},
+	{"getregkey", lua_getreg},
+	{"setregkey", lua_setreg},
     {NULL, NULL}
 };
 

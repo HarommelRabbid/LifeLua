@@ -19,6 +19,7 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
+#include "include/qrcodegen.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>
@@ -86,6 +87,106 @@ static int lua_screenimage(lua_State *L) {
 
     luaL_getmetatable(L, "image");
     lua_setmetatable(L, -2);
+    return 1;
+}
+
+static int lua_qr(lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    enum qrcodegen_Ecc errcor;
+    int min_version, max_version;
+    int mask;
+    bool boostEcl = true;
+	Color *bg_color = NULL;
+	Color *fg_color = NULL;
+    int scale;
+    int border;
+
+    // text (required)
+    lua_getfield(L, 1, "text");
+    const char *text = luaL_checkstring(L, -1);
+    lua_pop(L, 1);
+
+    // error_correction
+    lua_getfield(L, 1, "error_correction");
+    errcor = luaL_optinteger(L, -1, qrcodegen_Ecc_MEDIUM);
+    lua_pop(L, 1);
+
+    // min_version
+    lua_getfield(L, 1, "min_version");
+    min_version = luaL_optinteger(L, -1, qrcodegen_VERSION_MIN);
+    lua_pop(L, 1);
+
+    // max_version
+    lua_getfield(L, 1, "max_version");
+    max_version = luaL_optinteger(L, -1, qrcodegen_VERSION_MAX);
+    lua_pop(L, 1);
+
+    // mask
+    lua_getfield(L, 1, "mask");
+    mask = luaL_optinteger(L, -1, qrcodegen_Mask_AUTO);
+    lua_pop(L, 1);
+
+	// boostEcl
+    lua_getfield(L, 1, "boostEcl");
+    if (lua_isboolean(L, -1)) boostEcl = lua_toboolean(L, -1);
+    lua_pop(L, 1);
+
+	// bg_color
+    lua_getfield(L, 1, "bg_color");
+    if ((Color *)luaL_testudata(L, -1, "color")) bg_color = lua_tocolor(L, -1);
+    lua_pop(L, 1);
+
+	// fg_color
+    lua_getfield(L, 1, "fg_color");
+    if ((Color *)luaL_testudata(L, -1, "color")) fg_color = lua_tocolor(L, -1);
+    lua_pop(L, 1);
+
+	// scale
+    lua_getfield(L, 1, "scale");
+    scale = luaL_optinteger(L, -1, 4);
+    lua_pop(L, 1);
+
+	// border in modules
+    lua_getfield(L, 1, "border");
+    border = luaL_optinteger(L, -1, 2);
+    lua_pop(L, 1);
+
+    // Generate QR
+    uint8_t tempBuffer[qrcodegen_BUFFER_LEN_MAX];
+    uint8_t qrcode[qrcodegen_BUFFER_LEN_MAX];
+
+    if (!qrcodegen_encodeText(text, tempBuffer, qrcode, errcor,
+                              min_version, max_version, mask, boostEcl)) return luaL_error(L, "Failed to generate QR code");
+
+    int size = qrcodegen_getSize(qrcode);
+    int tex_size = (size + border * 2) * scale;
+
+    vita2d_texture *tex = vita2d_create_empty_texture(tex_size, tex_size);
+
+    vita2d_texture_set_filters(tex, SCE_GXM_TEXTURE_FILTER_POINT, SCE_GXM_TEXTURE_FILTER_POINT);
+    uint32_t *data = vita2d_texture_get_datap(tex);
+	unsigned int pitch = vita2d_texture_get_stride(tex) / 4;
+
+    for (int y = 0; y < tex_size; ++y) {
+        for (int x = 0; x < tex_size; ++x) {
+            int module_x = (x / scale) - border;
+            int module_y = (y / scale) - border;
+            bool black = (module_x >= 0 && module_x < size &&
+                          module_y >= 0 && module_y < size &&
+                          qrcodegen_getModule(qrcode, module_x, module_y));
+            uint32_t color = black ? (fg_color ? fg_color->color : 0xFF000000) : (bg_color ? bg_color->color : 0xFFFFFFFF);
+            data[y * pitch + x] = color;
+        }
+    }
+
+    // Return new Image userdata
+    Image *img = (Image *)lua_newuserdata(L, sizeof(Image));
+    img->tex = tex;
+
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+
     return 1;
 }
 
@@ -317,10 +418,52 @@ static int lua_qrscan(lua_State *L) {
     return 1;
 }
 
+static int lua_grayscale(lua_State *L) {
+    Image *img = (Image *)luaL_checkudata(L, 1, "image");
+
+    int w = vita2d_texture_get_width(img->tex);
+    int h = vita2d_texture_get_height(img->tex);
+    uint32_t *pixels = vita2d_texture_get_datap(img->tex);
+
+    for (int i = 0; i < w * h; i++) {
+        uint32_t px = pixels[i];
+        uint8_t r = (px >> 0) & 0xFF;
+        uint8_t g = (px >> 8) & 0xFF;
+        uint8_t b = (px >> 16) & 0xFF;
+        uint8_t a = (px >> 24) & 0xFF;
+
+        uint8_t gray = (r * 299 + g * 587 + b * 114) / 1000;
+        pixels[i] = (a << 24) | (gray << 16) | (gray << 8) | gray;
+    }
+
+    return 0;
+}
+
+static int lua_invert(lua_State *L) {
+    Image *img = (Image *)luaL_checkudata(L, 1, "image");
+
+    int w = vita2d_texture_get_width(img->tex);
+    int h = vita2d_texture_get_height(img->tex);
+    uint32_t *pixels = vita2d_texture_get_datap(img->tex);
+
+    for (int i = 0; i < w * h; i++) {
+        uint32_t px = pixels[i];
+        uint8_t r = (px >> 0) & 0xFF;
+        uint8_t g = (px >> 8) & 0xFF;
+        uint8_t b = (px >> 16) & 0xFF;
+        uint8_t a = (px >> 24) & 0xFF;
+
+        pixels[i] = (a << 24) | ((255 - b) << 16) | ((255 - g) << 8) | (255 - r);
+    }
+
+    return 0;
+}
+
 static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
 	{"screen", lua_screenimage},
+	{"qr", lua_qr},
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},
@@ -334,6 +477,8 @@ static const luaL_Reg image_lib[] = {
 	{"min", lua_imagemin},
 	{"mag", lua_imagemag},
 	{"qrscan", lua_qrscan},
+	{"grayscale", lua_grayscale},
+	{"invert", lua_invert},
     {NULL, NULL}
 };
 
@@ -351,6 +496,8 @@ static const luaL_Reg image_methods[] = {
 	{"min", lua_imagemin},
 	{"mag", lua_imagemag},
 	{"qrscan", lua_qrscan},
+	{"grayscale", lua_grayscale},
+	{"invert", lua_invert},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
@@ -368,5 +515,20 @@ LUALIB_API int luaL_openimage(lua_State *L) {
 	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_LINEAR);
 	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_MIPMAP_LINEAR);
 	luaL_pushglobalint(L, SCE_GXM_TEXTURE_FILTER_MIPMAP_POINT);
+	luaL_pushglobalint(L, qrcodegen_Ecc_LOW);
+	luaL_pushglobalint(L, qrcodegen_Ecc_MEDIUM);
+	luaL_pushglobalint(L, qrcodegen_Ecc_QUARTILE);
+	luaL_pushglobalint(L, qrcodegen_Ecc_HIGH);
+	luaL_pushglobalint(L, qrcodegen_Mask_AUTO);
+	luaL_pushglobalint(L, qrcodegen_Mask_0);
+	luaL_pushglobalint(L, qrcodegen_Mask_1);
+	luaL_pushglobalint(L, qrcodegen_Mask_2);
+	luaL_pushglobalint(L, qrcodegen_Mask_3);
+	luaL_pushglobalint(L, qrcodegen_Mask_4);
+	luaL_pushglobalint(L, qrcodegen_Mask_5);
+	luaL_pushglobalint(L, qrcodegen_Mask_6);
+	luaL_pushglobalint(L, qrcodegen_Mask_7);
+	luaL_pushglobalint(L, qrcodegen_VERSION_MIN);
+	luaL_pushglobalint(L, qrcodegen_VERSION_MAX);
     return 1;
 }
