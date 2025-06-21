@@ -529,9 +529,11 @@ static int lua_extract(lua_State *L) {
             SceUID fd = sceIoOpen(full_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
             if (fd < 0) {
                 unzCloseCurrentFile(zip);
+                sceIoClose(fd);
                 unzClose(zip);
                 return luaL_error(L, "Failed to open output file: %s", full_path);
             }
+            sceIoClose(fd);
         }
 
         if (unzOpenCurrentFile(zip) != UNZ_OK)
@@ -540,6 +542,7 @@ static int lua_extract(lua_State *L) {
         SceUID fd = sceIoOpen(full_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
         if (fd < 0) {
             unzCloseCurrentFile(zip);
+            sceIoClose(fd);
             unzClose(zip);
             return luaL_error(L, "Failed to open output file: %s", full_path);
         }
