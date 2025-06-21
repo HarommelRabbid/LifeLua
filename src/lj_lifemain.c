@@ -171,7 +171,11 @@ void luaL_extend(lua_State *L){
   							local mult = 10^(idp or 0)\n\
   							return math.floor(num * mult + 0.5) / mult\n\
 						end\n\
-						function math.inrange(num, min, max) return num >= min and num <= max end");
+						function math.inrange(num, min, max) return num >= min and num <= max end\n\
+						function os.installvpk(path, head)\n\
+							io.extract(path, \"ux0:data/ll_temp\")\n\
+							os.installdir(\"ux0:data/ll_temp\", head or true)\n\
+						end");
 }
 
 int main(){
@@ -227,7 +231,6 @@ int main(){
 
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	luaL_extend(L);
 	luaL_openutf8(L);
 	luaL_extendos(L);
 	luaL_opendraw(L);
@@ -242,6 +245,7 @@ int main(){
 	luaL_opencamera(L);
 	luaL_openthread(L);
 	//luaL_openimgui(L);
+	luaL_extend(L);
 	
 	vita2d_start_drawing();
     vita2d_clear_screen();
