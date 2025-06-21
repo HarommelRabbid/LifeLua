@@ -157,7 +157,8 @@ void luaL_extend(lua_State *L){
 						function math.inrange(num, min, max) return num >= min and num <= max end\n\
 						function os.installvpk(path, head)\n\
 							io.extract(path, \"ux0:data/ll_temp\")\n\
-							os.installdir(\"ux0:data/ll_temp\", head or true)\n\
+							if not head then os.installdir(\"ux0:data/ll_temp\")\n\
+							else os.installdir(\"ux0:data/ll_temp\", true) end\n\
 						end") != LUA_OK) sceClibPrintf("LL error: %s", lua_tostring(L, -1));
 }
 

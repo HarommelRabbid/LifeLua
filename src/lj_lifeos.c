@@ -301,22 +301,27 @@ void firmware_string(char string[8], unsigned int version) {
 	}
 }
 
-void loadPromoter() {
-	uint32_t ptr[0x100] = { 0 };
-	ptr[0] = 0;
-	ptr[1] = (uint32_t)&ptr[0];
-	uint32_t scepaf_argp[] = { 0x400000, 0xEA60, 0x40000, 0, 0 };
-	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(scepaf_argp), scepaf_argp, (SceSysmoduleOpt *)ptr);
+static void loadPromoter() {
+  	static uint32_t argp[] = { 0x180000, -1, -1, 1, -1, -1 };
+
+  	int result = -1;
+
+  	uint32_t buf[4];
+  	buf[0] = sizeof(buf);
+  	buf[1] = (uint32_t)&result;
+  	buf[2] = -1;
+  	buf[3] = -1;
+
+  	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, buf);
 	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	scePromoterUtilityInit();
 }
 
-void unloadPromoter() {
+static void unloadPromoter() {
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
-	SceSysmoduleOpt opt;
-	sceClibMemset(&opt.flags, 0, sizeof(opt));
-	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &opt);
+  	uint32_t buf = 0;
+  	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &buf);
 }
 
 static int lua_delay(lua_State *L) {
