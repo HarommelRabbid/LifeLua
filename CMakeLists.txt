@@ -64,10 +64,10 @@ add_executable(${PROJECT_NAME}
   src/lj_lifefont.c
   src/lj_lifecamera.c
   src/lj_lifethread.c
+  src/lj_lifejson.c
   #src/lj_lifeimgui.c++
   #src/lj_lifeaudio.c
   #src/lj_lifemathext.c
-  #src/lj_lifejson.c++
   src/ext/lutf8lib.c
   src/include/ftpvita.c
   src/include/sha1.c
@@ -77,6 +77,7 @@ add_executable(${PROJECT_NAME}
   src/include/zip.c
   src/include/unzip.c
   src/include/qrcodegen.c
+  src/include/cJSON.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.

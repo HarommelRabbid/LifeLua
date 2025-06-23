@@ -30,28 +30,62 @@ static int lua_text(lua_State *L){
 	float y = luaL_checknumber(L, 2);
 	const char *text = luaL_checkstring(L, 3);
 	Color *color = lua_tocolor(L, 4);
-	float size;
-	Font *font;
 
-	if(lua_isuserdata(L, 5) && !lua_isnil(L, 5)){
-		font = (Font *)luaL_checkudata(L, 5, "font");
-		size = luaL_optnumber(L, 6, 1.0f);
-		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
-		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
-		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, (y-6) + size*24, color->color, size*24, text);
-	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6)) && !lua_isnil(L, 6)){
-		font = (Font *)luaL_checkudata(L, 6, "font");
-		size = luaL_optnumber(L, 5, 1.0f);
-		if(font->pgf != NULL) vita2d_pgf_draw_text(font->pgf, x, y+17.402 * size, color->color, size, text);
-		else if(font->pvf != NULL) vita2d_pvf_draw_text(font->pvf, x, y+17.402 * size, color->color, size, text);
-		else if(font->font != NULL) vita2d_font_draw_text(font->font, x, (y-6) + size*24, color->color, size*24, text);
-	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
-		size = luaL_optnumber(L, 5, 1.0f);
-		vita2d_pgf_draw_text(pgf, x, y+17.402 * size, color->color, size, text);
-	}else{
-		return luaL_typerror(L, 5, "number or font");
+	float size = 1.0f;
+	Font *font = NULL;
+
+	int args = lua_gettop(L);
+
+	if (args >= 5) {
+		if (lua_isboolean(L, 5)) {
+			// Case: draw.text(..., true/false)
+			bool use_pvf = lua_toboolean(L, 5);
+			if (args >= 6 && lua_isnumber(L, 6)) {
+				size = lua_tonumber(L, 6);
+			}
+			if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 17.402f * size, color->color, size, text);
+			else vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+		} else if (lua_isnumber(L, 5)) {
+			// Case: draw.text(..., size, font | true | false)
+			size = lua_tonumber(L, 5);
+			if (args >= 6) {
+				if (lua_isboolean(L, 6)) {
+					bool use_pvf = lua_toboolean(L, 6);
+					if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 17.402f * size, color->color, size, text);
+					else vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+				} else if (lua_isuserdata(L, 6)) {
+					font = (Font *)luaL_checkudata(L, 6, "font");
+				}
+			} else {
+				// draw.text(..., size)
+				vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+				return 0;
+			}
+		} else if (lua_isuserdata(L, 5)) {
+			// Case: draw.text(..., font [, size])
+			font = (Font *)luaL_checkudata(L, 5, "font");
+			if (args >= 6 && lua_isnumber(L, 6))
+				size = lua_tonumber(L, 6);
+		} else {
+			return luaL_typerror(L, 5, "boolean, number, or font");
+		}
+	} else {
+		vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+		return 0;
 	}
-	
+
+	// Final fallback: draw with custom font if set
+	if (font != NULL) {
+		if (font->pgf != NULL)
+			vita2d_pgf_draw_text(font->pgf, x, y + 17.402f * size, color->color, size, text);
+		else if (font->pvf != NULL)
+			vita2d_pvf_draw_text(font->pvf, x, y + 17.402f * size, color->color, size, text);
+		else if (font->font != NULL)
+			vita2d_font_draw_text(font->font, x, (y - 6) + size * 24, color->color, size * 24, text);
+		else
+			return luaL_error(L, "Invalid font data.");
+	}
+
 	return 0;
 }
 
@@ -115,52 +149,119 @@ static int lua_swapbuff(lua_State *L) {
 
 static int lua_textwidth(lua_State *L){
 	const char *text = luaL_checkstring(L, 1);
-	float size;
-	Font *font;
-	if(lua_isuserdata(L, 2) && !lua_isnil(L, 2)){
-		font = (Font *)luaL_checkudata(L, 2, "font");
-		size = luaL_optnumber(L, 3, 1.0f);
-		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
-		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
-		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*24, text));
-	}else if((lua_isnumber(L, 2) && (lua_isuserdata(L, 3) && !lua_isnone(L, 3))) && !lua_isnil(L, 3)){
-		font = (Font *)luaL_checkudata(L, 3, "font");
-		size = luaL_optnumber(L, 2, 1.0f);
-		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
-		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
-		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_width(font->font, size*24, text));
-	}else if(lua_isnumber(L, 2) || lua_isnone(L, 2)){
-		size = luaL_optnumber(L, 2, 1.0f);
+	float size = 1.0f;
+	Font *font = NULL;
+
+	int args = lua_gettop(L);
+
+	if (args >= 2) {
+		if (lua_isboolean(L, 2)) {
+			bool use_pvf = lua_toboolean(L, 2);
+			if (args >= 3 && lua_isnumber(L, 3))
+				size = lua_tonumber(L, 3);
+			if (use_pvf) lua_pushinteger(L, vita2d_pvf_text_width(pvf, size, text));
+			else lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+			return 1;
+		} else if (lua_isnumber(L, 2)) {
+			size = lua_tonumber(L, 2);
+			if (args >= 3) {
+				if (lua_isboolean(L, 3)) {
+					bool use_pvf = lua_toboolean(L, 3);
+					if (use_pvf) lua_pushinteger(L, vita2d_pvf_text_width(pvf, size, text));
+					else lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+					return 1;
+				} else if (lua_isuserdata(L, 3)) {
+					font = (Font *)luaL_checkudata(L, 3, "font");
+				}
+			} else {
+				// draw.textwidth(text, size)
+				lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
+				return 1;
+			}
+		} else if (lua_isuserdata(L, 2)) {
+			font = (Font *)luaL_checkudata(L, 2, "font");
+			if (args >= 3 && lua_isnumber(L, 3))
+				size = lua_tonumber(L, 3);
+		} else {
+			return luaL_typerror(L, 2, "boolean, number, or font");
+		}
+	} else {
+		// Only text provided
 		lua_pushinteger(L, vita2d_pgf_text_width(pgf, size, text));
-	}else{
-		return luaL_typerror(L, 2, "number or font");
+		return 1;
 	}
-	return 1;
+
+	if (font != NULL) {
+		if (font->pgf != NULL)
+			lua_pushinteger(L, vita2d_pgf_text_width(font->pgf, size, text));
+		else if (font->pvf != NULL)
+			lua_pushinteger(L, vita2d_pvf_text_width(font->pvf, size, text));
+		else if (font->font != NULL)
+			lua_pushinteger(L, vita2d_font_text_width(font->font, size * 24, text));
+		else
+			return luaL_error(L, "Invalid font data.");
+		return 1;
+	}
+
+	return luaL_error(L, "Unhandled textwidth case");
 }
 
 static int lua_textheight(lua_State *L){
 	const char *text = luaL_checkstring(L, 1);
-	float size;
-	Font *font;
-	if(lua_isuserdata(L, 5)){
-		font = (Font *)luaL_checkudata(L, 5, "font");
-		size = luaL_optnumber(L, 6, 1.0f);
-		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
-		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
-		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*20, text));
-	}else if(lua_isnumber(L, 5) && (lua_isuserdata(L, 6) && !lua_isnone(L, 6))){
-		font = (Font *)luaL_checkudata(L, 6, "font");
-		size = luaL_optnumber(L, 5, 1.0f);
-		if(font->pgf != NULL) lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
-		else if(font->pvf != NULL) lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
-		else if(font->font != NULL) lua_pushinteger(L, vita2d_font_text_height(font->font, size*20, text));
-	}else if(lua_isnumber(L, 5) || lua_isnone(L, 5)){
-		size = luaL_optnumber(L, 5, 1.0f);
+	float size = 1.0f;
+	Font *font = NULL;
+
+	int args = lua_gettop(L);
+
+	if (args >= 2) {
+		if (lua_isboolean(L, 2)) {
+			bool use_pvf = lua_toboolean(L, 2);
+			if (args >= 3 && lua_isnumber(L, 3))
+				size = lua_tonumber(L, 3);
+			if (use_pvf) lua_pushinteger(L, vita2d_pvf_text_height(pvf, size, text));
+			else lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+			return 1;
+		} else if (lua_isnumber(L, 2)) {
+			size = lua_tonumber(L, 2);
+			if (args >= 3) {
+				if (lua_isboolean(L, 3)) {
+					bool use_pvf = lua_toboolean(L, 3);
+					if (use_pvf) lua_pushinteger(L, vita2d_pvf_text_height(pvf, size, text));
+					else lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+					return 1;
+				} else if (lua_isuserdata(L, 3)) {
+					font = (Font *)luaL_checkudata(L, 3, "font");
+				}
+			} else {
+				lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
+				return 1;
+			}
+		} else if (lua_isuserdata(L, 2)) {
+			font = (Font *)luaL_checkudata(L, 2, "font");
+			if (args >= 3 && lua_isnumber(L, 3))
+				size = lua_tonumber(L, 3);
+		} else {
+			return luaL_typerror(L, 2, "boolean, number, or font");
+		}
+	} else {
+		// Only text provided
 		lua_pushinteger(L, vita2d_pgf_text_height(pgf, size, text));
-	}else{
-		return luaL_typerror(L, 5, "number or font");
+		return 1;
 	}
-	return 1;
+
+	if (font != NULL) {
+		if (font->pgf != NULL)
+			lua_pushinteger(L, vita2d_pgf_text_height(font->pgf, size, text));
+		else if (font->pvf != NULL)
+			lua_pushinteger(L, vita2d_pvf_text_height(font->pvf, size, text));
+		else if (font->font != NULL)
+			lua_pushinteger(L, vita2d_font_text_height(font->font, size * 20, text));
+		else
+			return luaL_error(L, "Invalid font data.");
+		return 1;
+	}
+
+	return luaL_error(L, "Unhandled textheight case");
 }
 
 static int lua_pixel(lua_State *L){

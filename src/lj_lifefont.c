@@ -51,6 +51,10 @@ static int lua_loadfont(lua_State *L){
 }
 
 static int lua_defaultfont(lua_State *L){
+	Font *font = (Font *)luaL_testudata(L, 1, "font");
+	if(font){
+		
+	}
 	return 0;
 }
 

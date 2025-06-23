@@ -228,6 +228,7 @@ int main(){
 	luaL_opencamera(L);
 	luaL_openthread(L);
 	//luaL_openimgui(L);
+	luaL_openjson(L);
 	luaL_extend(L);
 	
 	vita2d_start_drawing();

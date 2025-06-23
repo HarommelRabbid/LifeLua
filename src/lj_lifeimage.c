@@ -164,7 +164,7 @@ static int lua_qr(lua_State *L) {
 
     vita2d_texture *tex = vita2d_create_empty_texture(tex_size, tex_size);
 
-    vita2d_texture_set_filters(tex, SCE_GXM_TEXTURE_FILTER_POINT, SCE_GXM_TEXTURE_FILTER_POINT);
+    //vita2d_texture_set_filters(tex, SCE_GXM_TEXTURE_FILTER_POINT, SCE_GXM_TEXTURE_FILTER_POINT);
     uint32_t *data = vita2d_texture_get_datap(tex);
 	unsigned int pitch = vita2d_texture_get_stride(tex) / 4;
 
@@ -333,7 +333,7 @@ static int lua_imageheight(lua_State *L){
 static int lua_imagefilters(lua_State *L){
 	Image *image = (Image *)luaL_checkudata(L, 1, "image");
 	SceGxmTextureFilter min = luaL_checkinteger(L, 2);
-	SceGxmTextureFilter mag = luaL_checkinteger(L, 3);
+	SceGxmTextureFilter mag = luaL_optinteger(L, 3, min);
 	vita2d_texture_set_filters(image->tex, min, mag);
 	return 0;
 }
