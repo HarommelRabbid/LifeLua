@@ -355,6 +355,61 @@ static int lua_cliprect(lua_State *L){
 	return 0;
 }
 
+void vita2d_set_clip_circle(int x_min, int y_min, int rad)
+{
+	// we can only draw during a scene, but we can cache the values since they're not going to have any visible effect till the scene starts anyways
+	if(true) {
+		// clear the stencil buffer to 0
+		sceGxmSetFrontStencilFunc(
+			vita2d_get_context(),
+			SCE_GXM_STENCIL_FUNC_NEVER,
+			SCE_GXM_STENCIL_OP_ZERO,
+			SCE_GXM_STENCIL_OP_ZERO,
+			SCE_GXM_STENCIL_OP_ZERO,
+			0xFF,
+			0xFF);
+		vita2d_draw_rectangle(0, 0, 960, 544, 0);
+		// set the stencil to 1 in the desired region
+		sceGxmSetFrontStencilFunc(
+			vita2d_get_context(),
+			SCE_GXM_STENCIL_FUNC_NEVER,
+			SCE_GXM_STENCIL_OP_REPLACE,
+			SCE_GXM_STENCIL_OP_REPLACE,
+			SCE_GXM_STENCIL_OP_REPLACE,
+			0xFF,
+			0xFF);
+		vita2d_draw_fill_circle(x_min, y_min, rad, 0);
+		if(vita2d_get_clipping_enabled()) {
+			// set the stencil function to only accept pixels where the stencil is 1
+			sceGxmSetFrontStencilFunc(
+				vita2d_get_context(),
+				SCE_GXM_STENCIL_FUNC_EQUAL,
+				SCE_GXM_STENCIL_OP_KEEP,
+				SCE_GXM_STENCIL_OP_KEEP,
+				SCE_GXM_STENCIL_OP_KEEP,
+				0xFF,
+				0xFF);
+		} else {
+			sceGxmSetFrontStencilFunc(
+				vita2d_get_context(),
+				SCE_GXM_STENCIL_FUNC_ALWAYS,
+				SCE_GXM_STENCIL_OP_KEEP,
+				SCE_GXM_STENCIL_OP_KEEP,
+				SCE_GXM_STENCIL_OP_KEEP,
+				0xFF,
+				0xFF);
+		}
+	}
+}
+
+static int lua_clipcircle(lua_State *L){
+	int minx = luaL_checkinteger(L, 1);
+	int miny = luaL_checkinteger(L, 2);
+	int rad = luaL_checkinteger(L, 3);
+	vita2d_set_clip_circle(minx, miny, rad);
+	return 0;
+}
+
 static const luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -370,6 +425,7 @@ static const luaL_Reg draw_lib[] = {
 	{"vdoublegradientrect", lua_vdoublegradient},
 	{"enableclip", lua_enableclip},
 	{"cliprect", lua_cliprect},
+	{"clipcircle", lua_clipcircle},
     {"swapbuffers", lua_swapbuff},
     {NULL, NULL}
 };

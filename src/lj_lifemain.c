@@ -19,7 +19,6 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/ftpvita.h"
-#include "include/sha1.h"
 
 #include "lj_lifeinit.h"
 #include <lua.h>

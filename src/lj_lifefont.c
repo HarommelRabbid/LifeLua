@@ -50,6 +50,10 @@ static int lua_loadfont(lua_State *L){
 	return 1;
 }
 
+static int lua_defaultfont(lua_State *L){
+	return 0;
+}
+
 static int lua_fontgc(lua_State *L){
 	Font *font = (Font *)luaL_checkudata(L, 1, "font");
     if (font->pgf != NULL) {
@@ -64,6 +68,7 @@ static int lua_fontgc(lua_State *L){
 
 static const luaL_Reg font_lib[] = {
     {"load", lua_loadfont},
+	{"default", lua_defaultfont},
     {NULL, NULL}
 };
 

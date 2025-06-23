@@ -15,7 +15,7 @@ endif()
 
 ## Define project parameters here
 # Name of the project
-project(lifelua)
+project(LifeLua)
 # This line adds Vita helper macros, must go after project definition in order
 # to build Vita specific artifacts (self/vpk).
 include("${VITASDK}/share/vita.cmake" REQUIRED)
@@ -32,7 +32,7 @@ set(VITA_VERSION  "00.00")
 ## Flags and includes for building
 # Note that we make sure not to overwrite previous flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wl,-q -g -fno-lto")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11 -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -std=c++11 -fno-exceptions -fno-lto")
 # Optional. You can specify more param.sfo flags this way.
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifecamera.c
   src/lj_lifethread.c
   #src/lj_lifeimgui.c++
+  #src/lj_lifeaudio.c
   #src/lj_lifemathext.c
   #src/lj_lifejson.c++
   src/ext/lutf8lib.c
@@ -131,6 +132,10 @@ target_link_libraries(${PROJECT_NAME}
     png
     jpeg
     freetype
+    mpg123
+    opus
+    opusfile
+    ogg
     c
     m
     z
