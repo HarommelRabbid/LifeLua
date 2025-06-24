@@ -27,11 +27,36 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
+static int lua_jsonnulltostring(lua_State *L) {
+	lua_pushstring(L, "json.null");
+	return 1;
+}
+
+static int lua_jsonnulleq(lua_State *L) {
+	lua_pushboolean(L, lua_touserdata(L, 1) == lua_touserdata(L, 2));
+	return 1;
+}
+
+static const luaL_Reg json_null[] = {
+	{"__tostring", lua_jsonnulltostring},
+    {"__eq", lua_jsonnulleq},
+    {NULL, NULL}
+};
+
+static void lua_pushjsonnull(lua_State *L) {
+	void **ud = (void **)lua_newuserdata(L, sizeof(void *));
+	*ud = ud;  // unique address
+	if (luaL_newmetatable(L, "jsonnull")) {
+        luaL_register(L, NULL, json_null);
+	}
+	lua_setmetatable(L, -2);
+}
+
 static void push_cjson_object(lua_State *L, cJSON *item) {
     switch (item->type) {
         case cJSON_False: lua_pushboolean(L, 0); break;
         case cJSON_True: lua_pushboolean(L, 1); break;
-        case cJSON_NULL: lua_pushnil(L); break;
+        case cJSON_NULL: lua_pushjsonnull(L); break;
         case cJSON_Number: lua_pushnumber(L, item->valuedouble); break;
         case cJSON_String: lua_pushstring(L, item->valuestring); break;
         case cJSON_Array: {
@@ -61,7 +86,23 @@ static void push_cjson_object(lua_State *L, cJSON *item) {
     }
 }
 
+void *check_json_null(lua_State *L, int index) {
+	if (lua_type(L, index) == LUA_TUSERDATA) {
+		if (lua_getmetatable(L, index)) {
+			luaL_getmetatable(L, "jsonnull");
+			int is_equal = lua_rawequal(L, -1, -2);
+			lua_pop(L, 2);
+			if (is_equal) {
+				return lua_touserdata(L, index);
+			}
+		}
+	}
+	return NULL;
+}
+
 static cJSON* lua_to_cjson(lua_State *L, int index) {
+    void *null_obj = check_json_null(L, index);
+    if (null_obj) return cJSON_CreateNull();
     int type = lua_type(L, index);
     switch(type) {
         case LUA_TBOOLEAN:
@@ -72,12 +113,12 @@ static cJSON* lua_to_cjson(lua_State *L, int index) {
             return cJSON_CreateString(lua_tostring(L, index));
         case LUA_TTABLE: {
             // Decide if array or object by checking keys
-            int is_array = 1;
+            bool is_array = true;
             int n = lua_rawlen(L, index);
             lua_pushnil(L);
             while (lua_next(L, index) != 0) {
                 if (lua_type(L, -2) != LUA_TNUMBER) {
-                    is_array = 0;
+                    is_array = false;
                 }
                 lua_pop(L, 1);
             }
@@ -110,7 +151,7 @@ static int lua_decode(lua_State *L) {
     const char *error_ptr;
     cJSON *json = cJSON_ParseWithOpts(json_str, &error_ptr, 1);
     if (!json) {
-        return luaL_error(L, error_ptr);
+        return luaL_error(L, "Parse error at: %s", error_ptr);
     }
     push_cjson_object(L, json);
     cJSON_Delete(json);
@@ -146,17 +187,25 @@ static int lua_cjsonver(lua_State *L) {
     return 1;
 }
 
+static int lua_isnull(lua_State *L) {
+	lua_pushboolean(L, check_json_null(L, 1) != NULL);
+	return 1;
+}
+
 static const luaL_Reg json_lib[] = {
 	{"decode", lua_decode},
     {"parse", lua_decode},
 	{"encode", lua_encode},
     {"tojson", lua_encode},
     {"minify", lua_minify},
+    {"isnull", lua_isnull},
     {"version", lua_cjsonver},
     {NULL, NULL}
 };
 
 LUALIB_API int luaL_openjson(lua_State *L) {
 	luaL_register(L, "json", json_lib);
+    lua_pushjsonnull(L);
+	lua_setfield(L, -2, "null");
     return 1;
 }
