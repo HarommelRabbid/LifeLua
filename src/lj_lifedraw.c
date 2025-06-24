@@ -89,7 +89,6 @@ static int lua_text(lua_State *L){
 	return 0;
 }
 
-// Draw rectangle
 static int lua_rect(lua_State *L) {
 	int argc = lua_gettop(L);
     float x = luaL_checknumber(L, 1);
@@ -110,7 +109,6 @@ static int lua_rect(lua_State *L) {
     return 0;
 }
 
-// Draw circle
 static int lua_circle(lua_State *L) {
     float x = luaL_checknumber(L, 1);
     float y = luaL_checknumber(L, 2);
@@ -121,7 +119,6 @@ static int lua_circle(lua_State *L) {
     return 0;
 }
 
-// Draw line
 static int lua_line(lua_State *L) {
     float x0 = luaL_checknumber(L, 1);
     float y0 = luaL_checknumber(L, 2);

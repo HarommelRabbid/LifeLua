@@ -38,7 +38,7 @@ static int lua_jsonnulleq(lua_State *L) {
 }
 
 static const luaL_Reg json_null[] = {
-	{"__tostring", lua_jsonnulltostring},
+    {"__tostring", lua_jsonnulltostring},
     {"__eq", lua_jsonnulleq},
     {NULL, NULL}
 };
@@ -193,9 +193,9 @@ static int lua_isnull(lua_State *L) {
 }
 
 static const luaL_Reg json_lib[] = {
-	{"decode", lua_decode},
+    {"decode", lua_decode},
     {"parse", lua_decode},
-	{"encode", lua_encode},
+    {"encode", lua_encode},
     {"tojson", lua_encode},
     {"minify", lua_minify},
     {"isnull", lua_isnull},
