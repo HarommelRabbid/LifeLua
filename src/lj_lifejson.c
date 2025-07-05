@@ -32,14 +32,9 @@ static int lua_jsonnulltostring(lua_State *L) {
 	return 1;
 }
 
-static int lua_jsonnulleq(lua_State *L) {
-	lua_pushboolean(L, lua_touserdata(L, 1) == lua_touserdata(L, 2));
-	return 1;
-}
-
 static const luaL_Reg json_null[] = {
     {"__tostring", lua_jsonnulltostring},
-    {"__eq", lua_jsonnulleq},
+    //{"__eq", lua_jsonnulleq},
     {NULL, NULL}
 };
 
