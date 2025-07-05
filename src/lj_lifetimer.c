@@ -110,7 +110,7 @@ static int lua_settimer(lua_State *L){
 static int lua_resettimer(lua_State *L) {
     Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
 	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-    t->start_time = starting_point + sceKernelGetProcessTimeWide();
+    t->start_time = starting_point / 1000000.0 + sceKernelGetProcessTimeWide();
     t->stop_time = 0;
     t->pause_time = 0;
     t->total_paused = 0;
