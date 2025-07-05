@@ -258,6 +258,127 @@ SceInt32 scePhotoReviewDialogTerm( void );
 
 SceInt32 scePhotoReviewDialogAbort( void );
 
+//camera import
+#define SCE_CAMERAIMPORT_DIALOG_ERROR_CAMERA_ALREADY_USED			(0x80104701)
+#define SCE_CAMERAIMPORT_DIALOG_ERROR_INVALID_WORKING_BUFFER		(0x80104702)
+#define SCE_CAMERAIMPORT_DIALOG_ERROR_REQUIRED_PRX_IS_NOT_LOADED	(0x80104703)
+#define SCE_CAMERAIMPORT_DIALOG_ERROR_REQUIRED_DEVICE_CANNOT_USE	(0x80104704)
+
+#define SCE_CAMERAIMPORT_DIALOG_OUTPUT_MODE_MEMORY_RAW				(0x00000000U)
+#define SCE_CAMERAIMPORT_DIALOG_OUTPUT_MODE_MEMORY_JPEG				(0x00000001U)
+
+#define SCE_CAMERAIMPORT_DIALOG_RAW_U8U8U8U8_SIZE_640X480			(640*480*4)
+#define SCE_CAMERAIMPORT_DIALOG_RAW_U8U8U8U8_SIZE_640X360			(640*360*4)
+#define SCE_CAMERAIMPORT_DIALOG_RAW_U8U8U8U8_SIZE_480X480			(480*480*4)
+
+#define SCE_CAMERAIMPORT_DIALOG_JPEG_MAX_SIZE_640X480				(640*480*4+(96*1024))
+#define SCE_CAMERAIMPORT_DIALOG_JPEG_MAX_SIZE_640X360				(640*360*4+(96*1024))
+#define SCE_CAMERAIMPORT_DIALOG_JPEG_MAX_SIZE_480X480				(480*480*4+(96*1024))
+
+#define SCE_CAMERAIMPORT_DIALOG_WORKING_BUFFER_SIZE					(2*1024*1024)
+
+#define SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_640X480			(0x00000001U)
+#define SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_640X360			(0x00000002U)
+#define SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_480X480			(0x00000004U)
+
+#define SCE_CAMERAIMPORT_DIALOG_CAMERA_DEVICE_FRONT					(0x00000001U)
+#define SCE_CAMERAIMPORT_DIALOG_CAMERA_DEVICE_REAR					(0x00000002U)
+
+#define SCE_CAMERAIMPORT_DIALOG_ROTATION_MODE_DISABLE				(0x00000000U)
+#define SCE_CAMERAIMPORT_DIALOG_ROTATION_MODE_ENABLE				(0x00000001U)
+
+#define SCE_CAMERAIMPORT_DIALOG_MAX_OVERLAY_IMAGE_WIDTH				(848)
+#define SCE_CAMERAIMPORT_DIALOG_MAX_OVERLAY_IMAGE_HEIGHT			(480)
+
+#define SCE_CAMERAIMPORT_DIALOG_OVERLAY_MODE_NOT_USE				(0x00000000U)
+#define SCE_CAMERAIMPORT_DIALOG_OVERLAY_MODE_DISPLAY				(0x00000001U)
+#define SCE_CAMERAIMPORT_DIALOG_OVERLAY_MODE_PRINT					(0x00000002U)
+#define SCE_CAMERAIMPORT_DIALOG_OVERLAY_MODE_DISPLAY_AND_PRINT		(0x00000003U)
+
+#define SCE_CAMERAIMPORT_DIALOG_IMAGE_ORIENTATION_NORMAL			(0x00000000U)
+#define SCE_CAMERAIMPORT_DIALOG_IMAGE_ORIENTATION_CLOCKWISE_90		(0x00000001U)
+#define SCE_CAMERAIMPORT_DIALOG_IMAGE_ORIENTATION_CLOCKWISE_180		(0x00000002U)
+#define SCE_CAMERAIMPORT_DIALOG_IMAGE_ORIENTATION_CLOCKWISE_270		(0x00000003U)
+
+typedef struct SceCameraImportDialogMemoryRawParam {
+
+	void* buffer;
+	SceSize bufferSize;
+	SceGxmTextureType texType;
+	SceGxmTextureFormat texFormat;
+	SceChar8 reserved[32];
+} SceCameraImportDialogMemoryRawParam;
+
+typedef struct SceCameraImportDialogMemoryJpegParam {
+
+	void* buffer;
+	SceSize bufferSize;
+	SceChar8 reserved[32];
+} SceCameraImportDialogMemoryJpegParam;
+
+typedef struct SceCameraImportDialogOverlayImage {
+
+	void *buffer;
+	SceSize bufferSize;
+	SceUInt32 width;
+	SceUInt32 height;
+	SceUInt32 stride;
+	SceGxmTextureType texType;
+	SceGxmTextureFormat texFormat;
+	SceChar8 reserved[32];
+} SceCameraImportDialogOverlayImage;
+
+typedef struct SceCameraImportDialogParam {
+	SceUInt32 sdkVersion;
+	SceCommonDialogParam commonParam;
+	SceUInt32 outputMode;
+	SceCameraImportDialogMemoryRawParam *memRawParam;
+	SceCameraImportDialogMemoryJpegParam *memJpegParam;
+	SceChar8 reserved1[8];
+	void *workingBuffer;
+	SceInt32 workingBufferSize;
+	SceUInt32 availableResolution;
+	SceUInt32 initialResolution;
+	SceUInt32 availableDevice;
+	SceUInt32 initialDevice;
+	SceUInt32 rotationMode;
+	SceUInt32 overlayMode;
+	SceCameraImportDialogOverlayImage *overlayImage;
+	SceChar8 reserved2[48];
+} SceCameraImportDialogParam;
+
+typedef struct SceCameraImportDialogOutputParam {
+	SceSize size;
+	SceUInt32 width;
+	SceUInt32 height;
+	SceUInt32 device;
+	SceUInt32 orientation;
+	SceChar8 reserved[32];
+} SceCameraImportDialogOutputParam;
+
+typedef struct SceCameraImportDialogResult {
+	SceInt32 result;
+	SceCameraImportDialogOutputParam output;
+	SceChar8 reserved[32];
+} SceCameraImportDialogResult;
+
+static inline
+void sceCameraImportDialogParamInit( SceCameraImportDialogParam *param ){
+	sceClibMemset( param, 0x0, sizeof(SceCameraImportDialogParam) );
+	_sceCommonDialogSetMagicNumber( &param->commonParam );
+	param->sdkVersion = PSP2_SDK_VERSION;
+}
+
+SceInt32 sceCameraImportDialogInit( const SceCameraImportDialogParam *param );
+
+SceCommonDialogStatus sceCameraImportDialogGetStatus( void );
+
+SceInt32 sceCameraImportDialogGetResult( SceCameraImportDialogResult* result );
+
+SceInt32 sceCameraImportDialogTerm( void );
+
+SceInt32 sceCameraImportDialogAbort( void );
+
 static uint16_t title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 static uint16_t initial_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 static uint16_t input_text[SCE_IME_DIALOG_MAX_TEXT_LENGTH + 1];
