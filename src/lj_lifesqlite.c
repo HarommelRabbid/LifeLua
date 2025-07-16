@@ -21,10 +21,6 @@
 #include "include/sqlite3.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 int callback_results = 1;
 static int sqlite_callback(void *data, int argc, char **argv, char **azColName){

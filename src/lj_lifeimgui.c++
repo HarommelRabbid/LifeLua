@@ -21,10 +21,6 @@
 #include <imgui_vita2d/imgui_vita.h>
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_iminit(lua_State *L) {
     ImGui::CreateContext();

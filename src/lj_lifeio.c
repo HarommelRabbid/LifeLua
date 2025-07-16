@@ -24,10 +24,6 @@
 #include "include/zip.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 typedef struct {
     char magic[4];       // "\0PSF"

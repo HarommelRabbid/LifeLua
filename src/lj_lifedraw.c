@@ -20,10 +20,6 @@
 #include <vita2d.h>
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_text(lua_State *L){
 	float x = luaL_checknumber(L, 1);

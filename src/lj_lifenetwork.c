@@ -22,10 +22,6 @@
 //#include "include/sha1.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_ftp(lua_State *L){
 	bool enable = lua_toboolean(L, 1);

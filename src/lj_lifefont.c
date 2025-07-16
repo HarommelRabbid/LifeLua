@@ -20,10 +20,6 @@
 #include <vita2d.h>
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_loadfont(lua_State *L){
 	const char *filename = luaL_checkstring(L, 1);
@@ -51,10 +47,7 @@ static int lua_loadfont(lua_State *L){
 }
 
 static int lua_defaultfont(lua_State *L){
-	Font *font = (Font *)luaL_testudata(L, 1, "font");
-	if(font){
-		
-	}
+	Font *font = (Font *)luaL_checkudata(L, 1, "font");
 	return 0;
 }
 

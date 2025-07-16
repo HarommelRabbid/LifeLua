@@ -22,10 +22,6 @@
 #include "include/qrcodegen.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_imageload(lua_State *L) {
     const char *filename = luaL_checkstring(L, 1);

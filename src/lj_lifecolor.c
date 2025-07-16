@@ -20,10 +20,6 @@
 #include <vita2d.h>
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 Color *lua_tocolor(lua_State *L, int n) {
     Color *color = (Color *)luaL_testudata(L, n, "color");

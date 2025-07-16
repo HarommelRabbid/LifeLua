@@ -21,10 +21,6 @@
 #include "include/ftpvita.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 lua_State *L;
 vita2d_pgf *pgf;

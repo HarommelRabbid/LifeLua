@@ -20,10 +20,6 @@
 #include "include/ftpvita.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 typedef struct {
     SceUInt64 start_time;
@@ -88,12 +84,9 @@ static int lua_resumetimer(lua_State *L) {
 static int lua_timerelapsed(lua_State *L) {
     Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
     SceUInt64 now;
-    if (t->paused)
-        now = t->pause_time;
-    else if (!t->running)
-        now = t->stop_time;
-    else
-        now = sceKernelGetProcessTimeWide();
+    if (t->paused) now = t->pause_time;
+    else if (!t->running) now = t->stop_time;
+    else now = sceKernelGetProcessTimeWide();
 
     double elapsed = (double)(now - t->start_time - t->total_paused) / 1000000.0;
     lua_pushnumber(L, elapsed);
@@ -103,7 +96,7 @@ static int lua_timerelapsed(lua_State *L) {
 static int lua_settimer(lua_State *L){
 	Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
 	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-	t->start_time = starting_point;
+	t->start_time = starting_point / 1000000.0;
 	return 0;
 }
 

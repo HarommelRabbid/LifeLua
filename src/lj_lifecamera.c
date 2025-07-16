@@ -20,10 +20,6 @@
 #include <vita2d.h>
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 SceCameraInfo cam_info;
 SceCameraRead cam_info_read;

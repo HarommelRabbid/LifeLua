@@ -22,10 +22,6 @@
 #include "include/cJSON.h"
 
 #include "lj_lifeinit.h"
-#include <lua.h>
-#include <luajit.h>
-#include <lualib.h>
-#include <lauxlib.h>
 
 static int lua_jsonnulltostring(lua_State *L) {
 	lua_pushstring(L, "json.null");

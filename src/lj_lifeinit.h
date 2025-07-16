@@ -29,7 +29,6 @@
 #include <lualib.h>
 #include <lauxlib.h>
 #endif
-#define str(str) #str
 #define luaL_pushglobalint(L, value) lua_pushinteger(L, value); lua_setglobal(L, #value);
 #define luaL_pushglobalint_as(L, value, var) lua_pushinteger(L, value); lua_setglobal(L, var);
 #define luaL_pushglobalint_alsoas(L, value, var) luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var);
