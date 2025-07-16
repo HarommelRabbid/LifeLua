@@ -20,6 +20,8 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/qrcodegen.h"
+#include <png.h>
+#include <libimagequant.h>
 
 #include "lj_lifeinit.h"
 
@@ -185,6 +187,121 @@ static int lua_qr(lua_State *L) {
 
     return 1;
 }
+
+/*static int lua_imagesave(lua_State *L){
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
+    const char *filename = luaL_checkstring(L, 2);
+    const char *format = luaL_optstring(L, 3, "png");
+    SceGxmTextureFormat tex_format = vita2d_texture_get_format(image->tex);
+    int bpp = (tex_format == SCE_GXM_TEXTURE_FORMAT_U8U8U8_BGR) ? 3 : 4;
+    unsigned int pitch = vita2d_texture_get_stride(image->tex) / bpp;
+    unsigned int w = vita2d_texture_get_width(text->text);
+	unsigned int h = vita2d_texture_get_height(text->text);
+    int format_int = 0;
+
+    if (format == "bmp") format_int = 1;
+    else if (format == "png") format_int = 2;
+    else if (format == "jpeg" || format == "jpg") format_int = 3;
+
+    switch (format_int){
+        default:
+        case 1:
+            SceUID fd = sceIoOpen(filename, SCE_O_CREAT|SCE_O_WRONLY|SCE_O_TRUNC, 0777);
+		    uint8_t *bmp_content = (uint8_t*)malloc((w * h * 4)+0x36);
+		    sceClibMemset(bmp_content, 0, 0x36);
+		    *(uint16_t*)&bmp_content[0x0] = 0x4D42;
+		    *(uint32_t*)&bmp_content[0x2] = (w * h * 4)+0x36;
+		    *(uint32_t*)&bmp_content[0xA] = 0x36;
+		    *(uint32_t*)&bmp_content[0xE] = 0x28;
+		    *(uint32_t*)&bmp_content[0x12] = w;
+		    *(uint32_t*)&bmp_content[0x16] = h;
+		    *(uint32_t*)&bmp_content[0x1A] = 0x00200001;
+		    *(uint32_t*)&bmp_content[0x22] = w * h * 4;
+		    int x, y;
+		    uint8_t* buffer = (uint8_t*)&bmp_content[0x36];
+		    uint8_t* framebuf = (uint8_t*)vita2d_texture_get_datap(image->tex);
+		    for (y = 0; y < h; y++) {
+		    	for (x = 0; x < w; x++) {
+		    		if (bpp == 3) {
+		    			buffer[(x + y * w) * 4] = framebuf[(x+(h-y)*pitch)*bpp + 2];
+		    			buffer[(x + y * w) * 4 + 1] = framebuf[(x+(h-y)*pitch)*bpp + 1];
+		    			buffer[(x + y * w) * 4 + 2] = framebuf[(x+(h-y)*pitch)*bpp];
+		    			buffer[(x + y * w) * 4 + 3] = 0xFF;
+		    		} else {
+		    			buffer[(x + y * w) * 4] = framebuf[(x+(h-y)*pitch)*bpp + 2];
+		    			buffer[(x + y * w) * 4 + 1] = framebuf[(x+(h-y)*pitch)*bpp + 1];
+		    			buffer[(x + y * w) * 4 + 2] = framebuf[(x+(h-y)*pitch)*bpp];
+		    			buffer[(x + y * w) * 4 + 3] = framebuf[(x+(h-y)*pitch)*bpp + 3];
+		    		}
+		    	}
+		    }
+		    sceIoWrite(fd, bmp_content, (w * h * 4)+0x36);
+		    free(bmp_content);
+		    sceIoClose(fd);
+            break;
+        case 2: // png
+            FILE *fh = fopen(filename, "wb");
+		    uint8_t *raw_data = (uint8_t*)malloc(w * h * 4);
+		    uint8_t* buffer = (uint8_t*)raw_data;
+		    uint8_t* framebuf = (uint8_t*)vita2d_texture_get_datap(image->tex);
+		    int x, y;
+		    for (y = 0; y < h; y++) {
+		    	for (x = 0; x < w; x++) {
+		    		if (bpp == 3) {
+		    			buffer[(x + y * w) * 4] = framebuf[(x+y*pitch)*bpp];
+		    			buffer[(x + y * w) * 4 + 1] = framebuf[(x+y*pitch)*bpp + 1];
+		    			buffer[(x + y * w) * 4 + 2] = framebuf[(x+y*pitch)*bpp + 2];
+		    			buffer[(x + y * w) * 4 + 3] = 0xFF;
+		    		} else {
+		    			buffer[(x + y * w) * 4] = framebuf[(x+y*pitch)*bpp];
+		    			buffer[(x + y * w) * 4 + 1] = framebuf[(x+y*pitch)*bpp + 1];
+		    			buffer[(x + y * w) * 4 + 2] = framebuf[(x+y*pitch)*bpp + 2];
+		    			buffer[(x + y * w) * 4 + 3] = framebuf[(x+y*pitch)*bpp + 3];
+		    		}
+		    	}
+		    }
+		    liq_attr *handle = liq_attr_create();
+		    liq_image *input_image = liq_image_create_rgba(handle, raw_data, w, h, 0);
+		    liq_result *res;
+		    liq_image_quantize(input_image, handle, &res);
+		    uint8_t *quant_raw = (uint8_t*)malloc(w * h);
+		    liq_set_dithering_level(res, 1.0);
+		    liq_write_remapped_image(res, input_image, quant_raw, w * h);
+		    const liq_palette *palette = liq_get_palette(res);
+		    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);;
+		    png_infop info_ptr = png_create_info_struct(png_ptr);
+		    setjmp(png_jmpbuf(png_ptr));
+		    png_init_io(png_ptr, fh);
+		    png_set_IHDR(png_ptr, info_ptr, w, h,
+		    	8, PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
+		    	PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+		    png_color *pal = (png_color*)png_malloc(png_ptr, palette->count*sizeof(png_color));
+		    for (int i = 0; i < palette->count; i++) {
+		    	png_color *col = &pal[i];
+		    	col->red = palette->entries[i].r;
+		    	col->green = palette->entries[i].g;
+		    	col->blue = palette->entries[i].b;
+		    }
+		    png_set_PLTE(png_ptr, info_ptr, pal, palette->count);
+		    png_write_info(png_ptr, info_ptr);
+		    for (y = 0; y < h; y++) {
+		    	png_write_row(png_ptr, &quant_raw[y * w]);
+		    }
+		    png_write_end(png_ptr, NULL);
+		    fclose(fh);
+		    png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+		    png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+		    free(quant_raw);
+		    free(raw_data);
+		    liq_result_destroy(res);
+		    liq_image_destroy(input_image);
+		    liq_attr_destroy(handle);
+            break;
+        case 3:
+            break;
+    }
+    return 0;
+}*/
 
 static int lua_imagedraw(lua_State *L){
 	int argc = lua_gettop(L);
@@ -460,6 +577,7 @@ static const luaL_Reg image_lib[] = {
 	{"new", lua_newimage},
 	{"screen", lua_screenimage},
 	{"qr", lua_qr},
+    //{"save", lua_imagesave},
     {"display", lua_imagedraw},
 	{"scaledisplay", lua_imagescaledraw},
 	{"rotatedisplay", lua_imagerotatedraw},

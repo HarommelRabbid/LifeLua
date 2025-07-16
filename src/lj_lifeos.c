@@ -1479,6 +1479,89 @@ static int lua_setreg(lua_State *L){
 	return 0;
 }
 
+static int lua_cameraimport(lua_State *L){
+	void *workingBuffer = NULL;
+	uint8_t rawBuffer[SCE_CAMERAIMPORT_DIALOG_RAW_U8U8U8U8_SIZE_640X480] __attribute__((aligned(64)));
+	if (!workingBuffer) {
+		workingBuffer = malloc(SCE_CAMERAIMPORT_DIALOG_WORKING_BUFFER_SIZE);
+		if (!workingBuffer)
+			return luaL_error(L, "Failed to allocate working buffer");
+	}
+
+	SceCameraImportDialogMemoryRawParam memRawParam;
+	SceCameraImportDialogParam pidParam;
+	sceCameraImportDialogParamInit(&pidParam);
+
+	pidParam.workingBuffer = workingBuffer;
+	pidParam.workingBufferSize = SCE_CAMERAIMPORT_DIALOG_WORKING_BUFFER_SIZE;
+
+	pidParam.overlayMode				= SCE_CAMERAIMPORT_DIALOG_OVERLAY_MODE_NOT_USE;
+	pidParam.overlayImage				= 0;
+
+	pidParam.outputMode = SCE_CAMERAIMPORT_DIALOG_OUTPUT_MODE_MEMORY_RAW;
+	pidParam.availableDevice = SCE_CAMERAIMPORT_DIALOG_CAMERA_DEVICE_FRONT | SCE_CAMERAIMPORT_DIALOG_CAMERA_DEVICE_REAR;
+	pidParam.initialDevice = SCE_CAMERAIMPORT_DIALOG_CAMERA_DEVICE_REAR;
+	pidParam.availableResolution	= SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_640X480
+										| SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_640X360
+										| SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_480X480;
+	pidParam.initialResolution		= SCE_CAMERAIMPORT_DIALOG_CAMERA_RESOLUTION_640X480;
+	pidParam.rotationMode			= SCE_CAMERAIMPORT_DIALOG_ROTATION_MODE_ENABLE;
+
+	memRawParam.buffer = rawBuffer;
+	memRawParam.bufferSize = sizeof(rawBuffer);
+	memRawParam.texType = SCE_GXM_TEXTURE_LINEAR;
+	memRawParam.texFormat = SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR;
+	pidParam.memRawParam = &memRawParam;
+	sceCameraImportDialogInit(&pidParam);
+
+	while (sceCameraImportDialogGetStatus() != SCE_COMMON_DIALOG_STATUS_FINISHED) {
+		//vita2d_start_drawing();
+
+		lua_getglobal(L, "LifeLuaCameraImportDialog");
+		if (lua_isfunction(L, -1)) {
+			lua_call(L, 0, 0);
+		}
+
+ 		vita2d_end_drawing();
+        vita2d_common_dialog_update();
+		vita2d_wait_rendering_done();
+        vita2d_swap_buffers();
+        sceDisplayWaitVblankStart();
+		vita2d_start_drawing();
+    	vita2d_clear_screen(); // Clear for next frame
+	}
+
+	SceCameraImportDialogResult pidResult;
+
+	memset(&pidResult, 0x0, sizeof(SceCameraImportDialogResult));
+	sceCameraImportDialogGetResult(&pidResult);
+
+	if (pidResult.result == SCE_COMMON_DIALOG_RESULT_OK) {
+		Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+		image->tex = vita2d_create_empty_texture_format(pidResult.output.width, pidResult.output.height, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+		if (!image->tex) return luaL_error(L, "Failed to create texture");
+		memcpy(vita2d_texture_get_datap(image->tex), rawBuffer, pidResult.output.width * pidResult.output.height * 4);
+		luaL_getmetatable(L, "image");
+    	lua_setmetatable(L, -2);
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED){
+		lua_pushnil(L);
+	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_ABORTED){
+		lua_pushnil(L);
+	}
+
+	if (workingBuffer) {
+		free(workingBuffer);
+		workingBuffer = NULL;
+	}
+	sceCameraImportDialogTerm();
+	return 1;
+}
+
+static int lua_cameradialogabort(lua_State *L){
+	sceCameraImportDialogAbort();
+	return 0;
+}
+
 static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1543,6 +1626,8 @@ static const luaL_Reg os_lib[] = {
     {"abortimportvideo", lua_videodialogabort},
     {"photoreview", lua_photoreview},
     {"abortphotoreview", lua_abortphotoreview},
+	{"cameraimport", lua_cameraimport},
+    {"abortcameraimport", lua_cameradialogabort},
 	{"volume", lua_vol},
 	{"mute", lua_mute},
 	{"colorspace", lua_colorspace},

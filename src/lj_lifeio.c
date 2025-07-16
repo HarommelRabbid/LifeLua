@@ -19,6 +19,7 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/sha1.h"
+#include "include/sha256.h"
 #include "include/md5.h"
 #include "include/unzip.h"
 #include "include/zip.h"
@@ -401,6 +402,28 @@ static int lua_md5(lua_State *L){
     return 1;
 }
 
+static int lua_sha256(lua_State *L){
+	const char *input = luaL_checkstring(L, 1);
+	size_t len = strlen(input);
+
+	uint8_t sha256out[20];
+
+	// Set up SHA1 context
+	SHA256_CTX ctx;
+	sha256_init(&ctx);
+	sha256_update(&ctx, (const uint8_t *)input, len);
+	sha256_final(&ctx, sha256out);
+
+	// Convert SHA256 result to hex string
+	char sha256msg[42]; // 40 chars + null terminator
+	for (int i = 0; i < 20; i++) {
+		sprintf(sha256msg + i * 2, "%02X", sha256out[i]);
+	}
+
+	lua_pushstring(L, sha256msg);
+	return 1;
+}
+
 static int lua_workpath(lua_State *L) {
     if(!lua_isnone(L, 1)){
         const char *path = luaL_checkstring(L, 1);
@@ -721,6 +744,7 @@ static const luaL_Reg io_lib[] = {
 	{"pathstrip", lua_getfilename},
 	{"filestrip", lua_getfolder},
 	{"sha1", lua_sha1},
+    {"sha256", lua_sha256},
 	{"crc32", lua_crc32},
     {"md5", lua_md5},
     {"workpath", lua_workpath},

@@ -78,6 +78,7 @@ add_executable(${PROJECT_NAME}
   src/include/unzip.c
   src/include/qrcodegen.c
   src/include/cJSON.c
+  src/include/sha256.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
@@ -132,6 +133,7 @@ target_link_libraries(${PROJECT_NAME}
     SceSblSsMgr_stub
     png
     jpeg
+    imagequant
     freetype
     mpg123
     opus
