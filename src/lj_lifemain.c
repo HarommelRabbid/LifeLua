@@ -98,6 +98,7 @@ void luaL_lifelua_dofile(lua_State *L){
 					ftpvita_fini();
 					vita_port = 0;
 				}
+				lua_close(L);
 				sceKernelExitProcess(0);
 			}
 			else if(!(pad.buttons == SCE_CTRL_SQUARE) && (oldpad.buttons == SCE_CTRL_SQUARE)){
