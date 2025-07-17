@@ -18,6 +18,7 @@ mkdir build && cd build && cmake .. && make
 * Adhoc support, and maybe PSN support as well
 * Fix & finish the Camera Import dialog
 * SHA512 support
+* Fix the timer and thread functions
 * USB support maybe
 ## Credits
 * HENkaku by Team Molecule
