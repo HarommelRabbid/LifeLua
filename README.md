@@ -1,5 +1,5 @@
 # LifeLua
-LifeLuaJIT is an open-source LuaJIT interpreter for the PSVita which combines ease with advanceability.
+LifeLua is a Lua interpreter for the PSVita which combines ease (OneLua) with advanceability (Lua Player Plus).
 <img src="bg0.png"></img>
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
@@ -11,6 +11,14 @@ For a showcase of LifeLua's features go to the repository's `sample` folder.
 ```
 mkdir build && cd build && cmake .. && make
 ```
+## To do
+* Audio & video support
+* 3D support with shading, shadows & reflections
+* More shape drawing functions, such as drawing arches and gradient lines
+* Adhoc support, and maybe PSN support as well
+* Fix & finish the Camera Import dialog
+* SHA512 support
+* USB support maybe
 ## Credits
 * HENkaku by Team Molecule
 * TheFloW's VitaShell for SHA1 hashing
