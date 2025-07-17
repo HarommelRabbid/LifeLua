@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <zlib.h>
+#include <libgen.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -314,41 +315,17 @@ static int lua_delete(lua_State *L){
 	return 1;
 }
 
-const char *get_filename(const char *path) {
-    const char *slash = strrchr(path, '/');
-    if (slash)
-        return slash + 1;
-    else
-        return path;
-}
-
-void get_directory(const char *path, char *out_dir, size_t out_size) {
-    const char *last_slash = strrchr(path, '/');
-    if (last_slash) {
-        size_t len = last_slash - path;
-        if (len >= out_size)
-            len = out_size - 1;
-        strncpy(out_dir, path, len);
-        out_dir[len] = '\0';
-        if(out_dir[strlen(out_dir)] == '/') out_dir[strlen(out_dir)] = '\0';
-    } else {
-        // No slash found, return empty string
-        out_dir[0] = '\0';
-    }
-}
-
 static int lua_getfilename(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
-    const char *filename = get_filename(path);
-    lua_pushstring(L, filename);
+    char *path_copy = strdup(path);
+    lua_pushstring(L, basename(path_copy));
     return 1;
 }
 
 static int lua_getfolder(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
-    char dir[512];
-    get_directory(path, dir, sizeof(dir));
-    lua_pushstring(L, dir);
+    char *path_copy = strdup(path);
+    lua_pushstring(L, dirname(path_copy));
     return 1;
 }
 
