@@ -12,7 +12,7 @@ For a showcase of LifeLua's features go to the repository's `sample` folder.
 mkdir build && cd build && cmake .. && make
 ```
 ## To do
-* Audio & video support
+* Audio (ATRAC9 & 3 aswell!) & video support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches and gradient lines
 * Adhoc support, and maybe PSN support as well
