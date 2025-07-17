@@ -16,7 +16,6 @@ mkdir build && cd build && cmake .. && make
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches and gradient lines
 * Adhoc support, and maybe PSN support as well
-* Fix & finish the Camera Import dialog
 * SHA512 support
 * Fix the timer and thread functions
 * USB support maybe
