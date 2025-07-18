@@ -140,6 +140,7 @@ target_link_libraries(${PROJECT_NAME}
     opus
     opusfile
     ogg
+    vorbis
     c
     m
     z

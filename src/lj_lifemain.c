@@ -250,9 +250,11 @@ int main(){
 	sceNetCtlTerm();
 	sceNetTerm();
 	sqlite3_rw_exit();
-	vitaAudioSetChannelCallback(0, NULL, NULL);
-	vitaAudioEndPre();
-	vitaAudioEnd();
+	if(audio_active){
+		vitaAudioSetChannelCallback(0, NULL, NULL);
+		vitaAudioEndPre();
+		vitaAudioEnd();
+	}
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SSL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_HTTP);
