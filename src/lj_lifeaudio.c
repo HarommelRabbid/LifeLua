@@ -82,7 +82,7 @@ typedef struct {
     };
 } Audio;
 
-volatile bool audio_active = false;
+bool audio_active = false;
 
 static void audio_callback(void *stream, unsigned int length, void *userdata) {
     Audio *aud = (Audio *)userdata;
@@ -122,16 +122,22 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                 }
             }
             case AUDIO_TYPE_WAV: {
-                size_t framesRead = drwav_read_pcm_frames_s16(&aud->wav.wav, length, (int16_t *)stream);
-                aud->frames_played += framesRead;
-
-                if (framesRead < length) {
+                drwav_uint64 frames_to_read = (bytes_needed - bytes_filled) / (aud->wav.wav.channels * sizeof(int16_t));
+                drwav_uint64 frames_read = drwav_read_pcm_frames_s16(&aud->wav.wav, frames_to_read, (drwav_int16 *)(dst + bytes_filled));
+            
+                size_t bytes_just_read = frames_read * aud->wav.wav.channels * sizeof(int16_t);
+                bytes_filled += bytes_just_read;
+                aud->frames_played += frames_read;
+            
+                if (frames_read < frames_to_read) {
                     if (aud->loop) {
                         drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
                     } else {
-                        memset(((int16_t *)stream) + framesRead * 2, 0, (length - framesRead) * sizeof(int16_t) * 2);
+                        memset(dst + bytes_filled, 0, bytes_needed - bytes_filled);
+                        break;
                     }
                 }
+                break;
             }
             default:
                 break;
