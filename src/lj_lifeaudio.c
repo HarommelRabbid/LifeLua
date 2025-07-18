@@ -197,21 +197,23 @@ static int lua_audioplay(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
     int loop = lua_toboolean(L, 2);
     aud->loop = loop;
-    if(aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle){
-        long rate;
-        int channels, encoding;
-        mpg123_getformat(aud->mp3.handle, &rate, &channels, &encoding);
-        vitaAudioInit(rate, (channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
-        vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-    }else if(aud->type == AUDIO_TYPE_WAV){
-        vitaAudioInit(aud->wav.wav.sampleRate, (aud->wav.wav.channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
-        vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-    }else{
-        vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
-        vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-    }
+    if(!audio_active){
+        if(aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle){
+            long rate;
+            int channels, encoding;
+            mpg123_getformat(aud->mp3.handle, &rate, &channels, &encoding);
+            vitaAudioInit(rate, (channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }else if(aud->type == AUDIO_TYPE_WAV){
+            vitaAudioInit(aud->wav.wav.sampleRate, (aud->wav.wav.channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }else{
+            vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }
 
-    audio_active = true;
+        audio_active = true;
+    }
 
     vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
     return 0;
@@ -219,10 +221,10 @@ static int lua_audioplay(lua_State *L) {
 
 static int lua_audiostop(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    audio_active = false;
     vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
     vitaAudioEndPre();
 	vitaAudioEnd();
+    audio_active = false;
     return 0;
 }
 
