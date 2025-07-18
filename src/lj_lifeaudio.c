@@ -15,6 +15,8 @@
 #include <stdbool.h>
 #include <zlib.h>
 #include <mpg123.h>
+#define DR_WAV_IMPLEMENTATION
+#include "include/dr_wav.h"
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -55,22 +57,28 @@ typedef enum {
 
 typedef struct {
     AudioType type;
-    int loop;
+    bool loop;
     int channel;
+    bool paused;
     union {
         struct {
             FILE *file;
         } raw;
         struct {
             mpg123_handle *handle;
+            mpg123_id3v1 *v1;
+            mpg123_id3v2 *v2;
             off_t start_frame;
         } mp3;
+        struct {
+            drwav *handle;
+        } wav;
     };
-} AudioStream;
+} Audio;
 
 static void audio_callback(void *stream, unsigned int length, void *userdata) {
-    sceClibPrintf("[LifeLua] audio_callback triggered! stream=%p userdata=%p\n", stream, userdata);
-    AudioStream *aud = (AudioStream *)userdata;
+    Audio *aud = (Audio *)userdata;
+    short *out = (short *)stream;
     if (!aud) return;
 
     unsigned int bytes_needed = length * 4; // stereo 16-bit = 4 bytes/sample
@@ -80,60 +88,43 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
         size_t done = 0;
         unsigned char *dst = ((unsigned char*)stream) + bytes_filled;
 
-        if (aud->type == AUDIO_TYPE_RAW) {
-            size_t read = fread(dst, 1, bytes_needed - bytes_filled, aud->raw.file);
-            bytes_filled += read;
+        if(!aud->paused){
+            if (aud->type == AUDIO_TYPE_RAW) {
+                size_t read = fread(dst, 1, bytes_needed - bytes_filled, aud->raw.file);
+                bytes_filled += read;
 
-            if (read == 0 && aud->loop) {
-                fseek(aud->raw.file, 0, SEEK_SET);
-            } else if (read == 0) {
-                memset(dst, 0, bytes_needed - bytes_filled);
-                break;
+                if (read == 0 && aud->loop) {
+                    fseek(aud->raw.file, 0, SEEK_SET);
+                } else if (read == 0) {
+                    memset(dst, 0, bytes_needed - bytes_filled);
+                    break;
+                }
+
+            } else if (aud->type == AUDIO_TYPE_MP3) {
+                int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
+                bytes_filled += done;
+
+                if (err == MPG123_DONE && aud->loop) {
+                    mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
+                } else if (err == MPG123_DONE) {
+                    memset(dst, 0, bytes_needed - bytes_filled);
+                    break;
+                }
             }
-
-        } else if (aud->type == AUDIO_TYPE_MP3) {
-            int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
-            bytes_filled += done;
-
-            if (err == MPG123_DONE && aud->loop) {
-                mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
-            } else if (err == MPG123_DONE) {
-                memset(dst, 0, bytes_needed - bytes_filled);
-                break;
-            }
+        }else{
+            sceKernelDelayThread(100); // hm
         }
     }
 }
 
-static int l_audio_play(lua_State *L) {
-    AudioStream *aud = luaL_checkudata(L, 1, "audio");
-    int loop = lua_toboolean(L, 2);
-    aud->loop = loop;
-
-    vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
-    sceClibPrintf("[LifeLua] callback set for channel %d with userdata %p\n", aud->channel, aud);
-    return 0;
-}
-
-static int l_audio_gc(lua_State *L) {
-    AudioStream *aud = luaL_checkudata(L, 1, "audio");
-    if (aud->type == AUDIO_TYPE_RAW && aud->raw.file)
-        fclose(aud->raw.file);
-    else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle)
-        mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
-    return 0;
-}
-
-static int l_audio_load(lua_State *L) {
+static int lua_audioload(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
 
-    // Determine file type
-    const char *ext = strrchr(path, '.');
-    AudioStream *aud = (AudioStream *)lua_newuserdata(L, sizeof(AudioStream));
-    memset(aud, 0, sizeof(AudioStream));
+    Audio *aud = (Audio *)lua_newuserdata(L, sizeof(Audio));
+    memset(aud, 0, sizeof(Audio));
     aud->channel = 0;
 
-    if (ext && strcasecmp(ext, ".mp3") == 0) {
+    if (string_ends_with(path, ".mp3")) {
         if (mpg123_init() != MPG123_OK)
             return luaL_error(L, "Failed to init mpg123");
 
@@ -148,12 +139,10 @@ static int l_audio_load(lua_State *L) {
         if (mpg123_getformat(mh, &rate, &channels, &encoding) != MPG123_OK)
             return luaL_error(L, "Unsupported MP3 format");
 
-        // Force stereo, 16-bit output
-        mpg123_format_none(mh);
-        mpg123_format(mh, 44100, 2, MPG123_ENC_SIGNED_16);
         aud->type = AUDIO_TYPE_MP3;
         aud->mp3.handle = mh;
         aud->mp3.start_frame = mpg123_tell(mh);
+        aud->paused = false;
     } else {
         FILE *f = fopen(path, "rb");
         if (!f) return luaL_error(L, "Failed to open audio file");
@@ -167,57 +156,100 @@ static int l_audio_load(lua_State *L) {
     return 1;
 }
 
-/*
+static int lua_audioplay(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    int loop = lua_toboolean(L, 2);
+    aud->loop = loop;
+
+    vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
+    return 0;
+}
+
+static int lua_audiostop(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
+    return 0;
+}
+
+static int lua_audiopause(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    aud->paused = lua_toboolean(L, 1);
+    return 0;
+}
+
+static int lua_audioplaying(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    lua_pushboolean(L, !aud->paused);
+    return 1;
+}
+
+static int lua_audiogc(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    if (aud->type == AUDIO_TYPE_RAW && aud->raw.file) fclose(aud->raw.file);
+    else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle) mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
+    return 0;
+}
+
 static int lua_id3v1(lua_State *L){
     Audio *audio = (Audio *)luaL_checkudata(L, 1, "audio");
-    if(audio->v1 != NULL){
+    if(audio->mp3.v1 != NULL){
         lua_newtable(L);
-        lua_pushstring(L, audio->v1->title); lua_setfield(L, -2, "title");
-        lua_pushstring(L, audio->v1->artist); lua_setfield(L, -2, "artist");
-        lua_pushstring(L, audio->v1->album); lua_setfield(L, -2, "album");
-        lua_pushstring(L, audio->v1->comment); lua_setfield(L, -2, "comment");
-        lua_pushstring(L, audio->v1->year); lua_setfield(L, -2, "year");
-        lua_pushstring(L, audio->v1->tag); lua_setfield(L, -2, "tag");
-        lua_pushstring(L, genreList[audio->v1->genre].text); lua_setfield(L, -2, "genre");
+        lua_pushstring(L, audio->mp3.v1->title); lua_setfield(L, -2, "title");
+        lua_pushstring(L, audio->mp3.v1->artist); lua_setfield(L, -2, "artist");
+        lua_pushstring(L, audio->mp3.v1->album); lua_setfield(L, -2, "album");
+        lua_pushstring(L, audio->mp3.v1->comment); lua_setfield(L, -2, "comment");
+        lua_pushstring(L, audio->mp3.v1->year); lua_setfield(L, -2, "year");
+        lua_pushstring(L, audio->mp3.v1->tag); lua_setfield(L, -2, "tag");
+        lua_pushstring(L, genreList[audio->mp3.v1->genre].text); lua_setfield(L, -2, "genre");
     }else lua_pushnil(L);
     return 1;
 }
 
 static int lua_id3v2(lua_State *L){
     Audio *audio = (Audio *)luaL_checkudata(L, 1, "audio");
-    if(audio->v2 != NULL){
+    if(audio->mp3.v2 != NULL){
         lua_newtable(L);
-        lua_pushstring(L, audio->v2->title->p); lua_setfield(L, -2, "title");
-        lua_pushstring(L, audio->v2->artist->p); lua_setfield(L, -2, "artist");
-        lua_pushstring(L, audio->v2->album->p); lua_setfield(L, -2, "album");
-        lua_pushstring(L, audio->v2->comment->p); lua_setfield(L, -2, "comment");
-        lua_pushstring(L, audio->v2->year->p); lua_setfield(L, -2, "year");
-        lua_pushstring(L, audio->v2->genre->p); lua_setfield(L, -2, "genre");
+        lua_pushstring(L, audio->mp3.v2->title->p); lua_setfield(L, -2, "title");
+        lua_pushstring(L, audio->mp3.v2->artist->p); lua_setfield(L, -2, "artist");
+        lua_pushstring(L, audio->mp3.v2->album->p); lua_setfield(L, -2, "album");
+        lua_pushstring(L, audio->mp3.v2->comment->p); lua_setfield(L, -2, "comment");
+        lua_pushstring(L, audio->mp3.v2->year->p); lua_setfield(L, -2, "year");
+        lua_pushstring(L, audio->mp3.v2->genre->p); lua_setfield(L, -2, "genre");
         Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
-        if(audio->v2->picture->mime_type.p == "image/jpg" || audio->v2->picture->mime_type.p == "image/jpeg") image->tex = vita2d_load_JPEG_buffer(audio->v2->picture->data, audio->v2->picture->size);
-        else if(audio->v2->picture->mime_type.p == "image/png") image->tex = vita2d_load_PNG_buffer(audio->v2->picture->data);
+        if(!strcmp(audio->mp3.v2->picture->mime_type.p, "image/jpg") || !strcmp(audio->mp3.v2->picture->mime_type.p, "image/jpeg")) image->tex = vita2d_load_JPEG_buffer(audio->mp3.v2->picture->data, audio->mp3.v2->picture->size);
+        else if(!strcmp(audio->mp3.v2->picture->mime_type.p, "image/png")) image->tex = vita2d_load_PNG_buffer(audio->mp3.v2->picture->data);
         if(!image->tex) lua_pushnil(L);
         luaL_getmetatable(L, "image");
         lua_setmetatable(L, -2);
-        lua_setfield(L, -2, "image");
+        lua_setfield(L, -2, "cover");
     }else lua_pushnil(L);
     return 1;
-}*/
+}
 
 static const luaL_Reg audio_lib[] = {
-    {"load", l_audio_load},
-    {"play", l_audio_play},
+    {"load", lua_audioload},
+    {"play", lua_audioplay},
+    {"pause", lua_audiopause},
+    {"playing", lua_audioplaying},
+    {"id3v1", lua_id3v1},
+    {"id3v2", lua_id3v2},
+    {"stop", lua_audiostop},
     {NULL, NULL}
 };
 
 static const luaL_Reg audio_methods[] = {
-    {"play", l_audio_play},
-    {"__gc", l_audio_gc},
+    {"play", lua_audioplay},
+    {"pause", lua_audiopause},
+    {"playing", lua_audioplaying},
+    {"id3v1", lua_id3v1},
+    {"id3v2", lua_id3v2},
+    {"stop", lua_audiostop},
+    {"__gc", lua_audiogc},
     {NULL, NULL}
 };
 
 LUALIB_API int luaL_openaudio(lua_State *L) {
-    vitaAudioInit(44100, SCE_AUDIO_OUT_MODE_STEREO);
+    vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
     vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
 	luaL_newmetatable(L, "audio");
 	lua_pushstring(L, "__index");
