@@ -19,5 +19,213 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
+#include "include/vitaaudiolib.h"
 
 #include "lj_lifeinit.h"
+
+// For MP3 ID3 tags
+struct genre {
+	int code;
+	char text[112];
+};
+
+// For MP3 ID3 tags
+struct genre genreList[] = {
+	{0 , "Blues"}, {1 , "Classic Rock"}, {2 , "Country"}, {3 , "Dance"}, {4 , "Disco"}, {5 , "Funk"}, {6 , "Grunge"}, {7 , "Hip-Hop"}, {8 , "Jazz"}, {9 , "Metal"}, {10 , "New Age"},
+	{11 , "Oldies"}, {12 , "Other"}, {13 , "Pop"}, {14 , "R&B"}, {15 , "Rap"}, {16 , "Reggae"}, {17 , "Rock"}, {18 , "Techno"}, {19 , "Industrial"}, {20 , "Alternative"},
+	{21 , "Ska"}, {22 , "Death Metal"}, {23 , "Pranks"}, {24 , "Soundtrack"}, {25 , "Euro-Techno"}, {26 , "Ambient"}, {27 , "Trip-Hop"}, {28 , "Vocal"}, {29 , "Jazz+Funk"}, {30 , "Fusion"},
+	{31 , "Trance"}, {32 , "Classical"}, {33 , "Instrumental"}, {34 , "Acid"}, {35 , "House"}, {36 , "Game"}, {37 , "Sound Clip"}, {38 , "Gospel"}, {39 , "Noise"}, {40 , "Alternative Rock"},
+	{41 , "Bass"}, {42 , "Soul"}, {43 , "Punk"}, {44 , "Space"}, {45 , "Meditative"}, {46 , "Instrumental Pop"}, {47 , "Instrumental Rock"}, {48 , "Ethnic"}, {49 , "Gothic"}, {50 , "Darkwave"},
+	{51 , "Techno-Industrial"}, {52 , "Electronic"}, {53 , "Pop-Folk"}, {54 , "Eurodance"}, {55 , "Dream"}, {56 , "Southern Rock"}, {57 , "Comedy"}, {58 , "Cult"}, {59 , "Gangsta"}, {60 , "Top 40"},
+	{61 , "Christian Rap"}, {62 , "Pop/Funk"}, {63 , "Jungle"}, {64 , "Native US"}, {65 , "Cabaret"}, {66 , "New Wave"}, {67 , "Psychadelic"}, {68 , "Rave"}, {69 , "Showtunes"}, {70 , "Trailer"},
+	{71 , "Lo-Fi"}, {72 , "Tribal"}, {73 , "Acid Punk"}, {74 , "Acid Jazz"}, {75 , "Polka"}, {76 , "Retro"}, {77 , "Musical"}, {78 , "Rock & Roll"}, {79 , "Hard Rock"}, {80 , "Folk"},
+	{81 , "Folk-Rock"}, {82 , "National Folk"}, {83 , "Swing"}, {84 , "Fast Fusion"}, {85 , "Bebob"}, {86 , "Latin"}, {87 , "Revival"}, {88 , "Celtic"}, {89 , "Bluegrass"}, {90 , "Avantgarde"},
+	{91 , "Gothic Rock"}, {92 , "Progressive Rock"}, {93 , "Psychedelic Rock"}, {94 , "Symphonic Rock"}, {95 , "Slow Rock"}, {96 , "Big Band"}, {97 , "Chorus"}, {98 , "Easy Listening"}, {99 , "Acoustic"},
+	{100 , "Humour"}, {101 , "Speech"}, {102 , "Chanson"}, {103 , "Opera"}, {104 , "Chamber Music"}, {105 , "Sonata"}, {106 , "Symphony"}, {107 , "Booty Bass"}, {108 , "Primus"}, {109 , "Porn Groove"},
+	{110 , "Satire"}, {111 , "Slow Jam"}, {112 , "Club"}, {113 , "Tango"}, {114 , "Samba"}, {115 , "Folklore"}, {116 , "Ballad"}, {117 , "Power Ballad"}, {118 , "Rhytmic Soul"}, {119 , "Freestyle"}, {120 , "Duet"},
+	{121 , "Punk Rock"}, {122 , "Drum Solo"}, {123 , "A capella"}, {124 , "Euro-House"}, {125 , "Dance Hall"}, {126 , "Goa"}, {127 , "Drum & Bass"}, {128 , "Club-House"}, {129 , "Hardcore"}, {130 , "Terror"},
+	{131 , "Indie"}, {132 , "BritPop"}, {133 , "Negerpunk"}, {134 , "Polsk Punk"}, {135 , "Beat"}, {136 , "Christian Gangsta"}, {137 , "Heavy Metal"}, {138 , "Black Metal"}, {139 , "Crossover"}, {140 , "Contemporary C"},
+	{141 , "Christian Rock"}, {142 , "Merengue"}, {143 , "Salsa"}, {144 , "Thrash Metal"}, {145 , "Anime"}, {146 , "JPop"}, {147 , "SynthPop"}
+};
+
+typedef enum {
+    AUDIO_TYPE_RAW,
+    AUDIO_TYPE_MP3
+} AudioType;
+
+typedef struct {
+    AudioType type;
+    int loop;
+    int channel;
+    union {
+        struct {
+            FILE *file;
+        } raw;
+        struct {
+            mpg123_handle *handle;
+            off_t start_frame;
+        } mp3;
+    };
+} AudioStream;
+
+static void audio_callback(void *stream, unsigned int length, void *userdata) {
+    sceClibPrintf("[LifeLua] audio_callback triggered! stream=%p userdata=%p\n", stream, userdata);
+    AudioStream *aud = (AudioStream *)userdata;
+    if (!aud) return;
+
+    unsigned int bytes_needed = length * 4; // stereo 16-bit = 4 bytes/sample
+    unsigned int bytes_filled = 0;
+
+    while (bytes_filled < bytes_needed) {
+        size_t done = 0;
+        unsigned char *dst = ((unsigned char*)stream) + bytes_filled;
+
+        if (aud->type == AUDIO_TYPE_RAW) {
+            size_t read = fread(dst, 1, bytes_needed - bytes_filled, aud->raw.file);
+            bytes_filled += read;
+
+            if (read == 0 && aud->loop) {
+                fseek(aud->raw.file, 0, SEEK_SET);
+            } else if (read == 0) {
+                memset(dst, 0, bytes_needed - bytes_filled);
+                break;
+            }
+
+        } else if (aud->type == AUDIO_TYPE_MP3) {
+            int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
+            bytes_filled += done;
+
+            if (err == MPG123_DONE && aud->loop) {
+                mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
+            } else if (err == MPG123_DONE) {
+                memset(dst, 0, bytes_needed - bytes_filled);
+                break;
+            }
+        }
+    }
+}
+
+static int l_audio_play(lua_State *L) {
+    AudioStream *aud = luaL_checkudata(L, 1, "audio");
+    int loop = lua_toboolean(L, 2);
+    aud->loop = loop;
+
+    vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
+    sceClibPrintf("[LifeLua] callback set for channel %d with userdata %p\n", aud->channel, aud);
+    return 0;
+}
+
+static int l_audio_gc(lua_State *L) {
+    AudioStream *aud = luaL_checkudata(L, 1, "audio");
+    if (aud->type == AUDIO_TYPE_RAW && aud->raw.file)
+        fclose(aud->raw.file);
+    else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle)
+        mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
+    return 0;
+}
+
+static int l_audio_load(lua_State *L) {
+    const char *path = luaL_checkstring(L, 1);
+
+    // Determine file type
+    const char *ext = strrchr(path, '.');
+    AudioStream *aud = (AudioStream *)lua_newuserdata(L, sizeof(AudioStream));
+    memset(aud, 0, sizeof(AudioStream));
+    aud->channel = 0;
+
+    if (ext && strcasecmp(ext, ".mp3") == 0) {
+        if (mpg123_init() != MPG123_OK)
+            return luaL_error(L, "Failed to init mpg123");
+
+        mpg123_handle *mh = mpg123_new(NULL, NULL);
+        if (!mh) return luaL_error(L, "Failed to create mpg123 handle");
+
+        if (mpg123_open(mh, path) != MPG123_OK)
+            return luaL_error(L, "Failed to open MP3");
+
+        long rate;
+        int channels, encoding;
+        if (mpg123_getformat(mh, &rate, &channels, &encoding) != MPG123_OK)
+            return luaL_error(L, "Unsupported MP3 format");
+
+        // Force stereo, 16-bit output
+        mpg123_format_none(mh);
+        mpg123_format(mh, 44100, 2, MPG123_ENC_SIGNED_16);
+        aud->type = AUDIO_TYPE_MP3;
+        aud->mp3.handle = mh;
+        aud->mp3.start_frame = mpg123_tell(mh);
+    } else {
+        FILE *f = fopen(path, "rb");
+        if (!f) return luaL_error(L, "Failed to open audio file");
+
+        aud->type = AUDIO_TYPE_RAW;
+        aud->raw.file = f;
+    }
+
+    luaL_getmetatable(L, "audio");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+/*
+static int lua_id3v1(lua_State *L){
+    Audio *audio = (Audio *)luaL_checkudata(L, 1, "audio");
+    if(audio->v1 != NULL){
+        lua_newtable(L);
+        lua_pushstring(L, audio->v1->title); lua_setfield(L, -2, "title");
+        lua_pushstring(L, audio->v1->artist); lua_setfield(L, -2, "artist");
+        lua_pushstring(L, audio->v1->album); lua_setfield(L, -2, "album");
+        lua_pushstring(L, audio->v1->comment); lua_setfield(L, -2, "comment");
+        lua_pushstring(L, audio->v1->year); lua_setfield(L, -2, "year");
+        lua_pushstring(L, audio->v1->tag); lua_setfield(L, -2, "tag");
+        lua_pushstring(L, genreList[audio->v1->genre].text); lua_setfield(L, -2, "genre");
+    }else lua_pushnil(L);
+    return 1;
+}
+
+static int lua_id3v2(lua_State *L){
+    Audio *audio = (Audio *)luaL_checkudata(L, 1, "audio");
+    if(audio->v2 != NULL){
+        lua_newtable(L);
+        lua_pushstring(L, audio->v2->title->p); lua_setfield(L, -2, "title");
+        lua_pushstring(L, audio->v2->artist->p); lua_setfield(L, -2, "artist");
+        lua_pushstring(L, audio->v2->album->p); lua_setfield(L, -2, "album");
+        lua_pushstring(L, audio->v2->comment->p); lua_setfield(L, -2, "comment");
+        lua_pushstring(L, audio->v2->year->p); lua_setfield(L, -2, "year");
+        lua_pushstring(L, audio->v2->genre->p); lua_setfield(L, -2, "genre");
+        Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+        if(audio->v2->picture->mime_type.p == "image/jpg" || audio->v2->picture->mime_type.p == "image/jpeg") image->tex = vita2d_load_JPEG_buffer(audio->v2->picture->data, audio->v2->picture->size);
+        else if(audio->v2->picture->mime_type.p == "image/png") image->tex = vita2d_load_PNG_buffer(audio->v2->picture->data);
+        if(!image->tex) lua_pushnil(L);
+        luaL_getmetatable(L, "image");
+        lua_setmetatable(L, -2);
+        lua_setfield(L, -2, "image");
+    }else lua_pushnil(L);
+    return 1;
+}*/
+
+static const luaL_Reg audio_lib[] = {
+    {"load", l_audio_load},
+    {"play", l_audio_play},
+    {NULL, NULL}
+};
+
+static const luaL_Reg audio_methods[] = {
+    {"play", l_audio_play},
+    {"__gc", l_audio_gc},
+    {NULL, NULL}
+};
+
+LUALIB_API int luaL_openaudio(lua_State *L) {
+    vitaAudioInit(44100, SCE_AUDIO_OUT_MODE_STEREO);
+    vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+	luaL_newmetatable(L, "audio");
+	lua_pushstring(L, "__index");
+    lua_pushvalue(L, -2);  /* pushes the metatable */
+    lua_settable(L, -3);  /* metatable.__index = metatable */
+    
+    luaL_register(L, NULL, audio_methods);
+
+	luaL_register(L, "audio", audio_lib);
+    return 1;
+}

@@ -19,6 +19,7 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/ftpvita.h"
+#include "include/vitaaudiolib.h"
 
 #include "lj_lifeinit.h"
 
@@ -226,6 +227,7 @@ int main(){
 	luaL_openthread(L);
 	//luaL_openimgui(L);
 	luaL_openjson(L);
+	luaL_openaudio(L);
 	luaL_extend(L);
 	
 	vita2d_start_drawing();
@@ -262,6 +264,8 @@ int main(){
 	sceAppUtilCacheUmount();
 	sceAppUtilMusicUmount();
 	sceAppUtilPhotoUmount();
+	vitaAudioEndPre();
+	vitaAudioEnd();
 
 	sceMotionMagnetometerOff();
 	sceMotionStopSampling();

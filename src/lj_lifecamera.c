@@ -33,6 +33,7 @@ void initCam(lua_State *L, SceCameraDevice type, SceCameraResolution res, SceCam
 	uint16_t height;
 	bool high_fps_ready = false;
     switch (res){
+		default:
         case SCE_CAMERA_RESOLUTION_0_0: //invalid
 	    	width = 0;
 	    	height = 0;
@@ -67,10 +68,6 @@ void initCam(lua_State *L, SceCameraDevice type, SceCameraResolution res, SceCam
 	    case SCE_CAMERA_RESOLUTION_640_360: //ngp
 	    	width = 640;
 	    	height = 360;
-            break;
-        default:
-            width = 0;
-            height = 0;
             break;
 	}
 	
