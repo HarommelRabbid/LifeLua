@@ -58,7 +58,7 @@ nil draw․hdoublegradientrect(number x, number y, number width, number height, 
 */
 nil draw․enableclip(boolean enable) {}
 /** 
- * Clips a rectangle, useful for clipping text
+ * Rectangle scrissor, useful for clipping text
  * @par Example:
  * @code
  * draw.enableclip(true)
@@ -68,6 +68,16 @@ nil draw․enableclip(boolean enable) {}
  * @endcode
 */
 nil draw․cliprect(number x, number y, number width, number height) {}
+/** 
+ * Circle scrissor
+*/
+nil draw․clipcircle(number x, number y, number radius) {}
+/** 
+ * Draws a triangle.
+ * @param c2 optional
+ * @param c3 optional
+*/
+nil draw․triangle(number x, number y, number x2, number y2, number x3, number y3, color c1, color c2, color c3) {}
 /** @} */
 
 /**
@@ -134,6 +144,10 @@ color tocolor(color color1, color color2, number p1, number p2) {}
  * Loads a font, can be a .PGF, .PVF, .TTF or a .WOFF
 */
 font font․load(string path) {}
+/** 
+ * Sets a font to be the default one
+*/
+font font․default(font font) {}
 /** @} */
 
 /**
@@ -175,4 +189,21 @@ number image․width(image image) {}
  * Gets height of an image
 */
 number image․height(image image) {}
+/** 
+ * Scans for QR codes in an image
+*/
+string image․qrscan(image image) {}
+/** 
+ * Generates a QR code
+ * @param parameters:
+ * * **string** text: Text content of the QR code
+ * * **color** bg_color: optional, color of the QR's background
+ * * **color** fg_color: optional, color of the QR's foreground
+ * * **number** border: optional, border amount
+*/
+image image․qr(table parameters) {}
+/** 
+ * Gets screen buffer as an image
+*/
+image image․screen(image image) {}
 /** @} */

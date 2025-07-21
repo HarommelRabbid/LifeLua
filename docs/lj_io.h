@@ -13,6 +13,10 @@ number io․crc32(string string) {}
  */
 string io․sha1(string string) {}
 /**
+ * Gets the SHA256 hash of a string
+ */
+string io․sha256(string string) {}
+/**
  * Gets the MD5 hash of a string
  */
 string io․md5(string string) {}
@@ -70,4 +74,8 @@ number io․freespace(string partition) {}
  * Gets the size of a partition
  */
 number io․totalspace(string partition) {}
+/**
+ * @param path optional, if empty it'll return the current workpath, otherwise it'll set the workpath to the specified path
+ */
+nil or string io․workpath(string path) {}
 /** @} */

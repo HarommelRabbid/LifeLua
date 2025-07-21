@@ -135,7 +135,11 @@ boolean os․appexists(string titleid) {}
 /** 
  * Installs a folder app (not a .VPK, but an app in a directory with what a .VPK includes)
 */
-nil os․installdir(string path) {}
+nil os․installdir(string path, boolean head) {}
+/** 
+ * Installs a .VPK
+*/
+nil os․installvpk(string path) {}
 /** 
  * Deletes an app
 */
@@ -145,16 +149,39 @@ nil os․appdelete(string titleid) {}
 */
 string os․launchparams() {}
 /** 
- * Opens a photo import dialog
- * @remark This function can call `LifeLuaPhotoImportDialog` if it exists.
- * @param a Optional, will default to 255 (`0xFF`)
+ * Opens the photo import dialog
  * @return Path of the photo
 */
-string os․importphoto(number r, number g, number b, number a) {}
+string os․importphoto() {}
 /** 
  * Aborts currently running photo import dialog
 */
 nil os․abortimportphoto() {}
+/** 
+ * Opens the video import dialog
+ * @return Path of the video
+*/
+string os․importvideo() {}
+/** 
+ * Aborts currently running video import dialog
+*/
+nil os․abortimportvideo() {}
+/** 
+ * Opens the photo review dialog
+*/
+nil os․photoreview(string path) {}
+/** 
+ * Aborts currently running photo review dialog
+*/
+nil os․abortphotoreview() {}
+/** 
+ * Opens the camera import dialog
+*/
+image os․cameraimport() {}
+/** 
+ * Aborts currently running camera import dialog
+*/
+nil os․abortcameraimport() {}
 /** 
  * Gets or sets the CPU's clock speed
 */
