@@ -148,33 +148,24 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
             }
             case AUDIO_TYPE_OGG: {
                 int current_section;
-                long ret;
-                int to_read = bytes_needed - bytes_filled;
-                uint8_t *ptr = (uint8_t *)dst + bytes_filled;
-            
-                while (to_read > 0) {
-                    ret = ov_read(&aud->ogg.ogg, (char *)ptr, to_read, 0, 2, 1, &current_section);
-                    
-                    if (ret == 0) {
-                        if (aud->loop) {
-                            ov_raw_seek(&aud->ogg.ogg, 0);
-                            continue;
-                        } else {
-                            memset(ptr, 0, to_read);
-                            break;
-                        }
-                    } else if (ret < 0) {
-                        memset(ptr, 0, to_read);
+                long ret = ov_read(&aud->ogg.ogg, (char *)dst, bytes_needed - bytes_filled, 0, 2, 1, &current_section);
+
+                if (ret == 0) {
+                    if (aud->loop) {
+                        ov_raw_seek(&aud->ogg.ogg, 0);
+                    } else {
+                        memset(dst, 0, bytes_needed - bytes_filled);
                         break;
                     }
-            
-                    ptr += ret;
-                    to_read -= ret;
-                    bytes_filled += ret;
+                } else if (ret < 0) {
+                    memset(dst, 0, bytes_needed - bytes_filled);
+                    break;
                 }
-            
+
+                bytes_filled += ret;
                 break;
             }
+            //case AUDIO_TYPE_AT9: {}
             default:
                 break;
         }

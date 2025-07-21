@@ -187,7 +187,7 @@ static const luaL_Reg json_lib[] = {
     {"decode", lua_decode},
     {"parse", lua_decode},
     {"encode", lua_encode},
-    {"tojson", lua_encode},
+    {"stringify", lua_encode},
     {"minify", lua_minify},
     {"isnull", lua_isnull},
     {"version", lua_cjsonver},

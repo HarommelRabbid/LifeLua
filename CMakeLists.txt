@@ -67,7 +67,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifejson.c
   #src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
-  #src/lj_lifemathext.c
+  #src/lj_lifevideo.c
   src/ext/lutf8lib.c
   src/include/ftpvita.c
   src/include/sha1.c
@@ -135,6 +135,9 @@ target_link_libraries(${PROJECT_NAME}
     png
     jpeg
     imagequant
+    avcodec
+    avutil
+    avformat
     freetype
     mpg123
     opusfile
