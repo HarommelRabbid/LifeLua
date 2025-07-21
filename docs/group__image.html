@@ -28,9 +28,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;30-05-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
    </div>
-   <div id="projectbrief">Documentation for LifeLua</div>
+   <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
  </tr>
  </tbody>
@@ -123,6 +123,12 @@ Functions</h2></td></tr>
 <tr class="separator:ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c172f644892fe4895de414d2ceb6ef7" id="r_ga6c172f644892fe4895de414d2ceb6ef7"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6c172f644892fe4895de414d2ceb6ef7">image.height</a> (image image)</td></tr>
 <tr class="separator:ga6c172f644892fe4895de414d2ceb6ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga42cf19dc7dd7ec3ca617bf03dfa38d7b" id="r_ga42cf19dc7dd7ec3ca617bf03dfa38d7b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga42cf19dc7dd7ec3ca617bf03dfa38d7b">image.qrscan</a> (image image)</td></tr>
+<tr class="separator:ga42cf19dc7dd7ec3ca617bf03dfa38d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad36412da10babb287406d331cbc486f1" id="r_gad36412da10babb287406d331cbc486f1"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad36412da10babb287406d331cbc486f1">image.qr</a> (table parameters)</td></tr>
+<tr class="separator:gad36412da10babb287406d331cbc486f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7eb30bdfb68790884f1525fa0bbe172b" id="r_ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7eb30bdfb68790884f1525fa0bbe172b">image.screen</a> (image image)</td></tr>
+<tr class="separator:ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Method calling will work on most of the functions here (e. g. <code>image:display</code>, <code>image:width</code>, etc.) </p>
@@ -232,6 +238,53 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="gad36412da10babb287406d331cbc486f1" name="gad36412da10babb287406d331cbc486f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad36412da10babb287406d331cbc486f1">&#9670;&#160;</a></span>image.qr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">image image.qr </td>
+          <td>(</td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>parameters</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Generates a QR code </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameters</td><td><ul>
+<li><b>string</b> text: Text content of the QR code</li>
+<li><b>color</b> bg_color: optional, color of the QR's background</li>
+<li><b>color</b> fg_color: optional, color of the QR's foreground</li>
+<li><b>number</b> border: optional, border amount </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga42cf19dc7dd7ec3ca617bf03dfa38d7b" name="ga42cf19dc7dd7ec3ca617bf03dfa38d7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42cf19dc7dd7ec3ca617bf03dfa38d7b">&#9670;&#160;</a></span>image.qrscan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string image.qrscan </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Scans for QR codes in an image </p>
+
+</div>
+</div>
 <a id="ga22457e38643ff5a4ef46c7cae3864fc5" name="ga22457e38643ff5a4ef46c7cae3864fc5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga22457e38643ff5a4ef46c7cae3864fc5">&#9670;&#160;</a></span>image.rotatedisplay()</h2>
 
@@ -318,6 +371,24 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ga7eb30bdfb68790884f1525fa0bbe172b" name="ga7eb30bdfb68790884f1525fa0bbe172b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7eb30bdfb68790884f1525fa0bbe172b">&#9670;&#160;</a></span>image.screen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">image image.screen </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets screen buffer as an image </p>
 
 </div>
 </div>

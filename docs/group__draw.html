@@ -28,9 +28,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;30-05-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
    </div>
-   <div id="projectbrief">Documentation for LifeLua</div>
+   <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
  </tr>
  </tbody>
@@ -135,6 +135,10 @@ Functions</h2></td></tr>
 <tr class="separator:gae997a12d36c849100a07b24b80a0b42d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadd7dea97db4db19d8c9cdf1a34ea8fac" id="r_gadd7dea97db4db19d8c9cdf1a34ea8fac"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadd7dea97db4db19d8c9cdf1a34ea8fac">draw.cliprect</a> (number x, number y, number width, number height)</td></tr>
 <tr class="separator:gadd7dea97db4db19d8c9cdf1a34ea8fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga169ecf176bb95d8df7e3683c070155d8" id="r_ga169ecf176bb95d8df7e3683c070155d8"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga169ecf176bb95d8df7e3683c070155d8">draw.clipcircle</a> (number x, number y, number radius)</td></tr>
+<tr class="separator:ga169ecf176bb95d8df7e3683c070155d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69d915154f2a348f74c7b754a8311f46" id="r_ga69d915154f2a348f74c7b754a8311f46"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga69d915154f2a348f74c7b754a8311f46">draw.triangle</a> (number x, number y, number x2, number y2, number x3, number y3, color c1, color c2, color c3)</td></tr>
+<tr class="separator:ga69d915154f2a348f74c7b754a8311f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Uses vita2d </p>
@@ -171,6 +175,33 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga169ecf176bb95d8df7e3683c070155d8" name="ga169ecf176bb95d8df7e3683c070155d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga169ecf176bb95d8df7e3683c070155d8">&#9670;&#160;</a></span>draw.clipcircle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil draw.clipcircle </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Circle scrissor </p>
+
+</div>
+</div>
 <a id="gadd7dea97db4db19d8c9cdf1a34ea8fac" name="gadd7dea97db4db19d8c9cdf1a34ea8fac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gadd7dea97db4db19d8c9cdf1a34ea8fac">&#9670;&#160;</a></span>draw.cliprect()</h2>
 
@@ -199,7 +230,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Clips a rectangle, useful for clipping text </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.enableclip(<span class="keyword">true</span>)</div>
+<p>Rectangle scrissor, useful for clipping text </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.enableclip(<span class="keyword">true</span>)</div>
 <div class="line">draw.clip(0, 0, 25, 10)</div>
 <div class="line">draw.text(0, 0 <span class="stringliteral">&quot;This is some text&quot;</span>, ...)</div>
 <div class="line">draw.enableclip(<span class="keyword">false</span>)</div>
@@ -558,6 +589,69 @@ Functions</h2></td></tr>
 <p>Gets the text width as displayed on the screen </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">size</td><td>The size argument can be also a font, if so, then the size will be the next argument </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga69d915154f2a348f74c7b754a8311f46" name="ga69d915154f2a348f74c7b754a8311f46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga69d915154f2a348f74c7b754a8311f46">&#9670;&#160;</a></span>draw.triangle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil draw.triangle </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x2</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y2</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x3</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y3</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>c1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>c2</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>c3</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Draws a triangle. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c2</td><td>optional </td></tr>
+    <tr><td class="paramname">c3</td><td>optional </td></tr>
   </table>
   </dd>
 </dl>

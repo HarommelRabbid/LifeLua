@@ -1,6 +1,7 @@
 var group__draw =
 [
     [ "draw.circle", "group__draw.html#gad4924525978b3011935786fb7c214089", null ],
+    [ "draw.clipcircle", "group__draw.html#ga169ecf176bb95d8df7e3683c070155d8", null ],
     [ "draw.cliprect", "group__draw.html#gadd7dea97db4db19d8c9cdf1a34ea8fac", null ],
     [ "draw.enableclip", "group__draw.html#gae997a12d36c849100a07b24b80a0b42d", null ],
     [ "draw.gradientrect", "group__draw.html#ga93157a35e20bbe326436f845667044ab", null ],
@@ -12,5 +13,6 @@ var group__draw =
     [ "draw.text", "group__draw.html#gaf521cfc477a3fa4c98ed5b10438a603e", null ],
     [ "draw.textheight", "group__draw.html#ga54d762db97215b915214d68949bd591d", null ],
     [ "draw.textwidth", "group__draw.html#gaa63faab337734380228371ab18603478", null ],
+    [ "draw.triangle", "group__draw.html#ga69d915154f2a348f74c7b754a8311f46", null ],
     [ "draw.vdoublegradientrect", "group__draw.html#ga87bd97838ec89b985fd538d1e50bd94a", null ]
 ];

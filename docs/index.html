@@ -28,9 +28,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;30-05-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
    </div>
-   <div id="projectbrief">Documentation for LifeLua</div>
+   <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
  </tr>
  </tbody>
@@ -101,11 +101,25 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">LifeLua Documentation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo</a></b></dt><dd>Expand this page and finish documenting the libraries, and also fix the common dialog functions (IME, message, etc.) from crashing/not rendering often, send a pull request if you manage to fix it</dd></dl>
-<p>This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. Since this is an interpreter, you don't need any compilation, just modify Lua files and boom.</p>
+<div class="textblock"><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo</a></b></dt><dd>Expand this page and finish documenting the libraries</dd></dl>
+<p>This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. Since this is an interpreter, you don't need any compilation, you only need to create and edit Lua files.</p>
+<h2><a class="anchor" id="autotoc_md0"></a>
+Custom userdata</h2>
+<p>LifeLua has custom userdata to represent multiple data types. These include:</p><ul>
+<li>color</li>
+<li>image</li>
+<li>audio</li>
+<li>jsonnull</li>
+<li>sqlite3</li>
+<li>font</li>
+<li>thread</li>
+<li>timer</li>
+<li>video</li>
+<li>model</li>
+</ul>
 <p>It has a lot of customizability and also a lot of useful features. The documentation is incomplete, so for features not documented here yet, look into the source code or the samples.</p>
 <p>Any other Lua function &amp;/or library that isn't documented here is documented in any <a href="https://www.lua.org/manual/">documentation</a> of Lua.</p>
-<h2><a class="anchor" id="autotoc_md0"></a>
+<h2><a class="anchor" id="autotoc_md1"></a>
 License</h2>
 <p>LifeLua is released under the <a href="https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE">GPLv3 license</a>.</p>
 <dl class="section note"><dt>Note</dt><dd>When using the safe <code>eboot.bin</code> in your app instead of the unsafe one, you'll have a few limitations:<br  />

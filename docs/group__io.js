@@ -12,6 +12,7 @@ var group__io =
     [ "io.pathstrip", "group__io.html#gad20a05587bc53ee6de36ee4aab112f65", null ],
     [ "io.readsfo", "group__io.html#gaacf5cd1aaec1db088e10fedce89df175", null ],
     [ "io.sha1", "group__io.html#gaa79328a860fbd57364b8f2b96a1d2620", null ],
+    [ "io.sha256", "group__io.html#gadbb917d3bf660e3ab32f0c9751c0dda4", null ],
     [ "io.totalspace", "group__io.html#ga33e61d068102220bb851a5b20902d9b4", null ],
-    [ "io.workpath", "group__io.html#gaf67b3029ca2b4f32f350b4fe6dd5b9f5", null ]
+    [ "io.workpath", "group__io.html#ga8c74218f641d10f2add46817c9299af8", null ]
 ];

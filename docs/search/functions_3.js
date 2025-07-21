@@ -1,24 +1,5 @@
 var searchData=
 [
-  ['image.display_0',['image.display',['../group__image.html#ga522e8008939d0abb96b809157971fd7c',1,'lj_draw.h']]],
-  ['image.height_1',['image.height',['../group__image.html#ga6c172f644892fe4895de414d2ceb6ef7',1,'lj_draw.h']]],
-  ['image.load_2',['image.load',['../group__image.html#gae64395a9ba650ea9028450ab3b41030c',1,'lj_draw.h']]],
-  ['image.new_3',['image.new',['../group__image.html#gaa622f5e5146f62db02194895cda3f487',1,'lj_draw.h']]],
-  ['image.rotatedisplay_4',['image.rotatedisplay',['../group__image.html#ga22457e38643ff5a4ef46c7cae3864fc5',1,'lj_draw.h']]],
-  ['image.scaledisplay_5',['image.scaledisplay',['../group__image.html#ga4de5f0cd213fc65a0ba00e456ff3b465',1,'lj_draw.h']]],
-  ['image.width_6',['image.width',['../group__image.html#ga13827329a6a0eb5be13e4aabf91ffc58',1,'lj_draw.h']]],
-  ['io.crc32_7',['io.crc32',['../group__io.html#gaad8a2ed342eed207b1270bf05769a4b1',1,'lj_io.h']]],
-  ['io.delete_8',['io.delete',['../group__io.html#gac185ff3386ac909165aa6d15739b2fd2',1,'lj_io.h']]],
-  ['io.editsfo_9',['io.editsfo',['../group__io.html#ga2713b4e975ff9434ecde4832d5952b87',1,'lj_io.h']]],
-  ['io.exists_10',['io.exists',['../group__io.html#ga89cb36a9e5460e3acbda901d356f0c82',1,'lj_io.h']]],
-  ['io.filestrip_11',['io.filestrip',['../group__io.html#gaa96cfef4494fe196b4b6ba6dc4bbca7f',1,'lj_io.h']]],
-  ['io.freespace_12',['io.freespace',['../group__io.html#gaca3cc34e74d881c8c24bcb052aaf3023',1,'lj_io.h']]],
-  ['io.list_13',['io.list',['../group__io.html#ga7cbdebed2bd81c97f85b3338bf136db5',1,'lj_io.h']]],
-  ['io.md5_14',['io.md5',['../group__io.html#gabe13a28deb7a05623838b4d52b4a2d9b',1,'lj_io.h']]],
-  ['io.newfolder_15',['io.newfolder',['../group__io.html#gafe60a7e298936384e2528ce4237ad7a5',1,'lj_io.h']]],
-  ['io.pathstrip_16',['io.pathstrip',['../group__io.html#gad20a05587bc53ee6de36ee4aab112f65',1,'lj_io.h']]],
-  ['io.readsfo_17',['io.readsfo',['../group__io.html#gaacf5cd1aaec1db088e10fedce89df175',1,'lj_io.h']]],
-  ['io.sha1_18',['io.sha1',['../group__io.html#gaa79328a860fbd57364b8f2b96a1d2620',1,'lj_io.h']]],
-  ['io.totalspace_19',['io.totalspace',['../group__io.html#ga33e61d068102220bb851a5b20902d9b4',1,'lj_io.h']]],
-  ['io.workpath_20',['io.workpath',['../group__io.html#gaf67b3029ca2b4f32f350b4fe6dd5b9f5',1,'lj_io.h']]]
+  ['font.default_0',['font.default',['../group__font.html#gac88da1213d874fc44ba054648f2051bb',1,'lj_draw.h']]],
+  ['font.load_1',['font.load',['../group__font.html#ga412a322840f1f76b8a6856549c4049f9',1,'lj_draw.h']]]
 ];
