@@ -90,10 +90,8 @@ static int lua_ip(lua_State *L){
 
 static int lua_mac(lua_State *L) {
 	SceNetEtherAddr mac;
-	char macAddress[32];
-	sceNetGetMacAddress(&mac, 0);	
-	sprintf(macAddress, "%02X:%02X:%02X:%02X:%02X:%02X", mac.data[0], mac.data[1], mac.data[2], mac.data[3], mac.data[4], mac.data[5]);
-	lua_pushstring(L, macAddress);
+	sceNetGetMacAddress(&mac, 0);
+	lua_pushfstring(L, "%02X:%02X:%02X:%02X:%02X:%02X", mac.data[0], mac.data[1], mac.data[2], mac.data[3], mac.data[4], mac.data[5]);
 	return 1;
 }
 

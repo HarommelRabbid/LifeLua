@@ -205,7 +205,7 @@ static int lua_qr(lua_State *L) {
 
     switch (format_int){
         default:
-        case 1:
+        case 1: // bmp
             SceUID fd = sceIoOpen(filename, SCE_O_CREAT|SCE_O_WRONLY|SCE_O_TRUNC, 0777);
 		    uint8_t *bmp_content = (uint8_t*)malloc((w * h * 4)+0x36);
 		    sceClibMemset(bmp_content, 0, 0x36);

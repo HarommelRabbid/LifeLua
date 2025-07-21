@@ -57,6 +57,8 @@ typedef enum {
     AUDIO_TYPE_MP3,
     AUDIO_TYPE_WAV,
     AUDIO_TYPE_OGG,
+    AUDIO_TYPE_FLAC,
+    AUDIO_TYPE_OPUS,
     AUDIO_TYPE_AT9,
     AUDIO_TYPE_AT3
 } AudioType;
