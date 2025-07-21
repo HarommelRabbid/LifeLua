@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <math.h>
@@ -53,7 +54,7 @@ extern bool unsafe;
 extern vita2d_pgf *pgf;
 extern vita2d_pvf *pvf;
 
-extern volatile bool audio_active;
+extern bool audio_active;
 
 typedef struct {
     unsigned int color;

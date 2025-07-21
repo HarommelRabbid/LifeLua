@@ -137,10 +137,11 @@ target_link_libraries(${PROJECT_NAME}
     imagequant
     freetype
     mpg123
-    opus
     opusfile
-    ogg
+    opus
+    vorbisfile
     vorbis
+    ogg
     c
     m
     z
