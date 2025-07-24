@@ -20,6 +20,14 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/qrcodegen.h"
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PSD
+#define STBI_ONLY_TGA
+//#define STBI_ONLY_GIF
+#define STBI_ONLY_HDR
+#define STBI_ONLY_PIC
+#define STBI_ONLY_PNM
+#include "include/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "include/stb_image_write.h"
 
@@ -40,6 +48,25 @@ static int lua_imageload(lua_State *L) {
 			image->tex = vita2d_load_JPEG_file(filename);
 		}else if(magic == 0x4D42){
 			image->tex = vita2d_load_BMP_file(filename);
+		}else if(magic == 0x4238 || (magic == 0x3F23 || stbi_is_hdr(filename)) || magic == 0x3550 || magic == 0x8053 || string_ends_with(filename, ".tga")){ //PSD, TGA, HDR, PIC & PNM
+			int w, h, comp;
+			uint8_t *img = stbi_load(filename, &w, &h, &comp, STBI_rgb_alpha);
+			if(!img){stbi_image_free(img); lua_pushnil(L); return 1;}
+			image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+			uint32_t *tex_ptr = vita2d_texture_get_datap(image->tex);
+    		int stride = vita2d_texture_get_stride(image->tex) / 4;
+    		for (int y = 0; y < h; y++) {
+        		uint32_t *row = tex_ptr + y * stride;
+        		for (int x = 0; x < w; x++) {
+            		int i = (y * w + x) * 4;
+            		uint8_t r = img[i + 0];
+            		uint8_t g = img[i + 1];
+            		uint8_t b = img[i + 2];
+            		uint8_t a = img[i + 3];
+            		row[x] = (a << 24) | (b << 16) | (g << 8) | r; // RGBA to ABGR
+        		}
+    		}
+			stbi_image_free(img);
 		}else{
 			lua_pushnil(L);
 			//return luaL_error(L, "Image file type isn't accepted (must be a .png, .jpeg/.jpg, or a .bmp)");
@@ -188,18 +215,48 @@ static int lua_qr(lua_State *L) {
     return 1;
 }
 
+uint8_t *convert_abgr_to_rgb_from_u32(const uint32_t *src, int width, int height, int stride) {
+    uint8_t *rgb = malloc(width * height * 3);
+    if (!rgb) return NULL;
+
+    int stride_pixels = stride / 4; // since stride is in bytes, but each pixel is 4 bytes
+
+    for (int y = 0; y < height; y++) {
+        const uint32_t *row = src + y * stride_pixels;
+        for (int x = 0; x < width; x++) {
+            uint32_t pixel = row[x];
+
+            uint8_t a = (pixel >> 24) & 0xFF;
+            uint8_t b = (pixel >> 16) & 0xFF;
+            uint8_t g = (pixel >> 8)  & 0xFF;
+            uint8_t r = (pixel >> 0)  & 0xFF;
+
+            rgb[(y * width + x) * 3 + 0] = r;
+            rgb[(y * width + x) * 3 + 1] = g;
+            rgb[(y * width + x) * 3 + 2] = b;
+        }
+    }
+
+    return rgb;
+}
+
 static int lua_imagesave(lua_State *L){
     Image *image = (Image *)luaL_checkudata(L, 1, "image");
     const char *filename = luaL_checkstring(L, 2);
     const char *format = luaL_optstring(L, 3, "png");
-	if(strcasecmp(format, "png") == 0) stbi_write_png(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 4, vita2d_texture_get_datap(image->tex), vita2d_texture_get_stride(image->tex));
-	else if(strcasecmp(format, "bmp") == 0) stbi_write_bmp(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 4, vita2d_texture_get_datap(image->tex));
-	else if(strcasecmp(format, "tga") == 0) stbi_write_tga(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 4, vita2d_texture_get_datap(image->tex));
-	else if(strcasecmp(format, "hdr") == 0) stbi_write_hdr(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 4, vita2d_texture_get_datap(image->tex));
+	uint8_t *pdata;
+	if(strcasecmp(format, "png") != 0){
+		pdata = convert_abgr_to_rgb_from_u32(vita2d_texture_get_datap(image->tex), vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), vita2d_texture_get_stride(image->tex));
+	}
+	if(strcasecmp(format, "png") == 0) stbi_write_png(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), STBI_rgb_alpha, vita2d_texture_get_datap(image->tex), vita2d_texture_get_stride(image->tex));
+	else if(strcasecmp(format, "bmp") == 0) stbi_write_bmp(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), STBI_rgb, pdata);
+	else if(strcasecmp(format, "tga") == 0) stbi_write_tga(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), STBI_rgb, pdata);
+	else if(strcasecmp(format, "hdr") == 0) stbi_write_hdr(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), STBI_rgb, (const float *)pdata);
 	else if(strcasecmp(format, "jpg") == 0 || strcasecmp(format, "jpeg") == 0){
 		int quality = luaL_optinteger(L, 4, 100); // JPEG quality must be between 1 to 100
-		stbi_write_jpg(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 4, vita2d_texture_get_datap(image->tex), quality);
+		stbi_write_jpg(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 3, pdata, quality);
 	}else luaL_argerror(L, 3, "Invalid format");
+	if(pdata) free(pdata);
     return 0;
 }
 
