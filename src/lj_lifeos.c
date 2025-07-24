@@ -443,13 +443,13 @@ static void unloadPromoter() {
 
 static int lua_delay(lua_State *L) {
 	float secs = luaL_optnumber(L, 1, 0);
-    sceKernelDelayThread(secs * 1000000); // this converts microsecs to secs
+    sceKernelDelayThread(secs * 1000*1000); // this converts microsecs to secs
     return 0;
 }
 
 static int lua_delaycb(lua_State *L) {
 	float secs = luaL_optnumber(L, 1, 0);
-    sceKernelDelayThreadCB(secs * 1000000); // this converts microsecs to secs
+    sceKernelDelayThreadCB(secs * 1000*1000); // this converts microsecs to secs
     return 0;
 }
 
