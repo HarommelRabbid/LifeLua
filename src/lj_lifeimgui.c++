@@ -307,6 +307,17 @@ static int lua_progressbar(lua_State *L) {
 	return 0;
 }
 
+static int lua_itemwidth(lua_State *L) {
+	float w = luaL_checknumber(L, 1);
+	ImGui::PushItemWidth(w);
+	return 0;
+}
+
+static int lua_itemwidthr(lua_State *L) {
+	ImGui::PopItemWidth();
+	return 0;
+}
+
 static const luaL_Reg imgui_lib[] = {
 	{"init", lua_iminit},
     {"shutdown", lua_imshutdown},
@@ -347,6 +358,8 @@ static const luaL_Reg imgui_lib[] = {
     {"combobox", lua_combobox},
     {"listbox", lua_listbox},
     {"progressbar", lua_progressbar},
+    {"itemwidth", lua_itemwidth},
+    {"resetitemwidth", lua_itemwidthr},
     {NULL, NULL}
 };
 
