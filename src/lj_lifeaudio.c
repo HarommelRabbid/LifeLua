@@ -52,6 +52,75 @@ struct genre genreList[] = {
 	{141 , "Christian Rock"}, {142 , "Merengue"}, {143 , "Salsa"}, {144 , "Thrash Metal"}, {145 , "Anime"}, {146 , "JPop"}, {147 , "SynthPop"}
 };
 
+/*
+typedef struct {
+    int fid;                       // File descriptor
+    void *mainBuffer;             // Entire file buffer (ATRAC9 data)
+    int handle;                   // Atrac handle from sceAtracSetDataAndAcquireHandle
+    int initialized;              // Non-zero if ATRAC9 successfully initialized
+    SceAtracContentInfo info;
+    const char *path;               // Optional: store path for looping reload
+} AudioAT9;
+
+int init_audioat9(AudioAT9 *at9, const char *path) {
+    if (!at9 || !path) return -1;
+
+    at9->fid = sceIoOpen(path, SCE_O_RDONLY, 0);
+    if (at9->fid < 0) return -1;
+
+    SceOff fileSize = sceIoLseek(at9->fid, 0, SCE_SEEK_END);
+    sceIoLseek(at9->fid, 0, SCE_SEEK_SET);
+
+    at9->mainBuffer = malloc(fileSize);
+    if (!at9->mainBuffer) {
+        sceIoClose(at9->fid);
+        return -1;
+    }
+
+    sceIoRead(at9->fid, at9->mainBuffer, fileSize);
+
+    int ret = sceAtracSetDataAndAcquireHandle(
+        at9->mainBuffer, fileSize, &at9->handle
+    );
+    
+    if (ret < 0) {
+        free(at9->mainBuffer);
+        sceIoClose(at9->fid);
+        return -1;
+    }
+
+    SceUInt32 sampleRate, channel;
+    SceAtracContentInfo *info;
+    sceClibMemset(info, 0, sizeof(SceAtracContentInfo));
+    sceAtracGetContentInfo(at9->handle, info);
+
+    at9->info = info;
+
+    at9->initialized = 1;
+    return 0;
+}
+
+int decode_audioat9(AudioAT9 *at9, void *out, int size) {
+    if (!at9 || !at9->initialized) return 0;
+
+    uint32_t samples = 0;
+    int ret = sceAtracDecode(at9->handle, out, &samples, NULL);
+    if (ret < 0 || samples == 0)
+        return 0;
+
+    return samples * (at9->info.channel * 2); // bytes
+}
+
+void free_audioat9(AudioAT9 *at9) {
+    if (!at9 || !at9->initialized) return;
+
+    sceAtracReleaseHandle(at9->handle);
+    if (at9->fid >= 0) sceIoClose(at9->fid);
+    if (at9->mainBuffer) free(at9->mainBuffer);
+
+    at9->initialized = 0;
+}*/
+
 typedef enum {
     AUDIO_TYPE_RAW,
     AUDIO_TYPE_MP3,
@@ -66,7 +135,6 @@ typedef enum {
 typedef struct {
     AudioType type;
     bool loop;
-    int channel;
     bool paused;
     bool playing;
     uint64_t frames_played;
@@ -89,9 +157,13 @@ typedef struct {
             vorbis_info *info;
             ogg_int64_t total_frames;
         } ogg;
+        /*struct {
+            AudioAT9 *atrac;
+        } at9;*/
     };
 } Audio;
 
+static int channel = 0;
 bool audio_active = false;
 
 static void audio_callback(void *stream, unsigned int length, void *userdata) {
@@ -102,6 +174,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
     unsigned int bytes_filled = 0;
 
     aud->playing = true;
+    channel++;
     while (bytes_filled < bytes_needed) {
         size_t done = 0;
         unsigned char *dst = ((unsigned char*)stream) + bytes_filled;
@@ -118,6 +191,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     memset(dst, 0, bytes_needed - bytes_filled);
                     break;
                 }
+                break;
             }
             case AUDIO_TYPE_MP3: {
                 int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
@@ -130,6 +204,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     memset(dst, 0, bytes_needed - bytes_filled);
                     break;
                 }
+                break;
             }
             case AUDIO_TYPE_WAV: {
                 int bytes_per_frame = aud->wav.wav.channels * sizeof(drwav_int16);
@@ -147,6 +222,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                         break;
                     }
                 }
+                break;
             }
             case AUDIO_TYPE_OGG: {
                 int current_section;
@@ -167,13 +243,26 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                 bytes_filled += ret;
                 break;
             }
-            //case AUDIO_TYPE_AT9: {}
+            /*case AUDIO_TYPE_AT9: {
+                int decoded = decode_audioat9(&aud->at9.atrac, dst, bytes_needed - bytes_filled);
+                if (decoded <= 0) {
+                    if (aud->loop) {
+                        sceAtracReleaseHandle(aud->at9.atrac.handle);
+                        sceIoLseek(aud->at9.atrac->fid, 0, SCE_SEEK_SET);
+                        init_audioat9(&aud->at9.atrac, aud->at9.atrac.path);
+                    } else {
+                        memset(dst, 0, bytes_needed - bytes_filled); // silence
+                    }
+                }
+                break;
+            }*/
             default:
                 break;
         }
         //if(aud->paused) sceKernelDelayThreadCB(100);
     }
     aud->playing = false;
+    channel--;
 }
 
 static int lua_audioload(lua_State *L) {
@@ -181,7 +270,6 @@ static int lua_audioload(lua_State *L) {
 
     Audio *aud = (Audio *)lua_newuserdata(L, sizeof(Audio));
     memset(aud, 0, sizeof(Audio));
-    aud->channel = 0;
 
     if(string_ends_with(path, ".mp3")){
         mpg123_init();
@@ -256,13 +344,13 @@ static int lua_audioplay(lua_State *L) {
         audio_active = true;
     }
 
-    vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
+    vitaAudioSetChannelCallback(channel, audio_callback, aud);
     return 0;
 }
 
 static int lua_audiostop(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
+    vitaAudioSetChannelCallback(channel, NULL, NULL);
     vitaAudioEndPre();
 	vitaAudioEnd();
     audio_active = false;

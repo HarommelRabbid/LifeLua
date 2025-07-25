@@ -1590,6 +1590,13 @@ static int lua_cameradialogabort(lua_State *L){
 	return 0;
 }
 
+static int lua_bgmacquire(lua_State *L){
+	bool acq = lua_toboolean(L, 1);
+	if(acq) sceAppMgrAcquireBgmPort();
+	else sceAppMgrReleaseBgmPort();
+	return 0;
+}
+
 static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1658,6 +1665,7 @@ static const luaL_Reg os_lib[] = {
     {"abortcameraimport", lua_cameradialogabort},
 	{"volume", lua_vol},
 	{"mute", lua_mute},
+	{"acquirebgm", lua_bgmacquire},
 	{"colorspace", lua_colorspace},
 	{"restart", lua_restart},
 	{"suspend", lua_suspend},

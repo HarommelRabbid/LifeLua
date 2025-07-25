@@ -80,6 +80,7 @@ add_executable(${PROJECT_NAME}
   src/include/cJSON.c
   src/include/sha256.c
   src/include/vitaaudiolib.c
+  src/include/libtimer.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.

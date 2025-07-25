@@ -17,120 +17,102 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
-#include "include/ftpvita.h"
+#include "include/libtimer.h"
 
 #include "lj_lifeinit.h"
 
 typedef struct {
-    SceUInt64 start_time;
-    SceUInt64 stop_time;
-    SceUInt64 pause_time;
-    SceUInt64 total_paused;
-    int running;
-    int paused;
-} Timer;
+    Timer *timer;
+} lTimer;
 
-static int timer_new(lua_State *L) {
-    Timer *t = (Timer *)lua_newuserdata(L, sizeof(Timer));
-    t->start_time = 0;
-    t->stop_time = 0;
-    t->running = 0;
+static int lua_newtimer(lua_State *L){
+    lTimer *timer = (lTimer *)lua_newuserdata(L, sizeof(lTimer));
 
+    timer->timer = createTimer();
+    
     luaL_getmetatable(L, "timer");
     lua_setmetatable(L, -2);
     return 1;
 }
 
-static int lua_starttimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    t->start_time = sceKernelGetProcessTimeWide();
-    t->stop_time = 0;
-    t->pause_time = 0;
-    t->total_paused = 0;
-    t->running = 1;
-    t->paused = 0;
+static int lua_timerstart(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    startTimer(timer->timer);
     return 0;
 }
 
-static int lua_stoptimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && !t->paused) {
-        t->stop_time = sceKernelGetProcessTimeWide();
-    }
-    t->running = 0;
-    t->paused = 0;
+static int lua_timerpause(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    pauseTimer(timer->timer);
     return 0;
 }
 
-static int lua_pausetimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && !t->paused) {
-        t->pause_time = sceKernelGetProcessTimeWide();
-        t->paused = 1;
-    }
+static int lua_timerreset(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    resetTimer(timer->timer);
     return 0;
 }
 
-static int lua_resumetimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    if (t->running && t->paused) {
-        SceUInt64 now = sceKernelGetProcessTimeWide();
-        t->total_paused += now - t->pause_time;
-        t->paused = 0;
-    }
+static int lua_timerstop(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    stopTimer(timer->timer);
     return 0;
 }
 
-static int lua_timerelapsed(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    SceUInt64 now;
-    if (t->paused) now = t->pause_time;
-    else if (!t->running) now = t->stop_time;
-    else now = sceKernelGetProcessTimeWide();
-
-    double elapsed = (double)(now - t->start_time - t->total_paused) / 1000000.0;
-    lua_pushnumber(L, elapsed);
+static int lua_timerelapsed(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    if (timer->timer->running) updateTimer(timer->timer);
+	lua_pushnumber(L, (double)(timer->timer->elapsed)/(1000*1000));
     return 1;
 }
 
-static int lua_settimer(lua_State *L){
-	Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-	t->start_time = starting_point / 1000000.0;
-	return 0;
-}
-
-static int lua_resettimer(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-	SceUInt64 starting_point = luaL_optnumber(L, 2, 0);
-    t->start_time = starting_point / 1000000.0 + sceKernelGetProcessTimeWide();
-    t->stop_time = 0;
-    t->pause_time = 0;
-    t->total_paused = 0;
-    t->paused = 0;
-    return 0;
-}
-
-static int lua_istimerrunning(lua_State *L) {
-    Timer *t = (Timer *)luaL_checkudata(L, 1, "timer");
-    lua_pushboolean(L, t->running && !(t->paused));
+static int lua_timerrunning(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    lua_pushboolean(L, timer->timer->running);
     return 1;
 }
 
-static const luaL_Reg timer_methods[] = {
-    {"start", lua_starttimer},
-    {"stop", lua_stoptimer},
-    {"pause", lua_pausetimer},
-    {"resume", lua_resumetimer},
+static int lua_timerset(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    double seconds = luaL_checknumber(L, 2);
+    SceRtcTick rtick;
+	sceRtcGetCurrentTick(&rtick);
+
+	uint64_t offset_ticks = (uint64_t)(seconds * 1000000.0); // seconds to microseconds
+	timer->timer->start_time = rtick.tick - offset_ticks;
+	timer->timer->current_time = rtick.tick;
+	timer->timer->elapsed = offset_ticks;
+	timer->timer->running = true;
+    return 0;
+}
+
+static int lua_timergc(lua_State *L){
+    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
+    freeTimer(timer->timer);
+    return 1;
+}
+
+static const luaL_Reg timer_lib[] = {
+    {"new", lua_newtimer},
+    {"start", lua_timerstart},
+    {"pause", lua_timerpause},
+    {"stop", lua_timerstop},
+    {"reset", lua_timerreset},
+    {"set", lua_timerset},
     {"elapsed", lua_timerelapsed},
-    {"reset", lua_resettimer},
-	{"set", lua_settimer},
-	{"isrunning", lua_istimerrunning},
+    {"running", lua_timerrunning},
     {NULL, NULL}
 };
 
-static const luaL_Reg timer_lib[] = {
-    {"new", timer_new},
+static const luaL_Reg timer_methods[] = {
+    {"start", lua_timerstart},
+    {"pause", lua_timerpause},
+    {"stop", lua_timerstop},
+    {"reset", lua_timerreset},
+    {"set", lua_timerset},
+    {"elapsed", lua_timerelapsed},
+    {"running", lua_timerrunning},
+    {"__gc", lua_timergc},
     {NULL, NULL}
 };
 
