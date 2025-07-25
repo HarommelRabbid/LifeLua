@@ -19,6 +19,8 @@
 #include <vorbis/vorbisfile.h>
 #define DR_WAV_IMPLEMENTATION
 #include "include/dr_wav.h"
+#define DR_FLAC_IMPLEMENTATION
+#include "include/dr_flac.h"
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -137,6 +139,7 @@ typedef struct {
     bool loop;
     bool paused;
     bool playing;
+    int channel;
     uint64_t frames_played;
     union {
         struct {
@@ -157,89 +160,91 @@ typedef struct {
             vorbis_info *info;
             ogg_int64_t total_frames;
         } ogg;
-        /*struct {
-            AudioAT9 *atrac;
-        } at9;*/
+        struct {
+            drflac *flac;
+        } flac;
     };
 } Audio;
 
-static int channel = 0;
 bool audio_active = false;
 
 static void audio_callback(void *stream, unsigned int length, void *userdata) {
     Audio *aud = (Audio *)userdata;
-    if (!aud) return;
+    if (!aud || !audio_active) return;
 
     int channels;
     switch (aud->type){
-        case AUDIO_TYPE_MP3: {
+        case AUDIO_TYPE_MP3:
             mpg123_getformat(aud->mp3.handle, NULL, &channels, NULL);
             break;
-        }
-        case AUDIO_TYPE_WAV: {
+        case AUDIO_TYPE_WAV:
             channels = aud->wav.wav.channels;
             break;
-        }
-        case AUDIO_TYPE_OGG: {
+        case AUDIO_TYPE_OGG:
             channels = aud->ogg.info->channels;
             break;
-        }
-        default: {
+        case AUDIO_TYPE_FLAC:
+            channels = aud->flac.flac->channels;
+            break;
+        default:
             channels = 2;
             break;
-        }
     }
 
-    unsigned int bytes_needed = length * channels * 2; // stereo 16-bit = 4 bytes/sample
+    unsigned int bytes_needed = length * channels * 2;
     unsigned int bytes_filled = 0;
 
-    aud->playing = true;
-    channel++;
     while (bytes_filled < bytes_needed) {
+        aud->playing = true;
         size_t done = 0;
         unsigned char *dst = ((unsigned char*)stream) + bytes_filled;
-        
-        switch (aud->type){
+        bool stream_done = false;
+
+        switch (aud->type) {
             case AUDIO_TYPE_RAW: {
                 size_t read = fread(dst, 1, bytes_needed - bytes_filled, aud->raw.file);
                 bytes_filled += read;
                 aud->frames_played += read;
 
-                if (read == 0 && aud->loop) {
-                    fseek(aud->raw.file, 0, SEEK_SET);
-                } else if (read == 0) {
-                    memset(dst, 0, bytes_needed - bytes_filled);
-                    break;
+                if (read == 0) {
+                    if (aud->loop) {
+                        fseek(aud->raw.file, 0, SEEK_SET);
+                    } else {
+                        stream_done = true;
+                    }
                 }
+                break;
             }
             case AUDIO_TYPE_MP3: {
                 int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
                 bytes_filled += done;
                 aud->frames_played += done;
 
-                if (err == MPG123_DONE && aud->loop) {
-                    mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
-                } else if (err == MPG123_DONE) {
-                    memset(dst, 0, bytes_needed - bytes_filled);
-                    break;
+                if (err == MPG123_DONE) {
+                    if (aud->loop) {
+                        mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
+                    } else {
+                        stream_done = true;
+                    }
                 }
+                break;
             }
             case AUDIO_TYPE_WAV: {
                 int bytes_per_frame = aud->wav.wav.channels * sizeof(drwav_int16);
                 int frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
 
-                drwav_uint64 frames_read = drwav_read_pcm_frames_s16(&aud->wav.wav, (drwav_uint64)frames_to_read, (drwav_int16 *)(dst + bytes_filled));
+                drwav_uint64 frames_read = drwav_read_pcm_frames_s16(&aud->wav.wav, (drwav_uint64)frames_to_read, (drwav_int16 *)dst);
                 int bytes_read = frames_read * bytes_per_frame;
                 bytes_filled += bytes_read;
 
-                if (frames_read >= aud->wav.wav.totalPCMFrameCount) {
+                if (frames_read == 0) {
                     if (aud->loop) {
                         drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
                     } else {
-                        memset(dst + bytes_filled, 0, bytes_needed - bytes_filled);
-                        break;
+                        stream_done = true;
                     }
                 }
+                break;
             }
             case AUDIO_TYPE_OGG: {
                 int current_section;
@@ -248,35 +253,45 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     if (aud->loop) {
                         ov_raw_seek(&aud->ogg.ogg, 0);
                     } else {
-                        memset(dst, 0, bytes_needed - bytes_filled);
-                        break;
+                        stream_done = true;
                     }
                 } else if (ret < 0) {
-                    memset(dst, 0, bytes_needed - bytes_filled);
-                    break;
+                    stream_done = true;
+                } else {
+                    bytes_filled += ret;
                 }
-                bytes_filled += ret;
+                break;
             }
-            /*case AUDIO_TYPE_AT9: {
-                int decoded = decode_audioat9(&aud->at9.atrac, dst, bytes_needed - bytes_filled);
-                if (decoded <= 0) {
+            case AUDIO_TYPE_FLAC: {
+                int bytes_per_frame = aud->flac.flac->channels * sizeof(drflac_int16);
+                drflac_uint64 frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
+
+                drflac_uint64 frames_read = drflac_read_pcm_frames_s16(aud->flac.flac, (drflac_uint64)frames_to_read, (drflac_int16 *)dst);
+                int bytes_read = frames_read * bytes_per_frame;
+                bytes_filled += bytes_read;
+
+                if (frames_read == 0) {
                     if (aud->loop) {
-                        sceAtracReleaseHandle(aud->at9.atrac.handle);
-                        sceIoLseek(aud->at9.atrac->fid, 0, SCE_SEEK_SET);
-                        init_audioat9(&aud->at9.atrac, aud->at9.atrac.path);
+                        drflac_seek_to_pcm_frame(aud->flac.flac, 0);
                     } else {
-                        memset(dst, 0, bytes_needed - bytes_filled); // silence
+                        stream_done = true;
                     }
                 }
                 break;
-            }*/
+            }
             default:
+                stream_done = true;
                 break;
         }
-        //if(aud->paused) sceKernelDelayThreadCB(100);
+
+        if (stream_done) {
+            // Fill the rest of the buffer with silence
+            memset(((unsigned char*)stream) + bytes_filled, 0, bytes_needed - bytes_filled);
+            aud->playing = false;
+            vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
+            break;
+        }
     }
-    aud->playing = false;
-    channel--;
 }
 
 static int lua_audioload(lua_State *L) {
@@ -284,6 +299,7 @@ static int lua_audioload(lua_State *L) {
 
     Audio *aud = (Audio *)lua_newuserdata(L, sizeof(Audio));
     memset(aud, 0, sizeof(Audio));
+    aud->channel = 0;
 
     if(string_ends_with(path, ".mp3")){
         mpg123_init();
@@ -320,6 +336,11 @@ static int lua_audioload(lua_State *L) {
         aud->ogg.info = ov_info(&aud->ogg.ogg, -1);
         aud->ogg.total_frames = ov_pcm_total(&aud->ogg.ogg, -1);
         aud->type = AUDIO_TYPE_OGG;
+    }else if (string_ends_with(path, ".flac")) {
+        aud->flac.flac = drflac_open_file(path, NULL);
+        if(aud->flac.flac == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
+
+        aud->type = AUDIO_TYPE_FLAC;
     }else{
         FILE *f = fopen(path, "rb");
         if (!f) return luaL_error(L, "Failed to open audio file");
@@ -342,13 +363,16 @@ static int lua_audioplay(lua_State *L) {
             long rate;
             int channels, encoding;
             mpg123_getformat(aud->mp3.handle, &rate, &channels, &encoding);
-            vitaAudioInit(rate, (channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioInit(rate, (channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
         }else if(aud->type == AUDIO_TYPE_WAV){
-            vitaAudioInit(aud->wav.wav.sampleRate, (aud->wav.wav.channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioInit(aud->wav.wav.sampleRate, (aud->wav.wav.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
         }else if(aud->type == AUDIO_TYPE_OGG){
-            vitaAudioInit(aud->ogg.info->rate, (aud->ogg.info->channels == 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioInit(aud->ogg.info->rate, (aud->ogg.info->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }else if(aud->type == AUDIO_TYPE_FLAC){
+            vitaAudioInit(aud->flac.flac->sampleRate, (aud->flac.flac->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
         }else{
             vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
@@ -358,13 +382,37 @@ static int lua_audioplay(lua_State *L) {
         audio_active = true;
     }
 
-    vitaAudioSetChannelCallback(channel, audio_callback, aud);
+    if (!aud->playing) {
+        switch (aud->type) {
+            case AUDIO_TYPE_RAW:
+                fseek(aud->raw.file, 0, SEEK_SET);
+                break;
+            case AUDIO_TYPE_MP3:
+                mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
+                break;
+            case AUDIO_TYPE_WAV:
+                drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
+                break;
+            case AUDIO_TYPE_FLAC:
+                drflac_seek_to_pcm_frame(aud->flac.flac, 0);
+                break;
+            case AUDIO_TYPE_OGG:
+                ov_raw_seek(&aud->ogg.ogg, 0);
+                break;
+
+            default: break;
+        }
+
+        aud->frames_played = 0;
+    }
+
+    vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
     return 0;
 }
 
 static int lua_audiostop(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    vitaAudioSetChannelCallback(channel, NULL, NULL);
+    vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
     vitaAudioEndPre();
 	vitaAudioEnd();
     audio_active = false;
@@ -416,6 +464,7 @@ static int lua_audiogc(lua_State *L) {
     if (aud->type == AUDIO_TYPE_RAW && aud->raw.file) fclose(aud->raw.file);
     else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle) mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
     else if (aud->type == AUDIO_TYPE_WAV) drwav_uninit(&aud->wav.wav);
+    else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
     return 0;
 }
