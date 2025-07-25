@@ -27,6 +27,7 @@ var group__os =
     [ "os.launchparams", "group__os.html#ga0288a1aee55e618f4d757388aa725c8f", null ],
     [ "os.lock", "group__os.html#ga295bf709298aaf34448cb894d233636f", null ],
     [ "os.musicexport", "group__os.html#ga254b01cc259eeaf2607929801822e278", null ],
+    [ "os.mute", "group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f", null ],
     [ "os.notification", "group__os.html#gab8148050015b0f14022c5f98082db8c5", null ],
     [ "os.photoexport", "group__os.html#ga28e9899961b89cfcbb60e9455cb89b58", null ],
     [ "os.photoreview", "group__os.html#ga053336c56f5cfa87c9efa8f6321e0e43", null ],
@@ -39,5 +40,6 @@ var group__os =
     [ "os.unsafe", "group__os.html#ga482cf184e1ea89deb12664a6c5fd1312", null ],
     [ "os.uri", "group__os.html#gaeca6b50622a9568bb8b9818a3b4281e3", null ],
     [ "os.videoexport", "group__os.html#ga5342758af5b34d72c161bef924106567", null ],
+    [ "os.volume", "group__os.html#ga5e985e461227f30a451ea99e8e097dd3", null ],
     [ "os.xbar", "group__os.html#ga4173abecd5950de9d87fcffeb02c39ff", null ]
 ];

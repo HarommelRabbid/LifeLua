@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LifeLua: image</title>
+<link rel="icon" href="LifeLua.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,8 +28,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="LifeLua.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;27-06-2025</span>
    </div>
    <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
@@ -119,6 +121,16 @@ Functions</h2></td></tr>
 <tr class="separator:ga4de5f0cd213fc65a0ba00e456ff3b465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga22457e38643ff5a4ef46c7cae3864fc5" id="r_ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga22457e38643ff5a4ef46c7cae3864fc5">image.rotatedisplay</a> (image image, number x, number y, number radius, color tint)</td></tr>
 <tr class="separator:ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacfe9d3315cec307d3a6f4b9bf4fdce66" id="r_gacfe9d3315cec307d3a6f4b9bf4fdce66"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacfe9d3315cec307d3a6f4b9bf4fdce66">image.scalerotatedisplay</a> (image image, number x, number y, number scale_x, number scale_y, number radius, color tint)</td></tr>
+<tr class="separator:gacfe9d3315cec307d3a6f4b9bf4fdce66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacf5dfd9236eab56edf49b96e7f289545" id="r_gacf5dfd9236eab56edf49b96e7f289545"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacf5dfd9236eab56edf49b96e7f289545">image.partdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, color tint)</td></tr>
+<tr class="separator:gacf5dfd9236eab56edf49b96e7f289545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga810debec84c943796636393978d7764b" id="r_ga810debec84c943796636393978d7764b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga810debec84c943796636393978d7764b">image.scalepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, color tint)</td></tr>
+<tr class="separator:ga810debec84c943796636393978d7764b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a4066ca82b8a164d6ca62d910603fff" id="r_ga3a4066ca82b8a164d6ca62d910603fff"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3a4066ca82b8a164d6ca62d910603fff">image.scalerotatepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, number radius, color tint)</td></tr>
+<tr class="separator:ga3a4066ca82b8a164d6ca62d910603fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga179261011f2f9f02e17359603000f281" id="r_ga179261011f2f9f02e17359603000f281"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga179261011f2f9f02e17359603000f281">image.rotatepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number radius, color tint)</td></tr>
+<tr class="separator:ga179261011f2f9f02e17359603000f281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga13827329a6a0eb5be13e4aabf91ffc58" id="r_ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga13827329a6a0eb5be13e4aabf91ffc58">image.width</a> (image image)</td></tr>
 <tr class="separator:ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c172f644892fe4895de414d2ceb6ef7" id="r_ga6c172f644892fe4895de414d2ceb6ef7"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6c172f644892fe4895de414d2ceb6ef7">image.height</a> (image image)</td></tr>
@@ -129,6 +141,8 @@ Functions</h2></td></tr>
 <tr class="separator:gad36412da10babb287406d331cbc486f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7eb30bdfb68790884f1525fa0bbe172b" id="r_ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7eb30bdfb68790884f1525fa0bbe172b">image.screen</a> (image image)</td></tr>
 <tr class="separator:ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4577e2634ab44720c23a81f1ff5b4f3c" id="r_ga4577e2634ab44720c23a81f1ff5b4f3c"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4577e2634ab44720c23a81f1ff5b4f3c">image.save</a> (image image, string path, string type)</td></tr>
+<tr class="separator:ga4577e2634ab44720c23a81f1ff5b4f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Method calling will work on most of the functions here (e. g. <code>image:display</code>, <code>image:width</code>, etc.) </p>
@@ -202,7 +216,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Loads an image, can be a .PNG, .BMP, or a .JPG/.JPEG </p>
+<p>Loads an image, can be a .PNG, .BMP, .JPG/.JPEG, .TGA, .PSD, .PIC, .PPM/.PGM &amp; .HDR </p>
 
 </div>
 </div>
@@ -232,6 +246,63 @@ Functions</h2></td></tr>
 <p>Creates a new image </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">color</td><td>Optional, will default to white </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gacf5dfd9236eab56edf49b96e7f289545" name="gacf5dfd9236eab56edf49b96e7f289545"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacf5dfd9236eab56edf49b96e7f289545">&#9670;&#160;</a></span>image.partdisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.partdisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a part of an image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
   </table>
   </dd>
 </dl>
@@ -327,6 +398,107 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga179261011f2f9f02e17359603000f281" name="ga179261011f2f9f02e17359603000f281"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga179261011f2f9f02e17359603000f281">&#9670;&#160;</a></span>image.rotatepartdisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.rotatepartdisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a part of a rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga4577e2634ab44720c23a81f1ff5b4f3c" name="ga4577e2634ab44720c23a81f1ff5b4f3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4577e2634ab44720c23a81f1ff5b4f3c">&#9670;&#160;</a></span>image.save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">image image.save </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Saves an image </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>available types:<ul>
+<li><b>"png"</b></li>
+<li><b>"jpeg"/"jpg"</b></li>
+<li><b>"bmp"</b></li>
+<li><b>"tga"</b></li>
+<li><b>"hdr"</b> </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga4de5f0cd213fc65a0ba00e456ff3b465" name="ga4de5f0cd213fc65a0ba00e456ff3b465"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga4de5f0cd213fc65a0ba00e456ff3b465">&#9670;&#160;</a></span>image.scaledisplay()</h2>
 
@@ -366,6 +538,197 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Displays a scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga810debec84c943796636393978d7764b" name="ga810debec84c943796636393978d7764b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga810debec84c943796636393978d7764b">&#9670;&#160;</a></span>image.scalepartdisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.scalepartdisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a part of a scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gacfe9d3315cec307d3a6f4b9bf4fdce66" name="gacfe9d3315cec307d3a6f4b9bf4fdce66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacfe9d3315cec307d3a6f4b9bf4fdce66">&#9670;&#160;</a></span>image.scalerotatedisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.scalerotatedisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a rotated &amp; scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tint</td><td>optional </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga3a4066ca82b8a164d6ca62d910603fff" name="ga3a4066ca82b8a164d6ca62d910603fff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a4066ca82b8a164d6ca62d910603fff">&#9670;&#160;</a></span>image.scalerotatepartdisplay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.scalerotatepartdisplay </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_h</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>scale_y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Displays a part of a scaled &amp; rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tint</td><td>optional </td></tr>
   </table>

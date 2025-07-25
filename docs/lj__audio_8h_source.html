@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LifeLua: lj_audio.h Source File</title>
+<link rel="icon" href="LifeLua.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,8 +28,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="LifeLua.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;27-06-2025</span>
    </div>
    <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
@@ -103,20 +105,22 @@ $(function(){initNavTree('lj__audio_8h_source.html',''); initResizable(true); })
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="group__audio.html#ga934a72ff1a00e74f1f32c6c78d8cddfc">   10</a></span>audio <a class="code hl_function" href="group__audio.html#ga934a72ff1a00e74f1f32c6c78d8cddfc">audio.load</a>(<span class="keywordtype">string</span> path) {}</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="group__audio.html#gaa8297c865db481d222ee7fb59bad3841">   14</a></span>nil <a class="code hl_function" href="group__audio.html#gaa8297c865db481d222ee7fb59bad3841">audio.play</a>(audio audio, <span class="keywordtype">bool</span> loop) {}</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="group__audio.html#gaeb176d922e2a50710cfeeec5eb152069">   14</a></span>nil <a class="code hl_function" href="group__audio.html#gaeb176d922e2a50710cfeeec5eb152069">audio.play</a>(audio audio, <span class="keywordtype">boolean</span> loop) {}</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="group__audio.html#gaff8f09a348c4b1d44cd3d7d9a8146966">   18</a></span>nil <a class="code hl_function" href="group__audio.html#gaff8f09a348c4b1d44cd3d7d9a8146966">audio.stop</a>(audio audio) {}</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="group__audio.html#ga303dc61f746e712d3b869d9763dee09a">   30</a></span>table <a class="code hl_function" href="group__audio.html#ga303dc61f746e712d3b869d9763dee09a">audio.id3v1</a>(audio audio) {}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="group__audio.html#ga1cba26c554196ea4aef089f1590f90dc">   34</a></span>table <a class="code hl_function" href="group__audio.html#ga1cba26c554196ea4aef089f1590f90dc">audio.id3v2</a>(audio audio) {}</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="group__audio.html#gae1eeb10ac607885924e7c881daeb8447">   38</a></span>table <a class="code hl_function" href="group__audio.html#gae1eeb10ac607885924e7c881daeb8447">audio.comment</a>(audio audio) {}</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="group__audio.html#ga8f87481a3141632eb7b34b0fd622436f">   42</a></span><span class="keywordtype">boolean</span> <a class="code hl_function" href="group__audio.html#ga8f87481a3141632eb7b34b0fd622436f">audio.playing</a>(audio audio) {}</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="group__audio.html#ga1bdd87aeda3ea77fef051c70135be0ed">   46</a></span>nil <a class="code hl_function" href="group__audio.html#ga1bdd87aeda3ea77fef051c70135be0ed">audio.pause</a>(audio audio, <span class="keywordtype">bool</span> pause) {}</div>
-<div class="ttc" id="agroup__audio_html_ga1bdd87aeda3ea77fef051c70135be0ed"><div class="ttname"><a href="group__audio.html#ga1bdd87aeda3ea77fef051c70135be0ed">audio.pause</a></div><div class="ttdeci">nil audio.pause(audio audio, bool pause)</div><div class="ttdef"><b>Definition</b> lj_audio.h:46</div></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="group__audio.html#gab3824cd7f183e82449136d87d80c7578">   46</a></span><span class="keywordtype">boolean</span> <a class="code hl_function" href="group__audio.html#gab3824cd7f183e82449136d87d80c7578">audio.paused</a>(audio audio) {}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="group__audio.html#ga41b8bf0a7597a566231bc28e7a2c05d6">   50</a></span>nil <a class="code hl_function" href="group__audio.html#ga41b8bf0a7597a566231bc28e7a2c05d6">audio.pause</a>(audio audio, <span class="keywordtype">boolean</span> pause) {}</div>
 <div class="ttc" id="agroup__audio_html_ga1cba26c554196ea4aef089f1590f90dc"><div class="ttname"><a href="group__audio.html#ga1cba26c554196ea4aef089f1590f90dc">audio.id3v2</a></div><div class="ttdeci">table audio.id3v2(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:34</div></div>
 <div class="ttc" id="agroup__audio_html_ga303dc61f746e712d3b869d9763dee09a"><div class="ttname"><a href="group__audio.html#ga303dc61f746e712d3b869d9763dee09a">audio.id3v1</a></div><div class="ttdeci">table audio.id3v1(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:30</div></div>
+<div class="ttc" id="agroup__audio_html_ga41b8bf0a7597a566231bc28e7a2c05d6"><div class="ttname"><a href="group__audio.html#ga41b8bf0a7597a566231bc28e7a2c05d6">audio.pause</a></div><div class="ttdeci">nil audio.pause(audio audio, boolean pause)</div><div class="ttdef"><b>Definition</b> lj_audio.h:50</div></div>
 <div class="ttc" id="agroup__audio_html_ga8f87481a3141632eb7b34b0fd622436f"><div class="ttname"><a href="group__audio.html#ga8f87481a3141632eb7b34b0fd622436f">audio.playing</a></div><div class="ttdeci">boolean audio.playing(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:42</div></div>
 <div class="ttc" id="agroup__audio_html_ga934a72ff1a00e74f1f32c6c78d8cddfc"><div class="ttname"><a href="group__audio.html#ga934a72ff1a00e74f1f32c6c78d8cddfc">audio.load</a></div><div class="ttdeci">audio audio.load(string path)</div><div class="ttdef"><b>Definition</b> lj_audio.h:10</div></div>
-<div class="ttc" id="agroup__audio_html_gaa8297c865db481d222ee7fb59bad3841"><div class="ttname"><a href="group__audio.html#gaa8297c865db481d222ee7fb59bad3841">audio.play</a></div><div class="ttdeci">nil audio.play(audio audio, bool loop)</div><div class="ttdef"><b>Definition</b> lj_audio.h:14</div></div>
+<div class="ttc" id="agroup__audio_html_gab3824cd7f183e82449136d87d80c7578"><div class="ttname"><a href="group__audio.html#gab3824cd7f183e82449136d87d80c7578">audio.paused</a></div><div class="ttdeci">boolean audio.paused(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:46</div></div>
 <div class="ttc" id="agroup__audio_html_gae1eeb10ac607885924e7c881daeb8447"><div class="ttname"><a href="group__audio.html#gae1eeb10ac607885924e7c881daeb8447">audio.comment</a></div><div class="ttdeci">table audio.comment(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:38</div></div>
+<div class="ttc" id="agroup__audio_html_gaeb176d922e2a50710cfeeec5eb152069"><div class="ttname"><a href="group__audio.html#gaeb176d922e2a50710cfeeec5eb152069">audio.play</a></div><div class="ttdeci">nil audio.play(audio audio, boolean loop)</div><div class="ttdef"><b>Definition</b> lj_audio.h:14</div></div>
 <div class="ttc" id="agroup__audio_html_gaff8f09a348c4b1d44cd3d7d9a8146966"><div class="ttname"><a href="group__audio.html#gaff8f09a348c4b1d44cd3d7d9a8146966">audio.stop</a></div><div class="ttdeci">nil audio.stop(audio audio)</div><div class="ttdef"><b>Definition</b> lj_audio.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

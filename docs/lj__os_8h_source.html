@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LifeLua: lj_os.h Source File</title>
+<link rel="icon" href="LifeLua.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,8 +28,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="LifeLua.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;27-06-2025</span>
    </div>
    <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
@@ -163,6 +165,8 @@ $(function(){initNavTree('lj__os_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="group__os.html#ga4173abecd5950de9d87fcffeb02c39ff">  200</a></span>number or nil <a class="code hl_function" href="group__os.html#ga4173abecd5950de9d87fcffeb02c39ff">os.xbar</a>(number clock) {}</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="group__os.html#ga2484d5bf88be0ae4d5118518ac9be682">  204</a></span>nil <a class="code hl_function" href="group__os.html#ga2484d5bf88be0ae4d5118518ac9be682">os.displayon</a>() {}</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="group__os.html#ga1e987ca8aa3b43d99655f6684a6c6755">  208</a></span>nil <a class="code hl_function" href="group__os.html#ga1e987ca8aa3b43d99655f6684a6c6755">os.displayoff</a>() {}</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="group__os.html#ga5e985e461227f30a451ea99e8e097dd3">  213</a></span>number or nil <a class="code hl_function" href="group__os.html#ga5e985e461227f30a451ea99e8e097dd3">os.volume</a>(number vol) {}</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f">  217</a></span>number or nil <a class="code hl_function" href="group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f">os.mute</a>(number vol) {}</div>
 <div class="ttc" id="agroup__os_html_ga01530503bcf96250d92bbf00cf861f7d"><div class="ttname"><a href="group__os.html#ga01530503bcf96250d92bbf00cf861f7d">os.standby</a></div><div class="ttdeci">nil os.standby()</div><div class="ttdef"><b>Definition</b> lj_os.h:97</div></div>
 <div class="ttc" id="agroup__os_html_ga0288a1aee55e618f4d757388aa725c8f"><div class="ttname"><a href="group__os.html#ga0288a1aee55e618f4d757388aa725c8f">os.launchparams</a></div><div class="ttdeci">string os.launchparams()</div><div class="ttdef"><b>Definition</b> lj_os.h:150</div></div>
 <div class="ttc" id="agroup__os_html_ga053336c56f5cfa87c9efa8f6321e0e43"><div class="ttname"><a href="group__os.html#ga053336c56f5cfa87c9efa8f6321e0e43">os.photoreview</a></div><div class="ttdeci">nil os.photoreview(string path)</div><div class="ttdef"><b>Definition</b> lj_os.h:172</div></div>
@@ -173,6 +177,7 @@ $(function(){initNavTree('lj__os_8h_source.html',''); initResizable(true); });
 <div class="ttc" id="agroup__os_html_ga1272c59cb828f6c5da69327a5882a32b"><div class="ttname"><a href="group__os.html#ga1272c59cb828f6c5da69327a5882a32b">os.abortphotoreview</a></div><div class="ttdeci">nil os.abortphotoreview()</div><div class="ttdef"><b>Definition</b> lj_os.h:176</div></div>
 <div class="ttc" id="agroup__os_html_ga177fc4d03908452206c4435ab8a760e9"><div class="ttname"><a href="group__os.html#ga177fc4d03908452206c4435ab8a760e9">os.abortimportphoto</a></div><div class="ttdeci">nil os.abortimportphoto()</div><div class="ttdef"><b>Definition</b> lj_os.h:159</div></div>
 <div class="ttc" id="agroup__os_html_ga1a758aba9585187b4caf92eb1ea09f57"><div class="ttname"><a href="group__os.html#ga1a758aba9585187b4caf92eb1ea09f57">os.execute</a></div><div class="ttdeci">nil os.execute(string path)</div><div class="ttdef"><b>Definition</b> lj_os.h:122</div></div>
+<div class="ttc" id="agroup__os_html_ga1aaf4475cd2bf074f5119dfed72b082f"><div class="ttname"><a href="group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f">os.mute</a></div><div class="ttdeci">number or nil os.mute(number vol)</div><div class="ttdef"><b>Definition</b> lj_os.h:217</div></div>
 <div class="ttc" id="agroup__os_html_ga1e987ca8aa3b43d99655f6684a6c6755"><div class="ttname"><a href="group__os.html#ga1e987ca8aa3b43d99655f6684a6c6755">os.displayoff</a></div><div class="ttdeci">nil os.displayoff()</div><div class="ttdef"><b>Definition</b> lj_os.h:208</div></div>
 <div class="ttc" id="agroup__os_html_ga2484d5bf88be0ae4d5118518ac9be682"><div class="ttname"><a href="group__os.html#ga2484d5bf88be0ae4d5118518ac9be682">os.displayon</a></div><div class="ttdeci">nil os.displayon()</div><div class="ttdef"><b>Definition</b> lj_os.h:204</div></div>
 <div class="ttc" id="agroup__os_html_ga254b01cc259eeaf2607929801822e278"><div class="ttname"><a href="group__os.html#ga254b01cc259eeaf2607929801822e278">os.musicexport</a></div><div class="ttdeci">nil os.musicexport(string path)</div><div class="ttdef"><b>Definition</b> lj_os.h:87</div></div>
@@ -186,6 +191,7 @@ $(function(){initNavTree('lj__os_8h_source.html',''); initResizable(true); });
 <div class="ttc" id="agroup__os_html_ga500538edc673871336c9320d8a8f7a8e"><div class="ttname"><a href="group__os.html#ga500538edc673871336c9320d8a8f7a8e">os.restart</a></div><div class="ttdeci">nil os.restart()</div><div class="ttdef"><b>Definition</b> lj_os.h:101</div></div>
 <div class="ttc" id="agroup__os_html_ga5342758af5b34d72c161bef924106567"><div class="ttname"><a href="group__os.html#ga5342758af5b34d72c161bef924106567">os.videoexport</a></div><div class="ttdeci">nil os.videoexport(string path)</div><div class="ttdef"><b>Definition</b> lj_os.h:79</div></div>
 <div class="ttc" id="agroup__os_html_ga5dba117f64b1c490afab61f430f1459d"><div class="ttname"><a href="group__os.html#ga5dba117f64b1c490afab61f430f1459d">os.isbatterylow</a></div><div class="ttdeci">boolean os.isbatterylow()</div><div class="ttdef"><b>Definition</b> lj_os.h:126</div></div>
+<div class="ttc" id="agroup__os_html_ga5e985e461227f30a451ea99e8e097dd3"><div class="ttname"><a href="group__os.html#ga5e985e461227f30a451ea99e8e097dd3">os.volume</a></div><div class="ttdeci">number or nil os.volume(number vol)</div><div class="ttdef"><b>Definition</b> lj_os.h:213</div></div>
 <div class="ttc" id="agroup__os_html_ga5f489016045dfdba82444070ba5b9962"><div class="ttname"><a href="group__os.html#ga5f489016045dfdba82444070ba5b9962">os.closeapp</a></div><div class="ttdeci">nil os.closeapp(string titleid)</div><div class="ttdef"><b>Definition</b> lj_os.h:113</div></div>
 <div class="ttc" id="agroup__os_html_ga74617315eebed5a05a3a64c03c9064cf"><div class="ttname"><a href="group__os.html#ga74617315eebed5a05a3a64c03c9064cf">os.infobar</a></div><div class="ttdeci">nil os.infobar(SceAppMgrInfoBarVisibility state, SceAppMgrInfoBarColor color, SceAppMgrInfoBarTransparency transparency)</div><div class="ttdef"><b>Definition</b> lj_os.h:61</div></div>
 <div class="ttc" id="agroup__os_html_ga749a893aef68d337a5da3fd003f3b111"><div class="ttname"><a href="group__os.html#ga749a893aef68d337a5da3fd003f3b111">os.shutdown</a></div><div class="ttdeci">nil os.shutdown()</div><div class="ttdef"><b>Definition</b> lj_os.h:93</div></div>

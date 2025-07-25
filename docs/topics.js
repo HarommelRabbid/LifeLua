@@ -1,5 +1,6 @@
 var topics =
 [
+    [ "render", "group__render.html", null ],
     [ "audio", "group__audio.html", "group__audio" ],
     [ "camera", "group__camera.html", "group__camera" ],
     [ "controls", "group__controls.html", "group__controls" ],
@@ -16,6 +17,6 @@ var topics =
     [ "sqlite3", "group__sqlite3.html", "group__sqlite3" ],
     [ "table", "group__table.html", "group__table" ],
     [ "thread", "group__thread.html", "group__thread" ],
-    [ "timer", "group__timer.html", null ],
+    [ "timer", "group__timer.html", "group__timer" ],
     [ "video", "group__video.html", "group__video" ]
 ];

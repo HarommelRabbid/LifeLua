@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LifeLua: json</title>
+<link rel="icon" href="LifeLua.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,8 +28,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="LifeLua.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">LifeLua<span id="projectnumber">&#160;18-06-2025</span>
+   <div id="projectname">LifeLua<span id="projectnumber">&#160;27-06-2025</span>
    </div>
    <div id="projectbrief">Documentation for LifeLua, a Lua interpreter for the PS Vita</div>
   </td>
@@ -114,10 +116,10 @@ Functions</h2></td></tr>
 <tr class="separator:ga8a599cabe395d356d253a1820c4012cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1d6763f229df83f9a2f66298d2dd1a9b" id="r_ga1d6763f229df83f9a2f66298d2dd1a9b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d6763f229df83f9a2f66298d2dd1a9b">json.encode</a> (table table)</td></tr>
 <tr class="separator:ga1d6763f229df83f9a2f66298d2dd1a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga475b09d6c278e73844c6793b35444afe" id="r_ga475b09d6c278e73844c6793b35444afe"><td class="memItemLeft" align="right" valign="top">string json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga475b09d6c278e73844c6793b35444afe">minify</a> (string json)</td></tr>
-<tr class="separator:ga475b09d6c278e73844c6793b35444afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7bdffc88cd434d94f4a697c6add46926" id="r_ga7bdffc88cd434d94f4a697c6add46926"><td class="memItemLeft" align="right" valign="top">string json&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7bdffc88cd434d94f4a697c6add46926">isnull</a> (jsonnull value)</td></tr>
-<tr class="separator:ga7bdffc88cd434d94f4a697c6add46926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e13e55581c60b6797ac5e272e25e224" id="r_ga0e13e55581c60b6797ac5e272e25e224"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0e13e55581c60b6797ac5e272e25e224">json.minify</a> (string json)</td></tr>
+<tr class="separator:ga0e13e55581c60b6797ac5e272e25e224"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b88c100439d024799d75d8dfa243a9a" id="r_ga9b88c100439d024799d75d8dfa243a9a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9b88c100439d024799d75d8dfa243a9a">json.isnull</a> (jsonnull value)</td></tr>
+<tr class="separator:ga9b88c100439d024799d75d8dfa243a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c388d6cbe6bf3e150774513d2eab14f" id="r_ga1c388d6cbe6bf3e150774513d2eab14f"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1c388d6cbe6bf3e150774513d2eab14f">json.version</a> (string json)</td></tr>
 <tr class="separator:ga1c388d6cbe6bf3e150774513d2eab14f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -130,24 +132,6 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga7bdffc88cd434d94f4a697c6add46926" name="ga7bdffc88cd434d94f4a697c6add46926"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7bdffc88cd434d94f4a697c6add46926">&#9670;&#160;</a></span>isnull()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string json isnull </td>
-          <td>(</td>
-          <td class="paramtype">jsonnull</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Checks if a value is null in JSON (nil in Lua and null in JSON aren't the same!) </p>
-
-</div>
-</div>
 <a id="ga8a599cabe395d356d253a1820c4012cc" name="ga8a599cabe395d356d253a1820c4012cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8a599cabe395d356d253a1820c4012cc">&#9670;&#160;</a></span>json.decode()</h2>
 
@@ -184,6 +168,42 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
 
 </div>
 </div>
+<a id="ga9b88c100439d024799d75d8dfa243a9a" name="ga9b88c100439d024799d75d8dfa243a9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9b88c100439d024799d75d8dfa243a9a">&#9670;&#160;</a></span>json.isnull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string json.isnull </td>
+          <td>(</td>
+          <td class="paramtype">jsonnull</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Checks if a value is null in JSON (nil in Lua and null in JSON aren't the same!) </p>
+
+</div>
+</div>
+<a id="ga0e13e55581c60b6797ac5e272e25e224" name="ga0e13e55581c60b6797ac5e272e25e224"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0e13e55581c60b6797ac5e272e25e224">&#9670;&#160;</a></span>json.minify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string json.minify </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Minifies a JSON string, removes any pretty formatting. </p>
+
+</div>
+</div>
 <a id="ga1c388d6cbe6bf3e150774513d2eab14f" name="ga1c388d6cbe6bf3e150774513d2eab14f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga1c388d6cbe6bf3e150774513d2eab14f">&#9670;&#160;</a></span>json.version()</h2>
 
@@ -199,24 +219,6 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>cJSON version </dd></dl>
-
-</div>
-</div>
-<a id="ga475b09d6c278e73844c6793b35444afe" name="ga475b09d6c278e73844c6793b35444afe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga475b09d6c278e73844c6793b35444afe">&#9670;&#160;</a></span>minify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string json minify </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Minifies a JSON string, removes any pretty formatting. </p>
 
 </div>
 </div>
