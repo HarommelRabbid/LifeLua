@@ -449,6 +449,12 @@ static int lua_audioplaying(lua_State *L) {
     return 1;
 }
 
+static int lua_audiopaused(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    lua_pushboolean(L, aud->paused);
+    return 1;
+}
+
 /*static int lua_audioduration(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
 
@@ -543,6 +549,7 @@ static const luaL_Reg audio_lib[] = {
     {"load", lua_audioload},
     {"play", lua_audioplay},
     {"pause", lua_audiopause},
+    {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
     //{"duration", lua_audioduration},
     //{"remaining", lua_audioremaining},
@@ -556,6 +563,7 @@ static const luaL_Reg audio_lib[] = {
 static const luaL_Reg audio_methods[] = {
     {"play", lua_audioplay},
     {"pause", lua_audiopause},
+    {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
     //{"duration", lua_audioduration},
     //{"remaining", lua_audioremaining},

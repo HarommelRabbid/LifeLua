@@ -1338,9 +1338,7 @@ static int lua_abortphotoreview(lua_State *L){
 static int lua_vol(lua_State *L){
 	if(lua_gettop(L) >= 1){
 		int vol = luaL_checkinteger(L, 1);
-		if (vol < 0) return luaL_error(L, "Volume number must not be lower than 0");
-		else if(vol > 30) return luaL_error(L, "Volume number must not be greater than 30");
-		else sceAVConfigSetSystemVol(vol);
+		sceAVConfigSetSystemVol(CLAMP(vol, 0, 30));
 		return 0;
 	}else{
 		int vol;
