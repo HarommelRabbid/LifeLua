@@ -137,10 +137,12 @@ typedef enum {
 typedef struct {
     AudioType type;
     bool loop;
-    bool paused;
+    volatile bool paused;
     bool playing;
     int channel;
     uint64_t frames_played;
+    SceKernelLwMutexWork mutex;
+    SceKernelLwCondWork cond;
     union {
         struct {
             FILE *file;
@@ -171,6 +173,12 @@ bool audio_active = false;
 static void audio_callback(void *stream, unsigned int length, void *userdata) {
     Audio *aud = (Audio *)userdata;
     if (!aud || !audio_active) return;
+
+    sceKernelLockLwMutex(&aud->mutex, 1, NULL);
+    while (aud->paused) {
+        sceKernelWaitLwCond(&aud->cond, NULL);
+    }
+    sceKernelUnlockLwMutex(&aud->mutex, 1);
 
     int channels;
     switch (aud->type){
@@ -300,6 +308,9 @@ static int lua_audioload(lua_State *L) {
     Audio *aud = (Audio *)lua_newuserdata(L, sizeof(Audio));
     memset(aud, 0, sizeof(Audio));
     aud->channel = 0;
+    sceKernelCreateLwMutex(&aud->mutex, "LifeLua Audio Mutex", 0, 0, NULL);
+    sceKernelCreateLwCond(&aud->cond, "LifeLua Audio Condition", 0, &aud->mutex, NULL);
+    aud->paused = false;
 
     if(string_ends_with(path, ".mp3")){
         mpg123_init();
@@ -421,7 +432,14 @@ static int lua_audiostop(lua_State *L) {
 
 static int lua_audiopause(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    aud->paused = lua_toboolean(L, 1);
+    bool paused = lua_toboolean(L, 2);
+    if(paused) aud->paused = true;
+    else{
+        sceKernelLockLwMutex(&aud->mutex, 1, NULL);
+        aud->paused = false;
+        sceKernelSignalLwCond(&aud->cond);
+        sceKernelUnlockLwMutex(&aud->mutex, 1);
+    }
     return 0;
 }
 
