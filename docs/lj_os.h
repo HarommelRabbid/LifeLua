@@ -206,4 +206,13 @@ nil os․displayon() {}
  * Turns the display off
 */
 nil os․displayoff() {}
+/** 
+ * Sets or gets the volume
+ * @param vol optional, volume amount, between 0 to 30
+*/
+number or nil os․volume(number vol) {}
+/** 
+ * Mute the PS Vita
+*/
+number or nil os․mute(number vol) {}
 /** @} */

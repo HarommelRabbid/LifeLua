@@ -11,7 +11,7 @@ audio audio․load(string path) {}
 /**
  * @param loop optional
 */
-nil audio․play(audio audio, bool loop) {}
+nil audio․play(audio audio, boolean loop) {}
 /**
  * Stops audio
 */
@@ -37,11 +37,15 @@ table audio․id3v2(audio audio) {}
 */
 table audio․comment(audio audio) {}
 /**
- * Detect if audio is playing
+ * Checks if audio is playing
 */
 boolean audio․playing(audio audio) {}
 /**
+ * Checks if audio is paused
+*/
+boolean audio․paused(audio audio) {}
+/**
  * Pause audio
 */
-nil audio․pause(audio audio, bool pause) {}
+nil audio․pause(audio audio, boolean pause) {}
 /** @} */

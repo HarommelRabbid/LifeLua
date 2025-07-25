@@ -158,7 +158,7 @@ font font․default(font font) {}
  * @{
 */
 /** 
- * Loads an image, can be a .PNG, .BMP, or a .JPG/.JPEG
+ * Loads an image, can be a .PNG, .BMP, .JPG/.JPEG, .TGA, .PSD, .PIC, .PPM/.PGM & .HDR
 */
 image image․load(string path) {}
 /** 
@@ -181,6 +181,31 @@ nil image․scaledisplay(image image, number x, number y, number scale_x, number
  * @param tint optional
 */
 nil image․rotatedisplay(image image, number x, number y, number radius, color tint) {}
+/** 
+ * Displays a rotated & scaled image to the screen
+ * @param tint optional
+*/
+nil image․scalerotatedisplay(image image, number x, number y, number scale_x, number scale_y, number radius, color tint) {}
+/** 
+ * Displays a part of an image to the screen
+ * @param tint optional
+*/
+nil image․partdisplay(image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, color tint) {}
+/** 
+ * Displays a part of a scaled image to the screen
+ * @param tint optional
+*/
+nil image․scalepartdisplay(image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, color tint) {}
+/** 
+ * Displays a part of a scaled & rotated image to the screen
+ * @param tint optional
+*/
+nil image․scalerotatepartdisplay(image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, number radius, color tint) {}
+/** 
+ * Displays a part of a rotated image to the screen
+ * @param tint optional
+*/
+nil image․rotatepartdisplay(image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number radius, color tint) {}
 /** 
  * Gets width of an image
 */
@@ -206,4 +231,14 @@ image image․qr(table parameters) {}
  * Gets screen buffer as an image
 */
 image image․screen(image image) {}
+/** 
+ * Saves an image
+ * @param type: available types:
+ * * **"png"**
+ * * **"jpeg"/"jpg"**
+ * * **"bmp"**
+ * * **"tga"**
+ * * **"hdr"**
+*/
+image image․save(image image, string path, string type) {}
 /** @} */
