@@ -17,11 +17,11 @@ string json․encode(table table) {}
 /**
  * Minifies a JSON string, removes any pretty formatting.
  */
-string json.minify(string json) {}
+string json․minify(string json) {}
 /**
  * Checks if a value is null in JSON (nil in Lua and null in JSON aren't the same!)
  */
-string json.isnull(jsonnull value) {}
+string json․isnull(jsonnull value) {}
 /**
  * @return cJSON version
  */

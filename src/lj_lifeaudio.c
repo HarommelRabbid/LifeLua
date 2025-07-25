@@ -170,7 +170,27 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
     Audio *aud = (Audio *)userdata;
     if (!aud) return;
 
-    unsigned int bytes_needed = length * 4; // stereo 16-bit = 4 bytes/sample
+    int channels;
+    switch (aud->type){
+        case AUDIO_TYPE_MP3: {
+            mpg123_getformat(aud->mp3.handle, NULL, &channels, NULL);
+            break;
+        }
+        case AUDIO_TYPE_WAV: {
+            channels = aud->wav.wav.channels;
+            break;
+        }
+        case AUDIO_TYPE_OGG: {
+            channels = aud->ogg.info->channels;
+            break;
+        }
+        default: {
+            channels = 2;
+            break;
+        }
+    }
+
+    unsigned int bytes_needed = length * channels * 2; // stereo 16-bit = 4 bytes/sample
     unsigned int bytes_filled = 0;
 
     aud->playing = true;
@@ -191,7 +211,6 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     memset(dst, 0, bytes_needed - bytes_filled);
                     break;
                 }
-                break;
             }
             case AUDIO_TYPE_MP3: {
                 int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
@@ -204,7 +223,6 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     memset(dst, 0, bytes_needed - bytes_filled);
                     break;
                 }
-                break;
             }
             case AUDIO_TYPE_WAV: {
                 int bytes_per_frame = aud->wav.wav.channels * sizeof(drwav_int16);
@@ -222,12 +240,10 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                         break;
                     }
                 }
-                break;
             }
             case AUDIO_TYPE_OGG: {
                 int current_section;
                 long ret = ov_read(&aud->ogg.ogg, (char *)dst, bytes_needed - bytes_filled, 0, 2, 1, &current_section);
-
                 if (ret == 0) {
                     if (aud->loop) {
                         ov_raw_seek(&aud->ogg.ogg, 0);
@@ -239,9 +255,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                     memset(dst, 0, bytes_needed - bytes_filled);
                     break;
                 }
-
                 bytes_filled += ret;
-                break;
             }
             /*case AUDIO_TYPE_AT9: {
                 int decoded = decode_audioat9(&aud->at9.atrac, dst, bytes_needed - bytes_filled);
