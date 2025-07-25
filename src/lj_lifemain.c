@@ -51,6 +51,13 @@ void luaL_lifelua_dofile(lua_State *L){
 		vita2d_end_drawing();
     	vita2d_swap_buffers();
 		sceAppMgrSetInfobarState(SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, SCE_APPMGR_INFOBAR_COLOR_BLACK, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
+		if(audio_active){
+			vitaAudioSetChannelCallback(0, NULL, NULL);
+			vitaAudioEndPre();
+			vitaAudioEnd();
+			audio_active = false;
+		}
+		lua_gc(L, LUA_GCCOLLECT, 0);
 		error = true;
 		if (vita_port != 0) {
 			ftpvita_fini();

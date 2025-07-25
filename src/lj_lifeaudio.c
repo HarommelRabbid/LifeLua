@@ -423,10 +423,12 @@ static int lua_audioplay(lua_State *L) {
 
 static int lua_audiostop(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
-    vitaAudioEndPre();
-	vitaAudioEnd();
-    audio_active = false;
+    if(audio_active){
+        vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
+        vitaAudioEndPre();
+	    vitaAudioEnd();
+        audio_active = false;
+    }
     return 0;
 }
 
