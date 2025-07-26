@@ -21,6 +21,7 @@
 #include "include/dr_wav.h"
 #define DR_FLAC_IMPLEMENTATION
 #include "include/dr_flac.h"
+#include <opus/opusfile.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -140,12 +141,12 @@ typedef struct {
     volatile bool paused;
     bool playing;
     int channel;
-    uint64_t frames_played;
     SceKernelLwMutexWork mutex;
     SceKernelLwCondWork cond;
     union {
         struct {
             FILE *file;
+            uint64_t frames_played;
         } raw;
         struct {
             mpg123_handle *handle;
@@ -156,6 +157,7 @@ typedef struct {
         struct {
             drwav wav;
             size_t framePos;
+            drwav_uint64 frames_played;
         } wav;
         struct {
             OggVorbis_File ogg;
@@ -164,7 +166,11 @@ typedef struct {
         } ogg;
         struct {
             drflac *flac;
+            drflac_uint64 frames_played;
         } flac;
+        struct {
+            OggOpusFile *opus;
+        } opus;
     };
 } Audio;
 
@@ -194,6 +200,9 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
         case AUDIO_TYPE_FLAC:
             channels = aud->flac.flac->channels;
             break;
+        case AUDIO_TYPE_OPUS:
+            channels = op_channel_count(aud->opus.opus, -1);
+            break;
         default:
             channels = 2;
             break;
@@ -212,11 +221,12 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
             case AUDIO_TYPE_RAW: {
                 size_t read = fread(dst, 1, bytes_needed - bytes_filled, aud->raw.file);
                 bytes_filled += read;
-                aud->frames_played += read;
+                aud->raw.frames_played += read;
 
                 if (read == 0) {
                     if (aud->loop) {
                         fseek(aud->raw.file, 0, SEEK_SET);
+                        aud->raw.frames_played = 0;
                     } else {
                         stream_done = true;
                     }
@@ -226,7 +236,6 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
             case AUDIO_TYPE_MP3: {
                 int err = mpg123_read(aud->mp3.handle, dst, bytes_needed - bytes_filled, &done);
                 bytes_filled += done;
-                aud->frames_played += done;
 
                 if (err == MPG123_DONE) {
                     if (aud->loop) {
@@ -244,10 +253,12 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                 drwav_uint64 frames_read = drwav_read_pcm_frames_s16(&aud->wav.wav, (drwav_uint64)frames_to_read, (drwav_int16 *)dst);
                 int bytes_read = frames_read * bytes_per_frame;
                 bytes_filled += bytes_read;
+                aud->wav.frames_played += bytes_read;
 
                 if (frames_read == 0) {
                     if (aud->loop) {
                         drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
+                        aud->wav.frames_played = 0;
                     } else {
                         stream_done = true;
                     }
@@ -271,19 +282,38 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                 break;
             }
             case AUDIO_TYPE_FLAC: {
-                int bytes_per_frame = aud->flac.flac->channels * sizeof(drflac_int16);
+                int bytes_per_frame = channels * sizeof(drflac_int16);
                 drflac_uint64 frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
 
                 drflac_uint64 frames_read = drflac_read_pcm_frames_s16(aud->flac.flac, (drflac_uint64)frames_to_read, (drflac_int16 *)dst);
                 int bytes_read = frames_read * bytes_per_frame;
                 bytes_filled += bytes_read;
+                aud->flac.frames_played += bytes_read;
 
                 if (frames_read == 0) {
                     if (aud->loop) {
                         drflac_seek_to_pcm_frame(aud->flac.flac, 0);
+                        aud->flac.frames_played = 0;
                     } else {
                         stream_done = true;
                     }
+                }
+                break;
+            }
+            case AUDIO_TYPE_OPUS: {
+                int current_section;
+                long ret = op_read(aud->opus.opus, (opus_int16 *)dst, (bytes_needed - bytes_filled) / 2, &current_section);
+                if (ret == 0) {
+                    if (aud->loop) {
+                        op_raw_seek(aud->opus.opus, 0);
+                    } else {
+                        stream_done = true;
+                    }
+                } else if (ret < 0) {
+                    stream_done = true;
+                } else {
+                    int bytes_read = ret * channels * sizeof(opus_int16);
+                    bytes_filled += bytes_read;
                 }
                 break;
             }
@@ -341,6 +371,7 @@ static int lua_audioload(lua_State *L) {
 
         aud->type = AUDIO_TYPE_WAV;
         aud->wav.framePos = 0;
+        aud->wav.frames_played = 0;
     }else if (string_ends_with(path, ".ogg")) {
         if (ov_fopen(path, &aud->ogg.ogg) < 0) return luaL_error(L, "Failed to open OGG file");
 
@@ -352,12 +383,18 @@ static int lua_audioload(lua_State *L) {
         if(aud->flac.flac == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
 
         aud->type = AUDIO_TYPE_FLAC;
+        aud->flac.frames_played = 0;
+    }else if (string_ends_with(path, ".opus")) {
+        if ((aud->opus.opus = op_open_file(path, NULL)) == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
+
+        aud->type = AUDIO_TYPE_OPUS;
     }else{
         FILE *f = fopen(path, "rb");
         if (!f) return luaL_error(L, "Failed to open audio file");
 
         aud->type = AUDIO_TYPE_RAW;
         aud->raw.file = f;
+        aud->raw.frames_played = 0;
     }
 
     luaL_getmetatable(L, "audio");
@@ -385,6 +422,10 @@ static int lua_audioplay(lua_State *L) {
         }else if(aud->type == AUDIO_TYPE_FLAC){
             vitaAudioInit(aud->flac.flac->sampleRate, (aud->flac.flac->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }else if(aud->type == AUDIO_TYPE_OPUS){
+            // Opus always decodes at 48000 kHz
+            vitaAudioInit(48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
         }else{
             vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
@@ -397,24 +438,27 @@ static int lua_audioplay(lua_State *L) {
         switch (aud->type) {
             case AUDIO_TYPE_RAW:
                 fseek(aud->raw.file, 0, SEEK_SET);
+                aud->raw.frames_played = 0;
                 break;
             case AUDIO_TYPE_MP3:
                 mpg123_seek(aud->mp3.handle, aud->mp3.start_frame, SEEK_SET);
                 break;
             case AUDIO_TYPE_WAV:
                 drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
+                aud->wav.frames_played = 0;
                 break;
             case AUDIO_TYPE_FLAC:
                 drflac_seek_to_pcm_frame(aud->flac.flac, 0);
+                aud->flac.frames_played = 0;
                 break;
             case AUDIO_TYPE_OGG:
                 ov_raw_seek(&aud->ogg.ogg, 0);
                 break;
-
+            case AUDIO_TYPE_OPUS:
+                op_raw_seek(aud->opus.opus, 0);
+                break;
             default: break;
         }
-
-        aud->frames_played = 0;
     }
 
     vitaAudioSetChannelCallback(aud->channel, audio_callback, aud);
@@ -457,18 +501,38 @@ static int lua_audiopaused(lua_State *L) {
     return 1;
 }
 
-/*static int lua_audioduration(lua_State *L) {
+static int lua_audioduration(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
 
-    if (aud->type == AUDIO_TYPE_MP3) {
-        if (aud->mp3.sample_rate > 0 && aud->total_frames > 0)
-            lua_pushnumber(L, (double)aud->total_frames / aud->mp3.sample_rate);
-        else
-            lua_pushnil(L);  // unknown duration
-    } else if (aud->type == AUDIO_TYPE_WAV) {
-        lua_pushnumber(L, (double)aud->total_frames / aud->wav.sample_rate);
-    } else {
-        lua_pushnil(L);
+    switch(aud->type){
+        case AUDIO_TYPE_MP3: {
+            off_t length = mpg123_length(aud->mp3.handle);
+            long rate;
+            mpg123_getformat(aud->mp3.handle, &rate, NULL, NULL);
+            lua_pushnumber(L, (double)length / rate);
+            break;
+        }
+        case AUDIO_TYPE_WAV: {
+            lua_pushnumber(L, (double)aud->wav.wav.totalPCMFrameCount / aud->wav.wav.sampleRate);
+            break;
+        }
+        case AUDIO_TYPE_OGG: {
+            lua_pushnumber(L, ov_time_total(&aud->ogg.ogg, -1));
+            break;
+        }
+        case AUDIO_TYPE_FLAC: {
+            lua_pushnumber(L, (double)aud->flac.flac->totalPCMFrameCount / aud->flac.flac->sampleRate);
+            break;
+        }
+        case AUDIO_TYPE_OPUS: {
+            ogg_int64_t total = op_pcm_total(aud->opus.opus, -1);
+            const OpusHead *head = op_head(aud->opus.opus, -1);
+            lua_pushnumber(L, (double)total / head->input_sample_rate);
+            break;
+        }
+        default:
+            lua_pushnil(L);
+            break;
     }
 
     return 1;
@@ -476,14 +540,42 @@ static int lua_audiopaused(lua_State *L) {
 
 static int lua_audioremaining(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
-    if(aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle) {
-        long rate;
-        mpg123_getformat(aud->mp3.handle, &rate, NULL, NULL);
-        lua_pushnumber(L, (aud->mp3.start_frame / rate));
+    switch(aud->type){
+        case AUDIO_TYPE_MP3: {
+            off_t remaining = mpg123_tell(aud->mp3.handle);
+            long rate;
+            mpg123_getformat(aud->mp3.handle, &rate, NULL, NULL);
+            lua_pushnumber(L, (double)remaining / rate);
+            break;
+        }
+        case AUDIO_TYPE_WAV: {
+            lua_pushnumber(L, (double)aud->wav.frames_played / aud->wav.wav.sampleRate);
+            break;
+        }
+        case AUDIO_TYPE_OGG: {
+            lua_pushnumber(L, ov_time_tell(&aud->ogg.ogg));
+            break;
+        }
+        case AUDIO_TYPE_FLAC: {
+            lua_pushnumber(L, (double)aud->flac.frames_played / aud->flac.flac->sampleRate);
+            break;
+        }
+        case AUDIO_TYPE_OPUS: {
+            ogg_int64_t remaining = op_pcm_tell(aud->opus.opus);
+            const OpusHead *head = op_head(aud->opus.opus, -1);
+            lua_pushnumber(L, (double)remaining / head->input_sample_rate);
+            break;
+        }
+        case AUDIO_TYPE_RAW: {
+            lua_pushnumber(L, (double)aud->raw.frames_played / 48000); // hardcoded samplerate for raw
+            break;
+        }
+        default:
+            lua_pushnil(L);
+            break;
     }
-    else lua_pushnil(L);
     return 1;
-}*/
+}
 
 static int lua_audiogc(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
@@ -492,6 +584,7 @@ static int lua_audiogc(lua_State *L) {
     else if (aud->type == AUDIO_TYPE_WAV) drwav_uninit(&aud->wav.wav);
     else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
+    else if (aud->type == AUDIO_TYPE_OPUS) op_free(aud->opus.opus);
     return 0;
 }
 
@@ -547,17 +640,47 @@ static int lua_comment(lua_State *L){
     return 1;
 }
 
+static int lua_tags(lua_State *L){
+    Audio *audio = (Audio *)luaL_checkudata(L, 1, "audio");
+    if(audio->type == AUDIO_TYPE_OPUS){
+        const OpusTags *tags = op_tags(audio->opus.opus, 0);
+        lua_pushstring(L, opus_tags_query(tags, "title", 0)); lua_setfield(L, -2, "title");
+        lua_pushstring(L, opus_tags_query(tags, "album", 0)); lua_setfield(L, -2, "album");
+        lua_pushstring(L, opus_tags_query(tags, "artist", 0)); lua_setfield(L, -2, "artist");
+        lua_pushstring(L, opus_tags_query(tags, "date", 0)); lua_setfield(L, -2, "date");
+        lua_pushstring(L, opus_tags_query(tags, "comment", 0)); lua_setfield(L, -2, "comment");
+        lua_pushstring(L, opus_tags_query(tags, "genre", 0)); lua_setfield(L, -2, "genre");
+        Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+        OpusPictureTag picture_tag = {0};
+        opus_picture_tag_init(&picture_tag);
+		const char* metadata_block = opus_tags_query(tags, "METADATA_BLOCK_PICTURE", 0);
+        int error = opus_picture_tag_parse(&picture_tag, metadata_block);
+		if (error == 0) {
+			if (picture_tag.type == 3) {
+				if (picture_tag.format == OP_PIC_FORMAT_JPEG) image->tex = vita2d_load_JPEG_buffer(picture_tag.data, picture_tag.data_length);
+				else if (picture_tag.format == OP_PIC_FORMAT_PNG) image->tex = vita2d_load_PNG_buffer(picture_tag.data);
+			}
+		}
+        luaL_getmetatable(L, "image");
+        lua_setmetatable(L, -2);
+        lua_setfield(L, -2, "image");
+		opus_picture_tag_clear(&picture_tag);
+    }else lua_pushnil(L);
+    return 1;
+}
+
 static const luaL_Reg audio_lib[] = {
     {"load", lua_audioload},
     {"play", lua_audioplay},
     {"pause", lua_audiopause},
     {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
-    //{"duration", lua_audioduration},
-    //{"remaining", lua_audioremaining},
+    {"duration", lua_audioduration},
+    {"remaining", lua_audioremaining},
     {"id3v1", lua_id3v1},
     {"id3v2", lua_id3v2},
     {"comment", lua_comment},
+    {"tags", lua_tags},
     {"stop", lua_audiostop},
     {NULL, NULL}
 };
@@ -567,11 +690,12 @@ static const luaL_Reg audio_methods[] = {
     {"pause", lua_audiopause},
     {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
-    //{"duration", lua_audioduration},
-    //{"remaining", lua_audioremaining},
+    {"duration", lua_audioduration},
+    {"remaining", lua_audioremaining},
     {"id3v1", lua_id3v1},
     {"id3v2", lua_id3v2},
     {"comment", lua_comment},
+    {"tags", lua_tags},
     {"stop", lua_audiostop},
     {"__gc", lua_audiogc},
     {NULL, NULL}

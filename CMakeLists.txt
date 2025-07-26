@@ -142,6 +142,7 @@ target_link_libraries(${PROJECT_NAME}
     freetype
     mpg123
     opusfile
+    opusurl
     opus
     vorbisfile
     vorbis
