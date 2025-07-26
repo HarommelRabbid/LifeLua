@@ -157,6 +157,10 @@ font font․default(font font) {}
  * @brief Image library
  * @{
 */
+SceGxmTextureFilter SCE_GXM_TEXTURE_FILTER_POINT;
+SceGxmTextureFilter SCE_GXM_TEXTURE_FILTER_LINEAR;
+SceGxmTextureFilter SCE_GXM_TEXTURE_FILTER_MIPMAP_LINEAR;
+SceGxmTextureFilter SCE_GXM_TEXTURE_FILTER_MIPMAP_POINT;
 /** 
  * Loads an image, can be a .PNG, .BMP, .JPG/.JPEG, .TGA, .PSD, .PIC, .PPM/.PGM & .HDR
 */
@@ -240,5 +244,9 @@ image image․screen(image image) {}
  * * **"tga"**
  * * **"hdr"**
 */
-image image․save(image image, string path, string type) {}
+nil image․save(image image, string path, string type) {}
+/** 
+ * Add filters to an image
+*/
+nil image․filter(image image, SceGxmTextureFilter min, SceGxmTextureFilter mag) {}
 /** @} */
