@@ -85,6 +85,7 @@ Color *lua_tocolor(lua_State *L, int n);
 LUALIB_API int luaL_opentimer(lua_State *L);
 LUALIB_API int luaL_extendio(lua_State *L);
 LUALIB_API int luaL_extendos(lua_State *L);
+LUALIB_API int luaL_extendstring(lua_State *L);
 LUALIB_API int luaL_opennetwork(lua_State *L);
 LUALIB_API int luaL_opencontrols(lua_State *L);
 LUALIB_API int luaL_opensqlite3(lua_State *L);

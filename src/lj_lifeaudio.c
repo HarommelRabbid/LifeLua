@@ -282,8 +282,8 @@ static void audio_callback(void *stream, unsigned int length, void *userdata) {
                 break;
             }
             case AUDIO_TYPE_FLAC: {
-                int bytes_per_frame = channels * sizeof(drflac_int16);
-                drflac_uint64 frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
+                int bytes_per_frame = aud->flac.flac->channels * sizeof(drflac_int16);
+                int frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
 
                 drflac_uint64 frames_read = drflac_read_pcm_frames_s16(aud->flac.flac, (drflac_uint64)frames_to_read, (drflac_int16 *)dst);
                 int bytes_read = frames_read * bytes_per_frame;
@@ -465,6 +465,46 @@ static int lua_audioplay(lua_State *L) {
     return 0;
 }
 
+static int lua_audioseek(lua_State *L) {
+    Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
+    double seconds = luaL_checknumber(L, 2);
+
+    switch (aud->type) {
+        case AUDIO_TYPE_RAW: {
+            fseek(aud->raw.file, seconds * 48000, SEEK_SET); // hardcoded sample rate unfortunately
+            aud->raw.frames_played = seconds * 48000;
+            break;
+        }
+        case AUDIO_TYPE_MP3: {
+            long rate;
+            mpg123_getformat(aud->mp3.handle, &rate, NULL, NULL);
+            mpg123_seek(aud->mp3.handle, seconds * rate, SEEK_SET);
+            break;
+        }
+        case AUDIO_TYPE_WAV: {
+            drwav_seek_to_pcm_frame(&aud->wav.wav, (drwav_uint64)seconds * aud->wav.wav.sampleRate);
+            aud->wav.frames_played = (drwav_uint64)seconds * aud->wav.wav.sampleRate;
+            break;
+        }
+        case AUDIO_TYPE_FLAC: {
+            drflac_seek_to_pcm_frame(aud->flac.flac, (drflac_uint64)seconds * aud->flac.flac->sampleRate);
+            aud->flac.frames_played = (drflac_uint64)seconds * aud->flac.flac->sampleRate;
+            break;
+        }
+        case AUDIO_TYPE_OGG: {
+            ov_time_seek(&aud->ogg.ogg, seconds);
+            break;
+        }
+        case AUDIO_TYPE_OPUS: {
+            op_raw_seek(aud->opus.opus, (opus_int64)seconds * 48000);
+            break;
+        }
+        default: break;
+    }
+
+    return 0;
+}
+
 static int lua_audiostop(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
     if(audio_active){
@@ -538,14 +578,14 @@ static int lua_audioduration(lua_State *L) {
     return 1;
 }
 
-static int lua_audioremaining(lua_State *L) {
+static int lua_audioelapsed(lua_State *L) {
     Audio *aud = (Audio *)luaL_checkudata(L, 1, "audio");
     switch(aud->type){
         case AUDIO_TYPE_MP3: {
-            off_t remaining = mpg123_tell(aud->mp3.handle);
+            off_t elapsed = mpg123_tell(aud->mp3.handle);
             long rate;
             mpg123_getformat(aud->mp3.handle, &rate, NULL, NULL);
-            lua_pushnumber(L, (double)remaining / rate);
+            lua_pushnumber(L, (double)elapsed / rate);
             break;
         }
         case AUDIO_TYPE_WAV: {
@@ -561,9 +601,9 @@ static int lua_audioremaining(lua_State *L) {
             break;
         }
         case AUDIO_TYPE_OPUS: {
-            ogg_int64_t remaining = op_pcm_tell(aud->opus.opus);
+            ogg_int64_t elapsed = op_pcm_tell(aud->opus.opus);
             const OpusHead *head = op_head(aud->opus.opus, -1);
-            lua_pushnumber(L, (double)remaining / head->input_sample_rate);
+            lua_pushnumber(L, (double)elapsed / head->input_sample_rate);
             break;
         }
         case AUDIO_TYPE_RAW: {
@@ -676,7 +716,8 @@ static const luaL_Reg audio_lib[] = {
     {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
     {"duration", lua_audioduration},
-    {"remaining", lua_audioremaining},
+    {"elapsed", lua_audioelapsed},
+    {"seek", lua_audioseek},
     {"id3v1", lua_id3v1},
     {"id3v2", lua_id3v2},
     {"comment", lua_comment},
@@ -691,7 +732,8 @@ static const luaL_Reg audio_methods[] = {
     {"paused", lua_audiopaused},
     {"playing", lua_audioplaying},
     {"duration", lua_audioduration},
-    {"remaining", lua_audioremaining},
+    {"elapsed", lua_audioelapsed},
+    {"seek", lua_audioseek},
     {"id3v1", lua_id3v1},
     {"id3v2", lua_id3v2},
     {"comment", lua_comment},

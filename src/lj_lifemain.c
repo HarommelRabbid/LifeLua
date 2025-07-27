@@ -223,6 +223,7 @@ int main(){
 	luaL_openlibs(L);
 	luaL_openutf8(L);
 	luaL_extendos(L);
+	luaL_extendstring(L);
 	luaL_opendraw(L);
 	luaL_opencolor(L);
 	luaL_opencontrols(L);

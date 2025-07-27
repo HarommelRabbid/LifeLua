@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifecamera.c
   src/lj_lifethread.c
   src/lj_lifejson.c
+  src/lj_lifestring.c
   #src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
   #src/lj_lifevideo.c
