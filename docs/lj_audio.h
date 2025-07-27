@@ -37,6 +37,10 @@ table audio․id3v2(audio audio) {}
 */
 table audio․comment(audio audio) {}
 /**
+ * Gets tags of an .OPUS. (only works on .OPUS files!)
+*/
+table audio․tags(audio audio) {}
+/**
  * Checks if audio is playing
 */
 boolean audio․playing(audio audio) {}
@@ -48,4 +52,12 @@ boolean audio․paused(audio audio) {}
  * Pause audio
 */
 nil audio․pause(audio audio, boolean pause) {}
+/**
+ * Audio duration in seconds
+*/
+number audio․duration(audio audio) {}
+/**
+ * Elapsed time of audio in seconds
+*/
+number audio․elapsed(audio audio) {}
 /** @} */
