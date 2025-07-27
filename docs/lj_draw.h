@@ -131,7 +131,7 @@ color color․mix(color color1, color color2, number p1, number p2) {}
 /** 
  * Converts an integer (e. g. 0xFFFF0000) to a color
 */
-color tocolor(color color1, color color2, number p1, number p2) {}
+color tocolor(number color) {}
 /** @} */
 
 /**
