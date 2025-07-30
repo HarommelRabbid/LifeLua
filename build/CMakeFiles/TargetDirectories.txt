@@ -1,6 +1,0 @@
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/LifeLua.dir
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/LifeLua-velf.dir
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/eboot.bin-self.dir
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/LifeLua.vpk-vpk.dir
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/edit_cache.dir
-/Users/felix/Documents/vita-my-love/LifeLua/build/CMakeFiles/rebuild_cache.dir
