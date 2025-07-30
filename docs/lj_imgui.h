@@ -21,6 +21,22 @@ nil imgui․renderinit() {}
  */
 nil imgui․renderterm() {}
 /**
+ * Show the ImGui debug window
+ */
+nil imgui․metrics() {}
+/**
+ * Sets ImGui's theme to dark
+ */
+nil imgui․darktheme() {}
+/**
+ * Sets ImGui's theme to light
+ */
+nil imgui․lighttheme() {}
+/**
+ * Sets ImGui's theme to the classic one
+ */
+nil imgui․classictheme() {}
+/**
  * Draws text
  */
 nil imgui․text(string text) {}
