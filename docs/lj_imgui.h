@@ -1,15 +1,9 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup imgui imgui
  * @todo add functions
  * @brief ImGui library
  * @{
 */
-<<<<<<< HEAD
-=======
 /**
  * Initializes ImGui
  */
@@ -30,5 +24,4 @@ nil imgui․renderterm() {}
  * Draws text
  */
 nil imgui․text(string text) {}
->>>>>>> 3308273 (Initial commit)
 /** @} */
