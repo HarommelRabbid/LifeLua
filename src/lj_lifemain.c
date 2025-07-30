@@ -235,9 +235,10 @@ int main(){
 	luaL_opensqlite3(L);
 	luaL_opencamera(L);
 	luaL_openthread(L);
-	//luaL_openimgui(L);
+	luaL_openimgui(L);
 	luaL_openjson(L);
 	luaL_openaudio(L);
+	luaL_openvideo(L);
 	luaL_extend(L);
 	
 	vita2d_start_drawing();

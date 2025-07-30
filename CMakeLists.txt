@@ -66,9 +66,9 @@ add_executable(${PROJECT_NAME}
   src/lj_lifethread.c
   src/lj_lifejson.c
   src/lj_lifestring.c
-  #src/lj_lifeimgui.c++
+  src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
-  #src/lj_lifevideo.c
+  src/lj_lifevideo.c
   src/ext/lutf8lib.c
   src/include/ftpvita.c
   src/include/sha1.c
@@ -126,6 +126,10 @@ target_link_libraries(${PROJECT_NAME}
     ScePower_stub
     SceAudio_stub
     SceAtrac_stub
+    SceAudiodec_stub
+    SceAvcodec_stub
+    SceVideodec_stub
+    SceAvPlayer_stub
     SceHid_stub
     SceUdcd_stub
     SceAVConfig_stub

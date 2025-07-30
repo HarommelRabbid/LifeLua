@@ -176,7 +176,7 @@ typedef struct {
 
 bool audio_active = false;
 
-static void audio_callback(void *stream, unsigned int length, void *userdata) {
+static void audio_callback(void *stream, unsigned int length, void *userdata){
     Audio *aud = (Audio *)userdata;
     if (!aud || !audio_active) return;
 
