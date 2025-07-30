@@ -1,8 +1,4 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup os os
  * @todo Add the rest of the functions & variables
  * @brief Lua OS library extension

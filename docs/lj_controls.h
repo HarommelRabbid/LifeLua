@@ -1,8 +1,4 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup controls controls
  * Controls, touch & motion
  * @brief Controls, touch & motion

@@ -1,21 +1,8 @@
 /**
-<<<<<<< HEAD
-@author Harommel OddSock
-@brief Main page for the LifeLua documentation
-@file
-*/
-
-/**
-@mainpage LifeLua Documentation
-@todo Expand this page and finish documenting the libraries
-
-This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. Since this is an interpreter, you don't need any compilation, you only have to create and modify Lua files.
-=======
 @mainpage LifeLua Documentation
 @todo Expand this page and finish documenting the libraries
 
 This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a great way to start developing homebrew in Lua for the PS Vita.
->>>>>>> 3308273 (Initial commit)
 
 ## Custom userdata ##
 LifeLua has custom userdata to represent multiple data types. These include:
@@ -30,13 +17,9 @@ LifeLua has custom userdata to represent multiple data types. These include:
 * * video
 * * model
 
-<<<<<<< HEAD
-It has a lot of customizability and also a lot of useful features. The documentation is incomplete, so for features not documented here yet, look into the source code or the samples.
-=======
 The documentation is incomplete, so for features not documented here yet, look into the source code or the samples.
 
 To benefit from the latest features added in development, you can compile LifeLua from the source. (nightly will be available soon)
->>>>>>> 3308273 (Initial commit)
 
 Any other Lua function &/or library that isn't documented here is documented in any [documentation](https://www.lua.org/manual/) of Lua.
 
@@ -56,9 +39,6 @@ Source code: https://github.com/HarommelRabbid/LifeLua\n
 /**
  * @example HelloWorld.lua
  * @example Controls.lua
-<<<<<<< HEAD
-=======
  * @example SFO.lua
  * @example ImGui.lua
->>>>>>> 3308273 (Initial commit)
 */

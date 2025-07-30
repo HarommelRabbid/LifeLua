@@ -1,8 +1,4 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup audio audio
  * @brief Audio library
  * @{

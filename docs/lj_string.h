@@ -1,8 +1,4 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup string string
  * Method calling will work on all of the functions listed here, just like other Lua string functions (e. g. `(""):startswith` & `(""):endswith`)
  * @brief Lua string library extension

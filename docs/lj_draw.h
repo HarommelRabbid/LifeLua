@@ -1,8 +1,4 @@
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup draw draw
  * Uses vita2d
  * @brief Drawing library

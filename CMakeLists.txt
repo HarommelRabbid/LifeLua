@@ -74,9 +74,6 @@ add_executable(${PROJECT_NAME}
   src/include/sha1.c
   src/include/md5.c
   src/include/makeheadbin.c
-  src/include/ioapi.c
-  src/include/zip.c
-  src/include/unzip.c
   src/include/qrcodegen.c
   src/include/cJSON.c
   src/include/sha256.c
@@ -136,8 +133,9 @@ target_link_libraries(${PROJECT_NAME}
     SceSqlite_stub
     luajit-5.1
     dl
-    taihen_stub
     SceSblSsMgr_stub
+    taihen_stub
+    archive
     png
     jpeg
     imagequant
