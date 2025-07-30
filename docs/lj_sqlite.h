@@ -1,5 +1,8 @@
 /**
+<<<<<<< HEAD
  * @file
+=======
+>>>>>>> 3308273 (Initial commit)
  * @defgroup sqlite3 sqlite3
  * Method calling will work on most of the functions here (e. g. `sqlite3:query` & `sqlite3:close`)
  * @brief SQLite3 functions

@@ -94,6 +94,42 @@ static int lua_classictheme(lua_State *L){
     ImGui::StyleColorsClassic();
     return 0;
 }
+/*
+static int lua_userguide(lua_State *L){
+    ImGui::ShowUserGuide();
+    return 0;
+}
+
+static int lua_about(lua_State *L){
+    ImGui::ShowAboutWindow();
+    return 0;
+}
+
+static int lua_demo(lua_State *L){
+    ImGui::ShowDemoWindow();
+    return 0;
+}
+*/
+static int lua_metrics(lua_State *L){
+    ImGui::ShowMetricsWindow();
+    return 0;
+}
+/*
+static int lua_styleeditor(lua_State *L){
+    ImGui::ShowStyleEditor();
+    return 0;
+}
+
+static int lua_stylesel(lua_State *L){
+    const char *label = luaL_checkstring(L, 1);
+    ImGui::ShowStyleSelector(label);
+    return 0;
+}
+*/
+static int lua_ver(lua_State *L){
+    lua_pushstring(L, ImGui::GetVersion());
+    return 1;
+}
 
 static int lua_menubarbegin(lua_State *L) {
 	lua_pushboolean(L, ImGui::BeginMainMenuBar());
@@ -360,6 +396,13 @@ static const luaL_Reg imgui_lib[] = {
     {"progressbar", lua_progressbar},
     {"itemwidth", lua_itemwidth},
     {"resetitemwidth", lua_itemwidthr},
+    //{"userguide", lua_userguide},
+    //{"about", lua_about},
+    //{"demo", lua_demo},
+    {"metrics", lua_metrics},
+    //{"stylesel", lua_stylesel},
+    //{"styleeditor", lua_styleeditor},
+    {"version", lua_ver},
     {NULL, NULL}
 };
 

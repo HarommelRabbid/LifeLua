@@ -1,5 +1,8 @@
 /**
+<<<<<<< HEAD
  * @file
+=======
+>>>>>>> 3308273 (Initial commit)
  * @defgroup math math
  * @brief Lua math library extension
  * @{
