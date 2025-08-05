@@ -119,35 +119,70 @@ Functions</h2></td></tr>
 <tr class="separator:gaa0a73ec8433f53441e75e0b0288ad008"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadeb26556ff1c896e6539496ecf2ef05f" id="r_gadeb26556ff1c896e6539496ecf2ef05f"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadeb26556ff1c896e6539496ecf2ef05f">video.stop</a> (video video)</td></tr>
 <tr class="separator:gadeb26556ff1c896e6539496ecf2ef05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga55a513ad5d50ee86bec4ec30e1bf580d" id="r_ga55a513ad5d50ee86bec4ec30e1bf580d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga55a513ad5d50ee86bec4ec30e1bf580d">video.close</a> (video video)</td></tr>
+<tr class="separator:ga55a513ad5d50ee86bec4ec30e1bf580d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad8934b5a855292ede22601559ce0f172" id="r_gad8934b5a855292ede22601559ce0f172"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad8934b5a855292ede22601559ce0f172">video.pause</a> (video video, bool pause)</td></tr>
 <tr class="separator:gad8934b5a855292ede22601559ce0f172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga489f019a1c7d5e5e079fdb3624b45ce6" id="r_ga489f019a1c7d5e5e079fdb3624b45ce6"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga489f019a1c7d5e5e079fdb3624b45ce6">video.fastforward</a> (video video, number seconds)</td></tr>
-<tr class="separator:ga489f019a1c7d5e5e079fdb3624b45ce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5ebcba25fd354c43b9a8d51514d5aa4d" id="r_ga5ebcba25fd354c43b9a8d51514d5aa4d"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ebcba25fd354c43b9a8d51514d5aa4d">video.rewind</a> (video video, number seconds)</td></tr>
-<tr class="separator:ga5ebcba25fd354c43b9a8d51514d5aa4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa02b576bda6057f651ab898c60b5071c" id="r_gaa02b576bda6057f651ab898c60b5071c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa02b576bda6057f651ab898c60b5071c">video.seek</a> (video video, number seconds)</td></tr>
+<tr class="separator:gaa02b576bda6057f651ab898c60b5071c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3f26226e5d40eeafa0e8feabfbba8c86" id="r_ga3f26226e5d40eeafa0e8feabfbba8c86"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3f26226e5d40eeafa0e8feabfbba8c86">video.elapsed</a> (video video)</td></tr>
+<tr class="separator:ga3f26226e5d40eeafa0e8feabfbba8c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad16b591b5134417da6c35ebefc891e88" id="r_gad16b591b5134417da6c35ebefc891e88"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad16b591b5134417da6c35ebefc891e88">video.active</a> (video video)</td></tr>
+<tr class="separator:gad16b591b5134417da6c35ebefc891e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo</a></b></dt><dd>Library doesn't exist yet in LifeLua, this is purely a concept only </dd></dl>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga489f019a1c7d5e5e079fdb3624b45ce6" name="ga489f019a1c7d5e5e079fdb3624b45ce6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga489f019a1c7d5e5e079fdb3624b45ce6">&#9670;&#160;</a></span>video.fastforward()</h2>
+<a id="gad16b591b5134417da6c35ebefc891e88" name="gad16b591b5134417da6c35ebefc891e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad16b591b5134417da6c35ebefc891e88">&#9670;&#160;</a></span>video.active()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">image video.fastforward </td>
+          <td class="memname">boolean video.active </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Fast forward by set seconds </p>
+<p>Checks if the video player is active or not </p>
+
+</div>
+</div>
+<a id="ga55a513ad5d50ee86bec4ec30e1bf580d" name="ga55a513ad5d50ee86bec4ec30e1bf580d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga55a513ad5d50ee86bec4ec30e1bf580d">&#9670;&#160;</a></span>video.close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil video.close </td>
+          <td>(</td>
+          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Closes the video player </p>
+
+</div>
+</div>
+<a id="ga3f26226e5d40eeafa0e8feabfbba8c86" name="ga3f26226e5d40eeafa0e8feabfbba8c86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3f26226e5d40eeafa0e8feabfbba8c86">&#9670;&#160;</a></span>video.elapsed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">number video.elapsed </td>
+          <td>(</td>
+          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets elapsed time of the video </p>
 
 </div>
 </div>
@@ -227,14 +262,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga5ebcba25fd354c43b9a8d51514d5aa4d" name="ga5ebcba25fd354c43b9a8d51514d5aa4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5ebcba25fd354c43b9a8d51514d5aa4d">&#9670;&#160;</a></span>video.rewind()</h2>
+<a id="gaa02b576bda6057f651ab898c60b5071c" name="gaa02b576bda6057f651ab898c60b5071c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa02b576bda6057f651ab898c60b5071c">&#9670;&#160;</a></span>video.seek()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">image video.rewind </td>
+          <td class="memname">nil video.seek </td>
           <td>(</td>
           <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span>, </td>
         </tr>
@@ -245,7 +280,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Rewind by set seconds </p>
+<p>Go to a part of the video (in seconds) </p>
 
 </div>
 </div>
