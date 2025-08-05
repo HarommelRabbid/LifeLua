@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifecamera.c
   src/lj_lifethread.c
   src/lj_lifejson.c
+  src/lj_lifetoml.c
   src/lj_lifestring.c
   src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
@@ -78,6 +79,7 @@ add_executable(${PROJECT_NAME}
   src/include/sha256.c
   src/include/vitaaudiolib.c
   src/include/libtimer.c
+  src/include/tomlc17.c
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.

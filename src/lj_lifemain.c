@@ -237,6 +237,7 @@ int main(){
 	luaL_openthread(L);
 	luaL_openimgui(L);
 	luaL_openjson(L);
+	luaL_opentoml(L);
 	luaL_openaudio(L);
 	luaL_openvideo(L);
 	luaL_extend(L);

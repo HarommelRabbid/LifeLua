@@ -98,6 +98,7 @@ LUALIB_API int luaL_opencamera(lua_State *L);
 LUALIB_API int luaL_openthread(lua_State *L);
 LUALIB_API int luaL_openimgui(lua_State *L);
 LUALIB_API int luaL_openjson(lua_State *L);
+LUALIB_API int luaL_opentoml(lua_State *L);
 LUALIB_API int luaL_openutf8(lua_State *L);
 LUALIB_API int luaL_openaudio(lua_State *L);
 LUALIB_API int luaL_openvideo(lua_State *L);
