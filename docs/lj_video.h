@@ -20,15 +20,15 @@ image video․output(video video) {}
  */
 nil video․stop(video video) {}
 /**
+ * Closes the video player
+ */
+nil video․close(video video) {}
+/**
  * Pauses a video
  */
 nil video․pause(video video, bool pause) {}
 /**
- * Fast forward by set seconds
+ * Go to a part of the video (in seconds)
  */
-image video․fastforward(video video, number seconds) {}
-/**
- * Rewind by set seconds
- */
-image video․rewind(video video, number seconds) {}
+nil video․seek(video video, number seconds) {}
 /** @} */
