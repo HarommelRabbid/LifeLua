@@ -1,6 +1,5 @@
 /**
  * @defgroup video video
- * @todo Library doesn't exist yet in LifeLua, this is purely a concept only
  * @brief Video library
  * @{
 */
