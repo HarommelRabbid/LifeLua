@@ -51,7 +51,7 @@ static int lua_imageload(lua_State *L) {
 		}else if(magic == 0x4238 || (magic == 0x3F23 || stbi_is_hdr(filename)) || magic == 0x3550 || magic == 0x8053 || string_ends_with(filename, ".tga")){ //PSD, TGA, HDR, PIC & PNM
 			int w, h, comp;
 			uint8_t *img = stbi_load(filename, &w, &h, &comp, STBI_rgb_alpha);
-			if(!img){stbi_image_free(img); lua_pushnil(L); return 1;}
+			if(!img) return lua_pushnil(L), 1;
 			image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
 			uint32_t *tex_ptr = vita2d_texture_get_datap(image->tex);
     		int stride = vita2d_texture_get_stride(image->tex) / 4;
@@ -67,14 +67,9 @@ static int lua_imageload(lua_State *L) {
         		}
     		}
 			stbi_image_free(img);
-		}else{
-			lua_pushnil(L);
-			//return luaL_error(L, "Image file type isn't accepted (must be a .png, .jpeg/.jpg, or a .bmp)");
 		}
-	}else{
-		lua_pushnil(L);
 	}
-    if (!image->tex) /*return luaL_error(L, "Failed to load image: %s", filename)*/lua_pushnil(L);
+    if (!image->tex) return lua_pushnil(L), 1;
     
     luaL_getmetatable(L, "image");
     lua_setmetatable(L, -2);

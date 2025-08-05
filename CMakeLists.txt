@@ -70,7 +70,6 @@ add_executable(${PROJECT_NAME}
   src/lj_lifeaudio.c
   src/lj_lifevideo.c
   src/ext/lutf8lib.c
-  src/include/ftpvita.c
   src/include/sha1.c
   src/include/md5.c
   src/include/makeheadbin.c
@@ -134,6 +133,7 @@ target_link_libraries(${PROJECT_NAME}
     luajit-5.1
     dl
     SceSblSsMgr_stub
+    ftpvita
     taihen_stub
     archive
     png

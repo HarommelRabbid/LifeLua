@@ -18,7 +18,7 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
-#include "include/ftpvita.h"
+#include <ftpvita.h>
 #include "include/vitaaudiolib.h"
 
 #include "lj_lifeinit.h"
