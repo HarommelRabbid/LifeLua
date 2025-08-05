@@ -193,7 +193,7 @@ static int lua_seek(lua_State *L){
 	if(!video_ready) return luaL_error(L, "Video isn't initialized");
 	uint64_t offset = luaL_checknumber(L, 1); // in seconds
 	sceAvPlayerJumpToTime(avplayer, offset*1000);
-	if(offset*1000 < sceAvPlayerCurrentTime(avplayer)) sceKernelDelayThread(100000); // We let sceAvPlayer actually rewind the video before resuming main thread
+	if(offset*1000 < sceAvPlayerCurrentTime(avplayer)) sceKernelDelayThread(100000);
 	return 0;
 }
 

@@ -664,7 +664,7 @@ static int lua_info(lua_State *L){
         push_datetime(L, &stat.st_atime); lua_setfield(L, -2, "accessed");
         push_datetime(L, &stat.st_mtime); lua_setfield(L, -2, "modified");
         push_datetime(L, &stat.st_ctime); lua_setfield(L, -2, "created");
-        lua_pushboolean(L, SCE_S_ISDIR(stat)); lua_setfield(L, -2, "isafolder");
+        lua_pushboolean(L, SCE_S_ISDIR(stat.st_mode)); lua_setfield(L, -2, "isafolder");
         lua_pushnumber(L, stat.st_size); lua_setfield(L, -2, "size");
     }
 	else lua_pushnil(L);
