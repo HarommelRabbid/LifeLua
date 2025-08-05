@@ -873,6 +873,7 @@ static int lua_runningapps(lua_State *L){
 	}
 	return 1;
 }
+
 static int lua_ischarging(lua_State *L){
 	lua_pushboolean(L, scePowerIsBatteryCharging());
 	return 1;
