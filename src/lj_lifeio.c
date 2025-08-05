@@ -655,6 +655,22 @@ static int lua_create(lua_State *L) {
     return 1;
 }
 
+static int lua_info(lua_State *L){
+    const char *path = luaL_checkstring(L, 1);
+    SceIoStat stat;
+	int res = sceIoGetstat(path, &stat);
+	if(res >= 0){
+        lua_newtable(L);
+        push_datetime(L, &stat.st_atime); lua_setfield(L, -2, "accessed");
+        push_datetime(L, &stat.st_mtime); lua_setfield(L, -2, "modified");
+        push_datetime(L, &stat.st_ctime); lua_setfield(L, -2, "created");
+        lua_pushboolean(L, SCE_S_ISDIR(stat)); lua_setfield(L, -2, "isafolder");
+        lua_pushnumber(L, stat.st_size); lua_setfield(L, -2, "size");
+    }
+	else lua_pushnil(L);
+    return 1;
+}
+
 static const luaL_Reg io_lib[] = {
 	{"readsfo", lua_readsfo},
 	{"editsfo", lua_editsfo},
@@ -673,6 +689,7 @@ static const luaL_Reg io_lib[] = {
     {"fullspace", lua_totalspace},
     {"extract", lua_extract},
     {"archive", lua_create},
+    {"info", lua_info},
     {NULL, NULL}
 };
 

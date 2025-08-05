@@ -200,6 +200,7 @@ static int lua_seek(lua_State *L){
 static int lua_videoclose(lua_State *L){
 	if(!video_ready) return luaL_error(L, "Video isn't initialized");
 	sceAvPlayerClose(avplayer);
+	vita2d_wait_rendering_done();
 	vita2d_free_texture(videobuf);
 	video_ready = false;
 	return 0;
