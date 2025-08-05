@@ -31,4 +31,12 @@ nil video․pause(video video, bool pause) {}
  * Go to a part of the video (in seconds)
  */
 nil video․seek(video video, number seconds) {}
+/**
+ * Gets elapsed time of the video
+ */
+number video․elapsed(video video) {}
+/**
+ * Checks if the video player is active or not
+ */
+boolean video․active(video video) {}
 /** @} */
