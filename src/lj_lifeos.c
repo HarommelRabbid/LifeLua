@@ -930,20 +930,20 @@ static int lua_isbatterylow(lua_State *L){
 }
 
 static int lua_tick(lua_State *L){
-	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
-	sceKernelPowerTick((SceKernelPowerTickType)tick);
+	SceKernelPowerTickType tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerTick(tick);
 	return 0;
 }
 
 static int lua_powerlock(lua_State *L){
-	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
-	sceKernelPowerLock((SceKernelPowerTickType)tick);
+	SceKernelPowerTickType tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerLock(tick);
 	return 0;
 }
 
 static int lua_powerunlock(lua_State *L){
-	int tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
-	sceKernelPowerUnlock((SceKernelPowerTickType)tick);
+	SceKernelPowerTickType tick = luaL_optinteger(L, 1, SCE_KERNEL_POWER_TICK_DEFAULT);
+	sceKernelPowerUnlock(tick);
 	return 0;
 }
 
@@ -1653,7 +1653,7 @@ static const luaL_Reg os_lib[] = {
     {"screenshotnotification", lua_screenshotnotif},
     {"screenshotcapture", lua_screenshotcapture},
 	{"unmountmountpoint", lua_mountpointunmount},
-	{"getsystemevent", lua_systemevent},
+	{"systemevent", lua_systemevent},
 	{"importphoto", lua_importphoto},
 	{"abortphotoimport", lua_photodialogabort},
     {"importvideo", lua_importvideo},
