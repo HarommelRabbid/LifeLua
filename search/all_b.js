@@ -69,12 +69,12 @@ var searchData=
   ['sce_5fcamera_5fwb_5fcwf_66',['SCE_CAMERA_WB_CWF',['../group__camera.html#gaa16e1f915933f711cf402f74ac8557a0',1,'lj_camera.h']]],
   ['sce_5fcamera_5fwb_5fday_67',['SCE_CAMERA_WB_DAY',['../group__camera.html#ga01d2a3869687ecb6db1727443fdfe44a',1,'lj_camera.h']]],
   ['sce_5fcamera_5fwb_5fslsa_68',['SCE_CAMERA_WB_SLSA',['../group__camera.html#ga83d00fbe6c23cf73fe02cd86cade74cb',1,'lj_camera.h']]],
-  ['sqlite3․close_69',['sqlite3․close',['../group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34',1,'lj_sqlite.h']]],
-  ['sqlite3․open_70',['sqlite3․open',['../group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0',1,'lj_sqlite.h']]],
-  ['sqlite3․query_71',['sqlite3․query',['../group__sqlite3.html#gaf0bd5796fb171044c217e1271af0e1de',1,'lj_sqlite.h']]],
+  ['sqlite3.close_69',['sqlite3.close',['../group__sqlite3.html#gaab70791ebec5752c5605b6a8f911be34',1,'lj_sqlite.h']]],
+  ['sqlite3.open_70',['sqlite3.open',['../group__sqlite3.html#ga73ecbcf17ba031f524567d9ecdae0bc0',1,'lj_sqlite.h']]],
+  ['sqlite3.query_71',['sqlite3.query',['../group__sqlite3.html#gaf0bd5796fb171044c217e1271af0e1de',1,'lj_sqlite.h']]],
   ['sqlite3_72',['sqlite3',['../group__sqlite3.html',1,'']]],
-  ['string․endswith_73',['string․endswith',['../group__string.html#gae6ff241fbce86ad29b787fd3302de972',1,'lj_string.h']]],
-  ['string․split_74',['string․split',['../group__string.html#ga1d4c654311746d249f758433309f8528',1,'lj_string.h']]],
-  ['string․startswith_75',['string․startswith',['../group__string.html#ga9def8093696c30816ee61f8129961c85',1,'lj_string.h']]],
+  ['string.endswith_73',['string.endswith',['../group__string.html#gae6ff241fbce86ad29b787fd3302de972',1,'lj_string.h']]],
+  ['string.split_74',['string.split',['../group__string.html#ga1d4c654311746d249f758433309f8528',1,'lj_string.h']]],
+  ['string.startswith_75',['string.startswith',['../group__string.html#ga9def8093696c30816ee61f8129961c85',1,'lj_string.h']]],
   ['string_76',['string',['../group__string.html',1,'']]]
 ];
