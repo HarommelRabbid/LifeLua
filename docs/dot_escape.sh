@@ -1,13 +1,11 @@
-find html/ -type f -name "*.html" -exec sed -i '' 's/\(․\)/./g' {} +
-find html/ -type f -name "*.js" -exec sed -i '' 's/\(․\)/./g' {} +
-find html/ -type f -name "*.css" -exec sed -i '' 's/\(․\)/./g' {} +
-find html/ -type f -name "*.html" -exec sed -i '' 's/\(․\)/./g' {} +
-find html/ -type f -name "*.js" -exec sed -i '' 's/\(․\)/./g' {} +
-find html/ -type f -name "*.css" -exec sed -i '' 's/\(․\)/./g' {} +
+DIR="../ll_docs"
+
+find $DIR -type f -name "*.html" -exec sed -i '' 's/\(․\)/./g' {} +
+find $DIR -type f -name "*.js" -exec sed -i '' 's/\(․\)/./g' {} +
+find $DIR -type f -name "*.css" -exec sed -i '' 's/\(․\)/./g' {} +
 
 OLD="․"
 NEW="."
-DIR="html"
 
 for filepath in "$DIR"/*"$OLD"*; do
   [ -e "$filepath" ] || continue
