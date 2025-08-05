@@ -12,12 +12,12 @@ For a showcase of LifeLua's features go to the repository's `sample` folder.
 mkdir build && cd build && cmake .. && make
 ```
 ## To do
-* Audio (ATRAC9 & 3 aswell!) & libmpv video support
+* ATRAC9 & 3 audio support & libmpv video support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches and gradient lines
 * Adhoc support, and maybe PSN support as well
 * SHA512 support
-* Fix the timer and thread functions
+* Fix the thread functions
 * USB support maybe
 ## Credits
 * HENkaku by Team Molecule
@@ -29,6 +29,8 @@ mkdir build && cd build && cmake .. && make
 * libvita2d & ftpvita by xerpi
 * Inspiration from [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by [Rinnegatamante](https://github.com/Rinnegatamante)
 * [luautf8](https://github.com/starwing/luautf8) by [starwing](https://github.com/starwing)
+<!--
 * [Compound Assignment Operators](http://lua-users.org/files/wiki_insecure/power_patches/5.2/compound-5.2.2.patch) (Lua diff patch) by [SvenOlsen](http://lua-users.org/wiki/SvenOlsen)
 * [Bitwise operators, integer division and !=](http://lua-users.org/files/wiki_insecure/power_patches/5.1/bitwise_operators_5.1.4_1.patch) by Thierry Grellier, darkmist(at)mail.ru & Joshua Simmons
 * [Continue Statement](https://lua-users.org/files/wiki_insecure/power_patches/5.1/continue-5.1.3.patch) by Leszek Buczkowski, Wolfgang Oertl & [AskoKauppi](https://lua-users.org/wiki/AskoKauppi)
+-->
