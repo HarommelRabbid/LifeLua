@@ -15,5 +15,7 @@ var searchData=
   ['timer.stop_12',['timer.stop',['../group__timer.html#ga730c4d2241924cde8795e20584ac4531',1,'lj_timer.h']]],
   ['timer_13',['timer',['../group__timer.html',1,'']]],
   ['tocolor_14',['tocolor',['../group__color.html#gafa84a40332bd023b59171a20f8386023',1,'lj_draw.h']]],
-  ['todo_20list_15',['Todo List',['../todo.html',1,'']]]
+  ['todo_20list_15',['Todo List',['../todo.html',1,'']]],
+  ['toml.parse_16',['toml.parse',['../group__toml.html#ga9628840de2cd0f765be51097cd4716dd',1,'lj_json.h']]],
+  ['toml_17',['toml',['../group__toml.html',1,'']]]
 ];

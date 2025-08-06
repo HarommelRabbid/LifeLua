@@ -11,5 +11,6 @@ var searchData=
   ['timer.set_8',['timer.set',['../group__timer.html#ga262b3f8a8364194460e657ba079827db',1,'lj_timer.h']]],
   ['timer.start_9',['timer.start',['../group__timer.html#gaaf4d82637a2374d321230556ee5b8a62',1,'lj_timer.h']]],
   ['timer.stop_10',['timer.stop',['../group__timer.html#ga730c4d2241924cde8795e20584ac4531',1,'lj_timer.h']]],
-  ['tocolor_11',['tocolor',['../group__color.html#gafa84a40332bd023b59171a20f8386023',1,'lj_draw.h']]]
+  ['tocolor_11',['tocolor',['../group__color.html#gafa84a40332bd023b59171a20f8386023',1,'lj_draw.h']]],
+  ['toml.parse_12',['toml.parse',['../group__toml.html#ga9628840de2cd0f765be51097cd4716dd',1,'lj_json.h']]]
 ];

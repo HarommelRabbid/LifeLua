@@ -11,6 +11,7 @@ var topics =
     [ "imgui", "group__imgui.html", "group__imgui" ],
     [ "io", "group__io.html", "group__io" ],
     [ "json", "group__json.html", "group__json" ],
+    [ "toml", "group__toml.html", "group__toml" ],
     [ "math", "group__math.html", "group__math" ],
     [ "network", "group__network.html", "group__network" ],
     [ "os", "group__os.html", "group__os" ],
