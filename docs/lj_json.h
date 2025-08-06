@@ -20,9 +20,19 @@ string json․minify(string json) {}
 /**
  * Checks if a value is null in JSON (nil in Lua and null in JSON aren't the same!)
  */
-string json․isnull(jsonnull value) {}
+boolean json․isnull(jsonnull value) {}
 /**
  * @return cJSON version
  */
-table json․version(string json) {}
+string json․version(string json) {}
+/** @} */
+/**
+ * @defgroup toml toml
+ * @brief TOML library
+ * @{
+*/
+/**
+ * Parses a TOML file to a table
+ */
+table toml․parse(string path) {}
 /** @} */

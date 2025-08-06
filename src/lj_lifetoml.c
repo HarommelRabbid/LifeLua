@@ -20,6 +20,7 @@
 #include <taihen.h>
 #include <vita2d.h>
 #include "include/tomlc17.h"
+#include "include/asprintf.h"
 
 #include "lj_lifeinit.h"
 
@@ -68,19 +69,19 @@ static void push_toml_datum(lua_State *L, toml_datum_t datum) {
         case TOML_DATETIME:
         case TOML_DATETIMETZ: {
             // Convert to ISO 8601 string
-            char buf[64];
+            char *buf;
             int y = datum.u.ts.year, mo = datum.u.ts.month, d = datum.u.ts.day;
             int h = datum.u.ts.hour, mi = datum.u.ts.minute, s = datum.u.ts.second;
             int us = datum.u.ts.usec;
             int tz = datum.u.ts.tz;
 
             if (datum.type == TOML_DATE) {
-                snprintf(buf, sizeof(buf), "%04d-%02d-%02d", y, mo, d);
+                asprintf(&buf, "%04d-%02d-%02d", y, mo, d);
             } else if (datum.type == TOML_TIME) {
-                snprintf(buf, sizeof(buf), "%02d:%02d:%02d.%06d", h, mi, s, us);
+                asprintf(&buf, "%02d:%02d:%02d.%06d", h, mi, s, us);
             } else { // datetime or datetimetz
                 if (tz == 0x8000) { // no tz info
-                    snprintf(buf, sizeof(buf), "%04d-%02d-%02dT%02d:%02d:%02d.%06d", y, mo, d, h, mi, s, us);
+                    asprintf(&buf, "%04d-%02d-%02dT%02d:%02d:%02d.%06d", y, mo, d, h, mi, s, us);
                 } else {
                     int tz_h = tz / 60;
                     int tz_m = tz % 60;
@@ -89,11 +90,12 @@ static void push_toml_datum(lua_State *L, toml_datum_t datum) {
                         tz_h = -tz_h;
                         tz_m = -tz_m;
                     }
-                    snprintf(buf, sizeof(buf), "%04d-%02d-%02dT%02d:%02d:%02d.%06d%c%02d:%02d",
+                    asprintf(&buf, "%04d-%02d-%02dT%02d:%02d:%02d.%06d%c%02d:%02d",
                         y, mo, d, h, mi, s, us, sign, tz_h, tz_m);
                 }
             }
             lua_pushstring(L, buf);
+            free(buf);
             break;
         }
         default:
