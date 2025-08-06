@@ -18,7 +18,7 @@
 #define UTF8_BUFFSZ 8
 #define UTF8_MAX    0x7FFFFFFFu
 #define UTF8_MAXCP  0x10FFFFu
-#define iscont(p)   ((*(p) & 0xC0) == 0x80)
+#define iscontp(p)    ((*(p) & 0xC0) == 0x80)
 #define CAST(tp,expr) ((tp)(expr))
 
 #ifndef LUA_QL
@@ -30,7 +30,7 @@ static int utf8_invalid (utfint ch)
 
 static size_t utf8_encode (char *buff, utfint x) {
   int n = 1;  /* number of bytes put in buffer (backwards) */
-  lua_assert(x <= UTF8_MAX);
+  assert(x <= UTF8_MAX);
   if (x < 0x80)  /* ascii? */
     buff[UTF8_BUFFSZ - 1] = x & 0x7F;
   else {  /* need continuation bytes */
@@ -75,12 +75,12 @@ static const char *utf8_decode (const char *s, utfint *val, int strict) {
 }
 
 static const char *utf8_prev (const char *s, const char *e) {
-  while (s < e && iscont(e - 1)) --e;
+  while (s < e && iscontp(e - 1)) --e;
   return s < e ? e - 1 : s;
 }
 
 static const char *utf8_next (const char *s, const char *e) {
-  while (s < e && iscont(s + 1)) ++s;
+  while (s < e && iscontp(s + 1)) ++s;
   return s < e ? s + 1 : e;
 }
 
@@ -494,9 +494,9 @@ static void string_to_nfc (lua_State *L, luaL_Buffer *buff, const char *s, const
    * If it is, we memcpy the bytes verbatim into the output buffer. If it is not, then we
    * convert the codepoints to NFC and then emit those codepoints as UTF-8 bytes. */
 
-  utfint starter = -1, ch; /* 'starter' is last starter codepoint seen */
+  utfint starter = (utfint)-1, ch; /* 'starter' is last starter codepoint seen */
   const char *to_copy = s; /* pointer to next bytes we might need to memcpy into output buffer */
-  unsigned int prev_canon_cls = 0, canon_cls = 0;
+  unsigned int prev_canon_cls = 0;
   int fixedup = 0; /* has the sequence currently under consideration been modified to make it NFC? */
 
   /* Temporary storage for a sequence of consecutive combining marks
@@ -627,7 +627,7 @@ process_combining_marks:
         if (fixedup) {
           /* The preceding starter/combining mark sequence was bad; convert fixed-up codepoints
            * to UTF-8 bytes */
-          if (starter != -1)
+          if (starter != (utfint)-1)
             add_utf8char(buff, starter);
           for (unsigned int i = 0; i < vec_size; i++)
             add_utf8char(buff, vector[i] >> 8);
@@ -644,7 +644,7 @@ process_combining_marks:
         }
         vec_size = 0; /* Clear vector of combining marks in readiness for next such sequence */
         fixedup = 0;
-      } else if (starter != -1) {
+      } else if (starter != (utfint)-1) {
         /* This starter was preceded immediately by another starter
          * Check if this one should combine with it */
         fixedup = 0;
@@ -726,7 +726,7 @@ process_combining_marks:
 
   if (vec_size)
     goto process_combining_marks; /* Finish processing trailing combining marks */
-  if (starter != -1)
+  if (starter != (utfint)-1)
     add_utf8char(buff, starter);
 
   if (vector != onstack)
@@ -1091,7 +1091,7 @@ static int push_offset (lua_State *L, const char *s, const char *e, lua_Integer 
   const char *p;
   if (idx != 0)
     p = utf8_offset(s, e, offset, idx);
-  else if (p = s+offset-1, iscont(p))
+  else if (p = s+offset-1, iscontp(p))
     p = utf8_prev(s, p);
   if (p == NULL || p == e) return 0;
   utf8_decode(p, &ch, 0);
@@ -1124,15 +1124,15 @@ static int Lutf8_offset (lua_State *L) {
                    "position out of range");
   if (n == 0) {
     /* find beginning of current byte sequence */
-    while (posi > 0 && iscont(s + posi)) posi--;
+    while (posi > 0 && iscontp(s + posi)) posi--;
   } else {
-    if (iscont(s + posi))
+    if (iscontp(s + posi))
       return luaL_error(L, "initial position is a continuation byte");
     if (n < 0) {
        while (n < 0 && posi > 0) {  /* move back */
          do {  /* find beginning of previous character */
            posi--;
-         } while (posi > 0 && iscont(s + posi));
+         } while (posi > 0 && iscontp(s + posi));
          n++;
        }
      } else {
@@ -1140,16 +1140,21 @@ static int Lutf8_offset (lua_State *L) {
        while (n > 0 && posi < (lua_Integer)len) {
          do {  /* find beginning of next character */
            posi++;
-         } while (iscont(s + posi));  /* (cannot pass final '\0') */
+         } while (iscontp(s + posi));  /* (cannot pass final '\0') */
          n--;
        }
      }
   }
-  if (n == 0)  /* did it find given character? */
-    lua_pushinteger(L, posi + 1);
-  else  /* no such character */
-    lua_pushnil(L);
-  return 1;
+  if (n != 0) return lua_pushnil(L), 1;
+  lua_pushinteger(L, posi + 1);
+  if ((s[posi] & 0x80) != 0) {
+    do {
+      posi++;
+    } while (iscontp(s + posi + 1));
+  }
+  /* else one-byte character: final position is the initial one */
+  lua_pushinteger(L, posi + 1);  /* 'posi' now is the final position */
+  return 2;
 }
 
 static int Lutf8_next (lua_State *L) {
@@ -1665,7 +1670,7 @@ static int find_aux (lua_State *L, int find) {
     const char *s2 = lmemfind(init, es-init, p, ep-p);
     if (s2) {
       const char *e2 = s2 + (ep - p);
-      if (iscont(e2)) e2 = utf8_next(e2, es);
+      if (iscontp(e2)) e2 = utf8_next(e2, es);
       lua_pushinteger(L, idx = get_index(s2, s, es) + 1);
       lua_pushinteger(L, idx + get_index(e2, s2, es) - 1);
       return 2;
@@ -2148,9 +2153,10 @@ next_iteration: ;
 
 static int Lutf8_grapheme_indices(lua_State *L) {
   size_t len;
-  const char *s = luaL_checklstring(L, 1, &len);
-  lua_Integer start = byte_relat(luaL_optinteger(L, 2, 1), len);
-  lua_Integer end = byte_relat(luaL_optinteger(L, 3, len), len);
+  lua_Integer start, end;
+  luaL_checklstring(L, 1, &len);
+  start = byte_relat(luaL_optinteger(L, 2, 1), len);
+  end = byte_relat(luaL_optinteger(L, 3, len), len);
   luaL_argcheck(L, start >= 1, 2, "out of range");
   luaL_argcheck(L, end <= (lua_Integer)len, 3, "out of range");
 
