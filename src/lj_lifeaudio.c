@@ -22,6 +22,7 @@
 #define DR_FLAC_IMPLEMENTATION
 #include "include/dr_flac.h"
 #include <opus/opusfile.h>
+#include <xmp.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -62,6 +63,7 @@ typedef enum {
     AUDIO_TYPE_OGG,
     AUDIO_TYPE_FLAC,
     AUDIO_TYPE_OPUS,
+    AUDIO_TYPE_XM,
     AUDIO_TYPE_AT9,
     AUDIO_TYPE_AT3
 } AudioType;
@@ -102,6 +104,11 @@ typedef struct {
         struct {
             OggOpusFile *opus;
         } opus;
+        struct {
+            xmp_context ctx;
+            struct xmp_frame_info frame_info;
+            struct xmp_module_info module_info;
+        } xmp;
     };
 } Audio;
 
@@ -248,6 +255,20 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
                 }
                 break;
             }
+            case AUDIO_TYPE_XM: {
+                if (xmp_start_player(aud->xmp.ctx, 48000, 0) == 0) {
+                    xmp_get_module_info(aud->xmp.ctx, &aud->xmp.module_info);
+                    sceClibPrintf("%s (%s)\n", aud->xmp.module_info.mod->name, aud->xmp.module_info.mod->type);
+
+                    if(xmp_play_frame(aud->xmp.ctx) == 0){
+                        xmp_get_frame_info(aud->xmp.ctx, &aud->xmp.frame_info);
+                        if (fi.loop_count > 0) stream_done = true;
+                    }
+                    xmp_end_player(aud->xmp.ctx);
+                }
+                xmp_release_module(aud->xmp.ctx);
+                break;
+            }
             default:
                 stream_done = true;
                 break;
@@ -320,12 +341,18 @@ static int lua_audioload(lua_State *L) {
 
         aud->type = AUDIO_TYPE_OPUS;
     }else{
-        FILE *f = fopen(path, "rb");
-        if (!f) return luaL_error(L, "Failed to open audio file");
+        aud->xmp.ctx = xmp_create_context();
+        if(!(xmp_load_module(aud->xmp.ctx, path) < 0)){
+            aud->type = AUDIO_TYPE_XM;
+        }else{
+            xmp_free_context(aud->xmp.ctx);
+            FILE *f = fopen(path, "rb");
+            if (!f) return luaL_error(L, "Failed to open audio file");
 
-        aud->type = AUDIO_TYPE_RAW;
-        aud->raw.file = f;
-        aud->raw.frames_played = 0;
+            aud->type = AUDIO_TYPE_RAW;
+            aud->raw.file = f;
+            aud->raw.frames_played = 0;
+        }
     }
 
     luaL_getmetatable(L, "audio");
@@ -357,6 +384,10 @@ static int lua_audioplay(lua_State *L) {
             // Opus always decodes at 48000 kHz
             vitaAudioInit(48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+        }else if(aud->type == AUDIO_TYPE_XM){
+            vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+            xmp_start_player(aud->xmp.ctx, 48000, 0);
         }else{
             vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
@@ -556,6 +587,7 @@ static int lua_audiogc(lua_State *L) {
     else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
     else if (aud->type == AUDIO_TYPE_OPUS) op_free(aud->opus.opus);
+    else if (aud->type == AUDIO_TYPE_XM) xmp_free_context(aud->xmp.ctx);
     return 0;
 }
 
