@@ -1,5 +1,6 @@
 # LifeLua
 LifeLua is a Lua interpreter for the PSVita which combines ease (OneLua) with advanceability (Lua Player Plus).
+<img src="bg0.png"></img>
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
 ## Samples
