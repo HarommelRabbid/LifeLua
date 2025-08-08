@@ -181,7 +181,6 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
-	sceSysmoduleLoadModule(SCE_SYSMODULE_JSON);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_MUSIC_EXPORT);
     sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
     sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
@@ -274,7 +273,6 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SHUTTER_SOUND);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
-	sceSysmoduleUnloadModule(SCE_SYSMODULE_JSON);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_PHOTO_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
     sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
