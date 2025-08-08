@@ -504,6 +504,26 @@ static int lua_clipcircle(lua_State *L){
 	return 0;
 }
 
+static int lua_gradientline(lua_State *L) {
+    float x0 = luaL_checknumber(L, 1);
+    float y0 = luaL_checknumber(L, 2);
+    float x1 = luaL_checknumber(L, 3);
+    float y1 = luaL_checknumber(L, 4);
+    Color *color = lua_tocolor(L, 5);
+    Color *color1 = lua_tocolor(L, 6);
+
+    // Allocate two vertices for the line
+    vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        2 * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+    vertices[0] = (vita2d_color_vertex){x0, y0, 0.5f, color->color};
+    vertices[1] = (vita2d_color_vertex){x1, y1, 0.5f, color1->color};
+
+    // Draw the line with the vertex array so colors interpolate
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_LINES, vertices, 2);
+    return 0;
+}
+
 static const luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -517,6 +537,7 @@ static const luaL_Reg draw_lib[] = {
 	{"gradientrect", lua_gradient},
 	{"hdoublegradientrect", lua_hdoublegradient},
 	{"vdoublegradientrect", lua_vdoublegradient},
+	{"gradientline", lua_gradientline},
 	{"enableclip", lua_enableclip},
 	{"cliprect", lua_cliprect},
 	{"clipcircle", lua_clipcircle},
