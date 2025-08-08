@@ -96,7 +96,16 @@ typedef struct {
             ogg_int64_t total_frames;
         } ogg;
         struct {
-            FLAC__StreamDecoder *flac;
+            FLAC__StreamDecoder *decoder;
+            bool metadata_parsed;
+            uint32_t sampleRate;
+            uint8_t channels;
+            uint8_t bps;
+            uint64_t totalSamples;
+            int16_t *decode_buffer;
+            size_t decode_buffer_capacity;
+            size_t decode_buffer_offset;
+            size_t decode_buffer_samples;
         } flac;
         struct {
             OggOpusFile *opus;
@@ -105,6 +114,58 @@ typedef struct {
 } Audio;
 
 bool audio_active = false;
+
+static void flac_metadata_callback(const FLAC__StreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data) {
+    Audio *aud = (Audio *)client_data;
+    if (metadata->type == FLAC__METADATA_TYPE_STREAMINFO) {
+        aud->flac.sampleRate = metadata->data.stream_info.sample_rate;
+        aud->flac.channels = metadata->data.stream_info.channels;
+        aud->flac.bps = metadata->data.stream_info.bits_per_sample;
+        aud->flac.totalSamples = metadata->data.stream_info.total_samples;
+        aud->flac.metadata_parsed = true;
+    }
+}
+
+static FLAC__StreamDecoderWriteStatus flac_write_callback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 * const buffer[], void *client_data) {
+    Audio *aud = (Audio *)client_data;
+    const size_t samples_in_frame = frame->header.blocksize;
+    const size_t total_interleaved_samples = samples_in_frame * aud->flac.channels;
+
+    // Ensure our decode buffer is large enough for the entire frame
+    if (total_interleaved_samples > aud->flac.decode_buffer_capacity) {
+        free(aud->flac.decode_buffer);
+        aud->flac.decode_buffer = malloc(total_interleaved_samples * sizeof(int16_t));
+        if (!aud->flac.decode_buffer) {
+            return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
+        }
+        aud->flac.decode_buffer_capacity = total_interleaved_samples;
+    }
+
+    // Reset buffer state for the new frame
+    aud->flac.decode_buffer_offset = 0;
+    aud->flac.decode_buffer_samples = samples_in_frame;
+
+    int16_t *out_ptr = aud->flac.decode_buffer;
+
+    // Interleave and convert the full frame into our intermediate buffer
+    for (size_t i = 0; i < samples_in_frame; i++) {
+        for (uint8_t c = 0; c < aud->flac.channels; c++) {
+            FLAC__int32 pSample = buffer[c][i];
+            // Scale sample to 16-bit
+            if (aud->flac.bps > 16) {
+                *out_ptr++ = (int16_t)(pSample >> (aud->flac.bps - 16));
+            } else {
+                *out_ptr++ = (int16_t)(pSample << (16 - aud->flac.bps));
+            }
+        }
+    }
+
+    return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
+}
+
+static void flac_error_callback(const FLAC__StreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data) {
+    //sceClibPrintf(stderr, "FLAC decoding error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
+}
 
 static void audio_callback(void *stream, unsigned int length, void *userdata){
     Audio *aud = (Audio *)userdata;
@@ -127,9 +188,9 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
         case AUDIO_TYPE_OGG:
             channels = aud->ogg.info->channels;
             break;
-        /*case AUDIO_TYPE_FLAC:
-            channels = aud->flac.flac->channels;
-            break;*/
+        case AUDIO_TYPE_FLAC:
+            channels = aud->flac.channels;
+            break;
         case AUDIO_TYPE_OPUS:
             channels = op_channel_count(aud->opus.opus, -1);
             break;
@@ -211,10 +272,52 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
                 }
                 break;
             }
-            /*case AUDIO_TYPE_FLAC: {
-                
+            case AUDIO_TYPE_FLAC: {
+                size_t bytes_per_sample_frame = aud->flac.channels * sizeof(int16_t);
+                size_t samples_to_fill = (bytes_needed - bytes_filled) / bytes_per_sample_frame;
+                size_t samples_filled = 0;
+
+                while (samples_filled < samples_to_fill) {
+                    size_t samples_in_buffer = aud->flac.decode_buffer_samples - aud->flac.decode_buffer_offset;
+
+                    // If our buffer is empty, decode a new frame.
+                    if (samples_in_buffer == 0) {
+                        if (FLAC__stream_decoder_get_state(aud->flac.decoder) == FLAC__STREAM_DECODER_END_OF_STREAM) {
+                            if (aud->loop) {
+                                FLAC__stream_decoder_seek_absolute(aud->flac.decoder, 0);
+                            } else {
+                                stream_done = true;
+                                break;
+                            }
+                        }
+                        
+                        // This calls flac_write_callback, which will fill our intermediate buffer
+                        if (!FLAC__stream_decoder_process_single(aud->flac.decoder)) {
+                            stream_done = true;
+                            break; 
+                        }
+                        // Loop again to re-check samples_in_buffer with the new data
+                        continue;
+                    }
+
+                    size_t samples_to_copy = samples_to_fill - samples_filled;
+                    if (samples_to_copy > samples_in_buffer) {
+                        samples_to_copy = samples_in_buffer;
+                    }
+
+                    // Copy from our buffer to the hardware stream buffer
+                    memcpy(dst, 
+                           aud->flac.decode_buffer + (aud->flac.decode_buffer_offset * aud->flac.channels),
+                           samples_to_copy * bytes_per_sample_frame);
+
+                    dst += samples_to_copy * bytes_per_sample_frame;
+                    aud->flac.decode_buffer_offset += samples_to_copy;
+                    samples_filled += samples_to_copy;
+                }
+
+                bytes_filled += samples_filled * bytes_per_sample_frame;
                 break;
-            }*/
+            }
             case AUDIO_TYPE_OPUS: {
                 int current_section;
                 long ret = op_read(aud->opus.opus, (opus_int16 *)dst, (bytes_needed - bytes_filled) / 2, &current_section);
@@ -293,14 +396,50 @@ static int lua_audioload(lua_State *L) {
         aud->ogg.info = ov_info(&aud->ogg.ogg, -1);
         aud->ogg.total_frames = ov_pcm_total(&aud->ogg.ogg, -1);
         aud->type = AUDIO_TYPE_OGG;
-    /*}else if (string_ends_with(path, ".flac")) {
-        aud->flac.flac = drflac_open_file(path, NULL);
-        if(aud->flac.flac == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
-
+    }else if (string_ends_with(path, ".flac")) {
         aud->type = AUDIO_TYPE_FLAC;
-        aud->flac.frames_played = 0;*/
+        aud->flac.decoder = FLAC__stream_decoder_new();
+        if (aud->flac.decoder == NULL) {
+            return luaL_error(L, "Failed to create FLAC decoder instance");
+        }
+
+        aud->flac.metadata_parsed = false;
+        
+        FLAC__stream_decoder_set_md5_checking(aud->flac.decoder, false);
+        FLAC__stream_decoder_set_metadata_ignore_all(aud->flac.decoder);
+        FLAC__stream_decoder_set_metadata_respond(aud->flac.decoder, FLAC__METADATA_TYPE_STREAMINFO);
+        
+        FLAC__StreamDecoderInitStatus init_status = FLAC__stream_decoder_init_file(
+            aud->flac.decoder, path, flac_write_callback, 
+            flac_metadata_callback, flac_error_callback, aud
+        );
+
+        if (init_status != FLAC__STREAM_DECODER_INIT_STATUS_OK) {
+            FLAC__stream_decoder_delete(aud->flac.decoder);
+            aud->flac.decoder = NULL;
+            return luaL_error(L, "Failed to initialize FLAC decoder: %s", FLAC__StreamDecoderInitStatusString[init_status]);
+        }
+
+        if (!FLAC__stream_decoder_process_until_end_of_metadata(aud->flac.decoder)) {
+            FLAC__stream_decoder_finish(aud->flac.decoder);
+            FLAC__stream_decoder_delete(aud->flac.decoder);
+            aud->flac.decoder = NULL;
+            return luaL_error(L, "Failed to process .FLAC metadata");
+        }
+    
+        aud->flac.decode_buffer = NULL;
+        aud->flac.decode_buffer_capacity = 0;
+        aud->flac.decode_buffer_offset = 0;
+        aud->flac.decode_buffer_samples = 0;
+
+        if (!aud->flac.metadata_parsed) {
+            FLAC__stream_decoder_finish(aud->flac.decoder);
+            FLAC__stream_decoder_delete(aud->flac.decoder);
+            aud->flac.decoder = NULL;
+            return luaL_error(L, "STREAMINFO block not found in .FLAC");
+        }
     }else if (string_ends_with(path, ".opus")) {
-        if ((aud->opus.opus = op_open_file(path, NULL)) == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
+        if ((aud->opus.opus = op_open_file(path, NULL)) == NULL) return luaL_error(L, "Failed to load OPUS file: %s", path);
 
         aud->type = AUDIO_TYPE_OPUS;
     }else{
@@ -334,9 +473,9 @@ static int lua_audioplay(lua_State *L) {
         }else if(aud->type == AUDIO_TYPE_OGG){
             vitaAudioInit(aud->ogg.info->rate, (aud->ogg.info->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-        /*}else if(aud->type == AUDIO_TYPE_FLAC){
-            vitaAudioInit(aud->flac.flac->sampleRate, (aud->flac.flac->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
-            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);*/
+        }else if(aud->type == AUDIO_TYPE_FLAC){
+            vitaAudioInit(aud->flac.sampleRate, (aud->flac.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
         }else if(aud->type == AUDIO_TYPE_OPUS){
             // Opus always decodes at 48000 kHz
             vitaAudioInit(48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
@@ -362,10 +501,9 @@ static int lua_audioplay(lua_State *L) {
                 drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
                 aud->wav.frames_played = 0;
                 break;
-            /*case AUDIO_TYPE_FLAC:
-                drflac_seek_to_pcm_frame(aud->flac.flac, 0);
-                aud->flac.frames_played = 0;
-                break;*/
+            case AUDIO_TYPE_FLAC:
+                FLAC__stream_decoder_seek_absolute(aud->flac.decoder, 0);
+                break;
             case AUDIO_TYPE_OGG:
                 ov_raw_seek(&aud->ogg.ogg, 0);
                 break;
@@ -401,11 +539,14 @@ static int lua_audioseek(lua_State *L) {
             aud->wav.frames_played = (drwav_uint64)seconds * aud->wav.wav.sampleRate;
             break;
         }
-        /*case AUDIO_TYPE_FLAC: {
-            drflac_seek_to_pcm_frame(aud->flac.flac, (drflac_uint64)seconds * aud->flac.flac->sampleRate);
-            aud->flac.frames_played = (drflac_uint64)seconds * aud->flac.flac->sampleRate;
+        case AUDIO_TYPE_FLAC: {
+            uint64_t target_sample = (uint64_t)(seconds * aud->flac.sampleRate);
+            if (target_sample > aud->flac.totalSamples) {
+                target_sample = aud->flac.totalSamples;
+            }
+            FLAC__stream_decoder_seek_absolute(aud->flac.decoder, target_sample);
             break;
-        }*/
+        }
         case AUDIO_TYPE_OGG: {
             ov_time_seek(&aud->ogg.ogg, seconds);
             break;
@@ -425,7 +566,7 @@ static int lua_audiostop(lua_State *L) {
     if(audio_active){
         vitaAudioSetChannelCallback(aud->channel, NULL, NULL);
         vitaAudioEndPre();
-	    vitaAudioEnd();
+        vitaAudioEnd();
         audio_active = false;
     }
     return 0;
@@ -475,10 +616,14 @@ static int lua_audioduration(lua_State *L) {
             lua_pushnumber(L, ov_time_total(&aud->ogg.ogg, -1));
             break;
         }
-        /*case AUDIO_TYPE_FLAC: {
-            lua_pushnumber(L, (double)aud->flac.flac->totalPCMFrameCount / aud->flac.flac->sampleRate);
+        case AUDIO_TYPE_FLAC: {
+            if (aud->flac.sampleRate > 0) {
+                lua_pushnumber(L, (double)aud->flac.totalSamples / aud->flac.sampleRate);
+            } else {
+                lua_pushnil(L);
+            }
             break;
-        }*/
+        }
         case AUDIO_TYPE_OPUS: {
             ogg_int64_t total = op_pcm_total(aud->opus.opus, -1);
             const OpusHead *head = op_head(aud->opus.opus, -1);
@@ -511,10 +656,16 @@ static int lua_audioelapsed(lua_State *L) {
             lua_pushnumber(L, ov_time_tell(&aud->ogg.ogg));
             break;
         }
-        /*case AUDIO_TYPE_FLAC: {
-            lua_pushnumber(L, (double)aud->flac.frames_played / aud->flac.flac->sampleRate);
+        case AUDIO_TYPE_FLAC: {
+            uint64_t current_sample;
+            FLAC__stream_decoder_get_decode_position(aud->flac.decoder, &current_sample);
+            if (aud->flac.sampleRate > 0) {
+                lua_pushnumber(L, (double)current_sample / aud->flac.sampleRate);
+            } else {
+                lua_pushnil(L);
+            }
             break;
-        }*/
+        }
         case AUDIO_TYPE_OPUS: {
             ogg_int64_t elapsed = op_pcm_tell(aud->opus.opus);
             const OpusHead *head = op_head(aud->opus.opus, -1);
@@ -522,7 +673,7 @@ static int lua_audioelapsed(lua_State *L) {
             break;
         }
         case AUDIO_TYPE_RAW: {
-            lua_pushnumber(L, (double)aud->raw.frames_played / 48000); // hardcoded samplerate for raw
+            lua_pushnumber(L, (double)aud->raw.frames_played / 48000); // hardcoded samplerate for raw files
             break;
         }
         default:
@@ -537,7 +688,11 @@ static int lua_audiogc(lua_State *L) {
     if (aud->type == AUDIO_TYPE_RAW && aud->raw.file) fclose(aud->raw.file);
     else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle) mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
     else if (aud->type == AUDIO_TYPE_WAV) drwav_uninit(&aud->wav.wav);
-    //else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
+    else if (aud->type == AUDIO_TYPE_FLAC && aud->flac.decoder) {
+        FLAC__stream_decoder_finish(aud->flac.decoder);
+        FLAC__stream_decoder_delete(aud->flac.decoder);
+        free(aud->flac.decode_buffer); // <-- ADD THIS LINE
+    }
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
     else if (aud->type == AUDIO_TYPE_OPUS) op_free(aud->opus.opus);
     return 0;
@@ -666,6 +821,6 @@ LUALIB_API int luaL_openaudio(lua_State *L) {
     
     luaL_register(L, NULL, audio_methods);
 
-	luaL_register(L, "audio", audio_lib);
+    luaL_register(L, "audio", audio_lib);
     return 1;
 }
