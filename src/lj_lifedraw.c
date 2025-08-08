@@ -524,6 +524,40 @@ static int lua_gradientline(lua_State *L) {
     return 0;
 }
 
+static int lua_gradientpolyline(lua_State *L) {
+    int arg_count = lua_gettop(L);
+
+    // Must have at least 2 points: (x,y,color) + (x,y,color)
+    if (arg_count < 6 || (arg_count % 3) != 0) {
+        return luaL_error(L, "Usage: draw.gradientpolyline(x1, y1, color1, x2, y2, color2, ...)");
+    }
+
+    int point_count = arg_count / 3;
+
+    // Allocate vertex array (2 vertices per line segment)
+    // Number of segments = point_count - 1, so total vertices = (point_count - 1) * 2
+    int vert_count = (point_count - 1) * 2;
+    vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+        vert_count * sizeof(vita2d_color_vertex), sizeof(vita2d_color_vertex));
+
+    int vi = 0;
+    for (int i = 0; i < point_count - 1; i++) {
+        float x0 = luaL_checknumber(L, (i * 3) + 1);
+        float y0 = luaL_checknumber(L, (i * 3) + 2);
+        Color *c0 = lua_tocolor(L, (i * 3) + 3);
+
+        float x1 = luaL_checknumber(L, (i * 3) + 4);
+        float y1 = luaL_checknumber(L, (i * 3) + 5);
+        Color *c1 = lua_tocolor(L, (i * 3) + 6);
+
+        vertices[vi++] = (vita2d_color_vertex){x0, y0, 0.5f, c0->color};
+        vertices[vi++] = (vita2d_color_vertex){x1, y1, 0.5f, c1->color};
+    }
+
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_LINES, vertices, vert_count);
+    return 0;
+}
+
 static const luaL_Reg draw_lib[] = {
     {"text", lua_text},
 	{"textwidth", lua_textwidth},
@@ -538,6 +572,7 @@ static const luaL_Reg draw_lib[] = {
 	{"hdoublegradientrect", lua_hdoublegradient},
 	{"vdoublegradientrect", lua_vdoublegradient},
 	{"gradientline", lua_gradientline},
+	{"polyline", lua_gradientpolyline},
 	{"enableclip", lua_enableclip},
 	{"cliprect", lua_cliprect},
 	{"clipcircle", lua_clipcircle},
