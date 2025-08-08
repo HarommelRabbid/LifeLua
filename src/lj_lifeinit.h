@@ -35,6 +35,8 @@
 #define luaL_pushglobalint_alsoas(L, value, var) luaL_pushglobalint(L, value); luaL_pushglobalint_as(L, value, var);
 #define lerp(value, from_max, to_max) ((((value*10) * (to_max*10))/(from_max*10))/10)
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
 #define lua_rawlen(L, i) lua_objlen(L, i)
 

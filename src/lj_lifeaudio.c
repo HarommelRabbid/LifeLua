@@ -19,10 +19,9 @@
 #include <vorbis/vorbisfile.h>
 #define DR_WAV_IMPLEMENTATION
 #include "include/dr_wav.h"
-#define DR_FLAC_IMPLEMENTATION
-#include "include/dr_flac.h"
+#include <FLAC/stream_decoder.h>
+#include <FLAC/metadata.h>
 #include <opus/opusfile.h>
-#include <xmp.h>
 
 #include <vitasdk.h>
 #include <taihen.h>
@@ -63,7 +62,6 @@ typedef enum {
     AUDIO_TYPE_OGG,
     AUDIO_TYPE_FLAC,
     AUDIO_TYPE_OPUS,
-    AUDIO_TYPE_XM,
     AUDIO_TYPE_AT9,
     AUDIO_TYPE_AT3
 } AudioType;
@@ -98,17 +96,11 @@ typedef struct {
             ogg_int64_t total_frames;
         } ogg;
         struct {
-            drflac *flac;
-            drflac_uint64 frames_played;
+            FLAC__StreamDecoder *flac;
         } flac;
         struct {
             OggOpusFile *opus;
         } opus;
-        struct {
-            xmp_context ctx;
-            struct xmp_frame_info frame_info;
-            struct xmp_module_info module_info;
-        } xmp;
     };
 } Audio;
 
@@ -135,9 +127,9 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
         case AUDIO_TYPE_OGG:
             channels = aud->ogg.info->channels;
             break;
-        case AUDIO_TYPE_FLAC:
+        /*case AUDIO_TYPE_FLAC:
             channels = aud->flac.flac->channels;
-            break;
+            break;*/
         case AUDIO_TYPE_OPUS:
             channels = op_channel_count(aud->opus.opus, -1);
             break;
@@ -219,25 +211,10 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
                 }
                 break;
             }
-            case AUDIO_TYPE_FLAC: {
-                int bytes_per_frame = aud->flac.flac->channels * sizeof(drflac_int16);
-                int frames_to_read = (bytes_needed - bytes_filled) / bytes_per_frame;
-
-                drflac_uint64 frames_read = drflac_read_pcm_frames_s16(aud->flac.flac, (drflac_uint64)frames_to_read, (drflac_int16 *)dst);
-                int bytes_read = frames_read * bytes_per_frame;
-                bytes_filled += bytes_read;
-                aud->flac.frames_played += bytes_read;
-
-                if (frames_read == 0) {
-                    if (aud->loop) {
-                        drflac_seek_to_pcm_frame(aud->flac.flac, 0);
-                        aud->flac.frames_played = 0;
-                    } else {
-                        stream_done = true;
-                    }
-                }
+            /*case AUDIO_TYPE_FLAC: {
+                
                 break;
-            }
+            }*/
             case AUDIO_TYPE_OPUS: {
                 int current_section;
                 long ret = op_read(aud->opus.opus, (opus_int16 *)dst, (bytes_needed - bytes_filled) / 2, &current_section);
@@ -253,20 +230,6 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
                     int bytes_read = ret * channels * sizeof(opus_int16);
                     bytes_filled += bytes_read;
                 }
-                break;
-            }
-            case AUDIO_TYPE_XM: {
-                if (xmp_start_player(aud->xmp.ctx, 48000, 0) == 0) {
-                    xmp_get_module_info(aud->xmp.ctx, &aud->xmp.module_info);
-                    sceClibPrintf("%s (%s)\n", aud->xmp.module_info.mod->name, aud->xmp.module_info.mod->type);
-
-                    if(xmp_play_frame(aud->xmp.ctx) == 0){
-                        xmp_get_frame_info(aud->xmp.ctx, &aud->xmp.frame_info);
-                        if (fi.loop_count > 0) stream_done = true;
-                    }
-                    xmp_end_player(aud->xmp.ctx);
-                }
-                xmp_release_module(aud->xmp.ctx);
                 break;
             }
             default:
@@ -330,29 +293,23 @@ static int lua_audioload(lua_State *L) {
         aud->ogg.info = ov_info(&aud->ogg.ogg, -1);
         aud->ogg.total_frames = ov_pcm_total(&aud->ogg.ogg, -1);
         aud->type = AUDIO_TYPE_OGG;
-    }else if (string_ends_with(path, ".flac")) {
+    /*}else if (string_ends_with(path, ".flac")) {
         aud->flac.flac = drflac_open_file(path, NULL);
         if(aud->flac.flac == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
 
         aud->type = AUDIO_TYPE_FLAC;
-        aud->flac.frames_played = 0;
+        aud->flac.frames_played = 0;*/
     }else if (string_ends_with(path, ".opus")) {
         if ((aud->opus.opus = op_open_file(path, NULL)) == NULL) return luaL_error(L, "Failed to load FLAC file: %s", path);
 
         aud->type = AUDIO_TYPE_OPUS;
     }else{
-        aud->xmp.ctx = xmp_create_context();
-        if(!(xmp_load_module(aud->xmp.ctx, path) < 0)){
-            aud->type = AUDIO_TYPE_XM;
-        }else{
-            xmp_free_context(aud->xmp.ctx);
-            FILE *f = fopen(path, "rb");
-            if (!f) return luaL_error(L, "Failed to open audio file");
+        FILE *f = fopen(path, "rb");
+        if (!f) return luaL_error(L, "Failed to open audio file");
 
-            aud->type = AUDIO_TYPE_RAW;
-            aud->raw.file = f;
-            aud->raw.frames_played = 0;
-        }
+        aud->type = AUDIO_TYPE_RAW;
+        aud->raw.file = f;
+        aud->raw.frames_played = 0;
     }
 
     luaL_getmetatable(L, "audio");
@@ -377,17 +334,13 @@ static int lua_audioplay(lua_State *L) {
         }else if(aud->type == AUDIO_TYPE_OGG){
             vitaAudioInit(aud->ogg.info->rate, (aud->ogg.info->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-        }else if(aud->type == AUDIO_TYPE_FLAC){
+        /*}else if(aud->type == AUDIO_TYPE_FLAC){
             vitaAudioInit(aud->flac.flac->sampleRate, (aud->flac.flac->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
-            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
+            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);*/
         }else if(aud->type == AUDIO_TYPE_OPUS){
             // Opus always decodes at 48000 kHz
             vitaAudioInit(48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-        }else if(aud->type == AUDIO_TYPE_XM){
-            vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
-            vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
-            xmp_start_player(aud->xmp.ctx, 48000, 0);
         }else{
             vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
             vitaAudioSetVolume(0, SCE_AUDIO_OUT_MAX_VOL, SCE_AUDIO_OUT_MAX_VOL);
@@ -409,10 +362,10 @@ static int lua_audioplay(lua_State *L) {
                 drwav_seek_to_pcm_frame(&aud->wav.wav, 0);
                 aud->wav.frames_played = 0;
                 break;
-            case AUDIO_TYPE_FLAC:
+            /*case AUDIO_TYPE_FLAC:
                 drflac_seek_to_pcm_frame(aud->flac.flac, 0);
                 aud->flac.frames_played = 0;
-                break;
+                break;*/
             case AUDIO_TYPE_OGG:
                 ov_raw_seek(&aud->ogg.ogg, 0);
                 break;
@@ -448,11 +401,11 @@ static int lua_audioseek(lua_State *L) {
             aud->wav.frames_played = (drwav_uint64)seconds * aud->wav.wav.sampleRate;
             break;
         }
-        case AUDIO_TYPE_FLAC: {
+        /*case AUDIO_TYPE_FLAC: {
             drflac_seek_to_pcm_frame(aud->flac.flac, (drflac_uint64)seconds * aud->flac.flac->sampleRate);
             aud->flac.frames_played = (drflac_uint64)seconds * aud->flac.flac->sampleRate;
             break;
-        }
+        }*/
         case AUDIO_TYPE_OGG: {
             ov_time_seek(&aud->ogg.ogg, seconds);
             break;
@@ -522,10 +475,10 @@ static int lua_audioduration(lua_State *L) {
             lua_pushnumber(L, ov_time_total(&aud->ogg.ogg, -1));
             break;
         }
-        case AUDIO_TYPE_FLAC: {
+        /*case AUDIO_TYPE_FLAC: {
             lua_pushnumber(L, (double)aud->flac.flac->totalPCMFrameCount / aud->flac.flac->sampleRate);
             break;
-        }
+        }*/
         case AUDIO_TYPE_OPUS: {
             ogg_int64_t total = op_pcm_total(aud->opus.opus, -1);
             const OpusHead *head = op_head(aud->opus.opus, -1);
@@ -558,10 +511,10 @@ static int lua_audioelapsed(lua_State *L) {
             lua_pushnumber(L, ov_time_tell(&aud->ogg.ogg));
             break;
         }
-        case AUDIO_TYPE_FLAC: {
+        /*case AUDIO_TYPE_FLAC: {
             lua_pushnumber(L, (double)aud->flac.frames_played / aud->flac.flac->sampleRate);
             break;
-        }
+        }*/
         case AUDIO_TYPE_OPUS: {
             ogg_int64_t elapsed = op_pcm_tell(aud->opus.opus);
             const OpusHead *head = op_head(aud->opus.opus, -1);
@@ -584,10 +537,9 @@ static int lua_audiogc(lua_State *L) {
     if (aud->type == AUDIO_TYPE_RAW && aud->raw.file) fclose(aud->raw.file);
     else if (aud->type == AUDIO_TYPE_MP3 && aud->mp3.handle) mpg123_close(aud->mp3.handle), mpg123_delete(aud->mp3.handle);
     else if (aud->type == AUDIO_TYPE_WAV) drwav_uninit(&aud->wav.wav);
-    else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
+    //else if (aud->type == AUDIO_TYPE_FLAC) drflac_close(aud->flac.flac);
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
     else if (aud->type == AUDIO_TYPE_OPUS) op_free(aud->opus.opus);
-    else if (aud->type == AUDIO_TYPE_XM) xmp_free_context(aud->xmp.ctx);
     return 0;
 }
 
