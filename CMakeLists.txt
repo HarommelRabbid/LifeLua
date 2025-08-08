@@ -152,6 +152,7 @@ target_link_libraries(${PROJECT_NAME}
     vorbisfile
     vorbis
     ogg
+    FLAC
     c
     m
     z
