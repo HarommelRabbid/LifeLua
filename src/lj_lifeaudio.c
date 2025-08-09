@@ -345,7 +345,7 @@ static void audio_callback(void *stream, unsigned int length, void *userdata){
                 break;
             }
             case AUDIO_TYPE_XM: {
-                int ret = xmp_play_buffer(aud->xmp.ctx, dst, bytes_needed - bytes_filled, aud->loop);
+                int ret = xmp_play_buffer(aud->xmp.ctx, dst, bytes_needed - bytes_filled, !aud->loop); //loop inversed because 0 is loop and 1 is no loop
                 if (ret == 0) {
                     bytes_filled += (bytes_needed - bytes_filled);
                 } else {
