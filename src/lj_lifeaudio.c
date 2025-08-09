@@ -165,7 +165,7 @@ static FLAC__StreamDecoderWriteStatus flac_write_callback(const FLAC__StreamDeco
 }
 
 static void flac_error_callback(const FLAC__StreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data) {
-    //sceClibPrintf(stderr, "FLAC decoding error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
+    //sceClibPrintf("FLAC decoding error: %s\n", FLAC__StreamDecoderErrorStatusString[status]);
 }
 
 static void audio_callback(void *stream, unsigned int length, void *userdata){
@@ -694,7 +694,7 @@ static int lua_audiogc(lua_State *L) {
     else if (aud->type == AUDIO_TYPE_FLAC && aud->flac.decoder) {
         FLAC__stream_decoder_finish(aud->flac.decoder);
         FLAC__stream_decoder_delete(aud->flac.decoder);
-        free(aud->flac.decode_buffer); // <-- ADD THIS LINE
+        free(aud->flac.decode_buffer);
     }
     else if (aud->type == AUDIO_TYPE_OGG) ov_clear(&aud->ogg.ogg);
     else if (aud->type == AUDIO_TYPE_OPUS) op_free(aud->opus.opus);
