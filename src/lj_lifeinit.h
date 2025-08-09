@@ -57,7 +57,7 @@ extern bool unsafe;
 extern vita2d_pgf *pgf;
 extern vita2d_pvf *pvf;
 
-extern bool audio_active;
+extern volatile bool audio_active;
 
 typedef struct {
     unsigned int color;
