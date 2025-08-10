@@ -30,6 +30,7 @@
 #include "include/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "include/stb_image_write.h"
+#define NANOSVG_ALL_COLOR_KEYWORDS
 #define NANOSVG_IMPLEMENTATION
 #include "include/nanosvg.h"
 #define NANOSVGRAST_IMPLEMENTATION
