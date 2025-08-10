@@ -30,6 +30,10 @@
 #include "include/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "include/stb_image_write.h"
+#define NANOSVG_IMPLEMENTATION
+#include "include/nanosvg.h"
+#define NANOSVGRAST_IMPLEMENTATION
+#include "include/nanosvgrast.h"
 
 #include "lj_lifeinit.h"
 
@@ -67,7 +71,39 @@ static int lua_imageload(lua_State *L) {
         		}
     		}
 			stbi_image_free(img);
-		}
+		}else if(string_ends_with(filename, ".svg")){
+            NSVGimage *svg_image = nsvgParseFromFile(filename, "px", 96.0f);
+            if(!svg_image) return lua_pushnil(L), 1;
+	        NSVGrasterizer *rast = nsvgCreateRasterizer();
+            int w = (int)svg_image->width; 
+            int h = (int)svg_image->height;
+
+	        uint8_t *img = malloc(w*h*4);
+            if (!img) {
+                nsvgDeleteRasterizer(rast);
+                nsvgDelete(svg_image);
+                return lua_pushnil(L), 1;
+            }
+
+            nsvgRasterize(rast, svg_image, 0, 0, 1, img, w, h, w*4);
+            image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+			uint32_t *tex_ptr = vita2d_texture_get_datap(image->tex);
+    		int stride = vita2d_texture_get_stride(image->tex) / 4;
+    		for (int y = 0; y < h; y++) {
+        		uint32_t *row = tex_ptr + y * stride;
+        		for (int x = 0; x < w; x++) {
+            		int i = (y * w + x) * 4;
+            		uint8_t r = img[i + 0];
+            		uint8_t g = img[i + 1];
+            		uint8_t b = img[i + 2];
+            		uint8_t a = img[i + 3];
+            		row[x] = (a << 24) | (b << 16) | (g << 8) | r; // RGBA to ABGR
+        		}
+    		}
+            nsvgDeleteRasterizer(rast);
+	        nsvgDelete(svg_image);
+            free(img);
+        }
 	}
     if (!image->tex) return lua_pushnil(L), 1;
     
