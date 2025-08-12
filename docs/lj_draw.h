@@ -80,10 +80,6 @@ nil draw․triangle(number x, number y, number x2, number y2, number x3, number 
 /** @} */
 
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup color color
  * Method calling will work on most of the functions here (e. g. `color:a`, `color:sub`, etc.)
  * @brief Color library
@@ -137,10 +133,6 @@ color tocolor(number color) {}
 /** @} */
 
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup font font
  * @brief Font library
  * @{
@@ -156,10 +148,6 @@ font font․default(font font) {}
 /** @} */
 
 /**
-<<<<<<< HEAD
- * @file
-=======
->>>>>>> 3308273 (Initial commit)
  * @defgroup image image
  * Method calling will work on most of the functions here (e. g. `image:display`, `image:width`, etc.)
  * @brief Image library
