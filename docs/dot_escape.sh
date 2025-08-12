@@ -1,8 +1,6 @@
-DIR="../ll_docs"
+DIR="../../ll_docs"
 
-find "${DIR}/" -type f -name "*.html" -exec sed -i '' 's/\(․\)/./g' {} +
-find "${DIR}/" -type f -name "*.js" -exec sed -i '' 's/\(․\)/./g' {} +
-find "${DIR}/" -type f -name "*.css" -exec sed -i '' 's/\(․\)/./g' {} +
+perl -pi -e 's/․/./g' "$DIR"/*.{html,js,css}
 
 OLD="․"
 NEW="."
