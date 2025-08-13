@@ -1,0 +1,1 @@
+Please do not try to contribute to the `docs` branch. It contains the HTML for the documentation.
