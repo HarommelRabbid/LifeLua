@@ -845,14 +845,14 @@ static int lua_lock(lua_State *L){
 		for (int i = 2; i <= argc; i++) {
 			if (lua_type(L, i) == LUA_TNUMBER){
 				SceShellUtilLockType type = luaL_checkinteger(L, i);
-				sceShellUtilLock((SceShellUtilLockType)(type));
+				sceShellUtilLock(type);
 			}
 		}
 	}else{
 		for (int i = 2; i <= argc; i++) {
 			if (lua_type(L, i) == LUA_TNUMBER){
 				SceShellUtilLockType type = luaL_checkinteger(L, i);
-				sceShellUtilUnlock((SceShellUtilLockType)(type));
+				sceShellUtilUnlock(type);
 			}
 		}
 	}
@@ -861,13 +861,13 @@ static int lua_lock(lua_State *L){
 
 static int lua_runningapps(lua_State *L){
 	int max = luaL_optinteger(L, 1, 100);
-	int runningapps[] = {};
-	int runningappsint = sceAppMgrGetRunningAppIdListForShell(&runningapps, max);
+	int runningapps[max];
+	int runningappsint = sceAppMgrGetRunningAppIdListForShell(runningapps, max);
 	lua_newtable(L);
-	for(int i = 0; i <= runningappsint; i++){
+	for(int i = 0; i < runningappsint; i++){
 		SceUID pid = sceAppMgrGetProcessIdByAppIdForShell(runningapps[i]);
-		char titleid[64];
-		sceAppMgrGetNameById(pid, &titleid);
+		char titleid[256];
+		sceAppMgrGetNameById(pid, titleid);
 		lua_pushstring(L, titleid);
 		lua_rawseti(L, -2, i+1);
 	}
@@ -1337,7 +1337,7 @@ static int lua_abortphotoreview(lua_State *L){
 }
 
 static int lua_vol(lua_State *L){
-	if(lua_gettop(L) >= 1){
+	if(!lua_isnone(L, 1)){
 		int vol = luaL_checkinteger(L, 1);
 		sceAVConfigSetSystemVol(CLAMP(vol, 0, 30));
 		return 0;
