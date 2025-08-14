@@ -99,7 +99,7 @@ void luaL_lifelua_dofile(lua_State *L){
 					vita_port = 0;
 				}
 				error = false;
-				luaL_lifelua_dofile(L); //this'll cause the app to freeze if you retry but the error doesn't change at all, NVM actually it doesn't anymore
+				luaL_lifelua_dofile(L);
 			}
 			else if(!(pad.buttons == SCE_CTRL_CIRCLE) && (oldpad.buttons == SCE_CTRL_CIRCLE)){
 				if (vita_port != 0) {
