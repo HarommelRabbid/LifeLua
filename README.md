@@ -1,6 +1,8 @@
 # LifeLua
 LifeLua is a Lua interpreter for the PSVita which combines ease (OneLua) with advanceability (Lua Player Plus).
+
 <img src="bg0.png"></img>
+
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
 ## Samples
@@ -8,9 +10,17 @@ For a showcase of LifeLua's features go to the repository's `sample` folder.
 ## Compiling
 * [libsqlite](https://github.com/VitaSmith/libsqlite): run `cd libsqlite && make`, move the library (ends with` *.a`) in the folder where the libraries are stored in the vitasdk, and run `make install`, see https://github.com/VitaSmith/libsqlite?tab=readme-ov-file#compiling
 * Install [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
+
 ```
 mkdir build && cd build && cmake .. && make
 ```
+
+To build after your first build:
+
+```
+find . -mindepth 1 -delete && cmake .. && make
+```
+
 ## To do
 * ATRAC9 & 3 audio support & libmpv video support
 * 3D support with shading, shadows & reflections
