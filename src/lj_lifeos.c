@@ -475,9 +475,7 @@ static int lua_bootparams(lua_State *L) {
 }
 
 static int lua_shuttersound(lua_State *L) {
-	SceShutterSoundType type = (SceShutterSoundType)luaL_checkinteger(L, 1);
-	/*if ((type > 2) || (type < 0))
-		return luaL_error(L, "Invalid shutter ID");*/
+	SceShutterSoundType type = luaL_checkinteger(L, 1);
 	sceShutterSoundPlay(type);
 	return 0;
 }
