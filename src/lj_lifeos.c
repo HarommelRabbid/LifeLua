@@ -817,6 +817,52 @@ static int lua_factoryfirmware(lua_State *L) {
 	return 1;
 }
 
+static int lua_cex(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsCEX());
+	return 1;
+}
+
+static int lua_vita(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsVITA());
+	return 1;
+}
+
+static int lua_pstv(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsDolce());
+	return 1;
+}
+
+static int lua_tool(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsTool());
+	return 1;
+}
+
+static int lua_test(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsTest());
+	return 1;
+}
+
+static int lua_username(lua_State *L){
+	static SceChar8 username[SCE_SYSTEM_PARAM_USERNAME_MAXSIZE];
+	sceAppUtilSystemParamGetString(SCE_SYSTEM_PARAM_ID_USERNAME, username, SCE_SYSTEM_PARAM_USERNAME_MAXSIZE);
+	lua_pushstring(L, (char *)username);
+	return 1;
+}
+
+static int lua_timeformat(lua_State *L){
+	int tf;
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_TIME_FORMAT, &tf);
+	lua_pushinteger(L, tf);
+	return 1;
+}
+
+static int lua_dateformat(lua_State *L){
+	int df;
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_DATE_FORMAT, &df);
+	lua_pushinteger(L, df);
+	return 1;
+}
+
 static int lua_closeotherapps(lua_State *L){
 	sceAppMgrDestroyOtherApp();
 	return 0;
@@ -1679,6 +1725,9 @@ static const luaL_Reg os_lib[] = {
     {"language", lua_language},
 	{"getregkey", lua_getreg},
 	{"setregkey", lua_setreg},
+	{"username", lua_username},
+	{"timeformat", lua_timeformat},
+	{"dateformat", lua_dateformat},
     {NULL, NULL}
 };
 
@@ -1775,5 +1824,10 @@ LUALIB_API int luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_PORTUGUESE_BR);
 	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_ENGLISH_GB);
 	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_LANG_TURKISH);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_DATE_FORMAT_YYYYMMDD);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_DATE_FORMAT_DDMMYYYY);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_DATE_FORMAT_MMDDYYYY);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_TIME_FORMAT_12HR);
+	luaL_pushglobalint(L, SCE_SYSTEM_PARAM_TIME_FORMAT_24HR);
     return 1;
 }
