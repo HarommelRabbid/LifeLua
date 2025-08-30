@@ -177,7 +177,6 @@ static void flac_error_callback(const FLAC__StreamDecoder *decoder, FLAC__Stream
 }
 
 static void audio_callback(void *stream, unsigned int length, void *userdata){
-    channel++;
     Audio *aud = (Audio *)userdata;
     if (!aud || !audio_active) return;
 
@@ -495,28 +494,28 @@ static int lua_audioplay(lua_State *L) {
                 long rate;
                 int channels, encoding;
                 mpg123_getformat(aud->mp3.handle, &rate, &channels, &encoding);
-                vitaAudioInit(rate, (channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+                vitaAudioInit(channel, rate, (channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
                 break;
             }
             case AUDIO_TYPE_WAV:
-                vitaAudioInit(aud->wav.wav.sampleRate, (aud->wav.wav.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+                vitaAudioInit(channel, aud->wav.wav.sampleRate, (aud->wav.wav.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
                 break;
             case AUDIO_TYPE_OGG: 
-                vitaAudioInit(aud->ogg.info->rate, (aud->ogg.info->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+                vitaAudioInit(channel, aud->ogg.info->rate, (aud->ogg.info->channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
                 break;
             case AUDIO_TYPE_FLAC:
-                vitaAudioInit(aud->flac.sampleRate, (aud->flac.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+                vitaAudioInit(channel, aud->flac.sampleRate, (aud->flac.channels >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
                 break;
             case AUDIO_TYPE_OPUS:
                 // Opus always decodes at 48000 kHz
-                vitaAudioInit(48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
+                vitaAudioInit(channel, 48000, (op_channel_count(aud->opus.opus, -1) >= 2) ? SCE_AUDIO_OUT_MODE_STEREO : SCE_AUDIO_OUT_MODE_MONO);
                 break;
             case AUDIO_TYPE_XM:
                 xmp_start_player(aud->xmp.ctx, 48000, 0);
-                vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
+                vitaAudioInit(channel, 48000, SCE_AUDIO_OUT_MODE_STEREO);
                 break;
             default:
-                vitaAudioInit(48000, SCE_AUDIO_OUT_MODE_STEREO);
+                vitaAudioInit(channel, 48000, SCE_AUDIO_OUT_MODE_STEREO);
                 break;
         }
 
@@ -556,6 +555,8 @@ static int lua_audioplay(lua_State *L) {
     vitaAudioSetChannelCallback(channel, audio_callback, aud);
 
     aud->channel = channel;
+    sceClibPrintf("channel = %i\naud->channel = %i\n", channel, aud->channel);
+    channel++;
     return 0;
 }
 
