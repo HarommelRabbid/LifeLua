@@ -466,6 +466,7 @@ static int lua_qrscan(lua_State *L) {
         lua_pushnil(L);
         return 1;
     }
+    int index = luaL_optinteger(L, 2, 0);
 
     int width = vita2d_texture_get_width(img->tex);
     int height = vita2d_texture_get_height(img->tex);
@@ -507,7 +508,7 @@ static int lua_qrscan(lua_State *L) {
     struct quirc_code code;
     struct quirc_data data;
 
-    quirc_extract(qr, 0, &code);
+    quirc_extract(qr, index, &code);
     quirc_decode_error_t err = quirc_decode(&code, &data);
     quirc_destroy(qr);
 
