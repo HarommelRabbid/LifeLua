@@ -92,28 +92,28 @@ static int lua_videoload(lua_State *L){
         return EXIT_FAILURE;
     }
 
-	vita2d_texture *img = vita2d_create_empty_texture_rendertarget(960, 544, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+	video->img = vita2d_create_empty_texture_rendertarget(960, 544, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
 
     int flip_y = 1;
     mpv_gxm_fbo fbo = {
-            .render_target = img->gxm_rtgt,
-            .color_surface = &img->gxm_sfc,
-            .depth_stencil_surface = &img->gxm_sfd,
-            .w = 960,
-            .h = 544,
-            .format = SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_RGBA,
+        .render_target = video->img->gxm_rtgt,
+        .color_surface = &video->img->gxm_sfc,
+        .depth_stencil_surface = &video->img->gxm_sfd,
+        .w = 960,
+        .h = 544,
+        .format = SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_RGBA,
     };
-    mpv_render_param mpv_params[3] = {
-            {MPV_RENDER_PARAM_FLIP_Y, &flip_y},
-            {MPV_RENDER_PARAM_GXM_FBO, &fbo},
-            {MPV_RENDER_PARAM_INVALID, NULL},
-    };
+    video->mpv_params[0] = (mpv_render_param){MPV_RENDER_PARAM_FLIP_Y, &flip_y};
+	video->mpv_params[1] = (mpv_render_param){MPV_RENDER_PARAM_GXM_FBO, &fbo};
+	video->mpv_params[2] = (mpv_render_param){MPV_RENDER_PARAM_INVALID, NULL};
 
     {
-        const char *cmd[] = {"loadfile", "file://ux0:/video/ik/Top Gear Parody.mp4", "replace", NULL};
-//        const char *cmd[] = {"loadfile", "file://ux0:/sintel_trailer-720p.mp4", NULL};
-        mpv_command(mpv, cmd);
+        const char *cmd[] = {"loadfile", path, "replace", NULL};
+        mpv_command(video->mpv, cmd);
     }
+
+    luaL_getmetatable(L, "video");
+    lua_setmetatable(L, -2);
     return 0;
 }
 
@@ -130,6 +130,13 @@ static const luaL_Reg video_lib[] = {
 };*/
 
 LUALIB_API int luaL_openvideo(lua_State *L) {
+	luaL_newmetatable(L, "image");
+	lua_pushstring(L, "__index");
+    lua_pushvalue(L, -2);  /* pushes the metatable */
+    lua_settable(L, -3);  /* metatable.__index = metatable */
+    
+    luaL_register(L, NULL, image_methods);
+
 	luaL_register(L, "video", video_lib);
     return 1;
 }
