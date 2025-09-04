@@ -117,25 +117,33 @@ static int lua_videoload(lua_State *L){
     return 0;
 }
 
+static int lua_videogc(lua_State *L){
+	Image *image = (Image *)luaL_checkudata(L, 1, "image");
+	mpv_render_context_free(video->mpv_context);
+	mpv_terminate_destroy(video->mpv);
+    vita2d_free_texture(video->img);
+	return 0;
+}
+
 static const luaL_Reg video_lib[] = {
     {"load", lua_videoload},
     {NULL, NULL}
 };
 
-/*static const luaL_Reg video_methods[] = {
-    {"output", lua_output},
-    {"stop", lua_stop},
-    {"__gc", lua_vclose},
+static const luaL_Reg video_methods[] = {
+    //{"output", lua_output},
+    //{"stop", lua_stop},
+    {"__gc", lua_videogc},
     {NULL, NULL}
-};*/
+};
 
 LUALIB_API int luaL_openvideo(lua_State *L) {
-	luaL_newmetatable(L, "image");
+	luaL_newmetatable(L, "video");
 	lua_pushstring(L, "__index");
     lua_pushvalue(L, -2);  /* pushes the metatable */
     lua_settable(L, -3);  /* metatable.__index = metatable */
     
-    luaL_register(L, NULL, image_methods);
+    luaL_register(L, NULL, video_methods);
 
 	luaL_register(L, "video", video_lib);
     return 1;
