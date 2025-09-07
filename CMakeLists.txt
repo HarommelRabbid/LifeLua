@@ -88,20 +88,6 @@ target_link_libraries(${PROJECT_NAME}
     vita2d
     sqlite
     imgui_vita2d
-    mpv
-    avfilter
-    avformat
-    avcodec
-    avutil
-    swscale
-    swresample
-    ass
-    harfbuzz
-    fribidi
-    freetype
-    mbedtls
-    mbedx509
-    mbedcrypto
     SceLibJson_stub
     SceDisplay_stub
     SceGxm_stub
@@ -136,7 +122,6 @@ target_link_libraries(${PROJECT_NAME}
     SceShutterSound_stub
     SceRegistryMgr_stub
     ScePower_stub
-    SceCodecEngine_stub
     SceAudio_stub
     SceAtrac_stub
     SceAudiodec_stub
