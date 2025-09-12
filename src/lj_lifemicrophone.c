@@ -52,7 +52,7 @@ static const luaL_Reg io_lib[] = {
     {NULL, NULL}
 };
 
-LUALIB_API int luaL_extendio(lua_State *L) {
+LUALIB_API int luaL_openmicrophone(lua_State *L) {
 	luaL_register(L, "microphone", io_lib);
     return 1;
 }
