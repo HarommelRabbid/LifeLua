@@ -20,3 +20,7 @@
 #include <vita2d.h>
 
 #include "lj_lifeinit.h"
+
+static int mic_thread(SceSize args, void *argp){
+    return sceKernelExitDeleteThread(0);
+}
