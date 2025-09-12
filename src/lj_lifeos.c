@@ -1728,6 +1728,11 @@ static const luaL_Reg os_lib[] = {
 	{"username", lua_username},
 	{"timeformat", lua_timeformat},
 	{"dateformat", lua_dateformat},
+	{"istest", lua_test},
+	{"istool", lua_tool},
+	{"ispstv", lua_pstv},
+	{"isvita", lua_vita},
+	{"iscex", lua_cex},
     {NULL, NULL}
 };
 
