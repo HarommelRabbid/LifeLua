@@ -822,6 +822,11 @@ static int lua_cex(lua_State *L) {
 	return 1;
 }
 
+static int lua_dex(lua_State *L) {
+	lua_pushboolean(L, vshSblAimgrIsDEX());
+	return 1;
+}
+
 static int lua_vita(lua_State *L) {
 	lua_pushboolean(L, vshSblAimgrIsVITA());
 	return 1;
@@ -1733,6 +1738,7 @@ static const luaL_Reg os_lib[] = {
 	{"ispstv", lua_pstv},
 	{"isvita", lua_vita},
 	{"iscex", lua_cex},
+	{"isdex", lua_dex},
     {NULL, NULL}
 };
 
