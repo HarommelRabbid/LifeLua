@@ -875,9 +875,9 @@ static int lua_closeotherapp(lua_State *L){
 }
 
 static int lua_infobar(lua_State *L){
-	int state = luaL_optinteger(L, 1, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
-	int color = luaL_optinteger(L, 2, SCE_APPMGR_INFOBAR_COLOR_BLACK);
-	int transparency = luaL_optinteger(L, 3, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
+	SceAppMgrInfoBarVisibility state = luaL_optinteger(L, 1, SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE);
+	SceAppMgrInfoBarColor color = luaL_optinteger(L, 2, SCE_APPMGR_INFOBAR_COLOR_BLACK);
+	SceAppMgrInfoBarTransparency transparency = luaL_optinteger(L, 3, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
 	sceAppMgrSetInfobarState(state, color, transparency);
 	return 0;
 }
