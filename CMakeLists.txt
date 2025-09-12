@@ -78,7 +78,6 @@ add_executable(${PROJECT_NAME}
   src/include/cJSON.c
   src/include/sha256.c
   src/include/vitaaudiolib.c
-  src/include/libtimer.c
   src/include/tomlc17.c
 )
 
