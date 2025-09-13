@@ -1262,7 +1262,7 @@ static int lua_importphoto(lua_State *L){
 
 	if (pidResult.result == SCE_COMMON_DIALOG_RESULT_OK) {
 		for (int i = 0; i < pidResult.importedItemNum && i < SCE_PHOTOIMPORT_DIALOG_MAX_ITEM_NUM; ++i) {
-			lua_pushstring(L, s_itemData[i].fileData.fileName);
+			lua_pushstring(L, (char *)s_itemData[i].fileData.fileName);
 		}
 	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED){
 		lua_pushnil(L);
@@ -1314,7 +1314,7 @@ static int lua_importvideo(lua_State *L){
 
 	if (pidResult.result == SCE_COMMON_DIALOG_RESULT_OK) {
 		for (int i = 0; i < pidResult.importedItemNum && i < SCE_VIDEOIMPORT_DIALOG_MAX_ITEM_NUM; ++i) {
-			lua_pushstring(L, s_itemData1[i].fileName);
+			lua_pushstring(L, (char *)s_itemData1[i].fileName);
 		}
 	}else if (pidResult.result == SCE_COMMON_DIALOG_RESULT_USER_CANCELED){
 		lua_pushnil(L);
