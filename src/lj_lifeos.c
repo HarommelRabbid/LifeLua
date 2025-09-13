@@ -1435,11 +1435,8 @@ static int lua_exportphoto(lua_State *L){
         outPath,
         sizeof(outPath)
     );
-	if (res < 0) {
-		lua_pushboolean(L, false);
-    } else {
-		lua_pushboolean(L, true);
-    }
+	if (res < 0) lua_pushboolean(L, false);
+    else lua_pushboolean(L, true);
 
 	return 1;
 }
@@ -1461,11 +1458,8 @@ static int lua_exportmusic(lua_State *L){
         outPath,
         sizeof(outPath)
     );
-	if (res < 0) {
-		lua_pushboolean(L, false);
-    } else {
-		lua_pushboolean(L, true);
-    }
+	if (res < 0) lua_pushboolean(L, false);
+    else lua_pushboolean(L, true);
 
 	return 1;
 }
@@ -1483,11 +1477,8 @@ static int lua_exportvideo(lua_State *L){
     memset(&out_param, 0, sizeof(VideoExportOutputParam));
 
     int res = sceVideoExportFromFile(&in_param, 1, buf, NULL, NULL, NULL, 0, &out_param);
-	if (res < 0) {
-		lua_pushboolean(L, false);
-    } else {
-		lua_pushboolean(L, true);
-    }
+	if (res < 0) lua_pushboolean(L, false);
+    else lua_pushboolean(L, true);
 
 	return 1;
 }
