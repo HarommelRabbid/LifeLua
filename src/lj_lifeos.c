@@ -1344,7 +1344,7 @@ static int lua_photoreview(lua_State *L){
 	scePhotoReviewDialogParamInit(&prdParam);
 
 	prdParam.mode = SCE_PHOTOREVIEW_DIALOG_MODE_DEFAULT;
-    strncpy(prdParam.fileName, path, SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH);
+    strncpy(prdParam.fileName, (SceChar8)path, SCE_PHOTOREVIEW_DIALOG_MAX_FS_PATH);
 	prdParam.workMemory = s_workMemory;
 	prdParam.workMemorySize = SCE_PHOTOREVIEW_DIALOG_DEFAULT_WORKMEMORY_SIZE;
 
