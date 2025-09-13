@@ -1648,6 +1648,11 @@ static int lua_bgmacquire(lua_State *L){
 	return 0;
 }
 
+static int lua_mrequire(lua_State *L){
+	const char *path = luaL_checkstring(L, 1);
+	sceKernelLoadStartModule(path, sizeof(lua_State), (void *)L, 0, 0, 0);
+}
+
 static const luaL_Reg os_lib[] = {
     {"delay", lua_delay},
 	{"uri", lua_uri},
@@ -1742,6 +1747,7 @@ static const luaL_Reg os_lib[] = {
 	{"isvita", lua_vita},
 	{"iscex", lua_cex},
 	{"isdex", lua_dex},
+	{"requiremodule", lua_mrequire},
     {NULL, NULL}
 };
 
