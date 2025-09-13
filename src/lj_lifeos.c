@@ -482,7 +482,19 @@ static int lua_shuttersound(lua_State *L) {
 
 static int lua_selfexecute(lua_State *L){
 	const char* path = luaL_checkstring(L, 1);
-	const char* argv = luaL_optstring(L, 2, NULL);
+	int argc = lua_gettop(L);
+
+    // number of extra args after path
+    int arg_count = argc - 1;
+
+    // allocate space for all args + NULL terminator
+    char* argv[arg_count + 1];
+
+    for(int i = 2; i <= argc; i++) {
+        argv[i - 2] = (char*)luaL_checkstring(L, i);
+    }
+
+    argv[arg_count] = NULL;  // terminate argv list
 	sceAppMgrLoadExec(path, argv, NULL);
 	return 0;
 }
@@ -1512,8 +1524,8 @@ static int lua_setreg(lua_State *L){
 		val = luaL_checkinteger(L, 3);
 		sceRegMgrSetKeyInt(cat, name, val);
 	}else if(lua_isstring(L, 3)){
-		buf = size ? luaL_checkstring(L, 3) : luaL_checklstring(L, 3, &size);
-		if(sceRegMgrSetKeyStr(cat, name, buf, size) < 0) sceRegMgrSetKeyBin(cat, name, buf, size);
+		buf = size ? (char *)luaL_checkstring(L, 3) : (char *)luaL_checklstring(L, 3, &size);
+		if(sceRegMgrSetKeyStr(cat, name, buf, size) < 0) sceRegMgrSetKeyBin(cat, name, (void *)buf, size);
 	}else return luaL_typerror(L, 3, "number or string");
 	return 0;
 }
