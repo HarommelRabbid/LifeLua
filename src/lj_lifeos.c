@@ -1785,9 +1785,6 @@ LUALIB_API int luaL_extendos(lua_State *L) {
 	luaL_pushglobalint(L, SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_NONE);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_CLOSE);
-	//luaL_pushglobalint(L, SCE_IME_DIALOG_BUTTON_ENTER);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_DEFAULT);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEND);
 	luaL_pushglobalint(L, SCE_IME_ENTER_LABEL_SEARCH);
