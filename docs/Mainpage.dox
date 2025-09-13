@@ -30,7 +30,7 @@ LifeLua is released under the [GPLv3 license](https://github.com/HarommelRabbid/
 When using the safe `eboot.bin` in your app instead of the unsafe one, you'll have a few limitations:\n\n
 
 - Can only open files inside of <b>ux0:/data</b> and <b>app0:/</b>.
-- Cannot intercept the <b>SCE_CTRL_VOLUP</b>, <b>SCE_CTRL_VOLDOWN</b>, <b>SCE_CTRL_POWER</b>, <b>SCE_CTRL_PSBUTTON</b>, <b>SCE_CTRL_HEADPHONE</b> inputs.
+- Cannot intercept the <b>SCE_CTRL_VOLUP</b>, <b>SCE_CTRL_VOLDOWN</b>, <b>SCE_CTRL_POWER</b>, <b>SCE_CTRL_PSBUTTON</b>, <b>SCE_CTRL_HEADPHONE</b>.
 
 ------------------------------
 
