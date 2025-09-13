@@ -1,6 +1,5 @@
 /**
  * @defgroup os os
- * @todo Add the rest of the functions & variables
  * @brief Lua OS library extension
  * @{
 */
@@ -31,6 +30,49 @@ SceAppMgrInfoBarColor SCE_APPMGR_INFOBAR_COLOR_WHITE;
 SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE;
 /** @brief `INFOBAR_TRANSPARENCY_TRANSLUCENT` for short */
 SceAppMgrInfoBarTransparency SCE_APPMGR_INFOBAR_TRANSPARENCY_TRANSLUCENT;
+SceUInt32 SCE_IME_TYPE_DEFAULT;
+SceUInt32 SCE_IME_TYPE_BASIC_LATIN;
+SceUInt32 SCE_IME_TYPE_NUMBER;
+SceUInt32 SCE_IME_TYPE_EXTENDED_NUMBER;
+SceUInt32 SCE_IME_TYPE_URL;
+SceUInt32 SCE_IME_TYPE_MAIL;
+SceUInt32 SCE_IME_DIALOG_TEXTBOX_MODE_DEFAULT;
+SceUInt32 SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD;
+SceUInt32 SCE_IME_DIALOG_TEXTBOX_MODE_WITH_CLEAR;
+SceUInt32 SCE_IME_DIALOG_DIALOG_MODE_DEFAULT;
+SceUInt32 SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL;
+SceUInt32 SCE_IME_ENTER_LABEL_DEFAULT;
+SceUInt32 SCE_IME_ENTER_LABEL_SEND;
+SceUInt32 SCE_IME_ENTER_LABEL_SEARCH;
+SceUInt32 SCE_IME_ENTER_LABEL_GO;
+SceUInt32 SCE_IME_OPTION_MULTILINE;
+SceUInt32 SCE_IME_OPTION_NO_AUTO_CAPITALIZATION;
+SceUInt32 SCE_IME_OPTION_NO_ASSISTANCE;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_OK;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_YESNO;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_NONE;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_OK_CANCEL;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_CANCEL;
+SceUInt32 SCE_MSG_DIALOG_BUTTON_TYPE_3BUTTONS;
+SceUInt32 SCE_MSG_DIALOG_FONT_SIZE_DEFAULT;
+SceUInt32 SCE_MSG_DIALOG_FONT_SIZE_SMALL;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_NOSPACE;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_MAGNETIC_CALIBRATION;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT_SMALL;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT_CANCEL;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_NEED_MC_CONTINUE;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_NEED_MC_OPERATION;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_MIC_DISABLED;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_OPERATION;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_WIFI_REQUIRED_APPLICATION;
+SceUInt32 SCE_MSG_DIALOG_SYSMSG_TYPE_TRC_EMPTY_STORE;
+SceKernelPowerTickType SCE_KERNEL_POWER_TICK_DEFAULT;
+SceKernelPowerTickType SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND;
+SceKernelPowerTickType SCE_KERNEL_POWER_TICK_DISABLE_OLED_OFF;
+SceKernelPowerTickType SCE_KERNEL_POWER_TICK_DISABLE_OLED_DIMMING;
+SceInt32 SCE_AVCONFIG_COLOR_SPACE_MODE_DEFAULT;
+SceInt32 SCE_AVCONFIG_COLOR_SPACE_MODE_HIGH_CONTRAST;
 /**
  * Delay the app for a certain amount of time
  * @param seconds The number of seconds to delay (defaults to 0)
@@ -214,4 +256,149 @@ number or nil os․volume(number vol) {}
  * Mute the PS Vita
 */
 number or nil os․mute(number vol) {}
+/**
+ * Gets the real firmware version.
+*/
+string os․realfirmware() {}
+/**
+ * Gets the spoofed firmware version.
+*/
+string os․spoofedfirmware() {}
+/**
+ * Gets the factory firmware version.
+*/
+string os․factoryfirmware() {}
+/**
+ * Shows a keyboard dialog.
+ * @param title The title of the dialog.
+ * @param default_text The default text in the input box.
+ * @param type The type of keyboard (e.g. `SCE_IME_TYPE_NUMBER`).
+ * @param mode The textbox mode (e.g. `SCE_IME_DIALOG_TEXTBOX_MODE_PASSWORD`).
+ * @param option Keyboard options (e.g. `SCE_IME_OPTION_MULTILINE`).
+ * @param dialog_mode The dialog mode (e.g. `SCE_IME_DIALOG_DIALOG_MODE_WITH_CANCEL`).
+ * @param enter_label The label for the enter key (e.g. `SCE_IME_ENTER_LABEL_SEND`).
+ * @param length The max length of the input text.
+ * @return The text entered by the user, or nil if cancelled.
+*/
+string os․keyboard(string title, string default_text, SceUInt32 type, SceUInt32 mode, SceUInt32 option, SceUInt32 dialog_mode, SceUInt32 enter_label, SceUInt32 length) {}
+/**
+ * Shows a message dialog.
+ * @param msg The message to display.
+ * @param type The button type (e.g. `SCE_MSG_DIALOG_BUTTON_TYPE_YESNO`).
+ * @return boolean or string depending on button type.
+*/
+boolean or string os․message(string msg, number type, ...) {}
+/**
+ * Shows a system message dialog.
+ * @param type The system message type (e.g. `SCE_MSG_DIALOG_SYSMSG_TYPE_WAIT`).
+ * @return boolean indicating user choice.
+*/
+boolean os․systemmessage(number type) {}
+/**
+ * Shows an error message dialog from an error code.
+ * @param errorcode The error code to display.
+ * @return boolean indicating user choice.
+*/
+boolean os․errormessage(number errorcode) {}
+/**
+ * Shows a progress message dialog.
+ * @param msg The message to display.
+ * @return boolean indicating user choice.
+*/
+boolean os․progressmessage(string msg) {}
+/**
+ * Sets the text of the progress message dialog.
+ * @param msg The new message.
+*/
+nil os․progressmessagetext(string msg) {}
+/**
+ * Sets the progress value of the progress bar.
+ * @param value The value to set (0-100).
+*/
+nil os․setprogressmessage(number value) {}
+/**
+ * Increments the progress value of the progress bar.
+ * @param inc The value to increment by.
+*/
+nil os․incprogressmessage(number inc) {}
+/**
+ * Closes the current message dialog.
+*/
+nil os․closemessage() {}
+/**
+ * Aborts the current message dialog.
+*/
+nil os․abortmessage() {}
+/**
+ * Closes the IME (Input Method Editor (keyboard)).
+*/
+nil os․closeime() {}
+/**
+ * Aborts the IME (keyboard) dialog.
+*/
+nil os․abortime() {}
+/**
+ * Gets a table of running applications' title IDs.
+ * @param max Maximum number of apps to list (defaults to 100).
+*/
+table os․runningapps(number max) {}
+/**
+ * Checks if the battery is charging.
+*/
+boolean os․isbatterycharging() {}
+/**
+ * Gets the battery percentage.
+*/
+number os․batterypercent() {}
+/**
+ * Gets the battery State of Health (SOH).
+*/
+number os․batterySOH() {}
+/**
+ * Gets the remaining battery life time in minutes.
+*/
+number os․batterylifetime() {}
+/**
+ * Gets the battery voltage.
+*/
+number os․batteryvoltage() {}
+/**
+ * Gets the battery cycle count.
+*/
+number os․batterycyclecount() {}
+/**
+ * Gets the battery temperature in Celsius.
+*/
+number os․batterytemperature() {}
+/**
+ * Gets the battery's full capacity.
+*/
+number os․batterycapacity() {}
+/**
+ * Gets the battery's remaining capacity.
+*/
+number os․remainingbatterycapacity() {}
+/**
+ * Checks if external power is connected.
+*/
+boolean os․externalbattery() {}
+/**
+ * Prevents the system from certain power-saving states.
+ * @param tick The power tick type (e.g. `SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND`).
+*/
+nil os․powertick(SceKernelPowerTickType tick) {}
+/**
+ * Locks a power state.
+ * @param tick The power tick type to lock.
+*/
+nil os․powerlock(SceKernelPowerTickType tick) {}
+/**
+ * Unlocks a power state.
+ * @param tick The power tick type to unlock.
+*/
+nil os․powerunlock(SceKernelPowerTickType tick) {}
+/**
+ * Checks if a suspend is required by the system.
+*/
+boolean os․suspendneeded() {}
 /** @} */
