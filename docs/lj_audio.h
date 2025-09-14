@@ -4,7 +4,7 @@
  * @{
 */
 /**
- * Loads an audio file, supported formats are .MP3, .WAV, .OGG, .FLAC, .OPUS, .AT9 & .AT3
+ * Loads an audio file, supported formats are .MP3, .WAV, .OGG, .FLAC, .OPUS, XMP formats (.MOD, .IT, etc.), .AT9 & .AT3
 */
 audio audio․load(string path) {}
 /**

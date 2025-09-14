@@ -270,6 +270,7 @@ string os․spoofedfirmware() {}
 string os․factoryfirmware() {}
 /**
  * Shows a keyboard dialog.
+ * (`os.ime` is the same as `os.keyboard`)
  * @param title The title of the dialog.
  * @param default_text The default text in the input box.
  * @param type The type of keyboard (e.g. `SCE_IME_TYPE_NUMBER`).
