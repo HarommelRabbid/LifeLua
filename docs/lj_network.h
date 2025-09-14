@@ -50,5 +50,5 @@ nil network․download(string url, string path) {}
 /**
  * Gets a URL's header
 */
-nil network․header(string url) {}
+string network․header(string url) {}
 /** @} */
