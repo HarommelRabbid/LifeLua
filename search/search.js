@@ -149,7 +149,7 @@ function SearchBox(name, resultsPath, extension) {
     }
 
     // strip whitespaces
-    const searchValue = this.DOMSearchField().value.replace(/ +/g, "");
+    const searchValue = this.DOMSearchField().value.trim();
 
     if (searchValue != this.lastSearchValue) { // search value has changed
       if (searchValue != "") { // non-empty search
@@ -353,9 +353,9 @@ function SearchResults() {
   function convertToId(search) {
     let result = '';
     for (let i=0;i<search.length;i++) {
-      const c = search.charAt(i);
+      const c = search.charAt(i).toLowerCase();
       const cn = c.charCodeAt(0);
-      if (c.match(/[a-z0-9\u0080-\uFFFF]/)) {
+      if (c.match(/[a-z0-9\.\u0080-\uFFFF]/)) {
         result+=c;
       } else if (cn<16) {
         result+="_0"+cn.toString(16);
@@ -421,9 +421,8 @@ function SearchResults() {
       search = unescape(search);
     }
 
-    search = search.replace(/^ +/, ""); // strip leading spaces
-    search = search.replace(/ +$/, ""); // strip trailing spaces
-    search = search.toLowerCase();
+    search = search.trim(); // strip leading/trailing spaces
+    search = search.toLowerCase(); // make search case-insensitive
     search = convertToId(search);
 
     const resultRows = document.getElementsByTagName("div");

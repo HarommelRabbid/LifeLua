@@ -122,10 +122,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga636d420e4a25e096da37a17a8d0ff279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga28a3af35d2a6f433e218c88266e2c0fe" id="r_ga28a3af35d2a6f433e218c88266e2c0fe"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga28a3af35d2a6f433e218c88266e2c0fe">controls.check</a> (SceCtrlButtons button)</td></tr>
 <tr class="separator:ga28a3af35d2a6f433e218c88266e2c0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga869f525dc70b0d0b1e182993c76da786" id="r_ga869f525dc70b0d0b1e182993c76da786"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga869f525dc70b0d0b1e182993c76da786">controls.check</a> (number min, number max, number port)</td></tr>
-<tr class="separator:ga869f525dc70b0d0b1e182993c76da786"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa6631570bb568e2f97a45173f701388c" id="r_gaa6631570bb568e2f97a45173f701388c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa6631570bb568e2f97a45173f701388c">controls.check</a> (number r, number g, number b, number port)</td></tr>
-<tr class="separator:gaa6631570bb568e2f97a45173f701388c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa095a534472d3bc4bc31e7ac9e3f7fa" id="r_gaaa095a534472d3bc4bc31e7ac9e3f7fa"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaa095a534472d3bc4bc31e7ac9e3f7fa">controls.lightbar</a> (number r, number g, number b, number port)</td></tr>
+<tr class="separator:gaaa095a534472d3bc4bc31e7ac9e3f7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5421461c6946ac9995f8701b6944dd46" id="r_ga5421461c6946ac9995f8701b6944dd46"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5421461c6946ac9995f8701b6944dd46">controls.leftanalog</a> ()</td></tr>
 <tr class="separator:ga5421461c6946ac9995f8701b6944dd46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4b9d1633aadaa5a0bb461d8ffd6e44f3" id="r_ga4b9d1633aadaa5a0bb461d8ffd6e44f3"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4b9d1633aadaa5a0bb461d8ffd6e44f3">controls.rightanalog</a> ()</td></tr>
@@ -138,8 +136,6 @@ Functions</h2></td></tr>
 <tr class="separator:ga590c2839b488a29b0c22274bf44d9c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf5546ab22da442a8be2c008ab894111c" id="r_gaf5546ab22da442a8be2c008ab894111c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf5546ab22da442a8be2c008ab894111c">controls.reartouch</a> ()</td></tr>
 <tr class="separator:gaf5546ab22da442a8be2c008ab894111c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9808aaec1c644321e593118f22e9a805" id="r_ga9808aaec1c644321e593118f22e9a805"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9808aaec1c644321e593118f22e9a805">controls.lightbar</a> (number r, number g, number b)</td></tr>
-<tr class="separator:ga9808aaec1c644321e593118f22e9a805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga259b600e0f50f986554d3aa0e142f436" id="r_ga259b600e0f50f986554d3aa0e142f436"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga259b600e0f50f986554d3aa0e142f436">controls.vibrate</a> (number small, number large, number port)</td></tr>
 <tr class="separator:ga259b600e0f50f986554d3aa0e142f436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -248,77 +244,8 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
 
 </div>
 </div>
-<a id="ga869f525dc70b0d0b1e182993c76da786" name="ga869f525dc70b0d0b1e182993c76da786"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga869f525dc70b0d0b1e182993c76da786">&#9670;&#160;</a></span>controls.check() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nil controls.check </td>
-          <td>(</td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>min</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>max</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Sets the vibration intensity on a DualShock controller </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">port</td><td>Optional </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gaa6631570bb568e2f97a45173f701388c" name="gaa6631570bb568e2f97a45173f701388c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa6631570bb568e2f97a45173f701388c">&#9670;&#160;</a></span>controls.check() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nil controls.check </td>
-          <td>(</td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>r</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>g</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Sets the light bar color on a DualShock 4 controller </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">port</td><td>Optional </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="ga28a3af35d2a6f433e218c88266e2c0fe" name="ga28a3af35d2a6f433e218c88266e2c0fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga28a3af35d2a6f433e218c88266e2c0fe">&#9670;&#160;</a></span>controls.check() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga28a3af35d2a6f433e218c88266e2c0fe">&#9670;&#160;</a></span>controls.check()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -417,8 +344,8 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
 
 </div>
 </div>
-<a id="ga9808aaec1c644321e593118f22e9a805" name="ga9808aaec1c644321e593118f22e9a805"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9808aaec1c644321e593118f22e9a805">&#9670;&#160;</a></span>controls.lightbar()</h2>
+<a id="gaaa095a534472d3bc4bc31e7ac9e3f7fa" name="gaaa095a534472d3bc4bc31e7ac9e3f7fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaa095a534472d3bc4bc31e7ac9e3f7fa">&#9670;&#160;</a></span>controls.lightbar()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -436,11 +363,21 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the lightbar on DualShock 4s </p>
+<p>Sets the light bar color on a DualShock 4 controller </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">port</td><td>Optional </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
