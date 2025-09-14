@@ -1650,7 +1650,8 @@ static int lua_bgmacquire(lua_State *L){
 
 static int lua_mrequire(lua_State *L){
 	const char *path = luaL_checkstring(L, 1);
-	sceKernelLoadStartModule(path, sizeof(lua_State), (void *)L, 0, 0, 0);
+	sceKernelLoadStartModule(path, sizeof(lua_State *), (void *)L, 0, 0, 0);
+	return 0;
 }
 
 static const luaL_Reg os_lib[] = {
