@@ -1,7 +1,7 @@
 DIR="../../ll_docs"
 SEARCHDIR="../../ll_docs/search"
 
-perl -pi -e 's/․/./g' "$DIR"/*.{html,js,css}
+perl -pi -e 's/․/./g' "$DIR"/*.* "$SEARCHDIR"/*.*
 
 OLD="․"
 NEW="."
