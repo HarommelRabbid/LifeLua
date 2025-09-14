@@ -53,15 +53,10 @@ boolean controls․released(SceCtrlButtons button) {}
 */
 boolean controls․check(SceCtrlButtons button) {}
 /** 
- * Sets the vibration intensity on a DualShock controller
- * @param port Optional
-*/
-nil controls․check(number min, number max, number port) {}
-/** 
  * Sets the light bar color on a DualShock 4 controller
  * @param port Optional
 */
-nil controls․check(number r, number g, number b, number port) {}
+nil controls․lightbar(number r, number g, number b, number port) {}
 /** 
  * Left analog stick input
  * @par Example:
@@ -124,10 +119,6 @@ number controls․fronttouch() {}
  * @return Tables with the X, Y, force and ID of the touch
 */
 number controls․reartouch() {}
-/** 
- * Sets the lightbar on DualShock 4s
-*/
-nil controls․lightbar(number r, number g, number b) {}
 /** 
  * Sets the vibration intensity on DualShock controllers
  * @param port optional
