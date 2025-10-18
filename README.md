@@ -25,7 +25,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * ATRAC9 & 3 audio support & libmpv video support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches and gradient lines
-* Adhoc support, and maybe PSN support as well
+* Adhoc & socket support, and maybe PSN support as well
 * SHA512 support
 * Fix the thread functions
 * USB support (maybe)
