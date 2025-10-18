@@ -203,7 +203,7 @@ static const luaL_Reg network_lib[] = {
 
 static const luaL_Reg ftp_lib[] = {
     {"start", lua_ftp},
-    {"isstarted", lua_ftpinit},
+    {"isrunning", lua_ftpinit},
     {"adddevice", lua_ftp_add},
     {"removedevice", lua_ftp_del},
     {NULL, NULL}
