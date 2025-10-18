@@ -27,7 +27,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * More shape drawing functions, such as drawing arches and gradient lines
 * Adhoc & socket support, and maybe PSN support as well
 * SHA512 support
-* Fix the thread functions
+* Fix the thread library (it's kinda unstable)
 * USB support (maybe)
 ## Credits
 * HENkaku by Team Molecule
