@@ -193,10 +193,6 @@ static int lua_header(lua_State *L){
 }
 
 static const luaL_Reg network_lib[] = {
-	{"ftp", lua_ftp},
-    {"ftpinit", lua_ftpinit},
-	{"ftpadddevice", lua_ftp_add},
-	{"ftpremovedevice", lua_ftp_del},
 	{"wifi", lua_wifi},
 	{"ip", lua_ip},
 	{"mac", lua_mac},
@@ -205,7 +201,19 @@ static const luaL_Reg network_lib[] = {
     {NULL, NULL}
 };
 
+static const luaL_Reg ftp_lib[] = {
+    {"start", lua_ftp},
+    {"isstarted", lua_ftpinit},
+    {"adddevice", lua_ftp_add},
+    {"removedevice", lua_ftp_del},
+    {NULL, NULL}
+};
+
 LUALIB_API int luaL_opennetwork(lua_State *L) {
 	luaL_register(L, "network", network_lib);
+	
+	lua_newtable(L);
+	luaL_register(L, NULL, ftp_lib);
+	lua_setfield(L, -2, "ftp"); // network.ftp = ftp_lib
     return 1;
 }
