@@ -32,7 +32,7 @@ find . -mindepth 1 -delete && cmake .. && make
 ## Credits
 * HENkaku by Team Molecule
 * TheFloW's VitaShell for SHA1 hashing
-* RegistryEditor MOD by devnoname120
+<!--* RegistryEditor MOD by devnoname120-->
 * vitasdk contributors
 * [quirc-vita](https://github.com/cxziaho/quirc-vita) by [cxziaho](https://github.com/cxziaho)
 * [QR-Code-generator](https://github.com/nayuki/QR-Code-generator) by [nayuki](https://github.com/nayuki)
