@@ -15,7 +15,7 @@ For a showcase of LifeLua's features go to the repository's `sample` folder.
 mkdir build && cd build && cmake .. && make
 ```
 
-To build after your first build:
+To make after your first build:
 
 ```
 find . -mindepth 1 -delete && cmake .. && make
