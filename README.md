@@ -24,7 +24,7 @@ find . -mindepth 1 -delete && cmake .. && make
 ## To do
 * ~~ATRAC9 & 3 audio support~~ Rewrite the audio library with FMOD (thanks to GrapheneCt) & libmpv video support
 * 3D support with shading, shadows & reflections
-* More shape drawing functions, such as drawing arches and gradient lines
+* More shape drawing functions, such as drawing arches
 * Adhoc & socket support, and maybe PSN support as well
 * SHA512 support
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
