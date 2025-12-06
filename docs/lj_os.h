@@ -255,7 +255,7 @@ number or nil os․volume(number vol) {}
 /** 
  * Mute the PS Vita
 */
-number or nil os․mute(number vol) {}
+nil os․mute() {}
 /**
  * Gets the real firmware version.
 */
