@@ -1,8 +1,14 @@
 # LifeLua
-LifeLua is a Lua interpreter for the PSVita which combines ease (OneLua) with advanceability (Lua Player Plus).
+LifeLua is a Lua interpreter for the PSVita which combines ease & simplicity with advanceability.
 
 <img src="bg0.png"></img>
 
+## Features
+* Timers
+* Camera support with effects and more
+* JSON, TOML and SQLite3 support.
+* Image support including PSD, TGA & HDR support
+* TBA
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
 ## Samples
@@ -29,6 +35,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * SHA512 support
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
 * USB support (maybe)
+* Update utf8 library
 ## Credits
 * HENkaku by Team Molecule
 * TheFloW's VitaShell for SHA1 hashing
