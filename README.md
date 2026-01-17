@@ -1,13 +1,14 @@
 # LifeLua
-LifeLua is a Lua interpreter for the PSVita which combines ease & simplicity with advanceability.
+LifeLua is a Lua interpreter for the PS Vita which combines simplicity with advanceability. It is an alternative to the other Lua interpreters available on the PS Vita.
 
 <img src="bg0.png"></img>
 
 ## Features
-* Timers
+* Timers with pausing and stopping.
 * Camera support with effects and more
 * JSON, TOML and SQLite3 support.
 * Image support including PSD, TGA & HDR support
+* Audio with support for MP3, WAV, OGG, OPUS, FLAC and tracker module formats (.MOD, .IT & more)
 * TBA
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
