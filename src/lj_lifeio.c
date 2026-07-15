@@ -185,10 +185,8 @@ static int lua_editsfo(lua_State *L) {
     const char *path = luaL_checkstring(L, 1);
     const char *param = luaL_checkstring(L, 2);
 
-    // Get the new value (could be string or number)
     int value_type = lua_type(L, 3);
 
-    // Open file
     SceUID fd = sceIoOpen(path, SCE_O_RDWR, 0);
     if (fd < 0)
         return luaL_error(L, "Failed to open .SFO for writing");
@@ -266,22 +264,18 @@ int recursive_delete(const char *path) {
     if (sceIoGetstat(path, &stat) < 0) return -1;
 
     if (SCE_S_ISDIR(stat.st_mode)) {
-        // Open directory
         SceUID dfd = sceIoDopen(path);
         if (dfd < 0) return -1;
 
         SceIoDirent dir;
         memset(&dir, 0, sizeof(SceIoDirent));
 
-        // Read each entry
         while (sceIoDread(dfd, &dir) > 0) {
-            // Skip "." and ".."
             if (strcmp(dir.d_name, ".") == 0 || strcmp(dir.d_name, "..") == 0) continue;
 
             char fullpath[1024];
             snprintf(fullpath, sizeof(fullpath), "%s/%s", path, dir.d_name);
-
-            // Recurse
+            
             if (recursive_delete(fullpath) < 0) {
                 sceIoDclose(dfd);
                 return -1;
@@ -289,10 +283,10 @@ int recursive_delete(const char *path) {
         }
 
         sceIoDclose(dfd);
-        return sceIoRmdir(path);  // remove the now-empty directory
+        return sceIoRmdir(path);
 
     } else {
-        return sceIoRemove(path);  // remove file
+        return sceIoRemove(path);
     }
 }
 
@@ -384,14 +378,12 @@ static int lua_sha256(lua_State *L){
 	size_t len = strlen(input);
 
 	uint8_t sha256out[20];
-
-	// Set up SHA1 context
+    
 	SHA256_CTX ctx;
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const uint8_t *)input, len);
 	sha256_final(&ctx, sha256out);
 
-	// Convert SHA256 result to hex string
 	char sha256msg[42]; // 40 chars + null terminator
 	for (int i = 0; i < 20; i++) {
 		sprintf(sha256msg + i * 2, "%02X", sha256out[i]);
@@ -405,17 +397,11 @@ static int lua_workpath(lua_State *L) {
     if(!lua_isnone(L, 1)){
         const char *path = luaL_checkstring(L, 1);
 
-        // Try changing the working directory
-        if (chdir(path) != 0) {
-            return luaL_error(L, "Failed to change directory to: %s", path);
-        }
-
-        return 0; // no return value
+        if (chdir(path) != 0) return luaL_error(L, "Failed to change directory to: %s", path);
+        return 0; 
     }else{
         char cwd[1024];
-        if (getcwd(cwd, sizeof(cwd)) == NULL) {
-            return luaL_error(L, "Failed to get current working directory");
-        }
+        if (getcwd(cwd, sizeof(cwd)) == NULL) return luaL_error(L, "Failed to get current working directory");
         lua_pushstring(L, cwd);
         return 1;
     }
@@ -489,12 +475,11 @@ static int lua_extract(lua_State *L) {
 
     while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
 
-        // Build full output path
+        // full path
         const char *entry_path = archive_entry_pathname(entry);
         char full_path[512];
         snprintf(full_path, sizeof(full_path), "%s/%s", out_path, entry_path);
 
-        // Ensure directory structure
         char *last_slash = strrchr(full_path, '/');
         if (last_slash) {
             *last_slash = '\0';
@@ -509,11 +494,8 @@ static int lua_extract(lua_State *L) {
             //lua_pushnumber(L, archive_entry_);
             lua_pushnumber(L, archive_entry_size(entry));
             lua_call(L, 3, 0);
-        } else {
-            lua_pop(L, 1); // not a function
         }
 
-        // Skip directories
         if (archive_entry_filetype(entry) == AE_IFDIR) {
             archive_read_data_skip(a);
             continue;
@@ -547,9 +529,7 @@ static int add_file_to_archive(struct archive *a, const char *src_path, const ch
     stat(src_path, &stt);
 
     SceIoStat st;
-    if (sceIoGetstat(src_path, &st) >= 0) {
-        archive_entry_set_size(entry, st.st_size);
-    }
+    if (sceIoGetstat(src_path, &st) >= 0) archive_entry_set_size(entry, st.st_size);
 
     archive_entry_set_mtime(entry, mktime(localtime(&stt.st_mtime)), 0);
     archive_entry_set_atime(entry, mktime(localtime(&stt.st_atime)), 0);
@@ -672,17 +652,17 @@ static int lua_info(lua_State *L){
 }
 
 static const luaL_Reg io_lib[] = {
-	{"readsfo", lua_readsfo},
-	{"editsfo", lua_editsfo},
-	{"exists", lua_fileexist},
-	{"newfolder", lua_newfolder},
-	{"delete", lua_delete},
-	{"list", lua_list},
-	{"pathstrip", lua_getfilename},
-	{"filestrip", lua_getfolder},
-	{"sha1", lua_sha1},
+    {"readsfo", lua_readsfo},
+    {"editsfo", lua_editsfo},
+    {"exists", lua_fileexist},
+    {"newfolder", lua_newfolder},
+    {"delete", lua_delete},
+    {"list", lua_list},
+    {"pathstrip", lua_getfilename},
+    {"filestrip", lua_getfolder},
+    {"sha1", lua_sha1},
     {"sha256", lua_sha256},
-	{"crc32", lua_crc32},
+    {"crc32", lua_crc32},
     {"md5", lua_md5},
     {"workpath", lua_workpath},
     {"freespace", lua_freespace},
@@ -694,6 +674,6 @@ static const luaL_Reg io_lib[] = {
 };
 
 LUALIB_API int luaL_extendio(lua_State *L) {
-	luaL_register(L, "io", io_lib);
+    luaL_register(L, "io", io_lib);
     return 1;
 }
