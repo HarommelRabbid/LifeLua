@@ -103,7 +103,6 @@ static cJSON* lua_to_cjson(lua_State *L, int index) {
         case LUA_TSTRING:
             return cJSON_CreateString(lua_tostring(L, index));
         case LUA_TTABLE: {
-            // Decide if array or object by checking keys
             bool is_array = true;
             int n = lua_rawlen(L, index);
             lua_pushnil(L);
@@ -124,8 +123,7 @@ static cJSON* lua_to_cjson(lua_State *L, int index) {
                     if (lua_type(L, -2) == LUA_TSTRING) {
                         cJSON_AddItemToObject(json, lua_tostring(L, -2), child);
                     } else {
-                        // non-string key: ignore or handle differently
-                        cJSON_Delete(child);
+                      cJSON_Delete(child);
                     }
                 }
                 lua_pop(L, 1);
