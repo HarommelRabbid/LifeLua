@@ -17,7 +17,6 @@
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
-//#include "include/libtimer.h"
 
 #include "lj_lifeinit.h"
 
@@ -128,12 +127,6 @@ static int lua_timerset(lua_State *L){
     return 0;
 }
 
-/*static int lua_timergc(lua_State *L){
-    lTimer *timer = (lTimer *)luaL_checkudata(L, 1, "timer");
-    freeTimer(timer->timer);
-    return 1;
-}*/
-
 static const luaL_Reg timer_lib[] = {
     {"new", lua_newtimer},
     {"start", lua_timerstart},
@@ -154,7 +147,6 @@ static const luaL_Reg timer_methods[] = {
     {"set", lua_timerset},
     {"elapsed", lua_timerelapsed},
     {"running", lua_timerrunning},
-    //{"__gc", lua_timergc},
     {NULL, NULL}
 };
 
