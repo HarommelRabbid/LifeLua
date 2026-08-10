@@ -288,7 +288,7 @@ static int lua_imagesave(lua_State *L){
 		int quality = luaL_optinteger(L, 4, 100); // JPEG quality must be between 1 to 100
 		stbi_write_jpg(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 3, pdata, quality);
 	}else luaL_argerror(L, 3, "Invalid format");
-	if(pdata) free(pdata);
+	if(pdata != NULL) free(pdata);
     return 0;
 }
 
