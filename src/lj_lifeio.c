@@ -328,15 +328,13 @@ static int lua_sha1(lua_State *L){
 	size_t len = strlen(input);
 
 	uint8_t sha1out[20];
-
-	// Set up SHA1 context
+    
 	SHA1_CTX ctx;
 	sha1_init(&ctx);
 	sha1_update(&ctx, (const uint8_t *)input, len);
 	sha1_final(&ctx, sha1out);
 
-	// Convert SHA1 result to hex string
-	char sha1msg[42]; // 40 chars + null terminator
+	char sha1msg[42];
 	for (int i = 0; i < 20; i++) {
 		sprintf(sha1msg + i * 2, "%02X", sha1out[i]);
 	}
