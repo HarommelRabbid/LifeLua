@@ -34,7 +34,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_controls_8lua-example.html",
+"Controls_8lua-example.html",
 "group__video.html#gaa0a73ec8433f53441e75e0b0288ad008"
 ];
 

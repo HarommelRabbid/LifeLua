@@ -45,7 +45,7 @@ var group__os =
     [ "os.lock", "group__os.html#ga295bf709298aaf34448cb894d233636f", null ],
     [ "os.message", "group__os.html#ga38da57522888cde34a35a4601061f10d", null ],
     [ "os.musicexport", "group__os.html#ga254b01cc259eeaf2607929801822e278", null ],
-    [ "os.mute", "group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f", null ],
+    [ "os.mute", "group__os.html#ga77ff74df7d976105eeaa478848e420bd", null ],
     [ "os.notification", "group__os.html#gab8148050015b0f14022c5f98082db8c5", null ],
     [ "os.photoexport", "group__os.html#ga28e9899961b89cfcbb60e9455cb89b58", null ],
     [ "os.photoreview", "group__os.html#ga053336c56f5cfa87c9efa8f6321e0e43", null ],

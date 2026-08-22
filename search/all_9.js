@@ -45,7 +45,7 @@ var searchData=
   ['os.lock_42',['os.lock',['../group__os.html#ga295bf709298aaf34448cb894d233636f',1,'lj_os.h']]],
   ['os.message_43',['os.message',['../group__os.html#ga38da57522888cde34a35a4601061f10d',1,'lj_os.h']]],
   ['os.musicexport_44',['os.musicexport',['../group__os.html#ga254b01cc259eeaf2607929801822e278',1,'lj_os.h']]],
-  ['os.mute_45',['os.mute',['../group__os.html#ga1aaf4475cd2bf074f5119dfed72b082f',1,'lj_os.h']]],
+  ['os.mute_45',['os.mute',['../group__os.html#ga77ff74df7d976105eeaa478848e420bd',1,'lj_os.h']]],
   ['os.notification_46',['os.notification',['../group__os.html#gab8148050015b0f14022c5f98082db8c5',1,'lj_os.h']]],
   ['os.photoexport_47',['os.photoexport',['../group__os.html#ga28e9899961b89cfcbb60e9455cb89b58',1,'lj_os.h']]],
   ['os.photoreview_48',['os.photoreview',['../group__os.html#ga053336c56f5cfa87c9efa8f6321e0e43',1,'lj_os.h']]],
