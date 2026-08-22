@@ -5,7 +5,7 @@
 This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a great way to start developing homebrew in Lua for the PS Vita.
 
 ## Custom userdata ##
-LifeLua has custom userdata to represent multiple data types. These include:
+LifeLua has userdata to represent different objects:
 * * color
 * * image
 * * audio
@@ -14,23 +14,18 @@ LifeLua has custom userdata to represent multiple data types. These include:
 * * font
 * * thread
 * * timer
-* * video
-* * model
 
-The documentation is incomplete, so for features not documented here yet, look into the source code or the samples.
+The documentation is mostly complete, but some functions are still missing, so for features not documented here yet, look into the source code, until they get added here.
 
-To benefit from the latest features added in development, you can compile LifeLua from the source. (nightly will be available soon)
+To benefit from the latest features added in development, you can compile LifeLua from the source. (A nightly will be available in the future)
 
-Any other Lua function &/or library that isn't documented here is documented in any [documentation](https://www.lua.org/manual/) of Lua.
+Any other Lua function &/or library that isn't documented here is documented in any [documentation](https://www.lua.org/manual/) of the Lua language.
+
+LifeLua also includes the luautf8 extension library by starwing.
+Documentation for that is [here](https://github.com/starwing/luautf8).
 
 ## License ##
-LifeLua is released under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).
-
-> [!note]
-When using the safe `eboot.bin` in your app instead of the unsafe one, you'll have a few limitations:\n\n
-
-- Can only open files inside of <b>ux0:/data</b> and <b>app0:/</b>.
-- Cannot intercept the <b>SCE_CTRL_VOLUP</b>, <b>SCE_CTRL_VOLDOWN</b>, <b>SCE_CTRL_POWER</b>, <b>SCE_CTRL_PSBUTTON</b>, <b>SCE_CTRL_HEADPHONE</b>.
+LifeLua is licensed under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).
 
 ------------------------------
 
