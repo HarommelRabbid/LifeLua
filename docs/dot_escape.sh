@@ -18,4 +18,4 @@ for filepath in "$SEARCHDIR"/*"$OLD"*; do
   newname="${filename//$OLD/$NEW}"
   mv -v -- "$filepath" "$SEARCHDIR/$newname"
 done
-patch -p1 -d "$SEARCHDIR" < search.js.patch
+patch -p0 -d "$SEARCHDIR" < search.js.patch
