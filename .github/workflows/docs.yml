@@ -26,7 +26,7 @@ jobs:
         touch ../../ll_docs/.nojekyll
     - name: Deploy to Pages
       uses: JamesIves/github-pages-deploy-action@v4
-      if: contains(github.ref,'refs/heads/master')
+      if: contains(github.ref,'refs/heads/main')
       with:
         branch: docs
         folder: ../ll_docs
