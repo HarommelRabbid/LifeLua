@@ -42,16 +42,26 @@ table io․readsfo(string path) {}
 nil io․editsfo(string path) {}
 /**
  * Lists a directory
- * @return A list of tables that represent a file/folder with these keys:
+ * @return A list of tables that represent the contents with these fields:
  * * **"name"**: string
  * * **"path"**: string
  * * **"isafolder"**: boolean
  * * **"created"**: string
  * * **"modified"**: string
  * * **"accessed"**: string
- * * **"size"**: number
+ * * **"size"**: number (size represented as bytes)
  */
 table io․list(string path) {}
+/** 
+  * Lists information about a file or a folder.
+  * @return A table with these fields:
+  * * **"accessed"**: string
+  * * **"modified"**: string
+  * * **"created"**: string
+  * * **"isafolder"**: boolean
+  * * **"size"**: number (size represented in bytes)
+  */
+table io․info(string path) {}
 /**
  * Strips the last file/directory from a path
  */
