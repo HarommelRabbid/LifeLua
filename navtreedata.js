@@ -35,7 +35,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "Controls_8lua-example.html",
-"group__video.html#gaa0a73ec8433f53441e75e0b0288ad008"
+"group__video.html#gaa02b576bda6057f651ab898c60b5071c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

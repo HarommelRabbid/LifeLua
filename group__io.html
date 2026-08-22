@@ -131,6 +131,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga2713b4e975ff9434ecde4832d5952b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7cbdebed2bd81c97f85b3338bf136db5" id="r_ga7cbdebed2bd81c97f85b3338bf136db5"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7cbdebed2bd81c97f85b3338bf136db5">io.list</a> (string path)</td></tr>
 <tr class="separator:ga7cbdebed2bd81c97f85b3338bf136db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93265d4225cd911acc9ad23803088c2c" id="r_ga93265d4225cd911acc9ad23803088c2c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93265d4225cd911acc9ad23803088c2c">io.info</a> (string path)</td></tr>
+<tr class="separator:ga93265d4225cd911acc9ad23803088c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa96cfef4494fe196b4b6ba6dc4bbca7f" id="r_gaa96cfef4494fe196b4b6ba6dc4bbca7f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa96cfef4494fe196b4b6ba6dc4bbca7f">io.filestrip</a> (string path)</td></tr>
 <tr class="separator:gaa96cfef4494fe196b4b6ba6dc4bbca7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad20a05587bc53ee6de36ee4aab112f65" id="r_gad20a05587bc53ee6de36ee4aab112f65"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad20a05587bc53ee6de36ee4aab112f65">io.pathstrip</a> (string path)</td></tr>
@@ -252,6 +254,31 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ga93265d4225cd911acc9ad23803088c2c" name="ga93265d4225cd911acc9ad23803088c2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga93265d4225cd911acc9ad23803088c2c">&#9670;&#160;</a></span>io.info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">table io.info </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Lists information about a file or a folder. </p><dl class="section return"><dt>Returns</dt><dd>A table with these fields:<ul>
+<li><b>"accessed"</b>: string</li>
+<li><b>"modified"</b>: string</li>
+<li><b>"created"</b>: string</li>
+<li><b>"isafolder"</b>: boolean</li>
+<li><b>"size"</b>: number (size represented in bytes) </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
 <a id="ga7cbdebed2bd81c97f85b3338bf136db5" name="ga7cbdebed2bd81c97f85b3338bf136db5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga7cbdebed2bd81c97f85b3338bf136db5">&#9670;&#160;</a></span>io.list()</h2>
 
@@ -266,14 +293,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lists a directory </p><dl class="section return"><dt>Returns</dt><dd>A list of tables that represent a file/folder with these keys:<ul>
+<p>Lists a directory </p><dl class="section return"><dt>Returns</dt><dd>A list of tables that represent the contents with these fields:<ul>
 <li><b>"name"</b>: string</li>
 <li><b>"path"</b>: string</li>
 <li><b>"isafolder"</b>: boolean</li>
 <li><b>"created"</b>: string</li>
 <li><b>"modified"</b>: string</li>
 <li><b>"accessed"</b>: string</li>
-<li><b>"size"</b>: number </li>
+<li><b>"size"</b>: number (size represented as bytes) </li>
 </ul>
 </dd></dl>
 

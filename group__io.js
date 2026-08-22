@@ -6,6 +6,7 @@ var group__io =
     [ "io.exists", "group__io.html#ga89cb36a9e5460e3acbda901d356f0c82", null ],
     [ "io.filestrip", "group__io.html#gaa96cfef4494fe196b4b6ba6dc4bbca7f", null ],
     [ "io.freespace", "group__io.html#gaca3cc34e74d881c8c24bcb052aaf3023", null ],
+    [ "io.info", "group__io.html#ga93265d4225cd911acc9ad23803088c2c", null ],
     [ "io.list", "group__io.html#ga7cbdebed2bd81c97f85b3338bf136db5", null ],
     [ "io.md5", "group__io.html#gabe13a28deb7a05623838b4d52b4a2d9b", null ],
     [ "io.newfolder", "group__io.html#gafe60a7e298936384e2528ce4237ad7a5", null ],

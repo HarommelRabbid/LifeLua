@@ -32,13 +32,14 @@ var searchData=
   ['io.exists_29',['io.exists',['../group__io.html#ga89cb36a9e5460e3acbda901d356f0c82',1,'lj_io.h']]],
   ['io.filestrip_30',['io.filestrip',['../group__io.html#gaa96cfef4494fe196b4b6ba6dc4bbca7f',1,'lj_io.h']]],
   ['io.freespace_31',['io.freespace',['../group__io.html#gaca3cc34e74d881c8c24bcb052aaf3023',1,'lj_io.h']]],
-  ['io.list_32',['io.list',['../group__io.html#ga7cbdebed2bd81c97f85b3338bf136db5',1,'lj_io.h']]],
-  ['io.md5_33',['io.md5',['../group__io.html#gabe13a28deb7a05623838b4d52b4a2d9b',1,'lj_io.h']]],
-  ['io.newfolder_34',['io.newfolder',['../group__io.html#gafe60a7e298936384e2528ce4237ad7a5',1,'lj_io.h']]],
-  ['io.pathstrip_35',['io.pathstrip',['../group__io.html#gad20a05587bc53ee6de36ee4aab112f65',1,'lj_io.h']]],
-  ['io.readsfo_36',['io.readsfo',['../group__io.html#gaacf5cd1aaec1db088e10fedce89df175',1,'lj_io.h']]],
-  ['io.sha1_37',['io.sha1',['../group__io.html#gaa79328a860fbd57364b8f2b96a1d2620',1,'lj_io.h']]],
-  ['io.sha256_38',['io.sha256',['../group__io.html#gadbb917d3bf660e3ab32f0c9751c0dda4',1,'lj_io.h']]],
-  ['io.totalspace_39',['io.totalspace',['../group__io.html#ga33e61d068102220bb851a5b20902d9b4',1,'lj_io.h']]],
-  ['io.workpath_40',['io.workpath',['../group__io.html#ga8c74218f641d10f2add46817c9299af8',1,'lj_io.h']]]
+  ['io.info_32',['io.info',['../group__io.html#ga93265d4225cd911acc9ad23803088c2c',1,'lj_io.h']]],
+  ['io.list_33',['io.list',['../group__io.html#ga7cbdebed2bd81c97f85b3338bf136db5',1,'lj_io.h']]],
+  ['io.md5_34',['io.md5',['../group__io.html#gabe13a28deb7a05623838b4d52b4a2d9b',1,'lj_io.h']]],
+  ['io.newfolder_35',['io.newfolder',['../group__io.html#gafe60a7e298936384e2528ce4237ad7a5',1,'lj_io.h']]],
+  ['io.pathstrip_36',['io.pathstrip',['../group__io.html#gad20a05587bc53ee6de36ee4aab112f65',1,'lj_io.h']]],
+  ['io.readsfo_37',['io.readsfo',['../group__io.html#gaacf5cd1aaec1db088e10fedce89df175',1,'lj_io.h']]],
+  ['io.sha1_38',['io.sha1',['../group__io.html#gaa79328a860fbd57364b8f2b96a1d2620',1,'lj_io.h']]],
+  ['io.sha256_39',['io.sha256',['../group__io.html#gadbb917d3bf660e3ab32f0c9751c0dda4',1,'lj_io.h']]],
+  ['io.totalspace_40',['io.totalspace',['../group__io.html#ga33e61d068102220bb851a5b20902d9b4',1,'lj_io.h']]],
+  ['io.workpath_41',['io.workpath',['../group__io.html#ga8c74218f641d10f2add46817c9299af8',1,'lj_io.h']]]
 ];
