@@ -20,11 +20,6 @@ string io․sha256(string string) {}
  */
 string io․md5(string string) {}
 /**
- * Gets or sets the working path
- * @param path If defined, the work path will be set to the defined path
- */
-nil or boolean io․workpath(string path) {}
-/**
  * Checks if a file or folder exists or not
  */
 boolean io․exists(string path) {}
