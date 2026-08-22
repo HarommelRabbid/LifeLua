@@ -1,0 +1,34 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen 
+    - name: Doxygen build
+      run: |
+        cd docs
+        doxygen
+        bash dot_escape.sh
+        touch ../../ll_docs/.nojekyll
+    - name: Deploy to Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      if: contains(github.ref,'refs/heads/master')
+      with:
+        branch: docs
+        folder: ../ll_docs
+        clean: true
+        clean-exclude: |
+          .nojekyll
