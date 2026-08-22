@@ -15,8 +15,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install doxygen
       run: |
-        sudo apt-get update
-        sudo apt-get install -y doxygen 
+        wget https://www.doxygen.nl/files/doxygen-1.13.2.linux.bin.tar.gz
+        tar -xzf doxygen-1.13.2.linux.bin.tar.gz
+        sudo cp doxygen-1.13.2/bin/doxygen /usr/local/bin/
     - name: Doxygen build
       run: |
         cd docs
