@@ -28,7 +28,7 @@ static int sqlite_callback(void *data, int argc, char **argv, char **azColName){
 	lua_pushnumber(L, callback_results++);
 	lua_newtable(L);
 	for (int i = 0; i < argc; i++) {
-		lua_pushstring(L,  azColName[i]);
+		lua_pushstring(L, azColName[i]);
 		if (argv[i] != NULL) lua_pushstring(L, argv[i]);
 		else lua_pushnil(L);
 		lua_settable(L, -3);
