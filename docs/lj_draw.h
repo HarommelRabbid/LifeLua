@@ -37,6 +37,20 @@ nil draw․circle(number x, number y, number radius, color color) {}
 */
 nil draw․line(number start_x, number start_y, number endx, number endy, color color) {}
 /** 
+ * Draws a gradient line on the screen
+*/
+nil draw․gradientline(number start_x, number start_y, number endx, number endy, color start_color, color end_color) {}
+/** 
+ * Draws a polyline on the screen
+ * Can have as many points as you want, but two points are required
+ * @note A point must have these parameters: x, y & color
+ * @par Example:
+ * @code
+ * draw.polyline(10, 10, white, 50, 10, blue, 30, 70, green)
+ * @endcode
+*/
+nil draw․polyline(number x1, number y1, color color1, number x2, number y2, color color2, ...) {}
+/** 
  * Draws a pixel on the screen
 */
 nil draw․pixel(number x, number y, color color) {}
@@ -47,17 +61,22 @@ nil draw․gradientrect(number x, number y, number width, number height, color t
 /** 
  * Draws a double vertical gradient rectangle on the screen
 */
-nil draw․vdoublegradientrect(number x, number y, number width, number height, color top, color center, color bottom) {}
+nil draw․vdoublegradientrect(number x, number y, number width, number height, color top_left, color top_right, color center_left, color center_right, color bottom_left, color bottom_right) {}
 /** 
  * Draws a double horizontal gradient rectangle on the screen
 */
-nil draw․hdoublegradientrect(number x, number y, number width, number height, color top, color center, color bottom) {}
+nil draw․hdoublegradientrect(number x, number y, number width, number height, color left_top, color center_top, color right_top, color left_bottom, color center_bottom, color right_bottom) {}
 /** 
- * Enables or disables clipping
+ * Enables or disables clipping/masking
 */
 nil draw․enableclip(boolean enable) {}
 /** 
- * Rectangle scrissor, useful for clipping text
+ * Draws a radial (gradient) circle
+ * @param smoothness: smoothness of the radial circle, higher = smoother, optional, default is 64, maximum 100
+*/
+nil draw․radialcircle(number x, number y, number radius, color center, color edge, number smoothness) {}
+/** 
+ * Rectangle scrissor, useful for clipping text, & masking stuff
  * @par Example:
  * @code
  * draw.enableclip(true)
@@ -68,7 +87,7 @@ nil draw․enableclip(boolean enable) {}
 */
 nil draw․cliprect(number x, number y, number width, number height) {}
 /** 
- * Circle scrissor
+ * Circle scrissor, same behavior as cliprect, but as a circle
 */
 nil draw․clipcircle(number x, number y, number radius) {}
 /** 
