@@ -2,7 +2,7 @@
 @mainpage LifeLua Documentation
 @todo Expand this page and finish documenting the libraries
 
-This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a great way to start developing homebrew in Lua for the PS Vita.
+This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a good way to start developing homebrew in Lua for the PS Vita.
 
 ## Custom userdata ##
 LifeLua has userdata to represent different objects:
@@ -23,6 +23,7 @@ Any other Lua function &/or library that isn't documented here is documented in 
 
 LifeLua also includes the luautf8 extension library by starwing.
 Documentation for that is [here](https://github.com/starwing/luautf8).
+It is registered in LifeLua as the `utf8` library already.
 
 ## License ##
 LifeLua is licensed under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).
