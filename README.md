@@ -1,14 +1,16 @@
 # LifeLua
-LifeLua is a Lua interpreter for the PS Vita which combines simplicity with advanceability. It is an alternative to the other Lua interpreters available on the PS Vita.
+LifeLua is a Lua interpreter for the PS Vita which combines simplicity with advanceability. It is an alternative to the other Lua interpreters available for the platform.
 
 <img src="bg0.png"></img>
 
 ## Features
-* Timers with pausing and stopping.
-* Camera support with effects and more
-* JSON, TOML and SQLite3 support.
+* Timers with pausing and stopping
+* Camera support with effects and filters
+* JSON, TOML and SQLite3 support
 * Image support including PSD, TGA & HDR support
 * Audio with support for MP3, WAV, OGG, OPUS, FLAC and tracker module formats (.MOD, .IT & more)
+* QR code scanning & generation
+* Shapes with solid colors or gradients
 * TBA
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
@@ -16,20 +18,22 @@ https://harommelrabbid.github.io/LifeLua
 For a showcase of LifeLua's features go to the repository's `sample` folder.
 ## Compiling
 * [libsqlite](https://github.com/VitaSmith/libsqlite): run `cd libsqlite && make`, move the library (ends with` *.a`) in the folder where the libraries are stored in the vitasdk, and run `make install`, see https://github.com/VitaSmith/libsqlite?tab=readme-ov-file#compiling
-* Install [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
+* Set up [vitasdk](https://github.com/vitasdk) if you haven't and build LifeLua using:
 
 ```
 mkdir build && cd build && cmake .. && make
 ```
 
-To make after your first build:
+To make after your first build (assuming you are in the `build` folder):
 
 ```
 find . -mindepth 1 -delete && cmake .. && make
 ```
 
 ## To do
-* ~~ATRAC9 & 3 audio support~~ Rewrite the audio library with FMOD backend (thanks to GrapheneCt) & libmpv video support
+* Rewrite the audio library with a new backend
+* libmpv video support, so that video streaming will work and also support for 1080p video quality
+* Audio streaming support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches
 * Adhoc & socket support, and maybe PSN support as well
@@ -38,6 +42,10 @@ find . -mindepth 1 -delete && cmake .. && make
 * Channels (like in LÖVE2D)
 * USB support (maybe)
 * Update utf8 library
+* Add MessagePack support
+* Get & set pixel of an image
+* libime support (half-screen keyboard)
+* Syntax extensions that were recently added to LuaJIT
 ## Credits
 * HENkaku by Team Molecule
 * TheFloW's VitaShell for SHA1 hashing
