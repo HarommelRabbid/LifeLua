@@ -106,7 +106,7 @@ static int lua_imageload(lua_State *L) {
             free(img);
         }
 	}
-    if (!image->tex) return lua_pushnil(L), 1;
+    if (!image->tex) lua_pushnil(L);
     
     luaL_getmetatable(L, "image");
     lua_setmetatable(L, -2);
