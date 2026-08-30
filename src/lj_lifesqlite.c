@@ -62,9 +62,7 @@ static int lua_query(lua_State *L){
 	callback_results = 1;
 	lua_newtable(L);
 	int fd = sqlite3_exec(db, query, sqlite_callback, L, NULL);
-	if (fd != SQLITE_OK) {
-		return luaL_error(L, sqlite3_errmsg(db));
-	}
+	if (fd != SQLITE_OK) return luaL_error(L, sqlite3_errmsg(db));
 	return 1;
 }
 
