@@ -276,7 +276,7 @@ static int lua_imagesave(lua_State *L){
     Image *image = (Image *)luaL_checkudata(L, 1, "image");
     const char *filename = luaL_checkstring(L, 2);
     const char *format = luaL_optstring(L, 3, "png");
-	uint8_t *pdata;
+	uint8_t *pdata = NULL;
 	if(strcasecmp(format, "png") != 0){
 		pdata = convert_abgr_to_rgb_from_u32(vita2d_texture_get_datap(image->tex), vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), vita2d_texture_get_stride(image->tex));
 	}
@@ -288,7 +288,7 @@ static int lua_imagesave(lua_State *L){
 		int quality = luaL_optinteger(L, 4, 100); // JPEG quality must be between 1 to 100
 		stbi_write_jpg(filename, vita2d_texture_get_width(image->tex), vita2d_texture_get_height(image->tex), 3, pdata, quality);
 	}else luaL_argerror(L, 3, "Invalid format");
-	if(pdata != NULL) free(pdata);
+    free(pdata);
     return 0;
 }
 
