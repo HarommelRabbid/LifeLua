@@ -39,7 +39,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * Adhoc & socket support, and maybe PSN support as well
 * SHA512 & Base64 decoding/encoding support
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
-* Channels (like in LÖVE2D)
+* Channels for communicating between threads (like in LÖVE2D)
 * USB support (maybe)
 * Update utf8 library
 * Add MessagePack support
@@ -47,9 +47,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * libime support (half-screen keyboard)
 * Syntax extensions that were recently added to LuaJIT
 ## Credits
-* HENkaku by Team Molecule
-* TheFloW's VitaShell for SHA1 hashing
-* vitasdk contributors
+* TheFloW's VitaShell for video and image exporting
 * [quirc-vita](https://github.com/cxziaho/quirc-vita) by [cxziaho](https://github.com/cxziaho)
 * [QR-Code-generator](https://github.com/nayuki/QR-Code-generator) by [nayuki](https://github.com/nayuki)
 * libvita2d & ftpvita by xerpi
