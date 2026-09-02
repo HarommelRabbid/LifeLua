@@ -103,17 +103,17 @@ static int lua_fronttouch(lua_State *L){
 	for (int i = 0; i < fronttouch.reportNum; i++) {
 		lua_newtable(L);
 
-		lua_pushnumber(L, lerp(fronttouch.report[i].x, 1920, 960));
+		lua_pushnumber(L, fronttouch.report[i].x / 2);
 		lua_setfield(L, -2, "x");
 
-		lua_pushnumber(L, lerp(fronttouch.report[i].y, 1315, 855));
+		lua_pushnumber(L, fronttouch.report[i].y / 2);
 		lua_setfield(L, -2, "y");
 
 		lua_pushnumber(L, fronttouch.report[i].id);
-        lua_setfield(L, -2, "id");
+  lua_setfield(L, -2, "id");
 
-        lua_pushnumber(L, fronttouch.report[i].force);
-        lua_setfield(L, -2, "force");
+  lua_pushnumber(L, fronttouch.report[i].force);
+  lua_setfield(L, -2, "force");
 
 		lua_rawseti(L, -2, i+1);
 	}
@@ -126,17 +126,17 @@ static int lua_reartouch(lua_State *L){
 	for (int i = 0; i < reartouch.reportNum; i++) {
 		lua_newtable(L);
 
-		lua_pushnumber(L, lerp(reartouch.report[i].x, 1920, 960));
+		lua_pushnumber(L, reartouch.report[i].x / 2);
 		lua_setfield(L, -2, "x");
 
-		lua_pushnumber(L, lerp(reartouch.report[i].y, 1285, 855));
+		lua_pushnumber(L, reartouch.report[i].y / 2);
 		lua_setfield(L, -2, "y");
 
 		lua_pushnumber(L, reartouch.report[i].id);
-        lua_setfield(L, -2, "id");
+  lua_setfield(L, -2, "id");
 
-        lua_pushnumber(L, reartouch.report[i].force);
-        lua_setfield(L, -2, "force");
+  lua_pushnumber(L, reartouch.report[i].force);
+  lua_setfield(L, -2, "force");
 
 		lua_rawseti(L, -2, i+1);
 	}
