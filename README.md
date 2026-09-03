@@ -41,9 +41,10 @@ find . -mindepth 1 -delete && cmake .. && make
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
 * Channels for communicating between threads (like in LÖVE2D)
 * USB support (maybe)
-* Update utf8 library
+* Update some libraries (like utf8 and some other libraries LifeLua uses)
 * Add MessagePack support
 * Get & set pixel of an image
+* DDS, GIF and WebP image support
 * libime support (half-screen keyboard)
 * Syntax extensions that were recently added to LuaJIT
 ## Credits
