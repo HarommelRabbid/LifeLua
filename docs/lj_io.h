@@ -82,4 +82,19 @@ number io․totalspace(string partition) {}
  * @param path optional, if empty it'll return the current workpath, otherwise it'll set the workpath to the specified path
  */
 nil or string io․workpath(string path) {}
+/**
+ * Extract an archive
+ * @note This function has a callback that can be defined named `LifeLuaArchiveExtracting`
+ * @par Example:
+ ```
+ function LifeLuaArchiveExtracting(pathname, index, size)
+ ...
+ end
+ ```
+ */
+boolean io․extract(string archive, string extracted_content) {}
+/**
+ * Makes a folder or a table of file/folder paths into an archive
+ */
+boolean io․archive(string or table contents, string archive_path, string format) {}
 /** @} */
