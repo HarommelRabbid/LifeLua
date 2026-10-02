@@ -1,6 +1,5 @@
 var topics =
 [
-    [ "render", "group__render.html", "group__render" ],
     [ "audio", "group__audio.html", "group__audio" ],
     [ "camera", "group__camera.html", "group__camera" ],
     [ "controls", "group__controls.html", "group__controls" ],
