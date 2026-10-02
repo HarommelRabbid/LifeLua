@@ -92,7 +92,7 @@ nil or string io․workpath(string path) {}
  end
  ```
  */
-boolean io․extract(string archive, string extracted_content) {}
+nil io․extract(string archive, string extracted_content) {}
 /**
  * Makes a folder or a table of file/folder paths into an archive
  */
