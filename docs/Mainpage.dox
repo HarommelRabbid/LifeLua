@@ -4,17 +4,6 @@
 
 This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a good way to start developing homebrew in Lua for the PS Vita.
 
-## Custom userdata ##
-LifeLua has userdata to represent different objects:
-* * color
-* * image
-* * audio
-* * jsonnull
-* * sqlite3
-* * font
-* * thread
-* * timer
-
 The documentation is mostly complete, but some functions are still missing, so for features not documented here yet, look into the source code, until they get added here.
 
 To benefit from the latest features added in development, you can compile LifeLua from the source. (A nightly will be available in the future)
@@ -23,7 +12,18 @@ Any other Lua function &/or library that isn't documented here is documented in 
 
 LifeLua also includes the luautf8 extension library by starwing.
 Documentation for that is [here](https://github.com/starwing/luautf8).
-It is registered in LifeLua as the `utf8` library already.
+It's already registered in LifeLua as the `utf8` library.
+
+## Custom userdata ##
+LifeLua has userdata to represent different objects:
+* * color
+* * image
+* * audio
+* * jsonnull (used to check if a value is null in a JSON)
+* * sqlite3
+* * font
+* * thread
+* * timer
 
 ## License ##
 LifeLua is licensed under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).
