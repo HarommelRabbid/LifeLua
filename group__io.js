@@ -1,9 +1,11 @@
 var group__io =
 [
+    [ "io.archive", "group__io.html#ga89488b275c772b3c4f3b401846a99825", null ],
     [ "io.crc32", "group__io.html#gaad8a2ed342eed207b1270bf05769a4b1", null ],
     [ "io.delete", "group__io.html#gac185ff3386ac909165aa6d15739b2fd2", null ],
     [ "io.editsfo", "group__io.html#ga2713b4e975ff9434ecde4832d5952b87", null ],
     [ "io.exists", "group__io.html#ga89cb36a9e5460e3acbda901d356f0c82", null ],
+    [ "io.extract", "group__io.html#ga42f6e152df4a1aa6a4ffee1c6f0eb56e", null ],
     [ "io.filestrip", "group__io.html#gaa96cfef4494fe196b4b6ba6dc4bbca7f", null ],
     [ "io.freespace", "group__io.html#gaca3cc34e74d881c8c24bcb052aaf3023", null ],
     [ "io.info", "group__io.html#ga93265d4225cd911acc9ad23803088c2c", null ],

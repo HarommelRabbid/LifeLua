@@ -143,9 +143,40 @@ Functions</h2></td></tr>
 <tr class="separator:ga33e61d068102220bb851a5b20902d9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8c74218f641d10f2add46817c9299af8" id="r_ga8c74218f641d10f2add46817c9299af8"><td class="memItemLeft" align="right" valign="top">nil or string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8c74218f641d10f2add46817c9299af8">io.workpath</a> (string path)</td></tr>
 <tr class="separator:ga8c74218f641d10f2add46817c9299af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga42f6e152df4a1aa6a4ffee1c6f0eb56e" id="r_ga42f6e152df4a1aa6a4ffee1c6f0eb56e"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga42f6e152df4a1aa6a4ffee1c6f0eb56e">io.extract</a> (string archive, string extracted_content)</td></tr>
+<tr class="separator:ga42f6e152df4a1aa6a4ffee1c6f0eb56e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga89488b275c772b3c4f3b401846a99825" id="r_ga89488b275c772b3c4f3b401846a99825"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga89488b275c772b3c4f3b401846a99825">io.archive</a> (string or table contents, string archive_path, string format)</td></tr>
+<tr class="separator:ga89488b275c772b3c4f3b401846a99825"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga89488b275c772b3c4f3b401846a99825" name="ga89488b275c772b3c4f3b401846a99825"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga89488b275c772b3c4f3b401846a99825">&#9670;&#160;</a></span>io.archive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean io.archive </td>
+          <td>(</td>
+          <td class="paramtype">string or table</td>          <td class="paramname"><span class="paramname"><em>contents</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>archive_path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>format</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Makes a folder or a table of file/folder paths into an archive </p>
+
+</div>
+</div>
 <a id="gaad8a2ed342eed207b1270bf05769a4b1" name="gaad8a2ed342eed207b1270bf05769a4b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaad8a2ed342eed207b1270bf05769a4b1">&#9670;&#160;</a></span>io.crc32()</h2>
 
@@ -215,6 +246,32 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Checks if a file or folder exists or not </p>
+
+</div>
+</div>
+<a id="ga42f6e152df4a1aa6a4ffee1c6f0eb56e" name="ga42f6e152df4a1aa6a4ffee1c6f0eb56e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42f6e152df4a1aa6a4ffee1c6f0eb56e">&#9670;&#160;</a></span>io.extract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean io.extract </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>archive</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>extracted_content</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extract an archive </p><dl class="section note"><dt>Note</dt><dd>This function has a callback that can be defined named <code>LifeLuaArchiveExtracting</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaArchiveExtracting(pathname, index, size)</div>
+<div class="line">...</div>
+<div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
