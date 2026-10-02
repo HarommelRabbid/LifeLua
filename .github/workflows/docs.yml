@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**'
   pull_request:
+      - 'docs/**'
   repository_dispatch:
     types: [run_build]
 
