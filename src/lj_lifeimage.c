@@ -123,7 +123,7 @@ static int lua_newimage(lua_State *L) {
 		Color *color = lua_tocolor(L, 3);
         uint32_t *datap = vita2d_texture_get_datap(image->tex);
         for(uint32_t i = 0; i < (vita2d_texture_get_stride(image->tex) / 4) * h; i++)
-            datap[i] = color->col;
+            datap[i] = color->color;
     }
 
     luaL_getmetatable(L, "image");
@@ -573,7 +573,7 @@ static int image_pixel(lua_State *L){
         lua_setmetatable(L, -2);
         return 1;
     }else{
-        Color *col = luaL_tocolor(L, 4);
+        Color *col = lua_tocolor(L, 4);
         datap[y * stride + x] = col->color;
     }
     return 0;
