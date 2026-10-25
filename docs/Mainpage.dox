@@ -1,40 +1,151 @@
 /**
 @mainpage LifeLua Documentation
-@todo Expand this page and finish documenting the libraries
 
-This is the documentation for LifeLua, a LuaJIT 2.1 interpreter for the PS Vita. This is a good way to start developing homebrew in Lua for the PS Vita.
+LifeLua is a Lua interpreter for the PS Vita, based on LuaJIT 2.1. You write your app in Lua and LifeLua runs it,
+with libraries for drawing, images, sound, controls, files, networking, system dialogs and more.
 
-The documentation is mostly complete, but some functions are still missing, so for features not documented here yet, look into the source code, until they get added here.
+## Getting started ##
 
-To benefit from the latest features added in development, you can compile LifeLua from the source. (A nightly will be available in the future)
+1. Install the LifeLua VPK on your PS Vita.
+2. Write your app in a file called `main.lua`.
+3. Put `main.lua` in LifeLua's app folder, `ux0:app/LIFELUAJT/` (that's `app0:` from inside the app),
+   together with any images, sounds or fonts it uses.
+4. Start LifeLua from the LiveArea. It runs `main.lua`.
 
-Any other Lua function &/or library that isn't documented here is documented in any [documentation](https://www.lua.org/manual/) of the Lua language.
+If `main.lua` is missing or has an error, LifeLua shows the error message on screen with three options:
+press **Cross** to run `main.lua` again, **Square** to start an FTP server (so you can upload a fixed `main.lua`
+from a computer without leaving the app) or **Circle** to close LifeLua. This makes it quick to fix mistakes and try again.
 
-LifeLua also includes the luautf8 extension library by starwing.
-Documentation for that is [here](https://github.com/starwing/luautf8).
-It's already registered in LifeLua as the `utf8` library.
+## Your first app ##
 
-## Custom userdata ##
-LifeLua has userdata to represent different objects:
-* * color
-* * image
-* * audio
-* * jsonnull (used to check if a value is null in a JSON)
-* * sqlite3
-* * font
-* * thread
-* * timer
+A LifeLua app is usually one loop that runs once per frame: read the controls, draw everything, then show the frame.
+
+@code
+local white = color.new(255, 255, 255)
+local x, y = 480, 272
+
+while true do
+    controls.update()                          -- read the buttons
+
+    if controls.check(SCE_CTRL_UP) then y = y - 4 end
+    if controls.check(SCE_CTRL_DOWN) then y = y + 4 end
+    if controls.check(SCE_CTRL_LEFT) then x = x - 4 end
+    if controls.check(SCE_CTRL_RIGHT) then x = x + 4 end
+    if controls.pressed(SCE_CTRL_START) then os.exit() end
+
+    draw.text(10, 10, "Move the circle with the D-pad, press Start to exit", white)
+    draw.circle(x, y, 20, white)
+
+    draw.swapbuffers()                         -- show the frame
+end
+@endcode
+
+More examples are in the [Examples](examples.html) tab, and the `sample` folder of the
+[source code](https://github.com/HarommelRabbid/LifeLua/tree/main/sample) has a full showcase app.
+
+## How to read this documentation ##
+
+The libraries are listed in the [Libraries](topics.html) tab. Every function is shown like this:
+
+@code{.c}
+nil image.display(image image, number x, number y, color tint)
+@endcode
+
+- The first word is what the function **returns**. `nil` means it returns nothing, `any` means the type can vary.
+- The words before each parameter name are the Lua **types** it expects: `number`, `string`, `boolean`, `table`, `function`,
+  or one of LifeLua's own types like `image` or `color`.
+- Parameters marked *(optional)* can be left out, starting from the end. Their default value is written next to them.
+- Names in CAPITALS (like `SCE_CTRL_CROSS`) are **constants**: global variables holding numbers, ready to use.
+- Functions whose first parameter is an object (an image, a color, an audio, ...) can also be called as **methods**,
+  so `image.display(img, 0, 0)` can be written as `img:display(0, 0)`.
+
+## Libraries ##
+
+| Library | What it's for |
+|---------|---------------|
+| @ref draw "draw" | Drawing text and shapes, showing each frame |
+| @ref color "color" | Creating and mixing colors |
+| @ref image "image" | Loading, drawing, editing and saving images, QR codes |
+| @ref font "font" | Loading fonts for text |
+| @ref controls "controls" | Buttons, analog sticks, touch screens, motion sensors |
+| @ref audio "audio" | Music and sounds |
+| @ref video "video" | Playing videos |
+| @ref camera "camera" | The front and back cameras |
+| @ref imgui "imgui" | Windows, menus, buttons and other UI widgets |
+| @ref timer "timer" | Measuring time |
+| @ref os "os" | System dialogs (keyboard, messages), apps, battery, power, system info |
+| @ref io "io" | Files, folders, archives, hashes |
+| @ref network "network" | Wi-Fi, downloads, FTP server |
+| @ref json "json" / @ref toml "toml" | Reading and writing JSON, reading TOML |
+| @ref sqlite3 "sqlite3" | SQLite databases |
+| @ref thread "thread" | Running code at the same time as your main loop |
+| @ref string "string" / @ref table "table" / @ref math "math" | Extra functions added to Lua's standard libraries |
+
+All of the standard Lua 5.1 libraries are available too (`string`, `table`, `math`, `io`, `os`, ...),
+plus LuaJIT's `bit`, `ffi` and `jit` libraries. They are documented in the [Lua 5.1 manual](https://www.lua.org/manual/5.1/manual.html)
+and on the [LuaJIT website](https://luajit.org/extensions.html).
+The [luautf8](https://github.com/starwing/luautf8) library by starwing is also included, as `utf8`, for working with UTF-8 text.
+
+## LifeLua's types ##
+
+Besides Lua's own types, LifeLua functions use these objects:
+
+| Type | Made with | Represents |
+|------|-----------|------------|
+| `color` | colorꓸnew(), tocolor() | A color with red, green, blue and alpha |
+| `image` | imageꓸload(), imageꓸnew(), imageꓸscreen(), imageꓸqr() | An image that can be drawn on the screen |
+| `font` | fontꓸload() | A font for drawꓸtext() |
+| `audio` | audioꓸload() | A sound or a song |
+| `timer` | timerꓸnew() | A stopwatch |
+| `thread` | threadꓸnew() | A function running at the same time as the main code |
+| `sqlite3` | sqlite3ꓸopen() | An open database |
+| `jsonnull` | json.null | JSON's `null` value |
+
+They are freed automatically when they're no longer used, like any other Lua value.
+
+## Callbacks ##
+
+Some functions wait until they're done (like a download or a system dialog), so your main loop doesn't run in the meantime.
+To show progress or keep drawing during that time, define a **global function** with one of these names. LifeLua calls it for you:
+
+| Function name | Called during | Parameters |
+|---------------|---------------|------------|
+| `LifeLuaNetworkDownload` | networkꓸdownload() | downloaded bytes, written bytes, total size, piece size, written piece size |
+| `LifeLuaArchiveExtracting` | ioꓸextract() | file name, file number, file size |
+| `LifeLuaIMEDialog`, `LifeLuaMessageDialog`, ... | The @ref os "os" dialogs | none (see the list in @ref os "os") |
+
+## Tips ##
+
+- `print()` writes to the debug console, which isn't visible on the PS Vita's screen. Use drawꓸtext() to show values while testing.
+- Load images, sounds and fonts **once**, before your main loop, not inside it: loading every frame is slow and wastes memory.
+- Save your app's files in its own folder in `ux0:data/` (e.g. `ux0:data/myapp/`), and create it with ioꓸnewfolder() first.
+- Lua lists start at index **1**, and LifeLua's lists (touch points, folder contents, combo box items, ...) do too.
+
+## Compiling LifeLua ##
+
+To get the newest features before a release, you can compile LifeLua yourself. See the
+[README](https://github.com/HarommelRabbid/LifeLua#compiling) for the steps.
+
+## About this documentation ##
+This documentation was largely rewritten with the help of AI (Claude by Anthropic), checked against LifeLua's source code.
+If you find something that doesn't match how LifeLua behaves, please [open an issue](https://github.com/HarommelRabbid/LifeLua/issues).
 
 ## License ##
 LifeLua is licensed under the [GPLv3 license](https://github.com/HarommelRabbid/LifeLua/blob/main/LICENSE).
 
 ------------------------------
 
-Source code: https://github.com/HarommelRabbid/LifeLua\n
+Source code: https://github.com/HarommelRabbid/LifeLua
 */
 /**
  * @example HelloWorld.lua
+ * The smallest LifeLua app: shows a text on the screen.
  * @example Controls.lua
+ * Shows the state of the buttons, analog sticks, motion sensors and touch screens.
+ * @example Menu.lua
+ * A simple menu you can move through with the D-pad.
  * @example SFO.lua
+ * Reads and shows the contents of LifeLua's param.sfo.
  * @example ImGui.lua
+ * A menu bar and a few widgets made with ImGui.
 */

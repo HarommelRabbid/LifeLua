@@ -1,9 +1,14 @@
+# Doxygen doesn't allow "." in function names, so the docs headers write
+# Lua names like image.load as "imageꓸload", using "ꓸ" (U+A4F8 LISU LETTER TONE MYA TI)
+# as a stand-in dot. After Doxygen runs, this script turns every "ꓸ" in the
+# generated HTML (and in the file names) back into a real ".".
+
 DIR="../../ll_docs"
 SEARCHDIR="../../ll_docs/search"
 
-perl -pi -e 's/․/./g' "$DIR"/*.* "$SEARCHDIR"/*.*
+perl -pi -e 's/ꓸ/./g' "$DIR"/*.* "$SEARCHDIR"/*.*
 
-OLD="․"
+OLD="ꓸ"
 NEW="."
 
 for filepath in "$DIR"/*"$OLD"*; do

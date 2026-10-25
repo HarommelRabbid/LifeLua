@@ -1,100 +1,178 @@
 /**
  * @defgroup io io
- * @brief Lua IO library extension
+ * @brief Files, folders, archives & hashes (extends Lua's io library)
+ *
+ * These functions are added to Lua's standard `io` library, so `io.open()`, `io.read()`, etc. still work
+ * like in normal Lua (see the [Lua manual](https://www.lua.org/manual/5.1/manual.html#5.7)).
+ *
+ * Paths on the PS Vita start with a partition, for example:
+ * * `app0:` is your app's own folder, where `main.lua` is
+ * * `ux0:data/` is the usual place to save your app's files
+ * * `ux0:`, `ur0:`, `uma0:`, `imc0:`, ... are the memory card and other storage
+ *
+ * @code
+ * if not io.exists("ux0:data/myapp") then
+ *     io.newfolder("ux0:data/myapp")
+ * end
+ * local file = io.open("ux0:data/myapp/save.txt", "w")
+ * file:write("Hello!")
+ * file:close()
+ * @endcode
  * @{
 */
 /**
- * Gets the CRC32 hash of a string
- */
-number io․crc32(string string) {}
+ * Checks if a file or folder exists
+ * @param path Path to check
+ * @return `true` if it exists
+*/
+boolean ioꓸexists(string path) {}
 /**
- * Gets the SHA1 hash of a string
- */
-string io․sha1(string string) {}
+ * Creates a folder, including any missing parent folders. Does nothing if it already exists.
+ * @param path Path of the new folder (e.g. `"ux0:data/myapp/saves"`)
+*/
+nil ioꓸnewfolder(string path) {}
 /**
- * Gets the SHA256 hash of a string
- */
-string io․sha256(string string) {}
+ * Deletes a file or an **empty** folder
+ * @param path Path to delete
+ * @return `true` on success, `false` if it doesn't exist or couldn't be deleted (e.g. the folder isn't empty)
+*/
+boolean ioꓸdelete(string path) {}
 /**
- * Gets the MD5 hash of a string
- */
-string io․md5(string string) {}
+ * Lists the contents of a folder
+ * @param path Path of the folder
+ * @return `nil` if the folder can't be opened, otherwise a list with one table per file/folder, with these fields:
+ * * **string** `name`: File or folder name
+ * * **string** `path`: Full path
+ * * **boolean** `isafolder`: `true` for folders
+ * * **number** `size`: Size in bytes
+ * * **string** `created`, `modified`, `accessed`: Dates in the `"YYYY-MM-DD HH:MM:SS"` format
+ * @par Example:
+ * @code
+ * for i, item in ipairs(io.list("ux0:data")) do
+ *     print(item.name, item.isafolder and "folder" or item.size.." bytes")
+ * end
+ * @endcode
+*/
+table ioꓸlist(string path) {}
 /**
- * Checks if a file or folder exists or not
- */
-boolean io․exists(string path) {}
+ * Gets information about a file or a folder
+ * @param path Path of the file or folder
+ * @return `nil` if it doesn't exist, otherwise a table with these fields:
+ * * **boolean** `isafolder`: `true` for folders
+ * * **number** `size`: Size in bytes
+ * * **string** `created`, `modified`, `accessed`: Dates in the `"YYYY-MM-DD HH:MM:SS"` format
+*/
+table ioꓸinfo(string path) {}
 /**
- * Creates a new folder
- */
-nil io․newfolder(string path) {}
+ * Gets the last part of a path (the file or folder name)
+ * @param path A path
+ * @return The name, e.g. `"save.txt"` for `"ux0:data/myapp/save.txt"`
+*/
+string ioꓸpathstrip(string path) {}
 /**
- * Deletes a file or a folder
- */
-nil io․delete(string path) {}
+ * Removes the last part of a path (gets the folder that contains it)
+ * @param path A path
+ * @return The parent folder, e.g. `"ux0:data/myapp"` for `"ux0:data/myapp/save.txt"`
+*/
+string ioꓸfilestrip(string path) {}
 /**
- * Reads a .SFO file
- * @return A table with the keys & values of the .SFO
- */
-table io․readsfo(string path) {}
-/**
- * Edits a parameter in a .SFO file
- */
-nil io․editsfo(string path) {}
-/**
- * Lists a directory
- * @return A list of tables that represent the contents with these fields:
- * * **"name"**: string
- * * **"path"**: string
- * * **"isafolder"**: boolean
- * * **"created"**: string
- * * **"modified"**: string
- * * **"accessed"**: string
- * * **"size"**: number (size represented as bytes)
- */
-table io․list(string path) {}
-/** 
-  * Lists information about a file or a folder.
-  * @return A table with these fields:
-  * * **"accessed"**: string
-  * * **"modified"**: string
-  * * **"created"**: string
-  * * **"isafolder"**: boolean
-  * * **"size"**: number (size represented in bytes)
-  */
-table io․info(string path) {}
-/**
- * Strips the last file/directory from a path
- */
-string io․filestrip(string path) {}
-/**
- * Strips the files/directories from a path besides the last one
- */
-string io․pathstrip(string path) {}
+ * Gets or sets the working directory, which relative paths (like `"main.lua"`) start from
+ * @param path New working directory *(optional)*
+ * @return The current working directory if `path` is omitted. Raises an error if the directory can't be set.
+*/
+string ioꓸworkpath(string path) {}
 /**
  * Gets the free space of a partition
- */
-number io․freespace(string partition) {}
-/**
- * Gets the size of a partition
- */
-number io․totalspace(string partition) {}
-/**
- * @param path optional, if empty it'll return the current workpath, otherwise it'll set the workpath to the specified path
- */
-nil or string io․workpath(string path) {}
-/**
- * Extract an archive
- * @note This function has a callback that can be defined named `LifeLuaArchiveExtracting`
+ * @param partition Partition name (e.g. `"ux0:"`)
+ * @return Free space in bytes
  * @par Example:
- ```
- function LifeLuaArchiveExtracting(pathname, index, size)
- ...
- end
- ```
- */
-nil io․extract(string archive, string extracted_content) {}
+ * @code
+ * print(string.format("%.2f GB free", io.freespace("ux0:") / 1024^3))
+ * @endcode
+*/
+number ioꓸfreespace(string partition) {}
 /**
- * Makes a folder or a table of file/folder paths into an archive
- */
-boolean io․archive(string or table contents, string archive_path, string format) {}
+ * Gets the total size of a partition
+ * @param partition Partition name (e.g. `"ux0:"`)
+ * @return Total size in bytes
+*/
+number ioꓸfullspace(string partition) {}
+/**
+ * Reads a .SFO file (like an app's `sce_sys/param.sfo`)
+ * @param path Path to the .SFO
+ * @return A table with every key of the .SFO, with string or number values. Raises an error if the file is invalid.
+ * @par Example:
+ * @code
+ * local sfo = io.readsfo("app0:sce_sys/param.sfo")
+ * print(sfo.TITLE, sfo.TITLE_ID)
+ * @endcode
+*/
+table ioꓸreadsfo(string path) {}
+/**
+ * Changes one value in a .SFO file. The key must already exist in the file.
+ * @param path Path to the .SFO
+ * @param key Key to change (e.g. `"TITLE"`)
+ * @param value New value: a string for text keys, a number for number keys
+*/
+nil ioꓸeditsfo(string path, string key, string value) {}
+/**
+ * Extracts an archive (.ZIP, .7Z, .RAR, .TAR, .VPK, ...). Missing folders are created.
+ *
+ * If you define a global function called `LifeLuaArchiveExtracting`, it's called for each file before it's extracted.
+ * You can use it to draw a progress screen.
+ * @param archive Path to the archive
+ * @param destination Folder to extract into
+ * @par Example:
+ * @code
+ * function LifeLuaArchiveExtracting(name, index, size)
+ *     draw.text(10, 10, "Extracting file #"..index..": "..name, color.new(255, 255, 255))
+ *     draw.swapbuffers()
+ * end
+ * io.extract("ux0:data/game.zip", "ux0:data/game")
+ * @endcode
+*/
+nil ioꓸextract(string archive, string destination) {}
+/**
+ * Creates an archive from a folder, or from a list of files
+ * @param contents Either a folder path (everything inside it is added),
+ * or a table where each key is a file path and each value is the name it gets inside the archive
+ * @param archive_path Path of the archive to create
+ * @param format Archive format *(optional, default: `"zip"`)*. One of `"zip"`, `"7z"`, `"gnutar"`, `"ustar"`, `"v7tar"`,
+ * `"xar"`, `"iso9660"`, `"ar_bsd"`, `"ar_svr4"`, `"warc"` or `"raw"`
+ * @return `true` when done
+ * @par Example:
+ * @code
+ * io.archive("ux0:data/myapp", "ux0:data/myapp_backup.zip")
+ * io.archive({["ux0:data/myapp/save.txt"] = "save.txt"}, "ux0:data/save.7z", "7z")
+ * @endcode
+*/
+boolean ioꓸarchive(string contents, string archive_path, string format) {}
+/**
+ * Calculates the CRC32 checksum of a text
+ * @param text The text
+ * @return The checksum as a number
+*/
+number ioꓸcrc32(string text) {}
+/**
+ * Calculates the MD5 hash of a string
+ * @param text The string (can contain any bytes)
+ * @return The hash as uppercase hexadecimal text
+*/
+string ioꓸmd5(string text) {}
+/**
+ * Calculates the SHA-1 hash of a text
+ * @param text The text
+ * @return The hash as uppercase hexadecimal text
+ * @par Example:
+ * @code
+ * print(io.sha1("hello")) -- AAF4C61DDCC5E8A2DABEDE0F3B482CD9AEA9434D
+ * @endcode
+*/
+string ioꓸsha1(string text) {}
+/**
+ * Calculates the SHA-256 hash of a text
+ * @param text The text
+ * @return The hash as uppercase hexadecimal text
+*/
+string ioꓸsha256(string text) {}
 /** @} */
