@@ -30,11 +30,8 @@ static int lua_loadfont(lua_State *L){
 			font->pgf = vita2d_load_custom_pgf(filename);
 		}else if((string_ends_with(filename, ".pvf"))){
 			font->pvf = vita2d_load_custom_pvf(filename);
-		}else if(string_ends_with(filename, ".ttf") || string_ends_with(filename, ".woff")){
-			font->font = vita2d_load_font_file(filename);
 		}else{
-			lua_pushnil(L);
-			//return luaL_error(L, "Font file type isn't accepted (must be a .pgf, .pvf, or a .ttf/.woff)");
+			font->font = vita2d_load_font_file(filename);
 		}
 	}else{
 		lua_pushnil(L);
@@ -44,11 +41,6 @@ static int lua_loadfont(lua_State *L){
 	luaL_getmetatable(L, "font");
     lua_setmetatable(L, -2);
 	return 1;
-}
-
-static int lua_defaultfont(lua_State *L){
-	Font *font = (Font *)luaL_checkudata(L, 1, "font");
-	return 0;
 }
 
 static int lua_fontgc(lua_State *L){
@@ -65,7 +57,6 @@ static int lua_fontgc(lua_State *L){
 
 static const luaL_Reg font_lib[] = {
     {"load", lua_loadfont},
-	{"default", lua_defaultfont},
     {NULL, NULL}
 };
 
