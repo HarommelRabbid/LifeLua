@@ -39,22 +39,22 @@ static int lua_text(lua_State *L){
 			if (args >= 6 && lua_isnumber(L, 6)) {
 				size = lua_tonumber(L, 6);
 			}
-			if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 17.402f * size, color->color, size, text);
-			else vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+			if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 15 * size, color->color, size, text);
+			else vita2d_pgf_draw_text(pgf, x, y + 15 * size, color->color, size, text);
 		} else if (lua_isnumber(L, 5)) {
 			// Case: draw.text(..., size, font | true | false)
 			size = lua_tonumber(L, 5);
 			if (args >= 6) {
 				if (lua_isboolean(L, 6)) {
 					bool use_pvf = lua_toboolean(L, 6);
-					if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 17.402f * size, color->color, size, text);
-					else vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+					if (use_pvf) vita2d_pvf_draw_text(pvf, x, y + 15 * size, color->color, size, text);
+					else vita2d_pgf_draw_text(pgf, x, y + 15 * size, color->color, size, text);
 				} else if (lua_isuserdata(L, 6)) {
 					font = (Font *)luaL_checkudata(L, 6, "font");
 				}
 			} else {
 				// draw.text(..., size)
-				vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+				vita2d_pgf_draw_text(pgf, x, y + 15 * size, color->color, size, text);
 				return 0;
 			}
 		} else if (lua_isuserdata(L, 5)) {
@@ -66,16 +66,16 @@ static int lua_text(lua_State *L){
 			return luaL_typerror(L, 5, "boolean, number, or font");
 		}
 	} else {
-		vita2d_pgf_draw_text(pgf, x, y + 17.402f * size, color->color, size, text);
+		vita2d_pgf_draw_text(pgf, x, y + 15 * size, color->color, size, text);
 		return 0;
 	}
 
 	// Final fallback: draw with custom font if set
 	if (font != NULL) {
 		if (font->pgf != NULL)
-			vita2d_pgf_draw_text(font->pgf, x, y + 17.402f * size, color->color, size, text);
+			vita2d_pgf_draw_text(font->pgf, x, y + 15 * size, color->color, size, text);
 		else if (font->pvf != NULL)
-			vita2d_pvf_draw_text(font->pvf, x, y + 17.402f * size, color->color, size, text);
+			vita2d_pvf_draw_text(font->pvf, x, y + 15 * size, color->color, size, text);
 		else if (font->font != NULL)
 			vita2d_font_draw_text(font->font, x, (y - 6) + size * 24, color->color, size * 24, text);
 		else
@@ -128,14 +128,13 @@ static int lua_line(lua_State *L) {
 
 static int lua_swapbuff(lua_State *L) {
 	Color *color;
-	if (lua_gettop(L) >= 1) color = lua_tocolor(L, 1);
+	if (!lua_isnone(L, 1)) color = lua_tocolor(L, 1);
     vita2d_end_drawing();
 	vita2d_common_dialog_update();
 	vita2d_wait_rendering_done();
     vita2d_swap_buffers();
     vita2d_start_drawing();
-	if (lua_gettop(L) >= 1) vita2d_set_clear_color(color->color);
-	else vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+	if (!lua_gettop(L, 1)) vita2d_set_clear_color(color->color);
     vita2d_clear_screen(); // Clear for next frame
     return 0;
 }
