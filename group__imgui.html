@@ -100,41 +100,417 @@ $(function(){initNavTree('group__imgui.html',''); initResizable(true); });
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">imgui</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>ImGui library.  
+<p>Windows, menus, buttons and other UI widgets (uses Dear ImGui)  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:gaa24e3ac005f40c658b6d3632a638297d" id="r_gaa24e3ac005f40c658b6d3632a638297d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa24e3ac005f40c658b6d3632a638297d">imgui.init</a> ()</td></tr>
-<tr class="separator:gaa24e3ac005f40c658b6d3632a638297d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac3c65f0ae58cf6150944715f1decb5f9" id="r_gac3c65f0ae58cf6150944715f1decb5f9"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac3c65f0ae58cf6150944715f1decb5f9">imgui.shutdown</a> ()</td></tr>
-<tr class="separator:gac3c65f0ae58cf6150944715f1decb5f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab004c40d09bbf3a5eb0c669a9b8d0cc1" id="r_gab004c40d09bbf3a5eb0c669a9b8d0cc1"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab004c40d09bbf3a5eb0c669a9b8d0cc1">imgui.renderinit</a> ()</td></tr>
-<tr class="separator:gab004c40d09bbf3a5eb0c669a9b8d0cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa6613b67b93aab9ac7cca20e375780f2" id="r_gaa6613b67b93aab9ac7cca20e375780f2"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa6613b67b93aab9ac7cca20e375780f2">imgui.renderterm</a> ()</td></tr>
-<tr class="separator:gaa6613b67b93aab9ac7cca20e375780f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga36ffaee421af965da3d61c196f89ae06" id="r_ga36ffaee421af965da3d61c196f89ae06"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga36ffaee421af965da3d61c196f89ae06">imgui.metrics</a> ()</td></tr>
-<tr class="separator:ga36ffaee421af965da3d61c196f89ae06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaba7eb452cc955270cf21a185165c84fd" id="r_gaba7eb452cc955270cf21a185165c84fd"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaba7eb452cc955270cf21a185165c84fd">imgui.darktheme</a> ()</td></tr>
-<tr class="separator:gaba7eb452cc955270cf21a185165c84fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf6b80c647ea21f1726e6b8b632b0d307" id="r_gaf6b80c647ea21f1726e6b8b632b0d307"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf6b80c647ea21f1726e6b8b632b0d307">imgui.lighttheme</a> ()</td></tr>
-<tr class="separator:gaf6b80c647ea21f1726e6b8b632b0d307"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0bdfd7aaa736f629216900046a811098" id="r_ga0bdfd7aaa736f629216900046a811098"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0bdfd7aaa736f629216900046a811098">imgui.classictheme</a> ()</td></tr>
-<tr class="separator:ga0bdfd7aaa736f629216900046a811098"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6e4a374a2bed14ee220e1a12bc683c84" id="r_ga6e4a374a2bed14ee220e1a12bc683c84"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6e4a374a2bed14ee220e1a12bc683c84">imgui.text</a> (string text)</td></tr>
-<tr class="separator:ga6e4a374a2bed14ee220e1a12bc683c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo</a></b></dt><dd>add functions </dd></dl>
+<p>ImGui is an "immediate mode" UI library: there are no button objects to create or keep. Instead, every frame you call the widget functions in the order they should appear, and each one tells you right away if the user interacted with it (e.g. <a class="el" href="#ga9e543bd6693d6b83090761d03e5a9aca">imgui.button()</a> returns <code>true</code> on the frame it's pressed).</p>
+<p>Call <a class="el" href="#gad0d525a764af762c9648270a3fc27e1b">imgui.init()</a> once at the start, then put your widgets between <a class="el" href="#gac05c63cd337b2bf9be45e40ae58bc7da">imgui.renderinit()</a> and <a class="el" href="#ga750eb622b91b5dd05e2d491b34062e43">imgui.renderterm()</a> in your main loop: </p><div class="fragment"><div class="line">imgui.init()</div>
+<div class="line">imgui.darktheme()</div>
+<div class="line">imgui.touch(<span class="keyword">true</span>)   -- use the touch screen</div>
+<div class="line">imgui.gamepad(<span class="keyword">true</span>) -- use the buttons/D-pad to move between widgets</div>
+<div class="line"> </div>
+<div class="line">local sound = <span class="keyword">true</span></div>
+<div class="line">local level = 1</div>
+<div class="line">local levels = {<span class="stringliteral">&quot;Easy&quot;</span>, <span class="stringliteral">&quot;Normal&quot;</span>, <span class="stringliteral">&quot;Hard&quot;</span>}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    imgui.renderinit()</div>
+<div class="line"> </div>
+<div class="line">    imgui.nextwindowposition(20, 20, <a class="code hl_variable" href="#gaf049047ab4c8a5d0525d5dad23f6e82a">ImGuiCond_FirstUseEver</a>)</div>
+<div class="line">    imgui.nextwindowsize(400, 250, <a class="code hl_variable" href="#gaf049047ab4c8a5d0525d5dad23f6e82a">ImGuiCond_FirstUseEver</a>)</div>
+<div class="line">    imgui.windowbegin(<span class="stringliteral">&quot;Settings&quot;</span>)</div>
+<div class="line">    imgui.text(<span class="stringliteral">&quot;Hello from ImGui!&quot;</span>)</div>
+<div class="line">    sound = imgui.checkbox(<span class="stringliteral">&quot;Sound&quot;</span>, sound)</div>
+<div class="line">    level = imgui.combobox(<span class="stringliteral">&quot;Difficulty&quot;</span>, level, levels)</div>
+<div class="line">    <span class="keywordflow">if</span> imgui.button(<span class="stringliteral">&quot;Start&quot;</span>) then</div>
+<div class="line">        -- start the game with levels[level]</div>
+<div class="line">    end</div>
+<div class="line">    imgui.windowend()</div>
+<div class="line"> </div>
+<div class="line">    imgui.renderterm()</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="ttc" id="agroup__imgui_html_gaf049047ab4c8a5d0525d5dad23f6e82a"><div class="ttname"><a href="#gaf049047ab4c8a5d0525d5dad23f6e82a">ImGuiCond_FirstUseEver</a></div><div class="ttdeci">ImGuiCond ImGuiCond_FirstUseEver</div><div class="ttdoc">Apply it only if the window has no saved position/size yet.</div><div class="ttdef"><b>Definition</b> lj_imgui.h:374</div></div>
+</div><!-- fragment --><p>You can draw other things (with <a class="el" href="group__draw.html">draw</a>, <a class="el" href="group__image.html">image</a>, ...) in the same frame; draw them before <a class="el" href="#ga750eb622b91b5dd05e2d491b34062e43">imgui.renderterm()</a> to have the ImGui windows on top of them.</p>
+<dl class="section note"><dt>Note</dt><dd>The text of <a class="el" href="#ga20eb8e083b59fdf039a4e36e0224aa34">imgui.text()</a>, <a class="el" href="#gabde3cc1e954c1e47cbfd1c070bcbb55d">imgui.disabledtext()</a>, <a class="el" href="#ga39f3bc4017c1a663df4d1e4d885d4976">imgui.wrappedtext()</a> and <a class="el" href="#ga23cf21371e132891d54f6791527b4fe3">imgui.tooltip()</a> is read as a C format string, so write <code>%%</code> to show a <code>%</code> sign. </dd></dl>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Window flags</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#gac99270e4ae56d192daaf0ed1f41b591b">imgui.windowbegin()</a>. Add them together to combine them. </p>
+</td></tr>
+<tr class="memitem:gae83fc295d48e3b05f0579738a0b32c97" id="r_gae83fc295d48e3b05f0579738a0b32c97"><td class="memItemLeft" align="right" valign="top"><a id="gae83fc295d48e3b05f0579738a0b32c97" name="gae83fc295d48e3b05f0579738a0b32c97"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_None</b></td></tr>
+<tr class="memdesc:gae83fc295d48e3b05f0579738a0b32c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default window. <br /></td></tr>
+<tr class="separator:gae83fc295d48e3b05f0579738a0b32c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad37e2ee7dc17eb8f95edaeaa1f03c5bf" id="r_gad37e2ee7dc17eb8f95edaeaa1f03c5bf"><td class="memItemLeft" align="right" valign="top"><a id="gad37e2ee7dc17eb8f95edaeaa1f03c5bf" name="gad37e2ee7dc17eb8f95edaeaa1f03c5bf"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoTitleBar</b></td></tr>
+<tr class="memdesc:gad37e2ee7dc17eb8f95edaeaa1f03c5bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">No title bar. <br /></td></tr>
+<tr class="separator:gad37e2ee7dc17eb8f95edaeaa1f03c5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cc62487767dfe8032a4b3116f7ccb55" id="r_ga4cc62487767dfe8032a4b3116f7ccb55"><td class="memItemLeft" align="right" valign="top"><a id="ga4cc62487767dfe8032a4b3116f7ccb55" name="ga4cc62487767dfe8032a4b3116f7ccb55"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoResize</b></td></tr>
+<tr class="memdesc:ga4cc62487767dfe8032a4b3116f7ccb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can't be resized by the user. <br /></td></tr>
+<tr class="separator:ga4cc62487767dfe8032a4b3116f7ccb55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa97ca784a23e65d39cb085c8a160f0c5" id="r_gaa97ca784a23e65d39cb085c8a160f0c5"><td class="memItemLeft" align="right" valign="top"><a id="gaa97ca784a23e65d39cb085c8a160f0c5" name="gaa97ca784a23e65d39cb085c8a160f0c5"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoMove</b></td></tr>
+<tr class="memdesc:gaa97ca784a23e65d39cb085c8a160f0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can't be moved by the user. <br /></td></tr>
+<tr class="separator:gaa97ca784a23e65d39cb085c8a160f0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga04f2cdecc5fdb6d1a94c6458258a9212" id="r_ga04f2cdecc5fdb6d1a94c6458258a9212"><td class="memItemLeft" align="right" valign="top"><a id="ga04f2cdecc5fdb6d1a94c6458258a9212" name="ga04f2cdecc5fdb6d1a94c6458258a9212"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoScrollbar</b></td></tr>
+<tr class="memdesc:ga04f2cdecc5fdb6d1a94c6458258a9212"><td class="mdescLeft">&#160;</td><td class="mdescRight">No scrollbars (it can still scroll) <br /></td></tr>
+<tr class="separator:ga04f2cdecc5fdb6d1a94c6458258a9212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3e0edd6f11fd8e361039c6d278f9f397" id="r_ga3e0edd6f11fd8e361039c6d278f9f397"><td class="memItemLeft" align="right" valign="top"><a id="ga3e0edd6f11fd8e361039c6d278f9f397" name="ga3e0edd6f11fd8e361039c6d278f9f397"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoScrollWithMouse</b></td></tr>
+<tr class="memdesc:ga3e0edd6f11fd8e361039c6d278f9f397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can't be scrolled with the mouse wheel. <br /></td></tr>
+<tr class="separator:ga3e0edd6f11fd8e361039c6d278f9f397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b515d7c1b63e49211549dd3a21f325e" id="r_ga7b515d7c1b63e49211549dd3a21f325e"><td class="memItemLeft" align="right" valign="top"><a id="ga7b515d7c1b63e49211549dd3a21f325e" name="ga7b515d7c1b63e49211549dd3a21f325e"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoCollapse</b></td></tr>
+<tr class="memdesc:ga7b515d7c1b63e49211549dd3a21f325e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can't be collapsed. <br /></td></tr>
+<tr class="separator:ga7b515d7c1b63e49211549dd3a21f325e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1e157b489b4fdf21d1fee915593231b2" id="r_ga1e157b489b4fdf21d1fee915593231b2"><td class="memItemLeft" align="right" valign="top"><a id="ga1e157b489b4fdf21d1fee915593231b2" name="ga1e157b489b4fdf21d1fee915593231b2"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoBackground</b></td></tr>
+<tr class="memdesc:ga1e157b489b4fdf21d1fee915593231b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">No background or border. <br /></td></tr>
+<tr class="separator:ga1e157b489b4fdf21d1fee915593231b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2003727c543b37a61ef7cfaa373d235b" id="r_ga2003727c543b37a61ef7cfaa373d235b"><td class="memItemLeft" align="right" valign="top"><a id="ga2003727c543b37a61ef7cfaa373d235b" name="ga2003727c543b37a61ef7cfaa373d235b"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoSavedSettings</b></td></tr>
+<tr class="memdesc:ga2003727c543b37a61ef7cfaa373d235b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Don't remember its position/size. <br /></td></tr>
+<tr class="separator:ga2003727c543b37a61ef7cfaa373d235b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd01438f355de887c10fe1f44b05275d" id="r_gadd01438f355de887c10fe1f44b05275d"><td class="memItemLeft" align="right" valign="top"><a id="gadd01438f355de887c10fe1f44b05275d" name="gadd01438f355de887c10fe1f44b05275d"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoMouseInputs</b></td></tr>
+<tr class="memdesc:gadd01438f355de887c10fe1f44b05275d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ignores the mouse/touch (they go through it) <br /></td></tr>
+<tr class="separator:gadd01438f355de887c10fe1f44b05275d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ec2e4d7b34c673cc191cecf7bd22622" id="r_ga0ec2e4d7b34c673cc191cecf7bd22622"><td class="memItemLeft" align="right" valign="top"><a id="ga0ec2e4d7b34c673cc191cecf7bd22622" name="ga0ec2e4d7b34c673cc191cecf7bd22622"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_MenuBar</b></td></tr>
+<tr class="memdesc:ga0ec2e4d7b34c673cc191cecf7bd22622"><td class="mdescLeft">&#160;</td><td class="mdescRight">Has a menu bar. <br /></td></tr>
+<tr class="separator:ga0ec2e4d7b34c673cc191cecf7bd22622"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1de93d55782b47c52199ad981dd2c9a5" id="r_ga1de93d55782b47c52199ad981dd2c9a5"><td class="memItemLeft" align="right" valign="top"><a id="ga1de93d55782b47c52199ad981dd2c9a5" name="ga1de93d55782b47c52199ad981dd2c9a5"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_HorizontalScrollbar</b></td></tr>
+<tr class="memdesc:ga1de93d55782b47c52199ad981dd2c9a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow a horizontal scrollbar. <br /></td></tr>
+<tr class="separator:ga1de93d55782b47c52199ad981dd2c9a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf1a6d7fc587bef992a4a2829ea4d7e6b" id="r_gaf1a6d7fc587bef992a4a2829ea4d7e6b"><td class="memItemLeft" align="right" valign="top"><a id="gaf1a6d7fc587bef992a4a2829ea4d7e6b" name="gaf1a6d7fc587bef992a4a2829ea4d7e6b"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoFocusOnAppearing</b></td></tr>
+<tr class="memdesc:gaf1a6d7fc587bef992a4a2829ea4d7e6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Don't take focus when it appears. <br /></td></tr>
+<tr class="separator:gaf1a6d7fc587bef992a4a2829ea4d7e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga92e2cc4c17c8a5bd76ad40f3686e1450" id="r_ga92e2cc4c17c8a5bd76ad40f3686e1450"><td class="memItemLeft" align="right" valign="top"><a id="ga92e2cc4c17c8a5bd76ad40f3686e1450" name="ga92e2cc4c17c8a5bd76ad40f3686e1450"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoBringToFrontOnFocus</b></td></tr>
+<tr class="memdesc:ga92e2cc4c17c8a5bd76ad40f3686e1450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Don't come to the front when it gets focus. <br /></td></tr>
+<tr class="separator:ga92e2cc4c17c8a5bd76ad40f3686e1450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6e7d261176d59e7b5b5ae487cdf2c717" id="r_ga6e7d261176d59e7b5b5ae487cdf2c717"><td class="memItemLeft" align="right" valign="top"><a id="ga6e7d261176d59e7b5b5ae487cdf2c717" name="ga6e7d261176d59e7b5b5ae487cdf2c717"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_AlwaysVerticalScrollbar</b></td></tr>
+<tr class="memdesc:ga6e7d261176d59e7b5b5ae487cdf2c717"><td class="mdescLeft">&#160;</td><td class="mdescRight">Always show the vertical scrollbar. <br /></td></tr>
+<tr class="separator:ga6e7d261176d59e7b5b5ae487cdf2c717"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafeae9813192ff16684a001dd542f3114" id="r_gafeae9813192ff16684a001dd542f3114"><td class="memItemLeft" align="right" valign="top"><a id="gafeae9813192ff16684a001dd542f3114" name="gafeae9813192ff16684a001dd542f3114"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_AlwaysUseWindowPadding</b></td></tr>
+<tr class="memdesc:gafeae9813192ff16684a001dd542f3114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Always use the window padding, even for child windows without a border. <br /></td></tr>
+<tr class="separator:gafeae9813192ff16684a001dd542f3114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9e68e18027de4828bc9bfdadb524131b" id="r_ga9e68e18027de4828bc9bfdadb524131b"><td class="memItemLeft" align="right" valign="top"><a id="ga9e68e18027de4828bc9bfdadb524131b" name="ga9e68e18027de4828bc9bfdadb524131b"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoNav</b></td></tr>
+<tr class="memdesc:ga9e68e18027de4828bc9bfdadb524131b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can't be navigated with the buttons. <br /></td></tr>
+<tr class="separator:ga9e68e18027de4828bc9bfdadb524131b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac264ffb43df2755021850de5efdd3d53" id="r_gac264ffb43df2755021850de5efdd3d53"><td class="memItemLeft" align="right" valign="top"><a id="gac264ffb43df2755021850de5efdd3d53" name="gac264ffb43df2755021850de5efdd3d53"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoDecoration</b></td></tr>
+<tr class="memdesc:gac264ffb43df2755021850de5efdd3d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as NoTitleBar + NoResize + NoScrollbar + NoCollapse. <br /></td></tr>
+<tr class="separator:gac264ffb43df2755021850de5efdd3d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6a144f1b3591496ebcdf75ad77e1c835" id="r_ga6a144f1b3591496ebcdf75ad77e1c835"><td class="memItemLeft" align="right" valign="top"><a id="ga6a144f1b3591496ebcdf75ad77e1c835" name="ga6a144f1b3591496ebcdf75ad77e1c835"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_NoInputs</b></td></tr>
+<tr class="memdesc:ga6a144f1b3591496ebcdf75ad77e1c835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ignores all input (same as NoMouseInputs + NoNav) <br /></td></tr>
+<tr class="separator:ga6a144f1b3591496ebcdf75ad77e1c835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae4b01a93d8a3339ddca64912fc559cf7" id="r_gae4b01a93d8a3339ddca64912fc559cf7"><td class="memItemLeft" align="right" valign="top"><a id="gae4b01a93d8a3339ddca64912fc559cf7" name="gae4b01a93d8a3339ddca64912fc559cf7"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_UnsavedDocument</b></td></tr>
+<tr class="memdesc:gae4b01a93d8a3339ddca64912fc559cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows a <code>*</code> after the title. <br /></td></tr>
+<tr class="separator:gae4b01a93d8a3339ddca64912fc559cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga129cfbd61d0b59d582c454424c78cc17" id="r_ga129cfbd61d0b59d582c454424c78cc17"><td class="memItemLeft" align="right" valign="top"><a id="ga129cfbd61d0b59d582c454424c78cc17" name="ga129cfbd61d0b59d582c454424c78cc17"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_ChildWindow</b></td></tr>
+<tr class="memdesc:ga129cfbd61d0b59d582c454424c78cc17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally by ImGui, don't use. <br /></td></tr>
+<tr class="separator:ga129cfbd61d0b59d582c454424c78cc17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75ffb91ef1d054d1d6f41017032ffdfe" id="r_ga75ffb91ef1d054d1d6f41017032ffdfe"><td class="memItemLeft" align="right" valign="top"><a id="ga75ffb91ef1d054d1d6f41017032ffdfe" name="ga75ffb91ef1d054d1d6f41017032ffdfe"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_Tooltip</b></td></tr>
+<tr class="memdesc:ga75ffb91ef1d054d1d6f41017032ffdfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally by ImGui, don't use. <br /></td></tr>
+<tr class="separator:ga75ffb91ef1d054d1d6f41017032ffdfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7119c9bf55d10ecc4faa267268dd1dac" id="r_ga7119c9bf55d10ecc4faa267268dd1dac"><td class="memItemLeft" align="right" valign="top"><a id="ga7119c9bf55d10ecc4faa267268dd1dac" name="ga7119c9bf55d10ecc4faa267268dd1dac"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_Popup</b></td></tr>
+<tr class="memdesc:ga7119c9bf55d10ecc4faa267268dd1dac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally by ImGui, don't use. <br /></td></tr>
+<tr class="separator:ga7119c9bf55d10ecc4faa267268dd1dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83793dfdfbf329a864c339e52cdcc5cb" id="r_ga83793dfdfbf329a864c339e52cdcc5cb"><td class="memItemLeft" align="right" valign="top"><a id="ga83793dfdfbf329a864c339e52cdcc5cb" name="ga83793dfdfbf329a864c339e52cdcc5cb"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_Modal</b></td></tr>
+<tr class="memdesc:ga83793dfdfbf329a864c339e52cdcc5cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally by ImGui, don't use. <br /></td></tr>
+<tr class="separator:ga83793dfdfbf329a864c339e52cdcc5cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3a350741af5a339048d9fb230b28eda" id="r_gac3a350741af5a339048d9fb230b28eda"><td class="memItemLeft" align="right" valign="top"><a id="gac3a350741af5a339048d9fb230b28eda" name="gac3a350741af5a339048d9fb230b28eda"></a>
+ImGuiWindowFlags&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiWindowFlags_ChildMenu</b></td></tr>
+<tr class="memdesc:gac3a350741af5a339048d9fb230b28eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally by ImGui, don't use. <br /></td></tr>
+<tr class="separator:gac3a350741af5a339048d9fb230b28eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Conditions</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#ga881b5e5e94b214bd8aebfeed3e66add6">imgui.nextwindowposition()</a> and <a class="el" href="#gad4abdf3d117992d4140d02b290938053">imgui.nextwindowsize()</a> </p>
+</td></tr>
+<tr class="memitem:ga2d044e8b6a354efdd71f4e7b37181b1a" id="r_ga2d044e8b6a354efdd71f4e7b37181b1a"><td class="memItemLeft" align="right" valign="top"><a id="ga2d044e8b6a354efdd71f4e7b37181b1a" name="ga2d044e8b6a354efdd71f4e7b37181b1a"></a>
+ImGuiCond&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiCond_None</b></td></tr>
+<tr class="memdesc:ga2d044e8b6a354efdd71f4e7b37181b1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as ImGuiCond_Always. <br /></td></tr>
+<tr class="separator:ga2d044e8b6a354efdd71f4e7b37181b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafbbd29dd91d02e6ed86a874a9f988fef" id="r_gafbbd29dd91d02e6ed86a874a9f988fef"><td class="memItemLeft" align="right" valign="top"><a id="gafbbd29dd91d02e6ed86a874a9f988fef" name="gafbbd29dd91d02e6ed86a874a9f988fef"></a>
+ImGuiCond&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiCond_Always</b></td></tr>
+<tr class="memdesc:gafbbd29dd91d02e6ed86a874a9f988fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply it every time (the user can't move/resize the window) <br /></td></tr>
+<tr class="separator:gafbbd29dd91d02e6ed86a874a9f988fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb3f3d7b79fc08e70c79394de38df558" id="r_gafb3f3d7b79fc08e70c79394de38df558"><td class="memItemLeft" align="right" valign="top"><a id="gafb3f3d7b79fc08e70c79394de38df558" name="gafb3f3d7b79fc08e70c79394de38df558"></a>
+ImGuiCond&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiCond_Once</b></td></tr>
+<tr class="memdesc:gafb3f3d7b79fc08e70c79394de38df558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply it only the first time it's called. <br /></td></tr>
+<tr class="separator:gafb3f3d7b79fc08e70c79394de38df558"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf049047ab4c8a5d0525d5dad23f6e82a" id="r_gaf049047ab4c8a5d0525d5dad23f6e82a"><td class="memItemLeft" align="right" valign="top"><a id="gaf049047ab4c8a5d0525d5dad23f6e82a" name="gaf049047ab4c8a5d0525d5dad23f6e82a"></a>
+ImGuiCond&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiCond_FirstUseEver</b></td></tr>
+<tr class="memdesc:gaf049047ab4c8a5d0525d5dad23f6e82a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply it only if the window has no saved position/size yet. <br /></td></tr>
+<tr class="separator:gaf049047ab4c8a5d0525d5dad23f6e82a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gada42999d2a39c9745114889c9805dcab" id="r_gada42999d2a39c9745114889c9805dcab"><td class="memItemLeft" align="right" valign="top"><a id="gada42999d2a39c9745114889c9805dcab" name="gada42999d2a39c9745114889c9805dcab"></a>
+ImGuiCond&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiCond_Appearing</b></td></tr>
+<tr class="memdesc:gada42999d2a39c9745114889c9805dcab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply it every time the window appears after being hidden. <br /></td></tr>
+<tr class="separator:gada42999d2a39c9745114889c9805dcab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Mouse cursors</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#ga5f024b73314845dc6fd589b82835b5b2">imgui.setcursor()</a> </p>
+</td></tr>
+<tr class="memitem:gab128e28df75392ff275a2dc4a2035291" id="r_gab128e28df75392ff275a2dc4a2035291"><td class="memItemLeft" align="right" valign="top"><a id="gab128e28df75392ff275a2dc4a2035291" name="gab128e28df75392ff275a2dc4a2035291"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_None</b></td></tr>
+<tr class="memdesc:gab128e28df75392ff275a2dc4a2035291"><td class="mdescLeft">&#160;</td><td class="mdescRight">No cursor. <br /></td></tr>
+<tr class="separator:gab128e28df75392ff275a2dc4a2035291"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab62f735d2dd0b0433d87ed007ea49755" id="r_gab62f735d2dd0b0433d87ed007ea49755"><td class="memItemLeft" align="right" valign="top"><a id="gab62f735d2dd0b0433d87ed007ea49755" name="gab62f735d2dd0b0433d87ed007ea49755"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_Arrow</b></td></tr>
+<tr class="memdesc:gab62f735d2dd0b0433d87ed007ea49755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normal arrow. <br /></td></tr>
+<tr class="separator:gab62f735d2dd0b0433d87ed007ea49755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64be0ebeb9c15d28bec3b1ab606cb81c" id="r_ga64be0ebeb9c15d28bec3b1ab606cb81c"><td class="memItemLeft" align="right" valign="top"><a id="ga64be0ebeb9c15d28bec3b1ab606cb81c" name="ga64be0ebeb9c15d28bec3b1ab606cb81c"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_TextInput</b></td></tr>
+<tr class="memdesc:ga64be0ebeb9c15d28bec3b1ab606cb81c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Text cursor. <br /></td></tr>
+<tr class="separator:ga64be0ebeb9c15d28bec3b1ab606cb81c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b360b434913ee2abfec5fd1f9f9bc15" id="r_ga8b360b434913ee2abfec5fd1f9f9bc15"><td class="memItemLeft" align="right" valign="top"><a id="ga8b360b434913ee2abfec5fd1f9f9bc15" name="ga8b360b434913ee2abfec5fd1f9f9bc15"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_ResizeAll</b></td></tr>
+<tr class="memdesc:ga8b360b434913ee2abfec5fd1f9f9bc15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move in all directions. <br /></td></tr>
+<tr class="separator:ga8b360b434913ee2abfec5fd1f9f9bc15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3ca1892347149aad91a646149f16d278" id="r_ga3ca1892347149aad91a646149f16d278"><td class="memItemLeft" align="right" valign="top"><a id="ga3ca1892347149aad91a646149f16d278" name="ga3ca1892347149aad91a646149f16d278"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_ResizeNS</b></td></tr>
+<tr class="memdesc:ga3ca1892347149aad91a646149f16d278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize up/down. <br /></td></tr>
+<tr class="separator:ga3ca1892347149aad91a646149f16d278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga125c347eac7a1c1e93f1de2db19116f1" id="r_ga125c347eac7a1c1e93f1de2db19116f1"><td class="memItemLeft" align="right" valign="top"><a id="ga125c347eac7a1c1e93f1de2db19116f1" name="ga125c347eac7a1c1e93f1de2db19116f1"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_ResizeEW</b></td></tr>
+<tr class="memdesc:ga125c347eac7a1c1e93f1de2db19116f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize left/right. <br /></td></tr>
+<tr class="separator:ga125c347eac7a1c1e93f1de2db19116f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c05bd2b396aa7726346bfb0df836afd" id="r_ga8c05bd2b396aa7726346bfb0df836afd"><td class="memItemLeft" align="right" valign="top"><a id="ga8c05bd2b396aa7726346bfb0df836afd" name="ga8c05bd2b396aa7726346bfb0df836afd"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_ResizeNESW</b></td></tr>
+<tr class="memdesc:ga8c05bd2b396aa7726346bfb0df836afd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize diagonally (bottom-left/top-right) <br /></td></tr>
+<tr class="separator:ga8c05bd2b396aa7726346bfb0df836afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad0ada69742fe1971ffabc42f045d3989" id="r_gad0ada69742fe1971ffabc42f045d3989"><td class="memItemLeft" align="right" valign="top"><a id="gad0ada69742fe1971ffabc42f045d3989" name="gad0ada69742fe1971ffabc42f045d3989"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_ResizeNWSE</b></td></tr>
+<tr class="memdesc:gad0ada69742fe1971ffabc42f045d3989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize diagonally (top-left/bottom-right) <br /></td></tr>
+<tr class="separator:gad0ada69742fe1971ffabc42f045d3989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c933c9fd4822ba01e631bf82f39c1cc" id="r_ga0c933c9fd4822ba01e631bf82f39c1cc"><td class="memItemLeft" align="right" valign="top"><a id="ga0c933c9fd4822ba01e631bf82f39c1cc" name="ga0c933c9fd4822ba01e631bf82f39c1cc"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_Hand</b></td></tr>
+<tr class="memdesc:ga0c933c9fd4822ba01e631bf82f39c1cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointing hand. <br /></td></tr>
+<tr class="separator:ga0c933c9fd4822ba01e631bf82f39c1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga90be75e0afa3e28c75926ae4de335706" id="r_ga90be75e0afa3e28c75926ae4de335706"><td class="memItemLeft" align="right" valign="top"><a id="ga90be75e0afa3e28c75926ae4de335706" name="ga90be75e0afa3e28c75926ae4de335706"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_NotAllowed</b></td></tr>
+<tr class="memdesc:ga90be75e0afa3e28c75926ae4de335706"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Not allowed" sign <br /></td></tr>
+<tr class="separator:ga90be75e0afa3e28c75926ae4de335706"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga11944c88260353efd4b767bc51f463e2" id="r_ga11944c88260353efd4b767bc51f463e2"><td class="memItemLeft" align="right" valign="top"><a id="ga11944c88260353efd4b767bc51f463e2" name="ga11944c88260353efd4b767bc51f463e2"></a>
+ImGuiMouseCursor&#160;</td><td class="memItemRight" valign="bottom"><b>ImGuiMouseCursor_COUNT</b></td></tr>
+<tr class="memdesc:ga11944c88260353efd4b767bc51f463e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of cursor types (not a cursor) <br /></td></tr>
+<tr class="separator:ga11944c88260353efd4b767bc51f463e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Setup</h2></td></tr>
+<tr class="memitem:gad0d525a764af762c9648270a3fc27e1b" id="r_gad0d525a764af762c9648270a3fc27e1b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad0d525a764af762c9648270a3fc27e1b">imgui.init</a> ()</td></tr>
+<tr class="separator:gad0d525a764af762c9648270a3fc27e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad486d61cc9b995690424e8c7d5844749" id="r_gad486d61cc9b995690424e8c7d5844749"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad486d61cc9b995690424e8c7d5844749">imgui.shutdown</a> ()</td></tr>
+<tr class="separator:gad486d61cc9b995690424e8c7d5844749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1b02362422865fb39d70c3c6bb2f4351" id="r_ga1b02362422865fb39d70c3c6bb2f4351"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1b02362422865fb39d70c3c6bb2f4351">imgui.touch</a> (boolean front, boolean rear, boolean indirect)</td></tr>
+<tr class="separator:ga1b02362422865fb39d70c3c6bb2f4351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga759e8f72c4e3448312c8a2b4a7eb5975" id="r_ga759e8f72c4e3448312c8a2b4a7eb5975"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga759e8f72c4e3448312c8a2b4a7eb5975">imgui.gamepad</a> (boolean enable)</td></tr>
+<tr class="separator:ga759e8f72c4e3448312c8a2b4a7eb5975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4967dfb2aea4acef351b5c627d8c66f" id="r_gab4967dfb2aea4acef351b5c627d8c66f"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab4967dfb2aea4acef351b5c627d8c66f">imgui.cursor</a> (boolean enable)</td></tr>
+<tr class="separator:gab4967dfb2aea4acef351b5c627d8c66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga065e3c5e5f2e8a1e527153f3821b62b0" id="r_ga065e3c5e5f2e8a1e527153f3821b62b0"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga065e3c5e5f2e8a1e527153f3821b62b0">imgui.drawcursor</a> (boolean enable)</td></tr>
+<tr class="separator:ga065e3c5e5f2e8a1e527153f3821b62b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f024b73314845dc6fd589b82835b5b2" id="r_ga5f024b73314845dc6fd589b82835b5b2"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5f024b73314845dc6fd589b82835b5b2">imgui.setcursor</a> (ImGuiMouseCursor cursor)</td></tr>
+<tr class="separator:ga5f024b73314845dc6fd589b82835b5b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaaed30c1e6b815cbd6d994364fff4647" id="r_gaaaed30c1e6b815cbd6d994364fff4647"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaaed30c1e6b815cbd6d994364fff4647">imgui.darktheme</a> ()</td></tr>
+<tr class="separator:gaaaed30c1e6b815cbd6d994364fff4647"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8de502509b72795b1d7291cfcfb2bf1c" id="r_ga8de502509b72795b1d7291cfcfb2bf1c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8de502509b72795b1d7291cfcfb2bf1c">imgui.lighttheme</a> ()</td></tr>
+<tr class="separator:ga8de502509b72795b1d7291cfcfb2bf1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ffe2dccc4b90df6420fb17d1be45c47" id="r_ga0ffe2dccc4b90df6420fb17d1be45c47"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0ffe2dccc4b90df6420fb17d1be45c47">imgui.classictheme</a> ()</td></tr>
+<tr class="separator:ga0ffe2dccc4b90df6420fb17d1be45c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga967b5adb8db75d9a590c6882d1e1b184" id="r_ga967b5adb8db75d9a590c6882d1e1b184"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga967b5adb8db75d9a590c6882d1e1b184">imgui.version</a> ()</td></tr>
+<tr class="separator:ga967b5adb8db75d9a590c6882d1e1b184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Frame</h2></td></tr>
+<tr class="memitem:gac05c63cd337b2bf9be45e40ae58bc7da" id="r_gac05c63cd337b2bf9be45e40ae58bc7da"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac05c63cd337b2bf9be45e40ae58bc7da">imgui.renderinit</a> ()</td></tr>
+<tr class="separator:gac05c63cd337b2bf9be45e40ae58bc7da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga750eb622b91b5dd05e2d491b34062e43" id="r_ga750eb622b91b5dd05e2d491b34062e43"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga750eb622b91b5dd05e2d491b34062e43">imgui.renderterm</a> ()</td></tr>
+<tr class="separator:ga750eb622b91b5dd05e2d491b34062e43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafd26e4078b7a147fe6b5e9fcd79227d7" id="r_gafd26e4078b7a147fe6b5e9fcd79227d7"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafd26e4078b7a147fe6b5e9fcd79227d7">imgui.metrics</a> ()</td></tr>
+<tr class="separator:gafd26e4078b7a147fe6b5e9fcd79227d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Windows</h2></td></tr>
+<tr class="memitem:ga881b5e5e94b214bd8aebfeed3e66add6" id="r_ga881b5e5e94b214bd8aebfeed3e66add6"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga881b5e5e94b214bd8aebfeed3e66add6">imgui.nextwindowposition</a> (number x, number y, ImGuiCond condition)</td></tr>
+<tr class="separator:ga881b5e5e94b214bd8aebfeed3e66add6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4abdf3d117992d4140d02b290938053" id="r_gad4abdf3d117992d4140d02b290938053"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad4abdf3d117992d4140d02b290938053">imgui.nextwindowsize</a> (number width, number height, ImGuiCond condition)</td></tr>
+<tr class="separator:gad4abdf3d117992d4140d02b290938053"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac99270e4ae56d192daaf0ed1f41b591b" id="r_gac99270e4ae56d192daaf0ed1f41b591b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac99270e4ae56d192daaf0ed1f41b591b">imgui.windowbegin</a> (string title, ImGuiWindowFlags flags)</td></tr>
+<tr class="separator:gac99270e4ae56d192daaf0ed1f41b591b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1fa07b3dda91e53249cffbac65ac397" id="r_gac1fa07b3dda91e53249cffbac65ac397"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac1fa07b3dda91e53249cffbac65ac397">imgui.windowend</a> ()</td></tr>
+<tr class="separator:gac1fa07b3dda91e53249cffbac65ac397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga38a0d5a959e6ed789c2468127157f53e" id="r_ga38a0d5a959e6ed789c2468127157f53e"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga38a0d5a959e6ed789c2468127157f53e">imgui.windowfocus</a> (string title)</td></tr>
+<tr class="separator:ga38a0d5a959e6ed789c2468127157f53e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga01fd1114d12d58b9ee292fa55ea580c3" id="r_ga01fd1114d12d58b9ee292fa55ea580c3"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga01fd1114d12d58b9ee292fa55ea580c3">imgui.windowrounding</a> (number rounding)</td></tr>
+<tr class="separator:ga01fd1114d12d58b9ee292fa55ea580c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Main menu bar &amp; menus</h2></td></tr>
+<tr class="memitem:ga379108c047f9b69691dc5e066bb5a299" id="r_ga379108c047f9b69691dc5e066bb5a299"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga379108c047f9b69691dc5e066bb5a299">imgui.menubarbegin</a> ()</td></tr>
+<tr class="separator:ga379108c047f9b69691dc5e066bb5a299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac08eb9b851742b9b8b2847b423bf04bd" id="r_gac08eb9b851742b9b8b2847b423bf04bd"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac08eb9b851742b9b8b2847b423bf04bd">imgui.menubarend</a> ()</td></tr>
+<tr class="separator:gac08eb9b851742b9b8b2847b423bf04bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab1d3b1c81a2f110b3d8efa55c19d0a59" id="r_gab1d3b1c81a2f110b3d8efa55c19d0a59"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab1d3b1c81a2f110b3d8efa55c19d0a59">imgui.menubegin</a> (string label, boolean enabled)</td></tr>
+<tr class="separator:gab1d3b1c81a2f110b3d8efa55c19d0a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2444aebf8477e1b88077645e17df0306" id="r_ga2444aebf8477e1b88077645e17df0306"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2444aebf8477e1b88077645e17df0306">imgui.menuend</a> ()</td></tr>
+<tr class="separator:ga2444aebf8477e1b88077645e17df0306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ce6ea691ad067e247bfeed4d6f5d396" id="r_ga5ce6ea691ad067e247bfeed4d6f5d396"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ce6ea691ad067e247bfeed4d6f5d396">imgui.menuitem</a> (string label, boolean selected, boolean enabled)</td></tr>
+<tr class="separator:ga5ce6ea691ad067e247bfeed4d6f5d396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Text</h2></td></tr>
+<tr class="memitem:ga20eb8e083b59fdf039a4e36e0224aa34" id="r_ga20eb8e083b59fdf039a4e36e0224aa34"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga20eb8e083b59fdf039a4e36e0224aa34">imgui.text</a> (string text)</td></tr>
+<tr class="separator:ga20eb8e083b59fdf039a4e36e0224aa34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabde3cc1e954c1e47cbfd1c070bcbb55d" id="r_gabde3cc1e954c1e47cbfd1c070bcbb55d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabde3cc1e954c1e47cbfd1c070bcbb55d">imgui.disabledtext</a> (string text)</td></tr>
+<tr class="separator:gabde3cc1e954c1e47cbfd1c070bcbb55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39f3bc4017c1a663df4d1e4d885d4976" id="r_ga39f3bc4017c1a663df4d1e4d885d4976"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga39f3bc4017c1a663df4d1e4d885d4976">imgui.wrappedtext</a> (string text)</td></tr>
+<tr class="separator:ga39f3bc4017c1a663df4d1e4d885d4976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf25330724a719d82c216b872a871737c" id="r_gaf25330724a719d82c216b872a871737c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf25330724a719d82c216b872a871737c">imgui.textsize</a> (string text)</td></tr>
+<tr class="separator:gaf25330724a719d82c216b872a871737c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga23cf21371e132891d54f6791527b4fe3" id="r_ga23cf21371e132891d54f6791527b4fe3"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga23cf21371e132891d54f6791527b4fe3">imgui.tooltip</a> (string text)</td></tr>
+<tr class="separator:ga23cf21371e132891d54f6791527b4fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Widgets</h2></td></tr>
+<tr class="memitem:ga9e543bd6693d6b83090761d03e5a9aca" id="r_ga9e543bd6693d6b83090761d03e5a9aca"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9e543bd6693d6b83090761d03e5a9aca">imgui.button</a> (string label, number width, number height)</td></tr>
+<tr class="separator:ga9e543bd6693d6b83090761d03e5a9aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga702840bc8d9ef0c270fb46c0617547cf" id="r_ga702840bc8d9ef0c270fb46c0617547cf"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga702840bc8d9ef0c270fb46c0617547cf">imgui.smallbutton</a> (string label)</td></tr>
+<tr class="separator:ga702840bc8d9ef0c270fb46c0617547cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab7a27cb04675ad02fb816d3bb80f3952" id="r_gab7a27cb04675ad02fb816d3bb80f3952"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab7a27cb04675ad02fb816d3bb80f3952">imgui.checkbox</a> (string label, boolean checked)</td></tr>
+<tr class="separator:gab7a27cb04675ad02fb816d3bb80f3952"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78a3e7ab9d5984b067ce43e2b995d793" id="r_ga78a3e7ab9d5984b067ce43e2b995d793"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga78a3e7ab9d5984b067ce43e2b995d793">imgui.radiobutton</a> (string label, boolean active)</td></tr>
+<tr class="separator:ga78a3e7ab9d5984b067ce43e2b995d793"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab6c6a08a7726eff926cd34fdd863d1a3" id="r_gab6c6a08a7726eff926cd34fdd863d1a3"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab6c6a08a7726eff926cd34fdd863d1a3">imgui.combobox</a> (string label, number selected, table items)</td></tr>
+<tr class="separator:gab6c6a08a7726eff926cd34fdd863d1a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga04d79040aa3d8c80371ec738a5fac1a7" id="r_ga04d79040aa3d8c80371ec738a5fac1a7"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga04d79040aa3d8c80371ec738a5fac1a7">imgui.listbox</a> (string label, number selected, table items)</td></tr>
+<tr class="separator:ga04d79040aa3d8c80371ec738a5fac1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b20d9d4fa8e6e6577388bcbe879305d" id="r_ga6b20d9d4fa8e6e6577388bcbe879305d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6b20d9d4fa8e6e6577388bcbe879305d">imgui.progressbar</a> (number percent, number width, number height)</td></tr>
+<tr class="separator:ga6b20d9d4fa8e6e6577388bcbe879305d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Layout &amp; style</h2></td></tr>
+<tr class="memitem:gac7da8cf9e0b33b1524b3c65a21532265" id="r_gac7da8cf9e0b33b1524b3c65a21532265"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac7da8cf9e0b33b1524b3c65a21532265">imgui.sameline</a> ()</td></tr>
+<tr class="separator:gac7da8cf9e0b33b1524b3c65a21532265"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1c856a05014831e61ac608378269e888" id="r_ga1c856a05014831e61ac608378269e888"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1c856a05014831e61ac608378269e888">imgui.separator</a> ()</td></tr>
+<tr class="separator:ga1c856a05014831e61ac608378269e888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a38218c634415394756f15a67c66bfb" id="r_ga8a38218c634415394756f15a67c66bfb"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8a38218c634415394756f15a67c66bfb">imgui.cursorposition</a> (number x, number y)</td></tr>
+<tr class="separator:ga8a38218c634415394756f15a67c66bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabad456412b40266781e42b114dff912d" id="r_gabad456412b40266781e42b114dff912d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabad456412b40266781e42b114dff912d">imgui.itemwidth</a> (number width)</td></tr>
+<tr class="separator:gabad456412b40266781e42b114dff912d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae570f283f0a4b423b7995a1cf3104b86" id="r_gae570f283f0a4b423b7995a1cf3104b86"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae570f283f0a4b423b7995a1cf3104b86">imgui.resetitemwidth</a> ()</td></tr>
+<tr class="separator:gae570f283f0a4b423b7995a1cf3104b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae50cd7b01df24ce08d8b5dd0bbf2fad4" id="r_gae50cd7b01df24ce08d8b5dd0bbf2fad4"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae50cd7b01df24ce08d8b5dd0bbf2fad4">imgui.buttontextalign</a> (number x, number y)</td></tr>
+<tr class="separator:gae50cd7b01df24ce08d8b5dd0bbf2fad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga0bdfd7aaa736f629216900046a811098" name="ga0bdfd7aaa736f629216900046a811098"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0bdfd7aaa736f629216900046a811098">&#9670;&#160;</a></span>imgui.classictheme()</h2>
+<a id="ga9e543bd6693d6b83090761d03e5a9aca" name="ga9e543bd6693d6b83090761d03e5a9aca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9e543bd6693d6b83090761d03e5a9aca">&#9670;&#160;</a></span>imgui.button()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.button </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a button </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The button's text </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels, 0 to fit the text <em>(optional, default: 0)</em> </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels, 0 to fit the text <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame it's pressed </dd></dl>
+
+</div>
+</div>
+<a id="gae50cd7b01df24ce08d8b5dd0bbf2fad4" name="gae50cd7b01df24ce08d8b5dd0bbf2fad4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae50cd7b01df24ce08d8b5dd0bbf2fad4">&#9670;&#160;</a></span>imgui.buttontextalign()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.buttontextalign </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets where the text is placed inside the buttons shown after calling it </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Horizontal alignment from 0 (left) to 1 (right), 0.5 is centered <em>(optional, default: 0)</em> </td></tr>
+    <tr><td class="paramname">y</td><td>Vertical alignment from 0 (top) to 1 (bottom), 0.5 is centered <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gab7a27cb04675ad02fb816d3bb80f3952" name="gab7a27cb04675ad02fb816d3bb80f3952"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab7a27cb04675ad02fb816d3bb80f3952">&#9670;&#160;</a></span>imgui.checkbox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.checkbox </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>checked</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a checkbox </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The checkbox's text </td></tr>
+    <tr><td class="paramname">checked</td><td>Whether it's checked now </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether it's checked after this frame. Store it and pass it again next frame. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">music_on = imgui.checkbox(<span class="stringliteral">&quot;Music&quot;</span>, music_on)</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga0ffe2dccc4b90df6420fb17d1be45c47" name="ga0ffe2dccc4b90df6420fb17d1be45c47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0ffe2dccc4b90df6420fb17d1be45c47">&#9670;&#160;</a></span>imgui.classictheme()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,12 +523,99 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets ImGui's theme to the classic one </p>
+<p>Switches to the classic color theme </p>
 
 </div>
 </div>
-<a id="gaba7eb452cc955270cf21a185165c84fd" name="gaba7eb452cc955270cf21a185165c84fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaba7eb452cc955270cf21a185165c84fd">&#9670;&#160;</a></span>imgui.darktheme()</h2>
+<a id="gab6c6a08a7726eff926cd34fdd863d1a3" name="gab6c6a08a7726eff926cd34fdd863d1a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab6c6a08a7726eff926cd34fdd863d1a3">&#9670;&#160;</a></span>imgui.combobox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">number imgui.combobox </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>selected</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>items</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a drop-down list </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The text next to it </td></tr>
+    <tr><td class="paramname">selected</td><td>Index (starting at 1) of the selected item </td></tr>
+    <tr><td class="paramname">items</td><td>A list of strings to choose from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The index of the selected item after this frame. Store it and pass it again next frame. </dd></dl>
+
+</div>
+</div>
+<a id="gab4967dfb2aea4acef351b5c627d8c66f" name="gab4967dfb2aea4acef351b5c627d8c66f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab4967dfb2aea4acef351b5c627d8c66f">&#9670;&#160;</a></span>imgui.cursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.cursor </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Chooses if the left analog stick moves a mouse cursor </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to use the left stick as a mouse </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga8a38218c634415394756f15a67c66bfb" name="ga8a38218c634415394756f15a67c66bfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8a38218c634415394756f15a67c66bfb">&#9670;&#160;</a></span>imgui.cursorposition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">table imgui.cursorposition </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets or sets where the next widget is placed in the current window </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>New X position inside the window <em>(optional)</em> </td></tr>
+    <tr><td class="paramname">y</td><td>New Y position inside the window <em>(optional)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If <code>x</code> and <code>y</code> are omitted: a table with the fields <code>x</code> and <code>y</code> </dd></dl>
+
+</div>
+</div>
+<a id="gaaaed30c1e6b815cbd6d994364fff4647" name="gaaaed30c1e6b815cbd6d994364fff4647"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaaed30c1e6b815cbd6d994364fff4647">&#9670;&#160;</a></span>imgui.darktheme()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,12 +628,81 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets ImGui's theme to dark </p>
+<p>Switches to the dark color theme </p>
 
 </div>
 </div>
-<a id="gaa24e3ac005f40c658b6d3632a638297d" name="gaa24e3ac005f40c658b6d3632a638297d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa24e3ac005f40c658b6d3632a638297d">&#9670;&#160;</a></span>imgui.init()</h2>
+<a id="gabde3cc1e954c1e47cbfd1c070bcbb55d" name="gabde3cc1e954c1e47cbfd1c070bcbb55d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabde3cc1e954c1e47cbfd1c070bcbb55d">&#9670;&#160;</a></span>imgui.disabledtext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.disabledtext </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows greyed-out text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga065e3c5e5f2e8a1e527153f3821b62b0" name="ga065e3c5e5f2e8a1e527153f3821b62b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga065e3c5e5f2e8a1e527153f3821b62b0">&#9670;&#160;</a></span>imgui.drawcursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.drawcursor </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Chooses if ImGui draws the mouse cursor itself </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to draw the cursor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga759e8f72c4e3448312c8a2b4a7eb5975" name="ga759e8f72c4e3448312c8a2b4a7eb5975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga759e8f72c4e3448312c8a2b4a7eb5975">&#9670;&#160;</a></span>imgui.gamepad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.gamepad </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Chooses if the buttons can be used to move between and use widgets (D-pad to move, the accept button to press) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to use the buttons </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gad0d525a764af762c9648270a3fc27e1b" name="gad0d525a764af762c9648270a3fc27e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad0d525a764af762c9648270a3fc27e1b">&#9670;&#160;</a></span>imgui.init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,12 +715,35 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Initializes ImGui </p>
+<p>Starts ImGui. Call it once before using any other ImGui function. </p>
 
 </div>
 </div>
-<a id="gaf6b80c647ea21f1726e6b8b632b0d307" name="gaf6b80c647ea21f1726e6b8b632b0d307"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf6b80c647ea21f1726e6b8b632b0d307">&#9670;&#160;</a></span>imgui.lighttheme()</h2>
+<a id="gabad456412b40266781e42b114dff912d" name="gabad456412b40266781e42b114dff912d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabad456412b40266781e42b114dff912d">&#9670;&#160;</a></span>imgui.itemwidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.itemwidth </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the width of the next widgets (like combo boxes and progress bars) until <a class="el" href="#gae570f283f0a4b423b7995a1cf3104b86">imgui.resetitemwidth()</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga8de502509b72795b1d7291cfcfb2bf1c" name="ga8de502509b72795b1d7291cfcfb2bf1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8de502509b72795b1d7291cfcfb2bf1c">&#9670;&#160;</a></span>imgui.lighttheme()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,12 +756,173 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets ImGui's theme to light </p>
+<p>Switches to the light color theme </p>
 
 </div>
 </div>
-<a id="ga36ffaee421af965da3d61c196f89ae06" name="ga36ffaee421af965da3d61c196f89ae06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga36ffaee421af965da3d61c196f89ae06">&#9670;&#160;</a></span>imgui.metrics()</h2>
+<a id="ga04d79040aa3d8c80371ec738a5fac1a7" name="ga04d79040aa3d8c80371ec738a5fac1a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga04d79040aa3d8c80371ec738a5fac1a7">&#9670;&#160;</a></span>imgui.listbox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">number imgui.listbox </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>selected</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>items</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a list box (a list where all the items are visible) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The text next to it </td></tr>
+    <tr><td class="paramname">selected</td><td>Index (starting at 1) of the selected item </td></tr>
+    <tr><td class="paramname">items</td><td>A list of strings to choose from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The index of the selected item after this frame. Store it and pass it again next frame. </dd></dl>
+
+</div>
+</div>
+<a id="ga379108c047f9b69691dc5e066bb5a299" name="ga379108c047f9b69691dc5e066bb5a299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga379108c047f9b69691dc5e066bb5a299">&#9670;&#160;</a></span>imgui.menubarbegin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.menubarbegin </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Starts the menu bar at the top of the screen </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if the menu bar is shown. Only then add menus and call <a class="el" href="#gac08eb9b851742b9b8b2847b423bf04bd">imgui.menubarend()</a>. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line"><span class="keywordflow">if</span> imgui.menubarbegin() then</div>
+<div class="line">    <span class="keywordflow">if</span> imgui.menubegin(<span class="stringliteral">&quot;File&quot;</span>) then</div>
+<div class="line">        <span class="keywordflow">if</span> imgui.menuitem(<span class="stringliteral">&quot;Exit&quot;</span>) then os.exit() end</div>
+<div class="line">        imgui.menuend()</div>
+<div class="line">    end</div>
+<div class="line">    imgui.menubarend()</div>
+<div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gac08eb9b851742b9b8b2847b423bf04bd" name="gac08eb9b851742b9b8b2847b423bf04bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac08eb9b851742b9b8b2847b423bf04bd">&#9670;&#160;</a></span>imgui.menubarend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.menubarend </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ends the menu bar. Only call it if <a class="el" href="#ga379108c047f9b69691dc5e066bb5a299">imgui.menubarbegin()</a> returned <code>true</code>. </p>
+
+</div>
+</div>
+<a id="gab1d3b1c81a2f110b3d8efa55c19d0a59" name="gab1d3b1c81a2f110b3d8efa55c19d0a59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab1d3b1c81a2f110b3d8efa55c19d0a59">&#9670;&#160;</a></span>imgui.menubegin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.menubegin </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enabled</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Starts a menu (or a sub-menu, inside another menu) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The menu's name </td></tr>
+    <tr><td class="paramname">enabled</td><td><code>false</code> to grey it out <em>(optional, default: true)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the menu is open. Only then add items and call <a class="el" href="#ga2444aebf8477e1b88077645e17df0306">imgui.menuend()</a>. </dd></dl>
+
+</div>
+</div>
+<a id="ga2444aebf8477e1b88077645e17df0306" name="ga2444aebf8477e1b88077645e17df0306"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2444aebf8477e1b88077645e17df0306">&#9670;&#160;</a></span>imgui.menuend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.menuend </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ends a menu. Only call it if <a class="el" href="#gab1d3b1c81a2f110b3d8efa55c19d0a59">imgui.menubegin()</a> returned <code>true</code>. </p>
+
+</div>
+</div>
+<a id="ga5ce6ea691ad067e247bfeed4d6f5d396" name="ga5ce6ea691ad067e247bfeed4d6f5d396"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5ce6ea691ad067e247bfeed4d6f5d396">&#9670;&#160;</a></span>imgui.menuitem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.menuitem </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>selected</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enabled</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds an item to the open menu </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The item's text </td></tr>
+    <tr><td class="paramname">selected</td><td><code>true</code> to show a check mark next to it <em>(optional, default: false)</em> </td></tr>
+    <tr><td class="paramname">enabled</td><td><code>false</code> to grey it out <em>(optional, default: true)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame it's chosen </dd></dl>
+
+</div>
+</div>
+<a id="gafd26e4078b7a147fe6b5e9fcd79227d7" name="gafd26e4078b7a147fe6b5e9fcd79227d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafd26e4078b7a147fe6b5e9fcd79227d7">&#9670;&#160;</a></span>imgui.metrics()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,12 +935,147 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Show the ImGui debug window </p>
+<p>Shows the ImGui metrics/debug window, with information about the windows and how fast they draw </p>
 
 </div>
 </div>
-<a id="gab004c40d09bbf3a5eb0c669a9b8d0cc1" name="gab004c40d09bbf3a5eb0c669a9b8d0cc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab004c40d09bbf3a5eb0c669a9b8d0cc1">&#9670;&#160;</a></span>imgui.renderinit()</h2>
+<a id="ga881b5e5e94b214bd8aebfeed3e66add6" name="ga881b5e5e94b214bd8aebfeed3e66add6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga881b5e5e94b214bd8aebfeed3e66add6">&#9670;&#160;</a></span>imgui.nextwindowposition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.nextwindowposition </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ImGuiCond</td>          <td class="paramname"><span class="paramname"><em>condition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the position of the next window created with <a class="el" href="#gac99270e4ae56d192daaf0ed1f41b591b">imgui.windowbegin()</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">condition</td><td>When to apply it, one of the condition constants <em>(optional, default: ImGuiCond_Always)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gad4abdf3d117992d4140d02b290938053" name="gad4abdf3d117992d4140d02b290938053"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad4abdf3d117992d4140d02b290938053">&#9670;&#160;</a></span>imgui.nextwindowsize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.nextwindowsize </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ImGuiCond</td>          <td class="paramname"><span class="paramname"><em>condition</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the size of the next window created with <a class="el" href="#gac99270e4ae56d192daaf0ed1f41b591b">imgui.windowbegin()</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">condition</td><td>When to apply it, one of the condition constants <em>(optional, default: ImGuiCond_Always)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga6b20d9d4fa8e6e6577388bcbe879305d" name="ga6b20d9d4fa8e6e6577388bcbe879305d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6b20d9d4fa8e6e6577388bcbe879305d">&#9670;&#160;</a></span>imgui.progressbar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.progressbar </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>percent</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a progress bar </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">percent</td><td>Progress from 0 to 100 <em>(optional, default: 0)</em> </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels, 0 for automatic <em>(optional, default: 0)</em> </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels, 0 for automatic <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga78a3e7ab9d5984b067ce43e2b995d793" name="ga78a3e7ab9d5984b067ce43e2b995d793"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga78a3e7ab9d5984b067ce43e2b995d793">&#9670;&#160;</a></span>imgui.radiobutton()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.radiobutton </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>active</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a radio button (one choice out of several) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The radio button's text </td></tr>
+    <tr><td class="paramname">active</td><td>Whether it's the selected choice </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame it's pressed </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line"><span class="keywordflow">if</span> imgui.radiobutton(<span class="stringliteral">&quot;Small&quot;</span>, size == 1) then size = 1 end</div>
+<div class="line">imgui.sameline()</div>
+<div class="line"><span class="keywordflow">if</span> imgui.radiobutton(<span class="stringliteral">&quot;Big&quot;</span>, size == 2) then size = 2 end</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gac05c63cd337b2bf9be45e40ae58bc7da" name="gac05c63cd337b2bf9be45e40ae58bc7da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac05c63cd337b2bf9be45e40ae58bc7da">&#9670;&#160;</a></span>imgui.renderinit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,12 +1088,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Initializes the ImGui rendering </p>
+<p>Starts a new ImGui frame. Call it at the start of every frame, before any widget. </p>
 
 </div>
 </div>
-<a id="gaa6613b67b93aab9ac7cca20e375780f2" name="gaa6613b67b93aab9ac7cca20e375780f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa6613b67b93aab9ac7cca20e375780f2">&#9670;&#160;</a></span>imgui.renderterm()</h2>
+<a id="ga750eb622b91b5dd05e2d491b34062e43" name="ga750eb622b91b5dd05e2d491b34062e43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga750eb622b91b5dd05e2d491b34062e43">&#9670;&#160;</a></span>imgui.renderterm()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,12 +1106,89 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Terminates the ImGui rendering </p>
+<p>Ends the ImGui frame and draws all the widgets. Call it after your last widget, before <a class="el" href="group__draw.html#ga08b62b5ac3bfb9bc879b98589cb2c368">draw.swapbuffers()</a>. </p>
 
 </div>
 </div>
-<a id="gac3c65f0ae58cf6150944715f1decb5f9" name="gac3c65f0ae58cf6150944715f1decb5f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac3c65f0ae58cf6150944715f1decb5f9">&#9670;&#160;</a></span>imgui.shutdown()</h2>
+<a id="gae570f283f0a4b423b7995a1cf3104b86" name="gae570f283f0a4b423b7995a1cf3104b86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae570f283f0a4b423b7995a1cf3104b86">&#9670;&#160;</a></span>imgui.resetitemwidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.resetitemwidth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Goes back to the widget width used before the last <a class="el" href="#gabad456412b40266781e42b114dff912d">imgui.itemwidth()</a> </p>
+
+</div>
+</div>
+<a id="gac7da8cf9e0b33b1524b3c65a21532265" name="gac7da8cf9e0b33b1524b3c65a21532265"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac7da8cf9e0b33b1524b3c65a21532265">&#9670;&#160;</a></span>imgui.sameline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.sameline </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Puts the next widget on the same line as the previous one, instead of below it </p>
+
+</div>
+</div>
+<a id="ga1c856a05014831e61ac608378269e888" name="ga1c856a05014831e61ac608378269e888"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1c856a05014831e61ac608378269e888">&#9670;&#160;</a></span>imgui.separator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.separator </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Draws a horizontal line to separate widgets </p>
+
+</div>
+</div>
+<a id="ga5f024b73314845dc6fd589b82835b5b2" name="ga5f024b73314845dc6fd589b82835b5b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5f024b73314845dc6fd589b82835b5b2">&#9670;&#160;</a></span>imgui.setcursor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.setcursor </td>
+          <td>(</td>
+          <td class="paramtype">ImGuiMouseCursor</td>          <td class="paramname"><span class="paramname"><em>cursor</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Changes the shape of the mouse cursor for this frame </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cursor</td><td>One of the mouse cursor constants </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gad486d61cc9b995690424e8c7d5844749" name="gad486d61cc9b995690424e8c7d5844749"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad486d61cc9b995690424e8c7d5844749">&#9670;&#160;</a></span>imgui.shutdown()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -273,12 +1201,36 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Terminates ImGui </p>
+<p>Stops ImGui and frees its memory </p>
 
 </div>
 </div>
-<a id="ga6e4a374a2bed14ee220e1a12bc683c84" name="ga6e4a374a2bed14ee220e1a12bc683c84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6e4a374a2bed14ee220e1a12bc683c84">&#9670;&#160;</a></span>imgui.text()</h2>
+<a id="ga702840bc8d9ef0c270fb46c0617547cf" name="ga702840bc8d9ef0c270fb46c0617547cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga702840bc8d9ef0c270fb46c0617547cf">&#9670;&#160;</a></span>imgui.smallbutton()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean imgui.smallbutton </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>label</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a small button, with less padding, that fits in a line of text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">label</td><td>The button's text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame it's pressed </dd></dl>
+
+</div>
+</div>
+<a id="ga20eb8e083b59fdf039a4e36e0224aa34" name="ga20eb8e083b59fdf039a4e36e0224aa34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga20eb8e083b59fdf039a4e36e0224aa34">&#9670;&#160;</a></span>imgui.text()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,7 +1243,235 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws text </p>
+<p>Shows a line of text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gaf25330724a719d82c216b872a871737c" name="gaf25330724a719d82c216b872a871737c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf25330724a719d82c216b872a871737c">&#9670;&#160;</a></span>imgui.textsize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">table imgui.textsize </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the size a text will have when shown with ImGui </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A table with the fields <code>x</code> (width) and <code>y</code> (height) </dd></dl>
+
+</div>
+</div>
+<a id="ga23cf21371e132891d54f6791527b4fe3" name="ga23cf21371e132891d54f6791527b4fe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga23cf21371e132891d54f6791527b4fe3">&#9670;&#160;</a></span>imgui.tooltip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.tooltip </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows a tooltip when the last widget is hovered by the cursor </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The tooltip text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">imgui.button(<span class="stringliteral">&quot;Save&quot;</span>)</div>
+<div class="line">imgui.tooltip(<span class="stringliteral">&quot;Saves your progress&quot;</span>)</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga1b02362422865fb39d70c3c6bb2f4351" name="ga1b02362422865fb39d70c3c6bb2f4351"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1b02362422865fb39d70c3c6bb2f4351">&#9670;&#160;</a></span>imgui.touch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.touch </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>front</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>rear</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>indirect</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Chooses if the touch screens can be used to interact with ImGui </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">front</td><td><code>true</code> to use the front touch screen </td></tr>
+    <tr><td class="paramname">rear</td><td><code>true</code> to also use the rear touch pad <em>(optional, default: false)</em> </td></tr>
+    <tr><td class="paramname">indirect</td><td><code>true</code> to use the front touch screen like a laptop touchpad (moving a cursor), instead of touching widgets directly <em>(optional, default: false)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga967b5adb8db75d9a590c6882d1e1b184" name="ga967b5adb8db75d9a590c6882d1e1b184"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga967b5adb8db75d9a590c6882d1e1b184">&#9670;&#160;</a></span>imgui.version()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string imgui.version </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the version of Dear ImGui </p><dl class="section return"><dt>Returns</dt><dd>The version, e.g. <code>"1.79 WIP"</code> </dd></dl>
+
+</div>
+</div>
+<a id="gac99270e4ae56d192daaf0ed1f41b591b" name="gac99270e4ae56d192daaf0ed1f41b591b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac99270e4ae56d192daaf0ed1f41b591b">&#9670;&#160;</a></span>imgui.windowbegin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.windowbegin </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>title</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ImGuiWindowFlags</td>          <td class="paramname"><span class="paramname"><em>flags</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Starts a window. The widgets called after it are placed in this window, until <a class="el" href="#gac1fa07b3dda91e53249cffbac65ac397">imgui.windowend()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>The window title, it must be unique </td></tr>
+    <tr><td class="paramname">flags</td><td>Window flag constants, added together <em>(optional, default: ImGuiWindowFlags_None)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">imgui.windowbegin(<span class="stringliteral">&quot;Info&quot;</span>, <a class="code hl_variable" href="#gaa97ca784a23e65d39cb085c8a160f0c5">ImGuiWindowFlags_NoMove</a> + <a class="code hl_variable" href="#ga4cc62487767dfe8032a4b3116f7ccb55">ImGuiWindowFlags_NoResize</a>)</div>
+<div class="line">imgui.text(<span class="stringliteral">&quot;This window can&#39;t be moved or resized&quot;</span>)</div>
+<div class="line">imgui.windowend()</div>
+<div class="ttc" id="agroup__imgui_html_ga4cc62487767dfe8032a4b3116f7ccb55"><div class="ttname"><a href="#ga4cc62487767dfe8032a4b3116f7ccb55">ImGuiWindowFlags_NoResize</a></div><div class="ttdeci">ImGuiWindowFlags ImGuiWindowFlags_NoResize</div><div class="ttdoc">Can&#39;t be resized by the user.</div><div class="ttdef"><b>Definition</b> lj_imgui.h:344</div></div>
+<div class="ttc" id="agroup__imgui_html_gaa97ca784a23e65d39cb085c8a160f0c5"><div class="ttname"><a href="#gaa97ca784a23e65d39cb085c8a160f0c5">ImGuiWindowFlags_NoMove</a></div><div class="ttdeci">ImGuiWindowFlags ImGuiWindowFlags_NoMove</div><div class="ttdoc">Can&#39;t be moved by the user.</div><div class="ttdef"><b>Definition</b> lj_imgui.h:345</div></div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gac1fa07b3dda91e53249cffbac65ac397" name="gac1fa07b3dda91e53249cffbac65ac397"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1fa07b3dda91e53249cffbac65ac397">&#9670;&#160;</a></span>imgui.windowend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.windowend </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ends the window started with <a class="el" href="#gac99270e4ae56d192daaf0ed1f41b591b">imgui.windowbegin()</a> </p>
+
+</div>
+</div>
+<a id="ga38a0d5a959e6ed789c2468127157f53e" name="ga38a0d5a959e6ed789c2468127157f53e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga38a0d5a959e6ed789c2468127157f53e">&#9670;&#160;</a></span>imgui.windowfocus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.windowfocus </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>title</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gives focus to a window (brings it to the front) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Title of the window <em>(optional, default: the current window)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga01fd1114d12d58b9ee292fa55ea580c3" name="ga01fd1114d12d58b9ee292fa55ea580c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga01fd1114d12d58b9ee292fa55ea580c3">&#9670;&#160;</a></span>imgui.windowrounding()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.windowrounding </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>rounding</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets how rounded the corners of the windows are. Applies to the windows started after calling it. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rounding</td><td>Corner radius in pixels <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga39f3bc4017c1a663df4d1e4d885d4976" name="ga39f3bc4017c1a663df4d1e4d885d4976"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga39f3bc4017c1a663df4d1e4d885d4976">&#9670;&#160;</a></span>imgui.wrappedtext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil imgui.wrappedtext </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shows text that wraps onto the next line at the edge of the window </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

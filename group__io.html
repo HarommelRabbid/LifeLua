@@ -106,52 +106,64 @@ $(function(){initNavTree('group__io.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Lua IO library extension.  
+<p>Files, folders, archives &amp; hashes (extends Lua's io library)  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>These functions are added to Lua's standard <code>io</code> library, so <code>io.open()</code>, <code>io.read()</code>, etc. still work like in normal Lua (see the <a href="https://www.lua.org/manual/5.1/manual.html#5.7">Lua manual</a>).</p>
+<p>Paths on the PS Vita start with a partition, for example:</p><ul>
+<li><code>app0:</code> is your app's own folder, where <code>main.lua</code> is</li>
+<li><code>ux0:data/</code> is the usual place to save your app's files</li>
+<li><code>ux0:</code>, <code>ur0:</code>, <code>uma0:</code>, <code>imc0:</code>, ... are the memory card and other storage</li>
+</ul>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> not io.exists(<span class="stringliteral">&quot;ux0:data/myapp&quot;</span>) then</div>
+<div class="line">    io.newfolder(<span class="stringliteral">&quot;ux0:data/myapp&quot;</span>)</div>
+<div class="line">end</div>
+<div class="line">local file = io.open(<span class="stringliteral">&quot;ux0:data/myapp/save.txt&quot;</span>, <span class="stringliteral">&quot;w&quot;</span>)</div>
+<div class="line">file:write(<span class="stringliteral">&quot;Hello!&quot;</span>)</div>
+<div class="line">file:close()</div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaad8a2ed342eed207b1270bf05769a4b1" id="r_gaad8a2ed342eed207b1270bf05769a4b1"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaad8a2ed342eed207b1270bf05769a4b1">io.crc32</a> (string string)</td></tr>
-<tr class="separator:gaad8a2ed342eed207b1270bf05769a4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa79328a860fbd57364b8f2b96a1d2620" id="r_gaa79328a860fbd57364b8f2b96a1d2620"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa79328a860fbd57364b8f2b96a1d2620">io.sha1</a> (string string)</td></tr>
-<tr class="separator:gaa79328a860fbd57364b8f2b96a1d2620"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadbb917d3bf660e3ab32f0c9751c0dda4" id="r_gadbb917d3bf660e3ab32f0c9751c0dda4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadbb917d3bf660e3ab32f0c9751c0dda4">io.sha256</a> (string string)</td></tr>
-<tr class="separator:gadbb917d3bf660e3ab32f0c9751c0dda4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe13a28deb7a05623838b4d52b4a2d9b" id="r_gabe13a28deb7a05623838b4d52b4a2d9b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabe13a28deb7a05623838b4d52b4a2d9b">io.md5</a> (string string)</td></tr>
-<tr class="separator:gabe13a28deb7a05623838b4d52b4a2d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga89cb36a9e5460e3acbda901d356f0c82" id="r_ga89cb36a9e5460e3acbda901d356f0c82"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga89cb36a9e5460e3acbda901d356f0c82">io.exists</a> (string path)</td></tr>
-<tr class="separator:ga89cb36a9e5460e3acbda901d356f0c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafe60a7e298936384e2528ce4237ad7a5" id="r_gafe60a7e298936384e2528ce4237ad7a5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafe60a7e298936384e2528ce4237ad7a5">io.newfolder</a> (string path)</td></tr>
-<tr class="separator:gafe60a7e298936384e2528ce4237ad7a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac185ff3386ac909165aa6d15739b2fd2" id="r_gac185ff3386ac909165aa6d15739b2fd2"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac185ff3386ac909165aa6d15739b2fd2">io.delete</a> (string path)</td></tr>
-<tr class="separator:gac185ff3386ac909165aa6d15739b2fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaacf5cd1aaec1db088e10fedce89df175" id="r_gaacf5cd1aaec1db088e10fedce89df175"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaacf5cd1aaec1db088e10fedce89df175">io.readsfo</a> (string path)</td></tr>
-<tr class="separator:gaacf5cd1aaec1db088e10fedce89df175"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2713b4e975ff9434ecde4832d5952b87" id="r_ga2713b4e975ff9434ecde4832d5952b87"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2713b4e975ff9434ecde4832d5952b87">io.editsfo</a> (string path)</td></tr>
-<tr class="separator:ga2713b4e975ff9434ecde4832d5952b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7cbdebed2bd81c97f85b3338bf136db5" id="r_ga7cbdebed2bd81c97f85b3338bf136db5"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7cbdebed2bd81c97f85b3338bf136db5">io.list</a> (string path)</td></tr>
-<tr class="separator:ga7cbdebed2bd81c97f85b3338bf136db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga93265d4225cd911acc9ad23803088c2c" id="r_ga93265d4225cd911acc9ad23803088c2c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93265d4225cd911acc9ad23803088c2c">io.info</a> (string path)</td></tr>
-<tr class="separator:ga93265d4225cd911acc9ad23803088c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa96cfef4494fe196b4b6ba6dc4bbca7f" id="r_gaa96cfef4494fe196b4b6ba6dc4bbca7f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa96cfef4494fe196b4b6ba6dc4bbca7f">io.filestrip</a> (string path)</td></tr>
-<tr class="separator:gaa96cfef4494fe196b4b6ba6dc4bbca7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad20a05587bc53ee6de36ee4aab112f65" id="r_gad20a05587bc53ee6de36ee4aab112f65"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad20a05587bc53ee6de36ee4aab112f65">io.pathstrip</a> (string path)</td></tr>
-<tr class="separator:gad20a05587bc53ee6de36ee4aab112f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaca3cc34e74d881c8c24bcb052aaf3023" id="r_gaca3cc34e74d881c8c24bcb052aaf3023"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaca3cc34e74d881c8c24bcb052aaf3023">io.freespace</a> (string partition)</td></tr>
-<tr class="separator:gaca3cc34e74d881c8c24bcb052aaf3023"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga33e61d068102220bb851a5b20902d9b4" id="r_ga33e61d068102220bb851a5b20902d9b4"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33e61d068102220bb851a5b20902d9b4">io.totalspace</a> (string partition)</td></tr>
-<tr class="separator:ga33e61d068102220bb851a5b20902d9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8c74218f641d10f2add46817c9299af8" id="r_ga8c74218f641d10f2add46817c9299af8"><td class="memItemLeft" align="right" valign="top">nil or string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8c74218f641d10f2add46817c9299af8">io.workpath</a> (string path)</td></tr>
-<tr class="separator:ga8c74218f641d10f2add46817c9299af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1010bc002ed6cb9a5724c67fbbb218eb" id="r_ga1010bc002ed6cb9a5724c67fbbb218eb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1010bc002ed6cb9a5724c67fbbb218eb">io.extract</a> (string archive, string extracted_content)</td></tr>
-<tr class="separator:ga1010bc002ed6cb9a5724c67fbbb218eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga89488b275c772b3c4f3b401846a99825" id="r_ga89488b275c772b3c4f3b401846a99825"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga89488b275c772b3c4f3b401846a99825">io.archive</a> (string or table contents, string archive_path, string format)</td></tr>
-<tr class="separator:ga89488b275c772b3c4f3b401846a99825"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae3cc5d2040b27f91c60a1b704b21aca7" id="r_gae3cc5d2040b27f91c60a1b704b21aca7"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae3cc5d2040b27f91c60a1b704b21aca7">io.exists</a> (string path)</td></tr>
+<tr class="separator:gae3cc5d2040b27f91c60a1b704b21aca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb8893d8c6955069abbaf9c3c17d6ab1" id="r_gaeb8893d8c6955069abbaf9c3c17d6ab1"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb8893d8c6955069abbaf9c3c17d6ab1">io.newfolder</a> (string path)</td></tr>
+<tr class="separator:gaeb8893d8c6955069abbaf9c3c17d6ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab835b13b970fe00fd1d4b742295e6f3f" id="r_gab835b13b970fe00fd1d4b742295e6f3f"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab835b13b970fe00fd1d4b742295e6f3f">io.delete</a> (string path)</td></tr>
+<tr class="separator:gab835b13b970fe00fd1d4b742295e6f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa4e6443a7b5b36ebb5780a69642596c" id="r_gafa4e6443a7b5b36ebb5780a69642596c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafa4e6443a7b5b36ebb5780a69642596c">io.list</a> (string path)</td></tr>
+<tr class="separator:gafa4e6443a7b5b36ebb5780a69642596c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga90e72a660ef3d1c72afa199b467149a8" id="r_ga90e72a660ef3d1c72afa199b467149a8"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga90e72a660ef3d1c72afa199b467149a8">io.info</a> (string path)</td></tr>
+<tr class="separator:ga90e72a660ef3d1c72afa199b467149a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9887ca472ca05539677b60e23473377b" id="r_ga9887ca472ca05539677b60e23473377b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9887ca472ca05539677b60e23473377b">io.pathstrip</a> (string path)</td></tr>
+<tr class="separator:ga9887ca472ca05539677b60e23473377b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6a27a502df45ffa3ebfdf2ee143df831" id="r_ga6a27a502df45ffa3ebfdf2ee143df831"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6a27a502df45ffa3ebfdf2ee143df831">io.filestrip</a> (string path)</td></tr>
+<tr class="separator:ga6a27a502df45ffa3ebfdf2ee143df831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c1d89f75131930adbd4589e355562fe" id="r_ga5c1d89f75131930adbd4589e355562fe"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5c1d89f75131930adbd4589e355562fe">io.workpath</a> (string path)</td></tr>
+<tr class="separator:ga5c1d89f75131930adbd4589e355562fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87863b1ac7bd2dcc9820d13db7e841b8" id="r_ga87863b1ac7bd2dcc9820d13db7e841b8"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga87863b1ac7bd2dcc9820d13db7e841b8">io.freespace</a> (string partition)</td></tr>
+<tr class="separator:ga87863b1ac7bd2dcc9820d13db7e841b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafde5dbe2bd77357145b9eea8db07d87f" id="r_gafde5dbe2bd77357145b9eea8db07d87f"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafde5dbe2bd77357145b9eea8db07d87f">io.fullspace</a> (string partition)</td></tr>
+<tr class="separator:gafde5dbe2bd77357145b9eea8db07d87f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c128ba8f6dcaac2f381017b9c129ab7" id="r_ga8c128ba8f6dcaac2f381017b9c129ab7"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8c128ba8f6dcaac2f381017b9c129ab7">io.readsfo</a> (string path)</td></tr>
+<tr class="separator:ga8c128ba8f6dcaac2f381017b9c129ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga74ef7482387c3eef7a649e39f3540e9e" id="r_ga74ef7482387c3eef7a649e39f3540e9e"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga74ef7482387c3eef7a649e39f3540e9e">io.editsfo</a> (string path, string key, string value)</td></tr>
+<tr class="separator:ga74ef7482387c3eef7a649e39f3540e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga35f8edaaff82efe116a846d6683638e9" id="r_ga35f8edaaff82efe116a846d6683638e9"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga35f8edaaff82efe116a846d6683638e9">io.extract</a> (string archive, string destination)</td></tr>
+<tr class="separator:ga35f8edaaff82efe116a846d6683638e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga91876b1c76ef231873e9e0a9c1fa06ca" id="r_ga91876b1c76ef231873e9e0a9c1fa06ca"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga91876b1c76ef231873e9e0a9c1fa06ca">io.archive</a> (string contents, string archive_path, string format)</td></tr>
+<tr class="separator:ga91876b1c76ef231873e9e0a9c1fa06ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga303d6f21c105ac6d731d41f54ba4e782" id="r_ga303d6f21c105ac6d731d41f54ba4e782"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga303d6f21c105ac6d731d41f54ba4e782">io.crc32</a> (string text)</td></tr>
+<tr class="separator:ga303d6f21c105ac6d731d41f54ba4e782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3c9f047cedfe3e2e02a928b9e56a5f0" id="r_gab3c9f047cedfe3e2e02a928b9e56a5f0"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab3c9f047cedfe3e2e02a928b9e56a5f0">io.md5</a> (string text)</td></tr>
+<tr class="separator:gab3c9f047cedfe3e2e02a928b9e56a5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadfd9513cfb5758e037e2e580c55ab7d6" id="r_gadfd9513cfb5758e037e2e580c55ab7d6"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadfd9513cfb5758e037e2e580c55ab7d6">io.sha1</a> (string text)</td></tr>
+<tr class="separator:gadfd9513cfb5758e037e2e580c55ab7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3c59083548eb96cadf19cb2aca7d5e88" id="r_ga3c59083548eb96cadf19cb2aca7d5e88"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3c59083548eb96cadf19cb2aca7d5e88">io.sha256</a> (string text)</td></tr>
+<tr class="separator:ga3c59083548eb96cadf19cb2aca7d5e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga89488b275c772b3c4f3b401846a99825" name="ga89488b275c772b3c4f3b401846a99825"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga89488b275c772b3c4f3b401846a99825">&#9670;&#160;</a></span>io.archive()</h2>
+<a id="ga91876b1c76ef231873e9e0a9c1fa06ca" name="ga91876b1c76ef231873e9e0a9c1fa06ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga91876b1c76ef231873e9e0a9c1fa06ca">&#9670;&#160;</a></span>io.archive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +171,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">boolean io.archive </td>
           <td>(</td>
-          <td class="paramtype">string or table</td>          <td class="paramname"><span class="paramname"><em>contents</em></span>, </td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>contents</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -173,12 +185,23 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Makes a folder or a table of file/folder paths into an archive </p>
+<p>Creates an archive from a folder, or from a list of files </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">contents</td><td>Either a folder path (everything inside it is added), or a table where each key is a file path and each value is the name it gets inside the archive </td></tr>
+    <tr><td class="paramname">archive_path</td><td>Path of the archive to create </td></tr>
+    <tr><td class="paramname">format</td><td>Archive format <em>(optional, default: <code>"zip"</code>)</em>. One of <code>"zip"</code>, <code>"7z"</code>, <code>"gnutar"</code>, <code>"ustar"</code>, <code>"v7tar"</code>, <code>"xar"</code>, <code>"iso9660"</code>, <code>"ar_bsd"</code>, <code>"ar_svr4"</code>, <code>"warc"</code> or <code>"raw"</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> when done </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">io.archive(<span class="stringliteral">&quot;ux0:data/myapp&quot;</span>, <span class="stringliteral">&quot;ux0:data/myapp_backup.zip&quot;</span>)</div>
+<div class="line">io.archive({[<span class="stringliteral">&quot;ux0:data/myapp/save.txt&quot;</span>] = <span class="stringliteral">&quot;save.txt&quot;</span>}, <span class="stringliteral">&quot;ux0:data/save.7z&quot;</span>, <span class="stringliteral">&quot;7z&quot;</span>)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaad8a2ed342eed207b1270bf05769a4b1" name="gaad8a2ed342eed207b1270bf05769a4b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaad8a2ed342eed207b1270bf05769a4b1">&#9670;&#160;</a></span>io.crc32()</h2>
+<a id="ga303d6f21c105ac6d731d41f54ba4e782" name="ga303d6f21c105ac6d731d41f54ba4e782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga303d6f21c105ac6d731d41f54ba4e782">&#9670;&#160;</a></span>io.crc32()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,35 +209,47 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">number io.crc32 </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the CRC32 hash of a string </p>
+<p>Calculates the CRC32 checksum of a text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The checksum as a number </dd></dl>
 
 </div>
 </div>
-<a id="gac185ff3386ac909165aa6d15739b2fd2" name="gac185ff3386ac909165aa6d15739b2fd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac185ff3386ac909165aa6d15739b2fd2">&#9670;&#160;</a></span>io.delete()</h2>
+<a id="gab835b13b970fe00fd1d4b742295e6f3f" name="gab835b13b970fe00fd1d4b742295e6f3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab835b13b970fe00fd1d4b742295e6f3f">&#9670;&#160;</a></span>io.delete()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nil io.delete </td>
+          <td class="memname">boolean io.delete </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Deletes a file or a folder </p>
+<p>Deletes a file or an <b>empty</b> folder </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to delete </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> if it doesn't exist or couldn't be deleted (e.g. the folder isn't empty) </dd></dl>
 
 </div>
 </div>
-<a id="ga2713b4e975ff9434ecde4832d5952b87" name="ga2713b4e975ff9434ecde4832d5952b87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2713b4e975ff9434ecde4832d5952b87">&#9670;&#160;</a></span>io.editsfo()</h2>
+<a id="ga74ef7482387c3eef7a649e39f3540e9e" name="ga74ef7482387c3eef7a649e39f3540e9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga74ef7482387c3eef7a649e39f3540e9e">&#9670;&#160;</a></span>io.editsfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,17 +257,33 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil io.editsfo </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Edits a parameter in a .SFO file </p>
+<p>Changes one value in a .SFO file. The key must already exist in the file. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the .SFO </td></tr>
+    <tr><td class="paramname">key</td><td>Key to change (e.g. <code>"TITLE"</code>) </td></tr>
+    <tr><td class="paramname">value</td><td>New value: a string for text keys, a number for number keys </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga89cb36a9e5460e3acbda901d356f0c82" name="ga89cb36a9e5460e3acbda901d356f0c82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga89cb36a9e5460e3acbda901d356f0c82">&#9670;&#160;</a></span>io.exists()</h2>
+<a id="gae3cc5d2040b27f91c60a1b704b21aca7" name="gae3cc5d2040b27f91c60a1b704b21aca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae3cc5d2040b27f91c60a1b704b21aca7">&#9670;&#160;</a></span>io.exists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,12 +296,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a file or folder exists or not </p>
+<p>Checks if a file or folder exists </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to check </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if it exists </dd></dl>
 
 </div>
 </div>
-<a id="ga1010bc002ed6cb9a5724c67fbbb218eb" name="ga1010bc002ed6cb9a5724c67fbbb218eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1010bc002ed6cb9a5724c67fbbb218eb">&#9670;&#160;</a></span>io.extract()</h2>
+<a id="ga35f8edaaff82efe116a846d6683638e9" name="ga35f8edaaff82efe116a846d6683638e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga35f8edaaff82efe116a846d6683638e9">&#9670;&#160;</a></span>io.extract()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,20 +320,29 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>extracted_content</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>destination</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Extract an archive </p><dl class="section note"><dt>Note</dt><dd>This function has a callback that can be defined named <code>LifeLuaArchiveExtracting</code> </dd></dl>
-<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaArchiveExtracting(pathname, index, size)</div>
-<div class="line">...</div>
+<p>Extracts an archive (.ZIP, .7Z, .RAR, .TAR, .VPK, ...). Missing folders are created.</p>
+<p>If you define a global function called <code>LifeLuaArchiveExtracting</code>, it's called for each file before it's extracted. You can use it to draw a progress screen. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">archive</td><td>Path to the archive </td></tr>
+    <tr><td class="paramname">destination</td><td>Folder to extract into </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaArchiveExtracting(name, index, size)</div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Extracting file #&quot;</span>..index..<span class="stringliteral">&quot;: &quot;</span>..name, color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
 <div class="line">end</div>
+<div class="line">io.extract(<span class="stringliteral">&quot;ux0:data/game.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/game&quot;</span>)</div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaa96cfef4494fe196b4b6ba6dc4bbca7f" name="gaa96cfef4494fe196b4b6ba6dc4bbca7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa96cfef4494fe196b4b6ba6dc4bbca7f">&#9670;&#160;</a></span>io.filestrip()</h2>
+<a id="ga6a27a502df45ffa3ebfdf2ee143df831" name="ga6a27a502df45ffa3ebfdf2ee143df831"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a27a502df45ffa3ebfdf2ee143df831">&#9670;&#160;</a></span>io.filestrip()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -289,12 +355,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Strips the last file/directory from a path </p>
+<p>Removes the last part of a path (gets the folder that contains it) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>A path </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The parent folder, e.g. <code>"ux0:data/myapp"</code> for <code>"ux0:data/myapp/save.txt"</code> </dd></dl>
 
 </div>
 </div>
-<a id="gaca3cc34e74d881c8c24bcb052aaf3023" name="gaca3cc34e74d881c8c24bcb052aaf3023"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaca3cc34e74d881c8c24bcb052aaf3023">&#9670;&#160;</a></span>io.freespace()</h2>
+<a id="ga87863b1ac7bd2dcc9820d13db7e841b8" name="ga87863b1ac7bd2dcc9820d13db7e841b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga87863b1ac7bd2dcc9820d13db7e841b8">&#9670;&#160;</a></span>io.freespace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -307,12 +379,44 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the free space of a partition </p>
+<p>Gets the free space of a partition </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partition</td><td>Partition name (e.g. <code>"ux0:"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Free space in bytes </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">print(<span class="keywordtype">string</span>.format(<span class="stringliteral">&quot;%.2f GB free&quot;</span>, io.freespace(<span class="stringliteral">&quot;ux0:&quot;</span>) / 1024^3))</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga93265d4225cd911acc9ad23803088c2c" name="ga93265d4225cd911acc9ad23803088c2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga93265d4225cd911acc9ad23803088c2c">&#9670;&#160;</a></span>io.info()</h2>
+<a id="gafde5dbe2bd77357145b9eea8db07d87f" name="gafde5dbe2bd77357145b9eea8db07d87f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafde5dbe2bd77357145b9eea8db07d87f">&#9670;&#160;</a></span>io.fullspace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">number io.fullspace </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>partition</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the total size of a partition </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partition</td><td>Partition name (e.g. <code>"ux0:"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Total size in bytes </dd></dl>
+
+</div>
+</div>
+<a id="ga90e72a660ef3d1c72afa199b467149a8" name="ga90e72a660ef3d1c72afa199b467149a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga90e72a660ef3d1c72afa199b467149a8">&#9670;&#160;</a></span>io.info()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -325,19 +429,23 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lists information about a file or a folder. </p><dl class="section return"><dt>Returns</dt><dd>A table with these fields:<ul>
-<li><b>"accessed"</b>: string</li>
-<li><b>"modified"</b>: string</li>
-<li><b>"created"</b>: string</li>
-<li><b>"isafolder"</b>: boolean</li>
-<li><b>"size"</b>: number (size represented in bytes) </li>
+<p>Gets information about a file or a folder </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path of the file or folder </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if it doesn't exist, otherwise a table with these fields:<ul>
+<li><b>boolean</b> <code>isafolder</code>: <code>true</code> for folders</li>
+<li><b>number</b> <code>size</code>: Size in bytes</li>
+<li><b>string</b> <code>created</code>, <code>modified</code>, <code>accessed</code>: Dates in the <code>"YYYY-MM-DD HH:MM:SS"</code> format </li>
 </ul>
 </dd></dl>
 
 </div>
 </div>
-<a id="ga7cbdebed2bd81c97f85b3338bf136db5" name="ga7cbdebed2bd81c97f85b3338bf136db5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7cbdebed2bd81c97f85b3338bf136db5">&#9670;&#160;</a></span>io.list()</h2>
+<a id="gafa4e6443a7b5b36ebb5780a69642596c" name="gafa4e6443a7b5b36ebb5780a69642596c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafa4e6443a7b5b36ebb5780a69642596c">&#9670;&#160;</a></span>io.list()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -350,21 +458,29 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lists a directory </p><dl class="section return"><dt>Returns</dt><dd>A list of tables that represent the contents with these fields:<ul>
-<li><b>"name"</b>: string</li>
-<li><b>"path"</b>: string</li>
-<li><b>"isafolder"</b>: boolean</li>
-<li><b>"created"</b>: string</li>
-<li><b>"modified"</b>: string</li>
-<li><b>"accessed"</b>: string</li>
-<li><b>"size"</b>: number (size represented as bytes) </li>
+<p>Lists the contents of a folder </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path of the folder </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if the folder can't be opened, otherwise a list with one table per file/folder, with these fields:<ul>
+<li><b>string</b> <code>name</code>: File or folder name</li>
+<li><b>string</b> <code>path</code>: Full path</li>
+<li><b>boolean</b> <code>isafolder</code>: <code>true</code> for folders</li>
+<li><b>number</b> <code>size</code>: Size in bytes</li>
+<li><b>string</b> <code>created</code>, <code>modified</code>, <code>accessed</code>: Dates in the <code>"YYYY-MM-DD HH:MM:SS"</code> format </li>
 </ul>
 </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line"><span class="keywordflow">for</span> i, item in ipairs(io.list(<span class="stringliteral">&quot;ux0:data&quot;</span>)) do</div>
+<div class="line">    print(item.name, item.isafolder and <span class="stringliteral">&quot;folder&quot;</span> or item.size..<span class="stringliteral">&quot; bytes&quot;</span>)</div>
+<div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gabe13a28deb7a05623838b4d52b4a2d9b" name="gabe13a28deb7a05623838b4d52b4a2d9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabe13a28deb7a05623838b4d52b4a2d9b">&#9670;&#160;</a></span>io.md5()</h2>
+<a id="gab3c9f047cedfe3e2e02a928b9e56a5f0" name="gab3c9f047cedfe3e2e02a928b9e56a5f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab3c9f047cedfe3e2e02a928b9e56a5f0">&#9670;&#160;</a></span>io.md5()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,17 +488,23 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">string io.md5 </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the MD5 hash of a string </p>
+<p>Calculates the MD5 hash of a string </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The string (can contain any bytes) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The hash as uppercase hexadecimal text </dd></dl>
 
 </div>
 </div>
-<a id="gafe60a7e298936384e2528ce4237ad7a5" name="gafe60a7e298936384e2528ce4237ad7a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafe60a7e298936384e2528ce4237ad7a5">&#9670;&#160;</a></span>io.newfolder()</h2>
+<a id="gaeb8893d8c6955069abbaf9c3c17d6ab1" name="gaeb8893d8c6955069abbaf9c3c17d6ab1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb8893d8c6955069abbaf9c3c17d6ab1">&#9670;&#160;</a></span>io.newfolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -395,12 +517,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new folder </p>
+<p>Creates a folder, including any missing parent folders. Does nothing if it already exists. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path of the new folder (e.g. <code>"ux0:data/myapp/saves"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gad20a05587bc53ee6de36ee4aab112f65" name="gad20a05587bc53ee6de36ee4aab112f65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad20a05587bc53ee6de36ee4aab112f65">&#9670;&#160;</a></span>io.pathstrip()</h2>
+<a id="ga9887ca472ca05539677b60e23473377b" name="ga9887ca472ca05539677b60e23473377b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9887ca472ca05539677b60e23473377b">&#9670;&#160;</a></span>io.pathstrip()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -413,12 +540,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Strips the files/directories from a path besides the last one </p>
+<p>Gets the last part of a path (the file or folder name) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>A path </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name, e.g. <code>"save.txt"</code> for <code>"ux0:data/myapp/save.txt"</code> </dd></dl>
 
 </div>
 </div>
-<a id="gaacf5cd1aaec1db088e10fedce89df175" name="gaacf5cd1aaec1db088e10fedce89df175"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaacf5cd1aaec1db088e10fedce89df175">&#9670;&#160;</a></span>io.readsfo()</h2>
+<a id="ga8c128ba8f6dcaac2f381017b9c129ab7" name="ga8c128ba8f6dcaac2f381017b9c129ab7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8c128ba8f6dcaac2f381017b9c129ab7">&#9670;&#160;</a></span>io.readsfo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -431,12 +564,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Reads a .SFO file </p><dl class="section return"><dt>Returns</dt><dd>A table with the keys &amp; values of the .SFO </dd></dl>
+<p>Reads a .SFO file (like an app's <code>sce_sys/param.sfo</code>) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the .SFO </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A table with every key of the .SFO, with string or number values. Raises an error if the file is invalid. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local sfo = io.readsfo(<span class="stringliteral">&quot;app0:sce_sys/param.sfo&quot;</span>)</div>
+<div class="line">print(sfo.TITLE, sfo.TITLE_ID)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaa79328a860fbd57364b8f2b96a1d2620" name="gaa79328a860fbd57364b8f2b96a1d2620"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa79328a860fbd57364b8f2b96a1d2620">&#9670;&#160;</a></span>io.sha1()</h2>
+<a id="gadfd9513cfb5758e037e2e580c55ab7d6" name="gadfd9513cfb5758e037e2e580c55ab7d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadfd9513cfb5758e037e2e580c55ab7d6">&#9670;&#160;</a></span>io.sha1()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -444,17 +586,25 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">string io.sha1 </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the SHA1 hash of a string </p>
+<p>Calculates the SHA-1 hash of a text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The hash as uppercase hexadecimal text </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">print(io.sha1(<span class="stringliteral">&quot;hello&quot;</span>)) -- AAF4C61DDCC5E8A2DABEDE0F3B482CD9AEA9434D</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gadbb917d3bf660e3ab32f0c9751c0dda4" name="gadbb917d3bf660e3ab32f0c9751c0dda4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadbb917d3bf660e3ab32f0c9751c0dda4">&#9670;&#160;</a></span>io.sha256()</h2>
+<a id="ga3c59083548eb96cadf19cb2aca7d5e88" name="ga3c59083548eb96cadf19cb2aca7d5e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3c59083548eb96cadf19cb2aca7d5e88">&#9670;&#160;</a></span>io.sha256()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -462,53 +612,42 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">string io.sha256 </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the SHA256 hash of a string </p>
+<p>Calculates the SHA-256 hash of a text </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">text</td><td>The text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The hash as uppercase hexadecimal text </dd></dl>
 
 </div>
 </div>
-<a id="ga33e61d068102220bb851a5b20902d9b4" name="ga33e61d068102220bb851a5b20902d9b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga33e61d068102220bb851a5b20902d9b4">&#9670;&#160;</a></span>io.totalspace()</h2>
+<a id="ga5c1d89f75131930adbd4589e355562fe" name="ga5c1d89f75131930adbd4589e355562fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5c1d89f75131930adbd4589e355562fe">&#9670;&#160;</a></span>io.workpath()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">number io.totalspace </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>partition</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the size of a partition </p>
-
-</div>
-</div>
-<a id="ga8c74218f641d10f2add46817c9299af8" name="ga8c74218f641d10f2add46817c9299af8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8c74218f641d10f2add46817c9299af8">&#9670;&#160;</a></span>io.workpath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nil or string io.workpath </td>
+          <td class="memname">string io.workpath </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Gets or sets the working directory, which relative paths (like <code>"main.lua"</code>) start from </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>optional, if empty it'll return the current workpath, otherwise it'll set the workpath to the specified path </td></tr>
+    <tr><td class="paramname">path</td><td>New working directory <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The current working directory if <code>path</code> is omitted. Raises an error if the directory can't be set. </dd></dl>
 
 </div>
 </div>

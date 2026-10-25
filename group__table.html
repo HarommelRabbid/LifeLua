@@ -106,20 +106,21 @@ $(function(){initNavTree('group__table.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Lua table library extension.  
+<p>Extra table functions (extends Lua's table library)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>These are added to Lua's standard <code>table</code> library and work on lists (tables with keys 1, 2, 3, ...). Note that the value comes <b>first</b> and the list second. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad53bbb6c21636c0b7d43375bcf2ac915" id="r_gad53bbb6c21636c0b7d43375bcf2ac915"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad53bbb6c21636c0b7d43375bcf2ac915">table.find</a> (string string, table table)</td></tr>
-<tr class="separator:gad53bbb6c21636c0b7d43375bcf2ac915"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67ede0520b3bdb4b2b24be9175060112" id="r_ga67ede0520b3bdb4b2b24be9175060112"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67ede0520b3bdb4b2b24be9175060112">table.removefirst</a> (string string, table table)</td></tr>
-<tr class="separator:ga67ede0520b3bdb4b2b24be9175060112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga910c9fdd1b510ba65c359ab4f6d03442" id="r_ga910c9fdd1b510ba65c359ab4f6d03442"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga910c9fdd1b510ba65c359ab4f6d03442">table.find</a> (any value, table list)</td></tr>
+<tr class="separator:ga910c9fdd1b510ba65c359ab4f6d03442"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacd4a120b3bfd59c41f07519d910bff89" id="r_gacd4a120b3bfd59c41f07519d910bff89"><td class="memItemLeft" align="right" valign="top">any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacd4a120b3bfd59c41f07519d910bff89">table.removefirst</a> (any value, table list)</td></tr>
+<tr class="separator:gacd4a120b3bfd59c41f07519d910bff89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gad53bbb6c21636c0b7d43375bcf2ac915" name="gad53bbb6c21636c0b7d43375bcf2ac915"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad53bbb6c21636c0b7d43375bcf2ac915">&#9670;&#160;</a></span>table.find()</h2>
+<a id="ga910c9fdd1b510ba65c359ab4f6d03442" name="ga910c9fdd1b510ba65c359ab4f6d03442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga910c9fdd1b510ba65c359ab4f6d03442">&#9670;&#160;</a></span>table.find()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,38 +128,58 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">boolean table.find </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span>, </td>
+          <td class="paramtype">any</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>table</em></span>&#160;)</td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>list</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if an item is in an array </p>
+<p>Checks if a value is in a list </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The value to look for </td></tr>
+    <tr><td class="paramname">list</td><td>The list to search </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the value is in the list </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local fruits = {<span class="stringliteral">&quot;apple&quot;</span>, <span class="stringliteral">&quot;banana&quot;</span>}</div>
+<div class="line">print(table.find(<span class="stringliteral">&quot;banana&quot;</span>, fruits)) -- <span class="keyword">true</span></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga67ede0520b3bdb4b2b24be9175060112" name="ga67ede0520b3bdb4b2b24be9175060112"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga67ede0520b3bdb4b2b24be9175060112">&#9670;&#160;</a></span>table.removefirst()</h2>
+<a id="gacd4a120b3bfd59c41f07519d910bff89" name="gacd4a120b3bfd59c41f07519d910bff89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacd4a120b3bfd59c41f07519d910bff89">&#9670;&#160;</a></span>table.removefirst()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nil table.removefirst </td>
+          <td class="memname">any table.removefirst </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span>, </td>
+          <td class="paramtype">any</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>table</em></span>&#160;)</td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>list</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Removes the first instance of an item in an array </p>
+<p>Removes the first time a value appears in a list (the items after it move down by one) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The value to remove </td></tr>
+    <tr><td class="paramname">list</td><td>The list to remove it from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The removed value, or nothing if it wasn't found </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local items = {<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;a&quot;</span>}</div>
+<div class="line">table.removefirst(<span class="stringliteral">&quot;a&quot;</span>, items) -- items = {<span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;a&quot;</span>}</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

@@ -106,20 +106,76 @@ $(function(){initNavTree('group__thread.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Thread library, useful for multithreading.  
+<p>Running a function at the same time as the rest of your app.  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Every function that takes a thread as its first parameter can also be called as a method, e.g. <code>t:start()</code> and <code>t:wait()</code>.</p>
+<div class="fragment"><div class="line">local done = <span class="keyword">false</span></div>
+<div class="line">local t = thread.new(function()</div>
+<div class="line">    io.extract(<span class="stringliteral">&quot;ux0:data/big.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/big&quot;</span>) -- slow work</div>
+<div class="line">    done = <span class="keyword">true</span></div>
+<div class="line">end)</div>
+<div class="line">t:start()</div>
+<div class="line">while not done do</div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Extracting...&quot;</span>, color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>Threads are experimental: they share the same Lua state as the main code, so running heavy code in a thread, or using the same variables/objects from several threads at once, may crash the app. Keep thread functions simple. </dd></dl>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaee29873f91fbab16c06d188b80e4a6ee" id="r_gaee29873f91fbab16c06d188b80e4a6ee"><td class="memItemLeft" align="right" valign="top">thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaee29873f91fbab16c06d188b80e4a6ee">thread.new</a> (function function, string name)</td></tr>
-<tr class="separator:gaee29873f91fbab16c06d188b80e4a6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8bd6e2f7582d0fd336c67556171a0be8" id="r_ga8bd6e2f7582d0fd336c67556171a0be8"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8bd6e2f7582d0fd336c67556171a0be8">thread.start</a> (thread thread)</td></tr>
-<tr class="separator:ga8bd6e2f7582d0fd336c67556171a0be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12b7a35376b699f918856f9ffc1f9e12" id="r_ga12b7a35376b699f918856f9ffc1f9e12"><td class="memItemLeft" align="right" valign="top">thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga12b7a35376b699f918856f9ffc1f9e12">thread.new</a> (function func, string name)</td></tr>
+<tr class="separator:ga12b7a35376b699f918856f9ffc1f9e12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20ee1746bfd41c79dc6dfaa2748c9524" id="r_ga20ee1746bfd41c79dc6dfaa2748c9524"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga20ee1746bfd41c79dc6dfaa2748c9524">thread.start</a> (thread thread)</td></tr>
+<tr class="separator:ga20ee1746bfd41c79dc6dfaa2748c9524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac24bb46d0c77e3812b96fe69b818e707" id="r_gac24bb46d0c77e3812b96fe69b818e707"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac24bb46d0c77e3812b96fe69b818e707">thread.wait</a> (thread thread)</td></tr>
+<tr class="separator:gac24bb46d0c77e3812b96fe69b818e707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6a650fe686fe87429effcce257e103f5" id="r_ga6a650fe686fe87429effcce257e103f5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6a650fe686fe87429effcce257e103f5">thread.waitcb</a> (thread thread)</td></tr>
+<tr class="separator:ga6a650fe686fe87429effcce257e103f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88c3f05191aa2c546934a9824055a1d9" id="r_ga88c3f05191aa2c546934a9824055a1d9"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga88c3f05191aa2c546934a9824055a1d9">thread.exit</a> ()</td></tr>
+<tr class="separator:ga88c3f05191aa2c546934a9824055a1d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga08720e9d052295b756fbfb585596d057" id="r_ga08720e9d052295b756fbfb585596d057"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08720e9d052295b756fbfb585596d057">thread.exitdelete</a> ()</td></tr>
+<tr class="separator:ga08720e9d052295b756fbfb585596d057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gaee29873f91fbab16c06d188b80e4a6ee" name="gaee29873f91fbab16c06d188b80e4a6ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaee29873f91fbab16c06d188b80e4a6ee">&#9670;&#160;</a></span>thread.new()</h2>
+<a id="ga88c3f05191aa2c546934a9824055a1d9" name="ga88c3f05191aa2c546934a9824055a1d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga88c3f05191aa2c546934a9824055a1d9">&#9670;&#160;</a></span>thread.exit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil thread.exit </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ends the thread that calls it. Call it from inside a thread function to stop it early. </p>
+
+</div>
+</div>
+<a id="ga08720e9d052295b756fbfb585596d057" name="ga08720e9d052295b756fbfb585596d057"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga08720e9d052295b756fbfb585596d057">&#9670;&#160;</a></span>thread.exitdelete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil thread.exitdelete </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ends the thread that calls it and frees its resources. Call it from inside a thread function to stop it early. </p>
+
+</div>
+</div>
+<a id="ga12b7a35376b699f918856f9ffc1f9e12" name="ga12b7a35376b699f918856f9ffc1f9e12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga12b7a35376b699f918856f9ffc1f9e12">&#9670;&#160;</a></span>thread.new()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,7 +183,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">thread thread.new </td>
           <td>(</td>
-          <td class="paramtype">function</td>          <td class="paramname"><span class="paramname"><em>function</em></span>, </td>
+          <td class="paramtype">function</td>          <td class="paramname"><span class="paramname"><em>func</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -136,17 +192,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new thread </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Creates a new thread. It doesn't run until you call <a class="el" href="#ga20ee1746bfd41c79dc6dfaa2748c9524">thread.start()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>thread name, optional </td></tr>
+    <tr><td class="paramname">func</td><td>The function the thread will run </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the thread, only useful for debugging <em>(optional, default: <code>"LifeLua Thread"</code>)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The new thread </dd></dl>
 
 </div>
 </div>
-<a id="ga8bd6e2f7582d0fd336c67556171a0be8" name="ga8bd6e2f7582d0fd336c67556171a0be8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8bd6e2f7582d0fd336c67556171a0be8">&#9670;&#160;</a></span>thread.start()</h2>
+<a id="ga20ee1746bfd41c79dc6dfaa2748c9524" name="ga20ee1746bfd41c79dc6dfaa2748c9524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga20ee1746bfd41c79dc6dfaa2748c9524">&#9670;&#160;</a></span>thread.start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +217,61 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Starts a thread </p>
+<p>Starts running a thread</p>
+<p>Method form: <code>t:start()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thread</td><td>The thread </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gac24bb46d0c77e3812b96fe69b818e707" name="gac24bb46d0c77e3812b96fe69b818e707"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac24bb46d0c77e3812b96fe69b818e707">&#9670;&#160;</a></span>thread.wait()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil thread.wait </td>
+          <td>(</td>
+          <td class="paramtype">thread</td>          <td class="paramname"><span class="paramname"><em>thread</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Waits until a thread has finished. The code calling this stops until then.</p>
+<p>Method form: <code>t:wait()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thread</td><td>The thread </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga6a650fe686fe87429effcce257e103f5" name="ga6a650fe686fe87429effcce257e103f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a650fe686fe87429effcce257e103f5">&#9670;&#160;</a></span>thread.waitcb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil thread.waitcb </td>
+          <td>(</td>
+          <td class="paramtype">thread</td>          <td class="paramname"><span class="paramname"><em>thread</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Waits until a thread has finished, like <a class="el" href="#gac24bb46d0c77e3812b96fe69b818e707">thread.wait()</a>, but lets system callbacks run while waiting</p>
+<p>Method form: <code>t:waitcb()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thread</td><td>The thread </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

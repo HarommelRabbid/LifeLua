@@ -1,10 +1,11 @@
 var group__timer =
 [
-    [ "timer.elapsed", "group__timer.html#ga70118f1de8561d0ee1afb925ca9341ff", null ],
-    [ "timer.new", "group__timer.html#ga68623e06a59e974e63923ad5545add98", null ],
-    [ "timer.pause", "group__timer.html#ga77e14212abde42af0d4ea3f4b26b831a", null ],
-    [ "timer.reset", "group__timer.html#gaf83ded4ad9ed220b8a0ef63816d332cd", null ],
-    [ "timer.set", "group__timer.html#ga262b3f8a8364194460e657ba079827db", null ],
-    [ "timer.start", "group__timer.html#gaaf4d82637a2374d321230556ee5b8a62", null ],
-    [ "timer.stop", "group__timer.html#ga730c4d2241924cde8795e20584ac4531", null ]
+    [ "timer.elapsed", "group__timer.html#gaab92704f2f3af17d65f566ba0daa3a8c", null ],
+    [ "timer.new", "group__timer.html#gacdc6f57153b775292bc6658f2e9e382c", null ],
+    [ "timer.pause", "group__timer.html#ga7b633908b4eb9da5979d20ba54d43734", null ],
+    [ "timer.reset", "group__timer.html#gaeb6f789c1f4b4c6294b5c3daf25148ff", null ],
+    [ "timer.running", "group__timer.html#ga8f41f027c8b0985f68579b235a7fad00", null ],
+    [ "timer.set", "group__timer.html#gad4c4612f22dacf3ac838ef33e2889b72", null ],
+    [ "timer.start", "group__timer.html#gad87b802db702b0b0513e5ad5ee744a88", null ],
+    [ "timer.stop", "group__timer.html#ga5b0ea49ee7327bae5474ab89bc0c10a5", null ]
 ];

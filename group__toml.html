@@ -106,18 +106,18 @@ $(function(){initNavTree('group__toml.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>TOML library.  
+<p>Reading TOML files (useful for settings/config files)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga9628840de2cd0f765be51097cd4716dd" id="r_ga9628840de2cd0f765be51097cd4716dd"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9628840de2cd0f765be51097cd4716dd">toml.parse</a> (string path)</td></tr>
-<tr class="separator:ga9628840de2cd0f765be51097cd4716dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48b86a8980f125b36d877f6f0f1f7043" id="r_ga48b86a8980f125b36d877f6f0f1f7043"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga48b86a8980f125b36d877f6f0f1f7043">toml.parse</a> (string path)</td></tr>
+<tr class="separator:ga48b86a8980f125b36d877f6f0f1f7043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga9628840de2cd0f765be51097cd4716dd" name="ga9628840de2cd0f765be51097cd4716dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9628840de2cd0f765be51097cd4716dd">&#9670;&#160;</a></span>toml.parse()</h2>
+<a id="ga48b86a8980f125b36d877f6f0f1f7043" name="ga48b86a8980f125b36d877f6f0f1f7043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga48b86a8980f125b36d877f6f0f1f7043">&#9670;&#160;</a></span>toml.parse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -130,7 +130,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Parses a TOML file to a table </p>
+<p>Reads a TOML file into a Lua table. Dates and times become strings in the ISO 8601 format (e.g. <code>"2025-08-21"</code> or <code>"2025-08-21T10:30:00.000000"</code>). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the .TOML file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A table with the contents of the file. Raises an error if the file is missing or invalid. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- settings.toml:</div>
+<div class="line">-- [player]</div>
+<div class="line">-- name = <span class="stringliteral">&quot;Harommel&quot;</span></div>
+<div class="line">-- volume = 80</div>
+<div class="line">local settings = toml.parse(<span class="stringliteral">&quot;app0:settings.toml&quot;</span>)</div>
+<div class="line">print(settings.player.name, settings.player.volume)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

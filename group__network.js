@@ -1,12 +1,12 @@
 var group__network =
 [
-    [ "network.download", "group__network.html#ga2ca94aa1f5ef5af3c3733c93255883e7", null ],
-    [ "network.ftp", "group__network.html#ga2a1d65affac3ea55c84a5561350f81e8", null ],
-    [ "network.ftpadddevice", "group__network.html#ga3baf96fcd98ed21a10fa9e87f249a7bb", null ],
-    [ "network.ftpinit", "group__network.html#ga1c727c1a58a2995c829c436be0042a27", null ],
-    [ "network.ftpremovedevice", "group__network.html#ga9cf97022e27769549b040a97f4faffb6", null ],
-    [ "network.header", "group__network.html#gad3efc6f02f8fe50f1bffcf7dedf26707", null ],
-    [ "network.ip", "group__network.html#ga0c1b5e90bc6678f325451bb6510e3103", null ],
-    [ "network.mac", "group__network.html#gafd1a07e4e7466ce18cbba9decef97052", null ],
-    [ "network.wifi", "group__network.html#ga00b6b3b94499356610f5f9c1920da798", null ]
+    [ "network.download", "group__network.html#ga9eaa4ac94f325313db3b5538e8288aeb", null ],
+    [ "network.ftp.adddevice", "group__network.html#gaeb02e46771bd6fc6891ae5c7473cf6d4", null ],
+    [ "network.ftp.isrunning", "group__network.html#ga9f57982ba52421a437483f152711a568", null ],
+    [ "network.ftp.removedevice", "group__network.html#ga1f26466f55330df914f27629b8f3b94f", null ],
+    [ "network.ftp.start", "group__network.html#ga640a84271b87040df07dc18dbb1d19f7", null ],
+    [ "network.header", "group__network.html#gadaddc25b974d3b04e9c43878cfe20558", null ],
+    [ "network.ip", "group__network.html#gae4981c0d5de1fd9427bdefefece89e2b", null ],
+    [ "network.mac", "group__network.html#gafcf4920bb90b973f8771379aa0d6170e", null ],
+    [ "network.wifi", "group__network.html#gab30e6c767a8929fbeea10023a9d181ea", null ]
 ];

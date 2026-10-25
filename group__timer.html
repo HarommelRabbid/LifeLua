@@ -106,49 +106,67 @@ $(function(){initNavTree('group__timer.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Timer library.  
+<p>Measuring time (stopwatches)  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Every function that takes a timer as its first parameter can also be called as a method, e.g. <code>t:start()</code> and <code>t:elapsed()</code>.</p>
+<div class="fragment"><div class="line">local t = timer.new()</div>
+<div class="line">t:start()</div>
+<div class="line">while true do</div>
+<div class="line">    controls.update()</div>
+<div class="line">    if controls.pressed(<a class="code hl_variable" href="group__controls.html#ga470352724212f876af80ac37f568f8e0">SCE_CTRL_CROSS</a>) then t:pause() end -- pause/resume</div>
+<div class="line">    draw.text(10, 10, <span class="keywordtype">string</span>.format(<span class="stringliteral">&quot;%.2f seconds&quot;</span>, t:elapsed()), color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="ttc" id="agroup__controls_html_ga470352724212f876af80ac37f568f8e0"><div class="ttname"><a href="group__controls.html#ga470352724212f876af80ac37f568f8e0">SCE_CTRL_CROSS</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_CROSS</div><div class="ttdoc">Cross (✕) button.</div><div class="ttdef"><b>Definition</b> lj_controls.h:33</div></div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga68623e06a59e974e63923ad5545add98" id="r_ga68623e06a59e974e63923ad5545add98"><td class="memItemLeft" align="right" valign="top">timer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga68623e06a59e974e63923ad5545add98">timer.new</a> ()</td></tr>
-<tr class="separator:ga68623e06a59e974e63923ad5545add98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaf4d82637a2374d321230556ee5b8a62" id="r_gaaf4d82637a2374d321230556ee5b8a62"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaf4d82637a2374d321230556ee5b8a62">timer.start</a> (timer timer)</td></tr>
-<tr class="separator:gaaf4d82637a2374d321230556ee5b8a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga77e14212abde42af0d4ea3f4b26b831a" id="r_ga77e14212abde42af0d4ea3f4b26b831a"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga77e14212abde42af0d4ea3f4b26b831a">timer.pause</a> (timer timer)</td></tr>
-<tr class="separator:ga77e14212abde42af0d4ea3f4b26b831a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga262b3f8a8364194460e657ba079827db" id="r_ga262b3f8a8364194460e657ba079827db"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga262b3f8a8364194460e657ba079827db">timer.set</a> (timer timer, number seconds)</td></tr>
-<tr class="separator:ga262b3f8a8364194460e657ba079827db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf83ded4ad9ed220b8a0ef63816d332cd" id="r_gaf83ded4ad9ed220b8a0ef63816d332cd"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf83ded4ad9ed220b8a0ef63816d332cd">timer.reset</a> (timer timer, number seconds)</td></tr>
-<tr class="separator:gaf83ded4ad9ed220b8a0ef63816d332cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga70118f1de8561d0ee1afb925ca9341ff" id="r_ga70118f1de8561d0ee1afb925ca9341ff"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga70118f1de8561d0ee1afb925ca9341ff">timer.elapsed</a> (timer timer)</td></tr>
-<tr class="separator:ga70118f1de8561d0ee1afb925ca9341ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga730c4d2241924cde8795e20584ac4531" id="r_ga730c4d2241924cde8795e20584ac4531"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga730c4d2241924cde8795e20584ac4531">timer.stop</a> (timer timer)</td></tr>
-<tr class="separator:ga730c4d2241924cde8795e20584ac4531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacdc6f57153b775292bc6658f2e9e382c" id="r_gacdc6f57153b775292bc6658f2e9e382c"><td class="memItemLeft" align="right" valign="top">timer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacdc6f57153b775292bc6658f2e9e382c">timer.new</a> ()</td></tr>
+<tr class="separator:gacdc6f57153b775292bc6658f2e9e382c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad87b802db702b0b0513e5ad5ee744a88" id="r_gad87b802db702b0b0513e5ad5ee744a88"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad87b802db702b0b0513e5ad5ee744a88">timer.start</a> (timer timer)</td></tr>
+<tr class="separator:gad87b802db702b0b0513e5ad5ee744a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b633908b4eb9da5979d20ba54d43734" id="r_ga7b633908b4eb9da5979d20ba54d43734"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7b633908b4eb9da5979d20ba54d43734">timer.pause</a> (timer timer)</td></tr>
+<tr class="separator:ga7b633908b4eb9da5979d20ba54d43734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b0ea49ee7327bae5474ab89bc0c10a5" id="r_ga5b0ea49ee7327bae5474ab89bc0c10a5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5b0ea49ee7327bae5474ab89bc0c10a5">timer.stop</a> (timer timer)</td></tr>
+<tr class="separator:ga5b0ea49ee7327bae5474ab89bc0c10a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb6f789c1f4b4c6294b5c3daf25148ff" id="r_gaeb6f789c1f4b4c6294b5c3daf25148ff"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb6f789c1f4b4c6294b5c3daf25148ff">timer.reset</a> (timer timer)</td></tr>
+<tr class="separator:gaeb6f789c1f4b4c6294b5c3daf25148ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4c4612f22dacf3ac838ef33e2889b72" id="r_gad4c4612f22dacf3ac838ef33e2889b72"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad4c4612f22dacf3ac838ef33e2889b72">timer.set</a> (timer timer, number seconds)</td></tr>
+<tr class="separator:gad4c4612f22dacf3ac838ef33e2889b72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab92704f2f3af17d65f566ba0daa3a8c" id="r_gaab92704f2f3af17d65f566ba0daa3a8c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab92704f2f3af17d65f566ba0daa3a8c">timer.elapsed</a> (timer timer)</td></tr>
+<tr class="separator:gaab92704f2f3af17d65f566ba0daa3a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8f41f027c8b0985f68579b235a7fad00" id="r_ga8f41f027c8b0985f68579b235a7fad00"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8f41f027c8b0985f68579b235a7fad00">timer.running</a> (timer timer)</td></tr>
+<tr class="separator:ga8f41f027c8b0985f68579b235a7fad00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga70118f1de8561d0ee1afb925ca9341ff" name="ga70118f1de8561d0ee1afb925ca9341ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga70118f1de8561d0ee1afb925ca9341ff">&#9670;&#160;</a></span>timer.elapsed()</h2>
+<a id="gaab92704f2f3af17d65f566ba0daa3a8c" name="gaab92704f2f3af17d65f566ba0daa3a8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab92704f2f3af17d65f566ba0daa3a8c">&#9670;&#160;</a></span>timer.elapsed()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boolean timer.elapsed </td>
+          <td class="memname">number timer.elapsed </td>
           <td>(</td>
           <td class="paramtype">timer</td>          <td class="paramname"><span class="paramname"><em>timer</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the timer's elapsed time in seconds</p>
-<p>Checks if the timer is running </p>
+<p>Gets the elapsed time of a timer</p>
+<p>Method form: <code>t:elapsed()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The elapsed time in seconds (with decimals) </dd></dl>
 
 </div>
 </div>
-<a id="ga68623e06a59e974e63923ad5545add98" name="ga68623e06a59e974e63923ad5545add98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga68623e06a59e974e63923ad5545add98">&#9670;&#160;</a></span>timer.new()</h2>
+<a id="gacdc6f57153b775292bc6658f2e9e382c" name="gacdc6f57153b775292bc6658f2e9e382c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacdc6f57153b775292bc6658f2e9e382c">&#9670;&#160;</a></span>timer.new()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,12 +179,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new timer </p>
+<p>Creates a new timer. Call <a class="el" href="#gad87b802db702b0b0513e5ad5ee744a88">timer.start()</a> to start it. </p><dl class="section return"><dt>Returns</dt><dd>The new timer </dd></dl>
 
 </div>
 </div>
-<a id="ga77e14212abde42af0d4ea3f4b26b831a" name="ga77e14212abde42af0d4ea3f4b26b831a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga77e14212abde42af0d4ea3f4b26b831a">&#9670;&#160;</a></span>timer.pause()</h2>
+<a id="ga7b633908b4eb9da5979d20ba54d43734" name="ga7b633908b4eb9da5979d20ba54d43734"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7b633908b4eb9da5979d20ba54d43734">&#9670;&#160;</a></span>timer.pause()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,12 +197,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pauses/resumes a timer </p>
+<p>Pauses a running timer, or resumes a paused one. The time while it's paused isn't counted.</p>
+<p>Method form: <code>t:pause()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gaf83ded4ad9ed220b8a0ef63816d332cd" name="gaf83ded4ad9ed220b8a0ef63816d332cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf83ded4ad9ed220b8a0ef63816d332cd">&#9670;&#160;</a></span>timer.reset()</h2>
+<a id="gaeb6f789c1f4b4c6294b5c3daf25148ff" name="gaeb6f789c1f4b4c6294b5c3daf25148ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb6f789c1f4b4c6294b5c3daf25148ff">&#9670;&#160;</a></span>timer.reset()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -192,21 +216,48 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil timer.reset </td>
           <td>(</td>
-          <td class="paramtype">timer</td>          <td class="paramname"><span class="paramname"><em>timer</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">timer</td>          <td class="paramname"><span class="paramname"><em>timer</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Resets the timer </p>
+<p>Stops a timer and sets it back to 0</p>
+<p>Method form: <code>t:reset()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga262b3f8a8364194460e657ba079827db" name="ga262b3f8a8364194460e657ba079827db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga262b3f8a8364194460e657ba079827db">&#9670;&#160;</a></span>timer.set()</h2>
+<a id="ga8f41f027c8b0985f68579b235a7fad00" name="ga8f41f027c8b0985f68579b235a7fad00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8f41f027c8b0985f68579b235a7fad00">&#9670;&#160;</a></span>timer.running()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean timer.running </td>
+          <td>(</td>
+          <td class="paramtype">timer</td>          <td class="paramname"><span class="paramname"><em>timer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Checks if a timer is running</p>
+<p>Method form: <code>t:running()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if it's running, <code>false</code> if it's stopped, paused or reset </dd></dl>
+
+</div>
+</div>
+<a id="gad4c4612f22dacf3ac838ef33e2889b72" name="gad4c4612f22dacf3ac838ef33e2889b72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad4c4612f22dacf3ac838ef33e2889b72">&#9670;&#160;</a></span>timer.set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,12 +274,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the timer to the specified seconds </p>
+<p>Sets the elapsed time of a timer and starts it running from there</p>
+<p>Method form: <code>t:set(seconds)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+    <tr><td class="paramname">seconds</td><td>The new elapsed time, in seconds </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">t:set(60) -- <span class="keywordflow">continue</span> counting from 1 minute</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaaf4d82637a2374d321230556ee5b8a62" name="gaaf4d82637a2374d321230556ee5b8a62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaaf4d82637a2374d321230556ee5b8a62">&#9670;&#160;</a></span>timer.start()</h2>
+<a id="gad87b802db702b0b0513e5ad5ee744a88" name="gad87b802db702b0b0513e5ad5ee744a88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad87b802db702b0b0513e5ad5ee744a88">&#9670;&#160;</a></span>timer.start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,12 +301,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Starts a timer </p>
+<p>Starts (or restarts) a timer from 0</p>
+<p>Method form: <code>t:start()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga730c4d2241924cde8795e20584ac4531" name="ga730c4d2241924cde8795e20584ac4531"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga730c4d2241924cde8795e20584ac4531">&#9670;&#160;</a></span>timer.stop()</h2>
+<a id="ga5b0ea49ee7327bae5474ab89bc0c10a5" name="ga5b0ea49ee7327bae5474ab89bc0c10a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5b0ea49ee7327bae5474ab89bc0c10a5">&#9670;&#160;</a></span>timer.stop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -259,7 +325,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Stops the timer </p>
+<p>Stops a timer. <a class="el" href="#gaab92704f2f3af17d65f566ba0daa3a8c">timer.elapsed()</a> keeps returning the time it had when stopped.</p>
+<p>Method form: <code>t:stop()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

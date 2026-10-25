@@ -107,33 +107,44 @@ $(function(){initNavTree('group__json.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>JSON library.  
+<p>Reading and writing JSON (uses cJSON)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>JSON objects become Lua tables with string keys, JSON arrays become Lua lists (starting at index 1), and the other way around.</p>
+<div class="fragment"><div class="line">local data = json.decode(<span class="stringliteral">&#39;{&quot;name&quot;: &quot;LifeLua&quot;, &quot;tags&quot;: [&quot;lua&quot;, &quot;vita&quot;], &quot;stars&quot;: 5}&#39;</span>)</div>
+<div class="line">print(data.name, data.tags[1], data.stars) -- LifeLua   lua   5</div>
+<div class="line"> </div>
+<div class="line">data.stars = data.stars + 1</div>
+<div class="line">local text = json.encode(data)</div>
+</div><!-- fragment --><p>JSON's <code>null</code> can't be stored as Lua's <code>nil</code> (a table can't hold <code>nil</code>), so it's represented by a special value instead. Use <a class="el" href="#ga18f0a78e18c237a12fda256fbe2ed2d7">json.isnull()</a> to check for it, and json.null to write it. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8a599cabe395d356d253a1820c4012cc" id="r_ga8a599cabe395d356d253a1820c4012cc"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8a599cabe395d356d253a1820c4012cc">json.decode</a> (string json)</td></tr>
-<tr class="separator:ga8a599cabe395d356d253a1820c4012cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d6763f229df83f9a2f66298d2dd1a9b" id="r_ga1d6763f229df83f9a2f66298d2dd1a9b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d6763f229df83f9a2f66298d2dd1a9b">json.encode</a> (table table)</td></tr>
-<tr class="separator:ga1d6763f229df83f9a2f66298d2dd1a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0e13e55581c60b6797ac5e272e25e224" id="r_ga0e13e55581c60b6797ac5e272e25e224"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0e13e55581c60b6797ac5e272e25e224">json.minify</a> (string json)</td></tr>
-<tr class="separator:ga0e13e55581c60b6797ac5e272e25e224"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga229c03de3a161dd294727cca7da6b595" id="r_ga229c03de3a161dd294727cca7da6b595"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga229c03de3a161dd294727cca7da6b595">json.isnull</a> (jsonnull value)</td></tr>
-<tr class="separator:ga229c03de3a161dd294727cca7da6b595"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga05fb0a6da50a76f252bc4e9d5e73274e" id="r_ga05fb0a6da50a76f252bc4e9d5e73274e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga05fb0a6da50a76f252bc4e9d5e73274e">json.version</a> (string json)</td></tr>
-<tr class="separator:ga05fb0a6da50a76f252bc4e9d5e73274e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga493244054e0332782ad695ebcba2bfa9" id="r_ga493244054e0332782ad695ebcba2bfa9"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga493244054e0332782ad695ebcba2bfa9">json.decode</a> (string json)</td></tr>
+<tr class="separator:ga493244054e0332782ad695ebcba2bfa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25bcb079f930d1298dfda92595d47124" id="r_ga25bcb079f930d1298dfda92595d47124"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga25bcb079f930d1298dfda92595d47124">json.parse</a> (string json)</td></tr>
+<tr class="separator:ga25bcb079f930d1298dfda92595d47124"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga15b6686fd6a1a4fd89f39c2c1755e79a" id="r_ga15b6686fd6a1a4fd89f39c2c1755e79a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga15b6686fd6a1a4fd89f39c2c1755e79a">json.encode</a> (table value, boolean minified)</td></tr>
+<tr class="separator:ga15b6686fd6a1a4fd89f39c2c1755e79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga936306be003a6a6b35520ca8c8dc7240" id="r_ga936306be003a6a6b35520ca8c8dc7240"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga936306be003a6a6b35520ca8c8dc7240">json.stringify</a> (table value, boolean minified)</td></tr>
+<tr class="separator:ga936306be003a6a6b35520ca8c8dc7240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c98d1357f306af15c3b4451524fd716" id="r_ga9c98d1357f306af15c3b4451524fd716"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9c98d1357f306af15c3b4451524fd716">json.minify</a> (string json)</td></tr>
+<tr class="separator:ga9c98d1357f306af15c3b4451524fd716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga18f0a78e18c237a12fda256fbe2ed2d7" id="r_ga18f0a78e18c237a12fda256fbe2ed2d7"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga18f0a78e18c237a12fda256fbe2ed2d7">json.isnull</a> (any value)</td></tr>
+<tr class="separator:ga18f0a78e18c237a12fda256fbe2ed2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga614b8e2bfa5026c45e3c65b144b0dfe7" id="r_ga614b8e2bfa5026c45e3c65b144b0dfe7"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga614b8e2bfa5026c45e3c65b144b0dfe7">json.version</a> ()</td></tr>
+<tr class="separator:ga614b8e2bfa5026c45e3c65b144b0dfe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga8e9bd2fd49d63c9a4037bbe877b7aa86" id="r_ga8e9bd2fd49d63c9a4037bbe877b7aa86"><td class="memItemLeft" align="right" valign="top"><a id="ga8e9bd2fd49d63c9a4037bbe877b7aa86" name="ga8e9bd2fd49d63c9a4037bbe877b7aa86"></a>
+<tr class="memitem:ga8372e5ced59fce4673486aba1ab9df7e" id="r_ga8372e5ced59fce4673486aba1ab9df7e"><td class="memItemLeft" align="right" valign="top"><a id="ga8372e5ced59fce4673486aba1ab9df7e" name="ga8372e5ced59fce4673486aba1ab9df7e"></a>
 jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td></tr>
-<tr class="memdesc:ga8e9bd2fd49d63c9a4037bbe877b7aa86"><td class="mdescLeft">&#160;</td><td class="mdescRight">JSON null value. <br /></td></tr>
-<tr class="separator:ga8e9bd2fd49d63c9a4037bbe877b7aa86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:ga8372e5ced59fce4673486aba1ab9df7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The value used for JSON <code>null</code>. Put it in a table to write <code>null</code>, e.g. <code>json.encode({score = json.null})</code> gives <code>{"score": null}</code> <br /></td></tr>
+<tr class="separator:ga8372e5ced59fce4673486aba1ab9df7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga8a599cabe395d356d253a1820c4012cc" name="ga8a599cabe395d356d253a1820c4012cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8a599cabe395d356d253a1820c4012cc">&#9670;&#160;</a></span>json.decode()</h2>
+<a id="ga493244054e0332782ad695ebcba2bfa9" name="ga493244054e0332782ad695ebcba2bfa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga493244054e0332782ad695ebcba2bfa9">&#9670;&#160;</a></span>json.decode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,12 +157,19 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Parses a JSON string to a table </p>
+<p>Converts a JSON string to a Lua value</p>
+<p><a class="el" href="#ga25bcb079f930d1298dfda92595d47124">json.parse()</a> is the same function under another name. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>The JSON text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting table (or string/number/boolean, if the JSON is just one value). Raises an error if the JSON is invalid. </dd></dl>
 
 </div>
 </div>
-<a id="ga1d6763f229df83f9a2f66298d2dd1a9b" name="ga1d6763f229df83f9a2f66298d2dd1a9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1d6763f229df83f9a2f66298d2dd1a9b">&#9670;&#160;</a></span>json.encode()</h2>
+<a id="ga15b6686fd6a1a4fd89f39c2c1755e79a" name="ga15b6686fd6a1a4fd89f39c2c1755e79a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga15b6686fd6a1a4fd89f39c2c1755e79a">&#9670;&#160;</a></span>json.encode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,17 +177,29 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
         <tr>
           <td class="memname">string json.encode </td>
           <td>(</td>
-          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>table</em></span></td><td>)</td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>minified</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Parses a table to a JSON string </p>
+<p>Converts a Lua value to a JSON string. A table whose keys are all numbers becomes a JSON array, any other table becomes a JSON object (keys that aren't strings are skipped). Functions and other unsupported values become <code>null</code>.</p>
+<p><a class="el" href="#ga936306be003a6a6b35520ca8c8dc7240">json.stringify()</a> is the same function under another name. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The table (or other value) to convert </td></tr>
+    <tr><td class="paramname">minified</td><td><code>true</code> to leave out the spaces and line breaks <em>(optional, default: false, the JSON is nicely formatted)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The JSON text </dd></dl>
 
 </div>
 </div>
-<a id="ga229c03de3a161dd294727cca7da6b595" name="ga229c03de3a161dd294727cca7da6b595"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga229c03de3a161dd294727cca7da6b595">&#9670;&#160;</a></span>json.isnull()</h2>
+<a id="ga18f0a78e18c237a12fda256fbe2ed2d7" name="ga18f0a78e18c237a12fda256fbe2ed2d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga18f0a78e18c237a12fda256fbe2ed2d7">&#9670;&#160;</a></span>json.isnull()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -177,17 +207,26 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
         <tr>
           <td class="memname">boolean json.isnull </td>
           <td>(</td>
-          <td class="paramtype">jsonnull</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype">any</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a value is null in JSON (nil in Lua and null in JSON aren't the same!) </p>
+<p>Checks if a value is JSON's <code>null</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>Any value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the value is JSON <code>null</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local data = json.decode(<span class="stringliteral">&#39;{&quot;score&quot;: null}&#39;</span>)</div>
+<div class="line"><span class="keywordflow">if</span> json.isnull(data.score) then print(<span class="stringliteral">&quot;No score yet&quot;</span>) end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga0e13e55581c60b6797ac5e272e25e224" name="ga0e13e55581c60b6797ac5e272e25e224"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0e13e55581c60b6797ac5e272e25e224">&#9670;&#160;</a></span>json.minify()</h2>
+<a id="ga9c98d1357f306af15c3b4451524fd716" name="ga9c98d1357f306af15c3b4451524fd716"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9c98d1357f306af15c3b4451524fd716">&#9670;&#160;</a></span>json.minify()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -200,12 +239,71 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Minifies a JSON string, removes any pretty formatting. </p>
+<p>Removes all spaces, line breaks and comments from a JSON string </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>The JSON text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The minified JSON text </dd></dl>
 
 </div>
 </div>
-<a id="ga05fb0a6da50a76f252bc4e9d5e73274e" name="ga05fb0a6da50a76f252bc4e9d5e73274e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga05fb0a6da50a76f252bc4e9d5e73274e">&#9670;&#160;</a></span>json.version()</h2>
+<a id="ga25bcb079f930d1298dfda92595d47124" name="ga25bcb079f930d1298dfda92595d47124"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga25bcb079f930d1298dfda92595d47124">&#9670;&#160;</a></span>json.parse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">table json.parse </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Same as <a class="el" href="#ga493244054e0332782ad695ebcba2bfa9">json.decode()</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>The JSON text </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The resulting table </dd></dl>
+
+</div>
+</div>
+<a id="ga936306be003a6a6b35520ca8c8dc7240" name="ga936306be003a6a6b35520ca8c8dc7240"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga936306be003a6a6b35520ca8c8dc7240">&#9670;&#160;</a></span>json.stringify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string json.stringify </td>
+          <td>(</td>
+          <td class="paramtype">table</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>minified</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Same as <a class="el" href="#ga15b6686fd6a1a4fd89f39c2c1755e79a">json.encode()</a> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The table (or other value) to convert </td></tr>
+    <tr><td class="paramname">minified</td><td><code>true</code> to leave out the spaces and line breaks <em>(optional, default: false)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The JSON text </dd></dl>
+
+</div>
+</div>
+<a id="ga614b8e2bfa5026c45e3c65b144b0dfe7" name="ga614b8e2bfa5026c45e3c65b144b0dfe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga614b8e2bfa5026c45e3c65b144b0dfe7">&#9670;&#160;</a></span>json.version()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -213,12 +311,12 @@ jsonnull&#160;</td><td class="memItemRight" valign="bottom"><b>json.null</b></td
         <tr>
           <td class="memname">string json.version </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>cJSON version </dd></dl>
+<p>Gets the version of the cJSON library </p><dl class="section return"><dt>Returns</dt><dd>The version, e.g. <code>"1.7.19"</code> </dd></dl>
 
 </div>
 </div>

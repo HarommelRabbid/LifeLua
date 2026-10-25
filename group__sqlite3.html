@@ -101,50 +101,63 @@ $(function(){initNavTree('group__sqlite3.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">sqlite3</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>SQLite3 functions.  
+<p>SQLite databases.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Every function that takes a database as its first parameter can also be called as a method, e.g. <code>db:query(sql)</code> and <code>db:close()</code>. Databases are also closed automatically when they're no longer used.</p>
+<div class="fragment"><div class="line">local db = sqlite3.open(<span class="stringliteral">&quot;ux0:data/myapp/scores.db&quot;</span>)</div>
+<div class="line">db:query(<span class="stringliteral">&quot;CREATE TABLE IF NOT EXISTS scores (name TEXT, points INTEGER)&quot;</span>)</div>
+<div class="line">db:query(<span class="stringliteral">&quot;INSERT INTO scores VALUES (&#39;Harommel&#39;, 1200)&quot;</span>)</div>
+<div class="line">for i, row in ipairs(db:query(<span class="stringliteral">&quot;SELECT * FROM scores ORDER BY points DESC&quot;</span>)) do</div>
+<div class="line">    print(i, row.name, row.points)</div>
+<div class="line">end</div>
+<div class="line">db:close()</div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga73ecbcf17ba031f524567d9ecdae0bc0" id="r_ga73ecbcf17ba031f524567d9ecdae0bc0"><td class="memItemLeft" align="right" valign="top">sqlite3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga73ecbcf17ba031f524567d9ecdae0bc0">sqlite3.open</a> (string path, number mode)</td></tr>
-<tr class="separator:ga73ecbcf17ba031f524567d9ecdae0bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf0bd5796fb171044c217e1271af0e1de" id="r_gaf0bd5796fb171044c217e1271af0e1de"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf0bd5796fb171044c217e1271af0e1de">sqlite3.query</a> (sqlite3 db, string query)</td></tr>
-<tr class="separator:gaf0bd5796fb171044c217e1271af0e1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaab70791ebec5752c5605b6a8f911be34" id="r_gaab70791ebec5752c5605b6a8f911be34"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab70791ebec5752c5605b6a8f911be34">sqlite3.close</a> (sqlite3 db)</td></tr>
-<tr class="separator:gaab70791ebec5752c5605b6a8f911be34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad09f0f1eddd48d54c6a8a70b6f4d60bf" id="r_gad09f0f1eddd48d54c6a8a70b6f4d60bf"><td class="memItemLeft" align="right" valign="top">sqlite3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad09f0f1eddd48d54c6a8a70b6f4d60bf">sqlite3.open</a> (string path, number mode)</td></tr>
+<tr class="separator:gad09f0f1eddd48d54c6a8a70b6f4d60bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab697efd1a7eaa3fe13d8245a4a62ab4f" id="r_gab697efd1a7eaa3fe13d8245a4a62ab4f"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab697efd1a7eaa3fe13d8245a4a62ab4f">sqlite3.query</a> (sqlite3 db, string sql)</td></tr>
+<tr class="separator:gab697efd1a7eaa3fe13d8245a4a62ab4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a917d695b56155669c9c41b808e2022" id="r_ga4a917d695b56155669c9c41b808e2022"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4a917d695b56155669c9c41b808e2022">sqlite3.close</a> (sqlite3 db)</td></tr>
+<tr class="separator:ga4a917d695b56155669c9c41b808e2022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Open modes</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#gad09f0f1eddd48d54c6a8a70b6f4d60bf">sqlite3.open()</a>. Combine several of them by adding them together. </p>
+</td></tr>
 <tr class="memitem:ga380f18e02fd11b2a3866dd2779880fd7" id="r_ga380f18e02fd11b2a3866dd2779880fd7"><td class="memItemLeft" align="right" valign="top"><a id="ga380f18e02fd11b2a3866dd2779880fd7" name="ga380f18e02fd11b2a3866dd2779880fd7"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_READONLY</b></td></tr>
+<tr class="memdesc:ga380f18e02fd11b2a3866dd2779880fd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the database for reading only. <br /></td></tr>
 <tr class="separator:ga380f18e02fd11b2a3866dd2779880fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga636fdebc16dbec71cf8c5ddc7b3d6156" id="r_ga636fdebc16dbec71cf8c5ddc7b3d6156"><td class="memItemLeft" align="right" valign="top"><a id="ga636fdebc16dbec71cf8c5ddc7b3d6156" name="ga636fdebc16dbec71cf8c5ddc7b3d6156"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_READWRITE</b></td></tr>
+<tr class="memdesc:ga636fdebc16dbec71cf8c5ddc7b3d6156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the database for reading and writing. <br /></td></tr>
 <tr class="separator:ga636fdebc16dbec71cf8c5ddc7b3d6156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1d88e4b571d9f45741adf76e4a95662a" id="r_ga1d88e4b571d9f45741adf76e4a95662a"><td class="memItemLeft" align="right" valign="top"><a id="ga1d88e4b571d9f45741adf76e4a95662a" name="ga1d88e4b571d9f45741adf76e4a95662a"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_CREATE</b></td></tr>
+<tr class="memdesc:ga1d88e4b571d9f45741adf76e4a95662a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the database if it doesn't exist (use together with SQLITE_OPEN_READWRITE) <br /></td></tr>
 <tr class="separator:ga1d88e4b571d9f45741adf76e4a95662a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga37fc3a9e73761efb83b2b1506576a628" id="r_ga37fc3a9e73761efb83b2b1506576a628"><td class="memItemLeft" align="right" valign="top"><a id="ga37fc3a9e73761efb83b2b1506576a628" name="ga37fc3a9e73761efb83b2b1506576a628"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_URI</b></td></tr>
+<tr class="memdesc:ga37fc3a9e73761efb83b2b1506576a628"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow the path to be a <code>file:</code> URI. <br /></td></tr>
 <tr class="separator:ga37fc3a9e73761efb83b2b1506576a628"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaabcda527e2508010be2c10dceff03e67" id="r_gaabcda527e2508010be2c10dceff03e67"><td class="memItemLeft" align="right" valign="top"><a id="gaabcda527e2508010be2c10dceff03e67" name="gaabcda527e2508010be2c10dceff03e67"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_NOMUTEX</b></td></tr>
+<tr class="memdesc:gaabcda527e2508010be2c10dceff03e67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multi-thread mode. <br /></td></tr>
 <tr class="separator:gaabcda527e2508010be2c10dceff03e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga75173f7351b333ed031cf1940b5e45de" id="r_ga75173f7351b333ed031cf1940b5e45de"><td class="memItemLeft" align="right" valign="top"><a id="ga75173f7351b333ed031cf1940b5e45de" name="ga75173f7351b333ed031cf1940b5e45de"></a>
 number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_FULLMUTEX</b></td></tr>
+<tr class="memdesc:ga75173f7351b333ed031cf1940b5e45de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialized mode (safe to use from several threads) <br /></td></tr>
 <tr class="separator:ga75173f7351b333ed031cf1940b5e45de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Method calling will work on most of the functions here (e. g. <code>sqlite3:query</code> &amp; <code>sqlite3:close</code>) </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gaab70791ebec5752c5605b6a8f911be34" name="gaab70791ebec5752c5605b6a8f911be34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaab70791ebec5752c5605b6a8f911be34">&#9670;&#160;</a></span>sqlite3.close()</h2>
+<a id="ga4a917d695b56155669c9c41b808e2022" name="ga4a917d695b56155669c9c41b808e2022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4a917d695b56155669c9c41b808e2022">&#9670;&#160;</a></span>sqlite3.close()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,12 +170,18 @@ number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_FULLMUT
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes an open database (also done automatically via garbage collecting) </p>
+<p>Closes a database</p>
+<p>Method form: <code>db:close()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">db</td><td>The database </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga73ecbcf17ba031f524567d9ecdae0bc0" name="ga73ecbcf17ba031f524567d9ecdae0bc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga73ecbcf17ba031f524567d9ecdae0bc0">&#9670;&#160;</a></span>sqlite3.open()</h2>
+<a id="gad09f0f1eddd48d54c6a8a70b6f4d60bf" name="gad09f0f1eddd48d54c6a8a70b6f4d60bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad09f0f1eddd48d54c6a8a70b6f4d60bf">&#9670;&#160;</a></span>sqlite3.open()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,12 +198,19 @@ number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_FULLMUT
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Opens an SQLite3 database </p>
+<p>Opens a database file </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the database file </td></tr>
+    <tr><td class="paramname">mode</td><td>How to open it, one or more of the open mode constants added together <em>(optional, default: <code>SQLITE_OPEN_READWRITE + SQLITE_OPEN_CREATE</code>)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The database. Raises an error if it can't be opened. </dd></dl>
 
 </div>
 </div>
-<a id="gaf0bd5796fb171044c217e1271af0e1de" name="gaf0bd5796fb171044c217e1271af0e1de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf0bd5796fb171044c217e1271af0e1de">&#9670;&#160;</a></span>sqlite3.query()</h2>
+<a id="gab697efd1a7eaa3fe13d8245a4a62ab4f" name="gab697efd1a7eaa3fe13d8245a4a62ab4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab697efd1a7eaa3fe13d8245a4a62ab4f">&#9670;&#160;</a></span>sqlite3.query()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,11 +223,19 @@ number&#160;</td><td class="memItemRight" valign="bottom"><b>SQLITE_OPEN_FULLMUT
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>query</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>sql</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Executes a query in an open database </p>
+<p>Runs one or more SQL statements</p>
+<p>Method form: <code>db:query(sql)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">db</td><td>The database </td></tr>
+    <tr><td class="paramname">sql</td><td>The SQL to run </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A list of the result rows (empty if there are none). Each row is a table with the column names as keys. All values are returned as strings (use <code>tonumber()</code> for numbers), and SQL <code>NULL</code> values are <code>nil</code>. Raises an error if the SQL fails. </dd></dl>
 
 </div>
 </div>

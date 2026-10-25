@@ -106,34 +106,37 @@ $(function(){initNavTree('group__network.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Network library.  
+<p>Wi-Fi, downloads &amp; FTP server.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="fragment"><div class="line"><span class="keywordflow">if</span> network.wifi() then</div>
+<div class="line">    network.download(<span class="stringliteral">&quot;https://example.com/file.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/file.zip&quot;</span>)</div>
+<div class="line">end</div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2a1d65affac3ea55c84a5561350f81e8" id="r_ga2a1d65affac3ea55c84a5561350f81e8"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2a1d65affac3ea55c84a5561350f81e8">network.ftp</a> (boolean enable)</td></tr>
-<tr class="separator:ga2a1d65affac3ea55c84a5561350f81e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3baf96fcd98ed21a10fa9e87f249a7bb" id="r_ga3baf96fcd98ed21a10fa9e87f249a7bb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3baf96fcd98ed21a10fa9e87f249a7bb">network.ftpadddevice</a> (string device)</td></tr>
-<tr class="separator:ga3baf96fcd98ed21a10fa9e87f249a7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9cf97022e27769549b040a97f4faffb6" id="r_ga9cf97022e27769549b040a97f4faffb6"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9cf97022e27769549b040a97f4faffb6">network.ftpremovedevice</a> (string device)</td></tr>
-<tr class="separator:ga9cf97022e27769549b040a97f4faffb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1c727c1a58a2995c829c436be0042a27" id="r_ga1c727c1a58a2995c829c436be0042a27"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1c727c1a58a2995c829c436be0042a27">network.ftpinit</a> ()</td></tr>
-<tr class="separator:ga1c727c1a58a2995c829c436be0042a27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga00b6b3b94499356610f5f9c1920da798" id="r_ga00b6b3b94499356610f5f9c1920da798"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga00b6b3b94499356610f5f9c1920da798">network.wifi</a> ()</td></tr>
-<tr class="separator:ga00b6b3b94499356610f5f9c1920da798"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0c1b5e90bc6678f325451bb6510e3103" id="r_ga0c1b5e90bc6678f325451bb6510e3103"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0c1b5e90bc6678f325451bb6510e3103">network.ip</a> ()</td></tr>
-<tr class="separator:ga0c1b5e90bc6678f325451bb6510e3103"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafd1a07e4e7466ce18cbba9decef97052" id="r_gafd1a07e4e7466ce18cbba9decef97052"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafd1a07e4e7466ce18cbba9decef97052">network.mac</a> ()</td></tr>
-<tr class="separator:gafd1a07e4e7466ce18cbba9decef97052"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2ca94aa1f5ef5af3c3733c93255883e7" id="r_ga2ca94aa1f5ef5af3c3733c93255883e7"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2ca94aa1f5ef5af3c3733c93255883e7">network.download</a> (string url, string path)</td></tr>
-<tr class="separator:ga2ca94aa1f5ef5af3c3733c93255883e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad3efc6f02f8fe50f1bffcf7dedf26707" id="r_gad3efc6f02f8fe50f1bffcf7dedf26707"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad3efc6f02f8fe50f1bffcf7dedf26707">network.header</a> (string url)</td></tr>
-<tr class="separator:gad3efc6f02f8fe50f1bffcf7dedf26707"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab30e6c767a8929fbeea10023a9d181ea" id="r_gab30e6c767a8929fbeea10023a9d181ea"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab30e6c767a8929fbeea10023a9d181ea">network.wifi</a> ()</td></tr>
+<tr class="separator:gab30e6c767a8929fbeea10023a9d181ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae4981c0d5de1fd9427bdefefece89e2b" id="r_gae4981c0d5de1fd9427bdefefece89e2b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae4981c0d5de1fd9427bdefefece89e2b">network.ip</a> ()</td></tr>
+<tr class="separator:gae4981c0d5de1fd9427bdefefece89e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafcf4920bb90b973f8771379aa0d6170e" id="r_gafcf4920bb90b973f8771379aa0d6170e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafcf4920bb90b973f8771379aa0d6170e">network.mac</a> ()</td></tr>
+<tr class="separator:gafcf4920bb90b973f8771379aa0d6170e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9eaa4ac94f325313db3b5538e8288aeb" id="r_ga9eaa4ac94f325313db3b5538e8288aeb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9eaa4ac94f325313db3b5538e8288aeb">network.download</a> (string url, string path, string useragent)</td></tr>
+<tr class="separator:ga9eaa4ac94f325313db3b5538e8288aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaddc25b974d3b04e9c43878cfe20558" id="r_gadaddc25b974d3b04e9c43878cfe20558"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadaddc25b974d3b04e9c43878cfe20558">network.header</a> (string url, string useragent)</td></tr>
+<tr class="separator:gadaddc25b974d3b04e9c43878cfe20558"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga640a84271b87040df07dc18dbb1d19f7" id="r_ga640a84271b87040df07dc18dbb1d19f7"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga640a84271b87040df07dc18dbb1d19f7">network.ftp.start</a> (boolean enable)</td></tr>
+<tr class="separator:ga640a84271b87040df07dc18dbb1d19f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9f57982ba52421a437483f152711a568" id="r_ga9f57982ba52421a437483f152711a568"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9f57982ba52421a437483f152711a568">network.ftp.isrunning</a> ()</td></tr>
+<tr class="separator:ga9f57982ba52421a437483f152711a568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb02e46771bd6fc6891ae5c7473cf6d4" id="r_gaeb02e46771bd6fc6891ae5c7473cf6d4"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb02e46771bd6fc6891ae5c7473cf6d4">network.ftp.adddevice</a> (string partition)</td></tr>
+<tr class="separator:gaeb02e46771bd6fc6891ae5c7473cf6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f26466f55330df914f27629b8f3b94f" id="r_ga1f26466f55330df914f27629b8f3b94f"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1f26466f55330df914f27629b8f3b94f">network.ftp.removedevice</a> (string partition)</td></tr>
+<tr class="separator:ga1f26466f55330df914f27629b8f3b94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga2ca94aa1f5ef5af3c3733c93255883e7" name="ga2ca94aa1f5ef5af3c3733c93255883e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2ca94aa1f5ef5af3c3733c93255883e7">&#9670;&#160;</a></span>network.download()</h2>
+<a id="ga9eaa4ac94f325313db3b5538e8288aeb" name="ga9eaa4ac94f325313db3b5538e8288aeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9eaa4ac94f325313db3b5538e8288aeb">&#9670;&#160;</a></span>network.download()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,97 +149,142 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>useragent</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Downloads a file to a specified path </p><dl class="section remark"><dt>Remarks</dt><dd>This function can call <code>LifeLuaNetworkDownload</code> if it exists. Arguments' names don't matter. </dd></dl>
-<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaNetworkDownload(read, wrote, size, speed)</div>
-<div class="line">draw.text(10, 10, read, white)</div>
-<div class="line">draw.text(10, 30, math.floor((wrote*100)/size)..<span class="stringliteral">&quot;% completed&quot;</span>, white)</div>
-<div class="line">draw.text(10, 50, size..<span class="stringliteral">&quot; B&quot;</span>, white)</div>
-<div class="line">draw.gradientrect(0, 544-39, (wrote*960)/size, 39, white, blue, white, blue)</div>
-<div class="line">draw.swapbuffers()</div>
+<p>Downloads a file (HTTP or HTTPS). The app waits until the download is finished.</p>
+<p>If you define a global function called <code>LifeLuaNetworkDownload</code>, it's called every time a piece of the file is downloaded, so you can show the progress. It receives these 5 numbers (the names you give them don't matter):</p><ol type="1">
+<li>Total bytes downloaded so far</li>
+<li>Total bytes written to the file so far</li>
+<li>Size of the whole file in bytes (0 if the server doesn't say)</li>
+<li>Bytes downloaded in this piece</li>
+<li>Bytes written in this piece <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>The URL of the file </td></tr>
+    <tr><td class="paramname">path</td><td>Where to save the file </td></tr>
+    <tr><td class="paramname">useragent</td><td>The User-Agent sent to the server <em>(optional, default: a desktop Chrome User-Agent)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if the connection or request failed </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white, blue = color.new(255, 255, 255), color.new(0, 0, 255)</div>
+<div class="line">function LifeLuaNetworkDownload(downloaded, written, size)</div>
+<div class="line">    <span class="keywordflow">if</span> size &gt; 0 then</div>
+<div class="line">        draw.text(10, 10, math.floor(written * 100 / size)..<span class="stringliteral">&quot;% done&quot;</span>, white)</div>
+<div class="line">        draw.rect(0, 505, written * 960 / size, 39, blue)</div>
+<div class="line">    end</div>
+<div class="line">    draw.swapbuffers()</div>
 <div class="line">end</div>
-<div class="line">network.download(url, path)</div>
+<div class="line">network.download(<span class="stringliteral">&quot;https://example.com/file.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/file.zip&quot;</span>)</div>
 </div><!-- fragment --> </dd></dl>
+</li>
+</ol>
 
 </div>
 </div>
-<a id="ga2a1d65affac3ea55c84a5561350f81e8" name="ga2a1d65affac3ea55c84a5561350f81e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2a1d65affac3ea55c84a5561350f81e8">&#9670;&#160;</a></span>network.ftp()</h2>
+<a id="gaeb02e46771bd6fc6891ae5c7473cf6d4" name="gaeb02e46771bd6fc6891ae5c7473cf6d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb02e46771bd6fc6891ae5c7473cf6d4">&#9670;&#160;</a></span>network.ftp.adddevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">table network.ftp </td>
+          <td class="memname">nil network.ftp.adddevice </td>
           <td>(</td>
-          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>partition</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Initializes FTP </p><dl class="section return"><dt>Returns</dt><dd>A table with the enabled IP and port </dd></dl>
+<p>Makes a partition visible on the running FTP server </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partition</td><td>Partition name (e.g. <code>"ux0:"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga3baf96fcd98ed21a10fa9e87f249a7bb" name="ga3baf96fcd98ed21a10fa9e87f249a7bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3baf96fcd98ed21a10fa9e87f249a7bb">&#9670;&#160;</a></span>network.ftpadddevice()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nil network.ftpadddevice </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>device</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Adds a partition to the running FTP server </p>
-
-</div>
-</div>
-<a id="ga1c727c1a58a2995c829c436be0042a27" name="ga1c727c1a58a2995c829c436be0042a27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1c727c1a58a2995c829c436be0042a27">&#9670;&#160;</a></span>network.ftpinit()</h2>
+<a id="ga9f57982ba52421a437483f152711a568" name="ga9f57982ba52421a437483f152711a568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9f57982ba52421a437483f152711a568">&#9670;&#160;</a></span>network.ftp.isrunning()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boolean network.ftpinit </td>
+          <td class="memname">boolean network.ftp.isrunning </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if FTP is enabled or not </p>
+<p>Checks if the FTP server is running </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if it's running </dd></dl>
 
 </div>
 </div>
-<a id="ga9cf97022e27769549b040a97f4faffb6" name="ga9cf97022e27769549b040a97f4faffb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9cf97022e27769549b040a97f4faffb6">&#9670;&#160;</a></span>network.ftpremovedevice()</h2>
+<a id="ga1f26466f55330df914f27629b8f3b94f" name="ga1f26466f55330df914f27629b8f3b94f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1f26466f55330df914f27629b8f3b94f">&#9670;&#160;</a></span>network.ftp.removedevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nil network.ftpremovedevice </td>
+          <td class="memname">nil network.ftp.removedevice </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>device</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>partition</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Removes a partition from the running FTP server </p>
+<p>Hides a partition from the running FTP server </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">partition</td><td>Partition name (e.g. <code>"ux0:"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gad3efc6f02f8fe50f1bffcf7dedf26707" name="gad3efc6f02f8fe50f1bffcf7dedf26707"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad3efc6f02f8fe50f1bffcf7dedf26707">&#9670;&#160;</a></span>network.header()</h2>
+<a id="ga640a84271b87040df07dc18dbb1d19f7" name="ga640a84271b87040df07dc18dbb1d19f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga640a84271b87040df07dc18dbb1d19f7">&#9670;&#160;</a></span>network.ftp.start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">table network.ftp.start </td>
+          <td>(</td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Starts or stops an FTP server on the PS Vita, so you can access its files from a computer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to start, <code>false</code> to stop </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>When starting: a table with the fields <code>ip</code> (string) and <code>port</code> (number) to connect to. Raises an error if the server is already in the requested state. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local ftp = network.ftp.start(<span class="keyword">true</span>)</div>
+<div class="line">network.ftp.adddevice(<span class="stringliteral">&quot;ux0:&quot;</span>)</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Connect to &quot;</span>..ftp.ip..<span class="stringliteral">&quot;:&quot;</span>..ftp.port, color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="gadaddc25b974d3b04e9c43878cfe20558" name="gadaddc25b974d3b04e9c43878cfe20558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadaddc25b974d3b04e9c43878cfe20558">&#9670;&#160;</a></span>network.header()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,17 +292,28 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">string network.header </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>url</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>url</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>useragent</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets a URL's header </p>
+<p>Gets the HTTP response headers of a URL </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>The URL </td></tr>
+    <tr><td class="paramname">useragent</td><td>The User-Agent sent to the server <em>(optional, default: a desktop Chrome User-Agent)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>All the headers as one string, or <code>nil</code> if the request failed </dd></dl>
 
 </div>
 </div>
-<a id="ga0c1b5e90bc6678f325451bb6510e3103" name="ga0c1b5e90bc6678f325451bb6510e3103"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0c1b5e90bc6678f325451bb6510e3103">&#9670;&#160;</a></span>network.ip()</h2>
+<a id="gae4981c0d5de1fd9427bdefefece89e2b" name="gae4981c0d5de1fd9427bdefefece89e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae4981c0d5de1fd9427bdefefece89e2b">&#9670;&#160;</a></span>network.ip()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,12 +326,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the Vita's IP address </p>
+<p>Gets the PS Vita's IP address </p><dl class="section return"><dt>Returns</dt><dd>The IP address, e.g. <code>"192.168.1.20"</code>, or <code>"127.0.0.1"</code> if not connected </dd></dl>
 
 </div>
 </div>
-<a id="gafd1a07e4e7466ce18cbba9decef97052" name="gafd1a07e4e7466ce18cbba9decef97052"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafd1a07e4e7466ce18cbba9decef97052">&#9670;&#160;</a></span>network.mac()</h2>
+<a id="gafcf4920bb90b973f8771379aa0d6170e" name="gafcf4920bb90b973f8771379aa0d6170e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafcf4920bb90b973f8771379aa0d6170e">&#9670;&#160;</a></span>network.mac()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,12 +344,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the Vita's MAC address </p>
+<p>Gets the PS Vita's MAC address </p><dl class="section return"><dt>Returns</dt><dd>The MAC address, e.g. <code>"00:11:22:AA:BB:CC"</code> </dd></dl>
 
 </div>
 </div>
-<a id="ga00b6b3b94499356610f5f9c1920da798" name="ga00b6b3b94499356610f5f9c1920da798"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga00b6b3b94499356610f5f9c1920da798">&#9670;&#160;</a></span>network.wifi()</h2>
+<a id="gab30e6c767a8929fbeea10023a9d181ea" name="gab30e6c767a8929fbeea10023a9d181ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab30e6c767a8929fbeea10023a9d181ea">&#9670;&#160;</a></span>network.wifi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,7 +362,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if the WiFi is enabled on the Vita or not </p>
+<p>Checks if the PS Vita is connected to Wi-Fi </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if it's connected (or connecting) </dd></dl>
 
 </div>
 </div>

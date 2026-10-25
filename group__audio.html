@@ -106,40 +106,52 @@ $(function(){initNavTree('group__audio.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Audio library.  
+<p>Playing music and sounds.  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Supported formats: .MP3, .WAV, .OGG, .FLAC, .OPUS and tracker modules (.MOD, .XM, .IT, .S3M, ...). The format is picked from the file extension. Any other file is played as raw 16-bit stereo PCM at 48000 Hz.</p>
+<p>Every function that takes an <code>audio</code> as its first parameter can also be called as a method: </p><div class="fragment"><div class="line">local music = audio.load(<span class="stringliteral">&quot;app0:music.ogg&quot;</span>)</div>
+<div class="line">music:play(<span class="keyword">true</span>) -- loop forever</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    draw.text(10, 10, <span class="keywordtype">string</span>.format(<span class="stringliteral">&quot;%.1f / %.1f s&quot;</span>, music:elapsed(), music:duration()), color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Only one audio can play at a time: playing another one replaces the current one. </dd></dl>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga934a72ff1a00e74f1f32c6c78d8cddfc" id="r_ga934a72ff1a00e74f1f32c6c78d8cddfc"><td class="memItemLeft" align="right" valign="top">audio&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga934a72ff1a00e74f1f32c6c78d8cddfc">audio.load</a> (string path)</td></tr>
-<tr class="separator:ga934a72ff1a00e74f1f32c6c78d8cddfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeb176d922e2a50710cfeeec5eb152069" id="r_gaeb176d922e2a50710cfeeec5eb152069"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb176d922e2a50710cfeeec5eb152069">audio.play</a> (audio audio, boolean loop)</td></tr>
-<tr class="separator:gaeb176d922e2a50710cfeeec5eb152069"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaff8f09a348c4b1d44cd3d7d9a8146966" id="r_gaff8f09a348c4b1d44cd3d7d9a8146966"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaff8f09a348c4b1d44cd3d7d9a8146966">audio.stop</a> (audio audio)</td></tr>
-<tr class="separator:gaff8f09a348c4b1d44cd3d7d9a8146966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga303dc61f746e712d3b869d9763dee09a" id="r_ga303dc61f746e712d3b869d9763dee09a"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga303dc61f746e712d3b869d9763dee09a">audio.id3v1</a> (audio audio)</td></tr>
-<tr class="separator:ga303dc61f746e712d3b869d9763dee09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1cba26c554196ea4aef089f1590f90dc" id="r_ga1cba26c554196ea4aef089f1590f90dc"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1cba26c554196ea4aef089f1590f90dc">audio.id3v2</a> (audio audio)</td></tr>
-<tr class="separator:ga1cba26c554196ea4aef089f1590f90dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae1eeb10ac607885924e7c881daeb8447" id="r_gae1eeb10ac607885924e7c881daeb8447"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae1eeb10ac607885924e7c881daeb8447">audio.comment</a> (audio audio)</td></tr>
-<tr class="separator:gae1eeb10ac607885924e7c881daeb8447"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga633df82feb4ae2fadef9d5c539b89afb" id="r_ga633df82feb4ae2fadef9d5c539b89afb"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga633df82feb4ae2fadef9d5c539b89afb">audio.tags</a> (audio audio)</td></tr>
-<tr class="separator:ga633df82feb4ae2fadef9d5c539b89afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8f87481a3141632eb7b34b0fd622436f" id="r_ga8f87481a3141632eb7b34b0fd622436f"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8f87481a3141632eb7b34b0fd622436f">audio.playing</a> (audio audio)</td></tr>
-<tr class="separator:ga8f87481a3141632eb7b34b0fd622436f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab3824cd7f183e82449136d87d80c7578" id="r_gab3824cd7f183e82449136d87d80c7578"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab3824cd7f183e82449136d87d80c7578">audio.paused</a> (audio audio)</td></tr>
-<tr class="separator:gab3824cd7f183e82449136d87d80c7578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga41b8bf0a7597a566231bc28e7a2c05d6" id="r_ga41b8bf0a7597a566231bc28e7a2c05d6"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41b8bf0a7597a566231bc28e7a2c05d6">audio.pause</a> (audio audio, boolean pause)</td></tr>
-<tr class="separator:ga41b8bf0a7597a566231bc28e7a2c05d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaed5845589baac9ef64f720393e3af3ce" id="r_gaed5845589baac9ef64f720393e3af3ce"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaed5845589baac9ef64f720393e3af3ce">audio.duration</a> (audio audio)</td></tr>
-<tr class="separator:gaed5845589baac9ef64f720393e3af3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6769346484bc3a28f67b82dfc70f0c6a" id="r_ga6769346484bc3a28f67b82dfc70f0c6a"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6769346484bc3a28f67b82dfc70f0c6a">audio.elapsed</a> (audio audio)</td></tr>
-<tr class="separator:ga6769346484bc3a28f67b82dfc70f0c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7cd669a750d0af7bda85464fe4fdbef7" id="r_ga7cd669a750d0af7bda85464fe4fdbef7"><td class="memItemLeft" align="right" valign="top">audio&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7cd669a750d0af7bda85464fe4fdbef7">audio.load</a> (string path)</td></tr>
+<tr class="separator:ga7cd669a750d0af7bda85464fe4fdbef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8e5e3e0b7edd007c6e95bd542a786bda" id="r_ga8e5e3e0b7edd007c6e95bd542a786bda"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8e5e3e0b7edd007c6e95bd542a786bda">audio.play</a> (audio audio, boolean loop)</td></tr>
+<tr class="separator:ga8e5e3e0b7edd007c6e95bd542a786bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabe831c854b6dc8a4f70b7a2a311894eb" id="r_gabe831c854b6dc8a4f70b7a2a311894eb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabe831c854b6dc8a4f70b7a2a311894eb">audio.stop</a> (audio audio)</td></tr>
+<tr class="separator:gabe831c854b6dc8a4f70b7a2a311894eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga449e188dff57d4f30c003d6e6cebede3" id="r_ga449e188dff57d4f30c003d6e6cebede3"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga449e188dff57d4f30c003d6e6cebede3">audio.pause</a> (audio audio, boolean pause)</td></tr>
+<tr class="separator:ga449e188dff57d4f30c003d6e6cebede3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga265880087dea513240155efb602ac39e" id="r_ga265880087dea513240155efb602ac39e"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga265880087dea513240155efb602ac39e">audio.playing</a> (audio audio)</td></tr>
+<tr class="separator:ga265880087dea513240155efb602ac39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa634eeb04d708ab3e7070aaabe78f8f8" id="r_gaa634eeb04d708ab3e7070aaabe78f8f8"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa634eeb04d708ab3e7070aaabe78f8f8">audio.paused</a> (audio audio)</td></tr>
+<tr class="separator:gaa634eeb04d708ab3e7070aaabe78f8f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca603a13783413e67652da0965b8b790" id="r_gaca603a13783413e67652da0965b8b790"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaca603a13783413e67652da0965b8b790">audio.seek</a> (audio audio, number seconds)</td></tr>
+<tr class="separator:gaca603a13783413e67652da0965b8b790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga08d5c080bcd6a40c8bd7ef442f407391" id="r_ga08d5c080bcd6a40c8bd7ef442f407391"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08d5c080bcd6a40c8bd7ef442f407391">audio.volume</a> (audio audio, number left, number right)</td></tr>
+<tr class="separator:ga08d5c080bcd6a40c8bd7ef442f407391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f26467fa28a5c48f624bf3584ecfcb1" id="r_ga2f26467fa28a5c48f624bf3584ecfcb1"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2f26467fa28a5c48f624bf3584ecfcb1">audio.duration</a> (audio audio)</td></tr>
+<tr class="separator:ga2f26467fa28a5c48f624bf3584ecfcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga271925ce33f781c7a6cc97e2d92db310" id="r_ga271925ce33f781c7a6cc97e2d92db310"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga271925ce33f781c7a6cc97e2d92db310">audio.elapsed</a> (audio audio)</td></tr>
+<tr class="separator:ga271925ce33f781c7a6cc97e2d92db310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2ae814efd40d0b412a6488025ca01410" id="r_ga2ae814efd40d0b412a6488025ca01410"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2ae814efd40d0b412a6488025ca01410">audio.id3v1</a> (audio audio)</td></tr>
+<tr class="separator:ga2ae814efd40d0b412a6488025ca01410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b95b4f8476dfad1e598ce5e5ae8b49b" id="r_ga6b95b4f8476dfad1e598ce5e5ae8b49b"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6b95b4f8476dfad1e598ce5e5ae8b49b">audio.id3v2</a> (audio audio)</td></tr>
+<tr class="separator:ga6b95b4f8476dfad1e598ce5e5ae8b49b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga724e30934f68b4c169c19e1e0f8c64d5" id="r_ga724e30934f68b4c169c19e1e0f8c64d5"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga724e30934f68b4c169c19e1e0f8c64d5">audio.comment</a> (audio audio)</td></tr>
+<tr class="separator:ga724e30934f68b4c169c19e1e0f8c64d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b75e8eb92aa6dca5d3ea033001a367c" id="r_ga8b75e8eb92aa6dca5d3ea033001a367c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8b75e8eb92aa6dca5d3ea033001a367c">audio.tags</a> (audio audio)</td></tr>
+<tr class="separator:ga8b75e8eb92aa6dca5d3ea033001a367c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gae1eeb10ac607885924e7c881daeb8447" name="gae1eeb10ac607885924e7c881daeb8447"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae1eeb10ac607885924e7c881daeb8447">&#9670;&#160;</a></span>audio.comment()</h2>
+<a id="ga724e30934f68b4c169c19e1e0f8c64d5" name="ga724e30934f68b4c169c19e1e0f8c64d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga724e30934f68b4c169c19e1e0f8c64d5">&#9670;&#160;</a></span>audio.comment()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -152,12 +164,27 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets comment of an .OGG. (only works on .OGG files!) </p>
+<p>Gets the Vorbis comments (tags) of an .OGG file</p>
+<p>Method form: <code>snd:comment()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio (.OGG only) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if it isn't an .OGG file, otherwise a table with these string fields:<ul>
+<li><code>title</code></li>
+<li><code>album</code></li>
+<li><code>artist</code></li>
+<li><code>year</code></li>
+<li><code>comment</code></li>
+<li><code>genre</code> </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
-<a id="gaed5845589baac9ef64f720393e3af3ce" name="gaed5845589baac9ef64f720393e3af3ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaed5845589baac9ef64f720393e3af3ce">&#9670;&#160;</a></span>audio.duration()</h2>
+<a id="ga2f26467fa28a5c48f624bf3584ecfcb1" name="ga2f26467fa28a5c48f624bf3584ecfcb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2f26467fa28a5c48f624bf3584ecfcb1">&#9670;&#160;</a></span>audio.duration()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,12 +197,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Audio duration in seconds </p>
+<p>Gets the total length of an audio</p>
+<p>Method form: <code>snd:duration()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The length in seconds, or <code>nil</code> if it's unknown </dd></dl>
 
 </div>
 </div>
-<a id="ga6769346484bc3a28f67b82dfc70f0c6a" name="ga6769346484bc3a28f67b82dfc70f0c6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6769346484bc3a28f67b82dfc70f0c6a">&#9670;&#160;</a></span>audio.elapsed()</h2>
+<a id="ga271925ce33f781c7a6cc97e2d92db310" name="ga271925ce33f781c7a6cc97e2d92db310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga271925ce33f781c7a6cc97e2d92db310">&#9670;&#160;</a></span>audio.elapsed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,12 +222,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Elapsed time of audio in seconds </p>
+<p>Gets how far an audio has played</p>
+<p>Method form: <code>snd:elapsed()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current position in seconds, or <code>nil</code> if it's unknown </dd></dl>
 
 </div>
 </div>
-<a id="ga303dc61f746e712d3b869d9763dee09a" name="ga303dc61f746e712d3b869d9763dee09a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga303dc61f746e712d3b869d9763dee09a">&#9670;&#160;</a></span>audio.id3v1()</h2>
+<a id="ga2ae814efd40d0b412a6488025ca01410" name="ga2ae814efd40d0b412a6488025ca01410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2ae814efd40d0b412a6488025ca01410">&#9670;&#160;</a></span>audio.id3v1()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,21 +247,28 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets ID3v1 of an .MP3. (only works on .MP3 files!) </p><dl class="section return"><dt>Returns</dt><dd>table:<ul>
-<li>"title"</li>
-<li>"artist"</li>
-<li>"album"</li>
-<li>"comment"</li>
-<li>"year"</li>
-<li>"tag"</li>
-<li>"genre" </li>
+<p>Gets the ID3v1 tag of an .MP3 file</p>
+<p>Method form: <code>snd:id3v1()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio (.MP3 only) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if there is no ID3v1 tag, otherwise a table with these string fields:<ul>
+<li><code>title</code></li>
+<li><code>artist</code></li>
+<li><code>album</code></li>
+<li><code>comment</code></li>
+<li><code>year</code></li>
+<li><code>tag</code></li>
+<li><code>genre</code> </li>
 </ul>
 </dd></dl>
 
 </div>
 </div>
-<a id="ga1cba26c554196ea4aef089f1590f90dc" name="ga1cba26c554196ea4aef089f1590f90dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1cba26c554196ea4aef089f1590f90dc">&#9670;&#160;</a></span>audio.id3v2()</h2>
+<a id="ga6b95b4f8476dfad1e598ce5e5ae8b49b" name="ga6b95b4f8476dfad1e598ce5e5ae8b49b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6b95b4f8476dfad1e598ce5e5ae8b49b">&#9670;&#160;</a></span>audio.id3v2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,12 +281,28 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets ID3v2 of an .MP3. (only works on .MP3 files!) </p>
+<p>Gets the ID3v2 tag of an .MP3 file</p>
+<p>Method form: <code>snd:id3v2()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio (.MP3 only) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if there is no ID3v2 tag, otherwise a table with these fields:<ul>
+<li><b>string</b> <code>title</code></li>
+<li><b>string</b> <code>artist</code></li>
+<li><b>string</b> <code>album</code></li>
+<li><b>string</b> <code>comment</code></li>
+<li><b>string</b> <code>year</code></li>
+<li><b>string</b> <code>genre</code></li>
+<li><b>image</b> <code>cover</code>: The album cover (.JPG or .PNG), if there is one </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
-<a id="ga934a72ff1a00e74f1f32c6c78d8cddfc" name="ga934a72ff1a00e74f1f32c6c78d8cddfc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga934a72ff1a00e74f1f32c6c78d8cddfc">&#9670;&#160;</a></span>audio.load()</h2>
+<a id="ga7cd669a750d0af7bda85464fe4fdbef7" name="ga7cd669a750d0af7bda85464fe4fdbef7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7cd669a750d0af7bda85464fe4fdbef7">&#9670;&#160;</a></span>audio.load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,12 +315,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Loads an audio file, supported formats are .MP3, .WAV, .OGG, .FLAC, .OPUS &amp; tracker formats (.MOD, .IT, etc.) </p>
+<p>Loads an audio file </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the file (e.g. <code>"app0:music.mp3"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The loaded audio. Raises an error if the file can't be opened. </dd></dl>
 
 </div>
 </div>
-<a id="ga41b8bf0a7597a566231bc28e7a2c05d6" name="ga41b8bf0a7597a566231bc28e7a2c05d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga41b8bf0a7597a566231bc28e7a2c05d6">&#9670;&#160;</a></span>audio.pause()</h2>
+<a id="ga449e188dff57d4f30c003d6e6cebede3" name="ga449e188dff57d4f30c003d6e6cebede3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga449e188dff57d4f30c003d6e6cebede3">&#9670;&#160;</a></span>audio.pause()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -273,12 +343,24 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pause audio </p>
+<p>Pauses or resumes an audio</p>
+<p>Method form: <code>snd:pause(pause)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+    <tr><td class="paramname">pause</td><td><code>true</code> to pause, <code>false</code> to resume </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line"><span class="keywordflow">if</span> controls.pressed(<a class="code hl_variable" href="group__controls.html#ga0be4de2ba51fd783102a83de8e973048">SCE_CTRL_START</a>) then</div>
+<div class="line">    music:pause(not music:paused())</div>
+<div class="line">end</div>
+<div class="ttc" id="agroup__controls_html_ga0be4de2ba51fd783102a83de8e973048"><div class="ttname"><a href="group__controls.html#ga0be4de2ba51fd783102a83de8e973048">SCE_CTRL_START</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_START</div><div class="ttdoc">Start button.</div><div class="ttdef"><b>Definition</b> lj_controls.h:47</div></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gab3824cd7f183e82449136d87d80c7578" name="gab3824cd7f183e82449136d87d80c7578"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab3824cd7f183e82449136d87d80c7578">&#9670;&#160;</a></span>audio.paused()</h2>
+<a id="gaa634eeb04d708ab3e7070aaabe78f8f8" name="gaa634eeb04d708ab3e7070aaabe78f8f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa634eeb04d708ab3e7070aaabe78f8f8">&#9670;&#160;</a></span>audio.paused()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,12 +373,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if audio is paused </p>
+<p>Checks if an audio is paused</p>
+<p>Method form: <code>snd:paused()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if paused </dd></dl>
 
 </div>
 </div>
-<a id="gaeb176d922e2a50710cfeeec5eb152069" name="gaeb176d922e2a50710cfeeec5eb152069"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeb176d922e2a50710cfeeec5eb152069">&#9670;&#160;</a></span>audio.play()</h2>
+<a id="ga8e5e3e0b7edd007c6e95bd542a786bda" name="ga8e5e3e0b7edd007c6e95bd542a786bda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8e5e3e0b7edd007c6e95bd542a786bda">&#9670;&#160;</a></span>audio.play()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -313,17 +402,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Starts playing an audio, from the beginning if it wasn't already playing</p>
+<p>Method form: <code>snd:play(loop)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">loop</td><td>optional </td></tr>
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+    <tr><td class="paramname">loop</td><td><code>true</code> to start over every time it ends <em>(optional, default: false)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga8f87481a3141632eb7b34b0fd622436f" name="ga8f87481a3141632eb7b34b0fd622436f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8f87481a3141632eb7b34b0fd622436f">&#9670;&#160;</a></span>audio.playing()</h2>
+<a id="ga265880087dea513240155efb602ac39e" name="ga265880087dea513240155efb602ac39e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga265880087dea513240155efb602ac39e">&#9670;&#160;</a></span>audio.playing()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -336,12 +427,48 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if audio is playing </p>
+<p>Checks if an audio is playing</p>
+<p>Method form: <code>snd:playing()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> while the audio is playing (also while it's paused), <code>false</code> once it has finished </dd></dl>
 
 </div>
 </div>
-<a id="gaff8f09a348c4b1d44cd3d7d9a8146966" name="gaff8f09a348c4b1d44cd3d7d9a8146966"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaff8f09a348c4b1d44cd3d7d9a8146966">&#9670;&#160;</a></span>audio.stop()</h2>
+<a id="gaca603a13783413e67652da0965b8b790" name="gaca603a13783413e67652da0965b8b790"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaca603a13783413e67652da0965b8b790">&#9670;&#160;</a></span>audio.seek()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil audio.seek </td>
+          <td>(</td>
+          <td class="paramtype">audio</td>          <td class="paramname"><span class="paramname"><em>audio</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Jumps to a position in the audio</p>
+<p>Method form: <code>snd:seek(seconds)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+    <tr><td class="paramname">seconds</td><td>Position to jump to, in seconds from the start </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gabe831c854b6dc8a4f70b7a2a311894eb" name="gabe831c854b6dc8a4f70b7a2a311894eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabe831c854b6dc8a4f70b7a2a311894eb">&#9670;&#160;</a></span>audio.stop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,12 +481,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Stops audio </p>
+<p>Stops the audio output completely. Use <a class="el" href="#ga449e188dff57d4f30c003d6e6cebede3">audio.pause()</a> if you want to continue later.</p>
+<p>Method form: <code>snd:stop()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga633df82feb4ae2fadef9d5c539b89afb" name="ga633df82feb4ae2fadef9d5c539b89afb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga633df82feb4ae2fadef9d5c539b89afb">&#9670;&#160;</a></span>audio.tags()</h2>
+<a id="ga8b75e8eb92aa6dca5d3ea033001a367c" name="ga8b75e8eb92aa6dca5d3ea033001a367c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8b75e8eb92aa6dca5d3ea033001a367c">&#9670;&#160;</a></span>audio.tags()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,7 +505,61 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets tags of an .OPUS. (only works on .OPUS files!) </p>
+<p>Gets the tags of an .OPUS file</p>
+<p>Method form: <code>snd:tags()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio (.OPUS only) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if it isn't an .OPUS file, otherwise a table with these fields:<ul>
+<li><b>string</b> <code>title</code></li>
+<li><b>string</b> <code>album</code></li>
+<li><b>string</b> <code>artist</code></li>
+<li><b>string</b> <code>date</code></li>
+<li><b>string</b> <code>comment</code></li>
+<li><b>string</b> <code>genre</code></li>
+<li><b>image</b> <code>image</code>: The front cover, if there is one </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="ga08d5c080bcd6a40c8bd7ef442f407391" name="ga08d5c080bcd6a40c8bd7ef442f407391"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga08d5c080bcd6a40c8bd7ef442f407391">&#9670;&#160;</a></span>audio.volume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil audio.volume </td>
+          <td>(</td>
+          <td class="paramtype">audio</td>          <td class="paramname"><span class="paramname"><em>audio</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>left</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>right</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the volume of the audio</p>
+<p>Method form: <code>snd:volume(left, right)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">audio</td><td>The audio </td></tr>
+    <tr><td class="paramname">left</td><td>Volume from 0 to 100 <em>(optional, default: 100)</em> </td></tr>
+    <tr><td class="paramname">right</td><td>Volume of the right speaker from 0 to 100 <em>(optional, default: same as left)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">music:volume(50)      -- half volume</div>
+<div class="line">music:volume(100, 0)  -- left speaker only</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

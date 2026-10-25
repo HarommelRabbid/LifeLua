@@ -103,41 +103,59 @@ $(function(){initNavTree('ImGui_8lua-example.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">ImGui.lua</div></div>
 </div><!--header-->
 <div class="contents">
+<p>A menu bar and a few widgets made with ImGui.</p>
 <div class="fragment"><div class="line">imgui.init()</div>
 <div class="line">imgui.darktheme()</div>
-<div class="line">theme = 1 -- for checking only</div>
-<div class="line">--imgui.cursor(false)</div>
-<div class="line">imgui.touch(true)</div>
-<div class="line">imgui.gamepad(true)</div>
+<div class="line">imgui.touch(true)   -- touch the widgets directly</div>
+<div class="line">imgui.gamepad(true) -- or move between them with the D-pad</div>
+<div class="line"> </div>
+<div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local theme = 1</div>
+<div class="line">local sound = true</div>
+<div class="line">local level = 2</div>
+<div class="line">local levels = {&quot;Easy&quot;, &quot;Normal&quot;, &quot;Hard&quot;}</div>
+<div class="line">local progress = 0</div>
 <div class="line"> </div>
 <div class="line">while true do</div>
 <div class="line">    imgui.renderinit()</div>
-<div class="line">    --imgui.setcursor(ImGuiMouseCursor_None)</div>
 <div class="line"> </div>
+<div class="line">    -- The menu bar at the top of the screen</div>
 <div class="line">    if imgui.menubarbegin() then</div>
-<div class="line">        if imgui.menubegin(&quot;test&quot;) then</div>
+<div class="line">        if imgui.menubegin(&quot;App&quot;) then</div>
 <div class="line">            if imgui.menubegin(&quot;Theme&quot;) then</div>
 <div class="line">                if imgui.menuitem(&quot;Dark theme&quot;, theme == 1) then imgui.darktheme() theme = 1 end</div>
 <div class="line">                if imgui.menuitem(&quot;Light theme&quot;, theme == 2) then imgui.lighttheme() theme = 2 end</div>
 <div class="line">                if imgui.menuitem(&quot;Classic theme&quot;, theme == 3) then imgui.classictheme() theme = 3 end</div>
 <div class="line">                imgui.menuend()</div>
 <div class="line">            end</div>
-<div class="line">            if imgui.menuitem(&quot;Error&quot;) then imgui.shutdown() error() end</div>
 <div class="line">            if imgui.menuitem(&quot;Exit&quot;) then imgui.shutdown() os.exit() end</div>
 <div class="line">            imgui.menuend()</div>
 <div class="line">        end</div>
 <div class="line">        imgui.menubarend()</div>
 <div class="line">    end</div>
 <div class="line"> </div>
-<div class="line">    draw.text(10, 30, &quot;This is an ImGui test in LifeLua&quot;, color.new(255, 255, 255)) -- you can draw anything non-ImGui related</div>
+<div class="line">    -- You can draw anything that isn&#39;t ImGui too</div>
+<div class="line">    draw.text(10, 520, &quot;This is an ImGui test in LifeLua&quot;, white)</div>
 <div class="line"> </div>
-<div class="line">    imgui.text(&quot;Test&quot;)</div>
-<div class="line">    imgui.button(&quot;Button&quot;, 100)</div>
-<div class="line">    imgui.smallbutton(&quot;Small button&quot;)</div>
-<div class="line">    if imgui.menubegin(&quot;test1&quot;) then</div>
-<div class="line">        imgui.menuitem(&quot;test&quot;)</div>
-<div class="line">        imgui.menuend()</div>
-<div class="line">    end</div>
+<div class="line">    -- A window with some widgets</div>
+<div class="line">    imgui.nextwindowposition(20, 40, ImGuiCond_FirstUseEver)</div>
+<div class="line">    imgui.nextwindowsize(420, 260, ImGuiCond_FirstUseEver)</div>
+<div class="line">    imgui.windowbegin(&quot;Settings&quot;)</div>
+<div class="line"> </div>
+<div class="line">    imgui.text(&quot;Change the settings below&quot;)</div>
+<div class="line">    sound = imgui.checkbox(&quot;Sound&quot;, sound)</div>
+<div class="line">    level = imgui.combobox(&quot;Difficulty&quot;, level, levels)</div>
+<div class="line">    imgui.separator()</div>
+<div class="line"> </div>
+<div class="line">    if imgui.button(&quot;Load&quot;, 100) then progress = 0 end</div>
+<div class="line">    imgui.tooltip(&quot;Starts the progress bar again&quot;)</div>
+<div class="line">    imgui.sameline()</div>
+<div class="line">    if imgui.smallbutton(&quot;Done&quot;) then progress = 100 end</div>
+<div class="line"> </div>
+<div class="line">    if progress &lt; 100 then progress = progress + 0.5 end</div>
+<div class="line">    imgui.progressbar(progress)</div>
+<div class="line"> </div>
+<div class="line">    imgui.windowend()</div>
 <div class="line"> </div>
 <div class="line">    imgui.renderterm()</div>
 <div class="line">    draw.swapbuffers()</div>

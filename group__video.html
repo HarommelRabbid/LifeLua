@@ -106,34 +106,45 @@ $(function(){initNavTree('group__video.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Video library.  
+<p>Playing videos (uses the system's AvPlayer)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Plays .MP4 videos (H.264 video with AAC audio). Only one video can be loaded at a time, so these functions don't take a video object; they all control the currently loaded video. All the functions except <a class="el" href="#gab4b20bbab9f66845dd6c828632ec4680">video.load()</a> raise an error if no video is loaded.</p>
+<div class="fragment"><div class="line">video.load(<span class="stringliteral">&quot;ux0:data/myapp/intro.mp4&quot;</span>, <span class="keyword">true</span>) -- load and start playing</div>
+<div class="line"><span class="keywordflow">while</span> video.active() <span class="keywordflow">do</span></div>
+<div class="line">    controls.update()</div>
+<div class="line">    video.output() -- draw the current frame</div>
+<div class="line">    <span class="keywordflow">if</span> controls.pressed(<a class="code hl_variable" href="group__controls.html#ga470352724212f876af80ac37f568f8e0">SCE_CTRL_CROSS</a>) then video.stop() end</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="line">video.close()</div>
+<div class="ttc" id="agroup__controls_html_ga470352724212f876af80ac37f568f8e0"><div class="ttname"><a href="group__controls.html#ga470352724212f876af80ac37f568f8e0">SCE_CTRL_CROSS</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_CROSS</div><div class="ttdoc">Cross (✕) button.</div><div class="ttdef"><b>Definition</b> lj_controls.h:33</div></div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Loading a video stops any audio playing with the <a class="el" href="group__audio.html">audio</a> library. </dd></dl>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga06d539bd4e690757eb1acb6f8eab4063" id="r_ga06d539bd4e690757eb1acb6f8eab4063"><td class="memItemLeft" align="right" valign="top">video&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga06d539bd4e690757eb1acb6f8eab4063">video.open</a> (string path)</td></tr>
-<tr class="separator:ga06d539bd4e690757eb1acb6f8eab4063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabfc9191f7a25c3328dbe7d6677ce8c42" id="r_gabfc9191f7a25c3328dbe7d6677ce8c42"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabfc9191f7a25c3328dbe7d6677ce8c42">video.play</a> (video video)</td></tr>
-<tr class="separator:gabfc9191f7a25c3328dbe7d6677ce8c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa0a73ec8433f53441e75e0b0288ad008" id="r_gaa0a73ec8433f53441e75e0b0288ad008"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa0a73ec8433f53441e75e0b0288ad008">video.output</a> (video video)</td></tr>
-<tr class="separator:gaa0a73ec8433f53441e75e0b0288ad008"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadeb26556ff1c896e6539496ecf2ef05f" id="r_gadeb26556ff1c896e6539496ecf2ef05f"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadeb26556ff1c896e6539496ecf2ef05f">video.stop</a> (video video)</td></tr>
-<tr class="separator:gadeb26556ff1c896e6539496ecf2ef05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga55a513ad5d50ee86bec4ec30e1bf580d" id="r_ga55a513ad5d50ee86bec4ec30e1bf580d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga55a513ad5d50ee86bec4ec30e1bf580d">video.close</a> (video video)</td></tr>
-<tr class="separator:ga55a513ad5d50ee86bec4ec30e1bf580d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad8934b5a855292ede22601559ce0f172" id="r_gad8934b5a855292ede22601559ce0f172"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad8934b5a855292ede22601559ce0f172">video.pause</a> (video video, bool pause)</td></tr>
-<tr class="separator:gad8934b5a855292ede22601559ce0f172"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa02b576bda6057f651ab898c60b5071c" id="r_gaa02b576bda6057f651ab898c60b5071c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa02b576bda6057f651ab898c60b5071c">video.seek</a> (video video, number seconds)</td></tr>
-<tr class="separator:gaa02b576bda6057f651ab898c60b5071c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3f26226e5d40eeafa0e8feabfbba8c86" id="r_ga3f26226e5d40eeafa0e8feabfbba8c86"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3f26226e5d40eeafa0e8feabfbba8c86">video.elapsed</a> (video video)</td></tr>
-<tr class="separator:ga3f26226e5d40eeafa0e8feabfbba8c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad16b591b5134417da6c35ebefc891e88" id="r_gad16b591b5134417da6c35ebefc891e88"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad16b591b5134417da6c35ebefc891e88">video.active</a> (video video)</td></tr>
-<tr class="separator:gad16b591b5134417da6c35ebefc891e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4b20bbab9f66845dd6c828632ec4680" id="r_gab4b20bbab9f66845dd6c828632ec4680"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab4b20bbab9f66845dd6c828632ec4680">video.load</a> (string path, boolean autostart, boolean loop)</td></tr>
+<tr class="separator:gab4b20bbab9f66845dd6c828632ec4680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40bede92e7070c95bb2e5ae7c1adab98" id="r_ga40bede92e7070c95bb2e5ae7c1adab98"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga40bede92e7070c95bb2e5ae7c1adab98">video.output</a> ()</td></tr>
+<tr class="separator:ga40bede92e7070c95bb2e5ae7c1adab98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6df5ddc586bc00690bec15136ef12478" id="r_ga6df5ddc586bc00690bec15136ef12478"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6df5ddc586bc00690bec15136ef12478">video.active</a> ()</td></tr>
+<tr class="separator:ga6df5ddc586bc00690bec15136ef12478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga395191ad0228e02ed4c07a8087435d75" id="r_ga395191ad0228e02ed4c07a8087435d75"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga395191ad0228e02ed4c07a8087435d75">video.pause</a> ()</td></tr>
+<tr class="separator:ga395191ad0228e02ed4c07a8087435d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6777f53bac80fd52ff70da34d2db6f2d" id="r_ga6777f53bac80fd52ff70da34d2db6f2d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6777f53bac80fd52ff70da34d2db6f2d">video.resume</a> ()</td></tr>
+<tr class="separator:ga6777f53bac80fd52ff70da34d2db6f2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1fbfe1958dfe86e3ea1046e6c21ee568" id="r_ga1fbfe1958dfe86e3ea1046e6c21ee568"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1fbfe1958dfe86e3ea1046e6c21ee568">video.elapsed</a> ()</td></tr>
+<tr class="separator:ga1fbfe1958dfe86e3ea1046e6c21ee568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8d4bbec4c240aa0eb3e589b3621770d" id="r_gaa8d4bbec4c240aa0eb3e589b3621770d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa8d4bbec4c240aa0eb3e589b3621770d">video.seek</a> (number seconds)</td></tr>
+<tr class="separator:gaa8d4bbec4c240aa0eb3e589b3621770d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga92e9c278de84e124a607380eea329dcc" id="r_ga92e9c278de84e124a607380eea329dcc"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga92e9c278de84e124a607380eea329dcc">video.stop</a> ()</td></tr>
+<tr class="separator:ga92e9c278de84e124a607380eea329dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga074a2ba9fc36dd6acdb1242af19a675c" id="r_ga074a2ba9fc36dd6acdb1242af19a675c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga074a2ba9fc36dd6acdb1242af19a675c">video.close</a> ()</td></tr>
+<tr class="separator:ga074a2ba9fc36dd6acdb1242af19a675c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gad16b591b5134417da6c35ebefc891e88" name="gad16b591b5134417da6c35ebefc891e88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad16b591b5134417da6c35ebefc891e88">&#9670;&#160;</a></span>video.active()</h2>
+<a id="ga6df5ddc586bc00690bec15136ef12478" name="ga6df5ddc586bc00690bec15136ef12478"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6df5ddc586bc00690bec15136ef12478">&#9670;&#160;</a></span>video.active()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,17 +152,17 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">boolean video.active </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if the video player is active or not </p>
+<p>Checks if the video is playing </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> while the video is playing, <code>false</code> once it has ended or was stopped </dd></dl>
 
 </div>
 </div>
-<a id="ga55a513ad5d50ee86bec4ec30e1bf580d" name="ga55a513ad5d50ee86bec4ec30e1bf580d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga55a513ad5d50ee86bec4ec30e1bf580d">&#9670;&#160;</a></span>video.close()</h2>
+<a id="ga074a2ba9fc36dd6acdb1242af19a675c" name="ga074a2ba9fc36dd6acdb1242af19a675c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga074a2ba9fc36dd6acdb1242af19a675c">&#9670;&#160;</a></span>video.close()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,17 +170,17 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil video.close </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes the video player </p>
+<p>Closes the video and frees its memory, so another one can be loaded </p>
 
 </div>
 </div>
-<a id="ga3f26226e5d40eeafa0e8feabfbba8c86" name="ga3f26226e5d40eeafa0e8feabfbba8c86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3f26226e5d40eeafa0e8feabfbba8c86">&#9670;&#160;</a></span>video.elapsed()</h2>
+<a id="ga1fbfe1958dfe86e3ea1046e6c21ee568" name="ga1fbfe1958dfe86e3ea1046e6c21ee568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1fbfe1958dfe86e3ea1046e6c21ee568">&#9670;&#160;</a></span>video.elapsed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -177,53 +188,69 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">number video.elapsed </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets elapsed time of the video </p>
+<p>Gets how far the video has played </p><dl class="section return"><dt>Returns</dt><dd>The current position in <b>milliseconds</b> </dd></dl>
 
 </div>
 </div>
-<a id="ga06d539bd4e690757eb1acb6f8eab4063" name="ga06d539bd4e690757eb1acb6f8eab4063"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga06d539bd4e690757eb1acb6f8eab4063">&#9670;&#160;</a></span>video.open()</h2>
+<a id="gab4b20bbab9f66845dd6c828632ec4680" name="gab4b20bbab9f66845dd6c828632ec4680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab4b20bbab9f66845dd6c828632ec4680">&#9670;&#160;</a></span>video.load()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">video video.open </td>
+          <td class="memname">nil video.load </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>autostart</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>loop</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Loads a video </p>
+<p>Loads a video. Does nothing if a video is already loaded (close it first with <a class="el" href="#ga074a2ba9fc36dd6acdb1242af19a675c">video.close()</a>). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the video file </td></tr>
+    <tr><td class="paramname">autostart</td><td><code>true</code> to start playing right away <em>(optional, default: false)</em> </td></tr>
+    <tr><td class="paramname">loop</td><td><code>true</code> to start over every time it ends <em>(optional, default: false)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gaa0a73ec8433f53441e75e0b0288ad008" name="gaa0a73ec8433f53441e75e0b0288ad008"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa0a73ec8433f53441e75e0b0288ad008">&#9670;&#160;</a></span>video.output()</h2>
+<a id="ga40bede92e7070c95bb2e5ae7c1adab98" name="ga40bede92e7070c95bb2e5ae7c1adab98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga40bede92e7070c95bb2e5ae7c1adab98">&#9670;&#160;</a></span>video.output()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">image video.output </td>
+          <td class="memname">nil video.output </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets video output as an image </p>
+<p>Draws the current video frame, scaled to fill the screen's height and centered. Call it every frame, before <a class="el" href="group__draw.html#ga08b62b5ac3bfb9bc879b98589cb2c368">draw.swapbuffers()</a>. </p>
 
 </div>
 </div>
-<a id="gad8934b5a855292ede22601559ce0f172" name="gad8934b5a855292ede22601559ce0f172"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad8934b5a855292ede22601559ce0f172">&#9670;&#160;</a></span>video.pause()</h2>
+<a id="ga395191ad0228e02ed4c07a8087435d75" name="ga395191ad0228e02ed4c07a8087435d75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga395191ad0228e02ed4c07a8087435d75">&#9670;&#160;</a></span>video.pause()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,39 +258,35 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil video.pause </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>pause</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Pauses a video </p>
+<p>Pauses the video </p>
 
 </div>
 </div>
-<a id="gabfc9191f7a25c3328dbe7d6677ce8c42" name="gabfc9191f7a25c3328dbe7d6677ce8c42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabfc9191f7a25c3328dbe7d6677ce8c42">&#9670;&#160;</a></span>video.play()</h2>
+<a id="ga6777f53bac80fd52ff70da34d2db6f2d" name="ga6777f53bac80fd52ff70da34d2db6f2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6777f53bac80fd52ff70da34d2db6f2d">&#9670;&#160;</a></span>video.resume()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nil video.play </td>
+          <td class="memname">nil video.resume </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Plays a video </p>
+<p>Resumes a paused video </p>
 
 </div>
 </div>
-<a id="gaa02b576bda6057f651ab898c60b5071c" name="gaa02b576bda6057f651ab898c60b5071c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa02b576bda6057f651ab898c60b5071c">&#9670;&#160;</a></span>video.seek()</h2>
+<a id="gaa8d4bbec4c240aa0eb3e589b3621770d" name="gaa8d4bbec4c240aa0eb3e589b3621770d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa8d4bbec4c240aa0eb3e589b3621770d">&#9670;&#160;</a></span>video.seek()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,21 +294,22 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil video.seek </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>seconds</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Go to a part of the video (in seconds) </p>
+<p>Jumps to a position in the video </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seconds</td><td>Position to jump to, in seconds from the start </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gadeb26556ff1c896e6539496ecf2ef05f" name="gadeb26556ff1c896e6539496ecf2ef05f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadeb26556ff1c896e6539496ecf2ef05f">&#9670;&#160;</a></span>video.stop()</h2>
+<a id="ga92e9c278de84e124a607380eea329dcc" name="ga92e9c278de84e124a607380eea329dcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga92e9c278de84e124a607380eea329dcc">&#9670;&#160;</a></span>video.stop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,12 +317,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil video.stop </td>
           <td>(</td>
-          <td class="paramtype">video</td>          <td class="paramname"><span class="paramname"><em>video</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Stops a video </p>
+<p>Stops the video. Call <a class="el" href="#ga074a2ba9fc36dd6acdb1242af19a675c">video.close()</a> afterwards to free it. </p>
 
 </div>
 </div>

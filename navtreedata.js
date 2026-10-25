@@ -26,7 +26,6 @@ var NAVTREE =
 [
   [ "LifeLua", "index.html", [
     [ "LifeLua Documentation", "index.html", null ],
-    [ "Todo List", "todo.html", null ],
     [ "Libraries", "topics.html", "topics" ],
     [ "Examples", "examples.html", "examples" ]
   ] ]
@@ -35,7 +34,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "Controls_8lua-example.html",
-"group__video.html#ga3f26226e5d40eeafa0e8feabfbba8c86"
+"group__os.html#ga849ff1d9b71c6466c4a3b6b906973d54"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

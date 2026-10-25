@@ -103,26 +103,35 @@ $(function(){initNavTree('Controls_8lua-example.html',''); initResizable(true); 
   <div class="headertitle"><div class="title">Controls.lua</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line">white = color.new(255, 255, 255) -- no need to define the same thing multiple times</div>
+<p>Shows the state of the buttons, analog sticks, motion sensors and touch screens.</p>
+<div class="fragment"><div class="line">-- Create the colors once, before the loop</div>
+<div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local blue = color.new(0, 0, 255)</div>
+<div class="line"> </div>
 <div class="line">while true do</div>
-<div class="line">    controls.update()</div>
-<div class="line">    lx, ly = controls.leftanalog()</div>
-<div class="line">    rx, ry = controls.rightanalog()</div>
-<div class="line">    acc, gyro = controls.accelerometer(), controls.gyroscope()</div>
-<div class="line">    fronttouch, reartouch = controls.fronttouch(), controls.reartouch()</div>
-<div class="line">    draw.text(10, 10, &quot;Cross &quot;..tostring(controls.pressed(SCE_CTRL_CROSS)):gsub(&quot;true&quot;, &quot;pressed&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t pressed&quot;), white)</div>
-<div class="line">    draw.text(10, 30, &quot;Square &quot;..tostring(controls.held(SCE_CTRL_SQUARE)):gsub(&quot;true&quot;, &quot;held&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t held&quot;), white)</div>
-<div class="line">    draw.text(10, 50, &quot;Circle &quot;..tostring(controls.pressed(SCE_CTRL_CIRCLE)):gsub(&quot;true&quot;, &quot;released&quot;):gsub(&quot;false&quot;, &quot;isn&#39;t released&quot;), white)</div>
-<div class="line">    draw.text(10, 70, &quot;Left analog stick: X: &quot;..lx..&quot;, Y:&quot;..ly, white)</div>
-<div class="line">    draw.text(10, 90, &quot;Right analog stick: X: &quot;..rx..&quot;, Y:&quot;..ry, white)</div>
-<div class="line">    draw.text(10, 110, &quot;Accelerometer: X: &quot;..acc.x..&quot; Y: &quot;..acc.y..&quot; Z: &quot;..acc.z, white)</div>
-<div class="line">    draw.text(10, 130, &quot;Gyroscope: X: &quot;..gyro.x..&quot; Y: &quot;..gyro.y..&quot; Z: &quot;..gyro.z, white)</div>
-<div class="line">    for i=1, #reartouch do</div>
+<div class="line">    controls.update() -- read the latest input, once per frame</div>
+<div class="line"> </div>
+<div class="line">    local lx, ly = controls.leftanalog()</div>
+<div class="line">    local rx, ry = controls.rightanalog()</div>
+<div class="line">    local acc, gyro = controls.accelerometer(), controls.gyroscope()</div>
+<div class="line">    local fronttouch, reartouch = controls.fronttouch(), controls.reartouch()</div>
+<div class="line"> </div>
+<div class="line">    draw.text(10, 10, &quot;Cross: &quot;..(controls.check(SCE_CTRL_CROSS) and &quot;down&quot; or &quot;up&quot;), white)</div>
+<div class="line">    draw.text(10, 30, &quot;Square: &quot;..(controls.held(SCE_CTRL_SQUARE) and &quot;held&quot; or &quot;not held&quot;), white)</div>
+<div class="line">    draw.text(10, 50, &quot;Circle: &quot;..(controls.released(SCE_CTRL_CIRCLE) and &quot;released!&quot; or &quot;-&quot;), white)</div>
+<div class="line">    draw.text(10, 70, &quot;Left analog stick: X: &quot;..lx..&quot;, Y: &quot;..ly, white)</div>
+<div class="line">    draw.text(10, 90, &quot;Right analog stick: X: &quot;..rx..&quot;, Y: &quot;..ry, white)</div>
+<div class="line">    draw.text(10, 110, string.format(&quot;Accelerometer: X: %.2f Y: %.2f Z: %.2f&quot;, acc.x, acc.y, acc.z), white)</div>
+<div class="line">    draw.text(10, 130, string.format(&quot;Gyroscope: X: %.2f Y: %.2f Z: %.2f&quot;, gyro.x, gyro.y, gyro.z), white)</div>
+<div class="line"> </div>
+<div class="line">    -- A blue circle for each finger on the rear touch pad, a white one for the front touch screen</div>
+<div class="line">    for i = 1, #reartouch do</div>
 <div class="line">        draw.circle(reartouch[i].x, reartouch[i].y, 35, blue)</div>
 <div class="line">    end</div>
-<div class="line">    for i=1, #fronttouch do</div>
+<div class="line">    for i = 1, #fronttouch do</div>
 <div class="line">        draw.circle(fronttouch[i].x, fronttouch[i].y, 35, white)</div>
 <div class="line">    end</div>
+<div class="line"> </div>
 <div class="line">    draw.swapbuffers()</div>
 <div class="line">end</div>
 </div><!-- fragment --> </div><!-- contents -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LifeLua: Related Pages</title>
+<title>LifeLua: Menu.lua</title>
 <link rel="icon" href="LifeLua.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -74,7 +74,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('pages.html',''); initResizable(true); });
+$(function(){initNavTree('Menu_8lua-example.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -100,15 +100,54 @@ $(function(){initNavTree('pages.html',''); initResizable(true); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Related Pages</div></div>
+  <div class="headertitle"><div class="title">Menu.lua</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all related documentation pages:</div><div class="directory">
-<table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="todo.html" target="_self">Todo List</a></td><td class="desc"></td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+<p>A simple menu you can move through with the D-pad.</p>
+<div class="fragment"><div class="line">-- A simple menu: move with Up/Down, choose with Cross</div>
+<div class="line"> </div>
+<div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local grey = color.new(120, 120, 120)</div>
+<div class="line">local highlight = color.new(0, 90, 200)</div>
+<div class="line"> </div>
+<div class="line">local options = {&quot;Start game&quot;, &quot;Settings&quot;, &quot;Exit&quot;}</div>
+<div class="line">local selected = 1</div>
+<div class="line"> </div>
+<div class="line">while true do</div>
+<div class="line">    controls.update()</div>
+<div class="line"> </div>
+<div class="line">    -- controls.pressed() is only true on the frame the button goes down,</div>
+<div class="line">    -- so holding Down doesn&#39;t scroll through the whole menu at once</div>
+<div class="line">    if controls.pressed(SCE_CTRL_DOWN) then</div>
+<div class="line">        selected = selected + 1</div>
+<div class="line">        if selected &gt; #options then selected = 1 end</div>
+<div class="line">    elseif controls.pressed(SCE_CTRL_UP) then</div>
+<div class="line">        selected = selected - 1</div>
+<div class="line">        if selected &lt; 1 then selected = #options end</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    if controls.pressed(SCE_CTRL_CROSS) then</div>
+<div class="line">        if options[selected] == &quot;Exit&quot; then</div>
+<div class="line">            os.exit()</div>
+<div class="line">        else</div>
+<div class="line">            os.message(&quot;You chose: &quot;..options[selected])</div>
+<div class="line">        end</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    draw.text(40, 40, &quot;My App&quot;, white, 2)</div>
+<div class="line">    for i, option in ipairs(options) do</div>
+<div class="line">        local y = 120 + (i - 1) * 50</div>
+<div class="line">        if i == selected then</div>
+<div class="line">            draw.rect(30, y - 8, 300, 40, highlight)</div>
+<div class="line">            draw.text(40, y, option, white)</div>
+<div class="line">        else</div>
+<div class="line">            draw.text(40, y, option, grey)</div>
+<div class="line">        end</div>
+<div class="line">    end</div>
+<div class="line"> </div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

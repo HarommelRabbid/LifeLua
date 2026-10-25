@@ -103,9 +103,12 @@ $(function(){initNavTree('HelloWorld_8lua-example.html',''); initResizable(true)
   <div class="headertitle"><div class="title">HelloWorld.lua</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line">while true do</div>
-<div class="line">    draw.text(10, 10, &quot;Hello World!&quot;, color.new(255, 255, 255))</div>
-<div class="line">    draw.swapbuffers()</div>
+<p>The smallest LifeLua app: shows a text on the screen.</p>
+<div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line"> </div>
+<div class="line">while true do</div>
+<div class="line">    draw.text(10, 10, &quot;Hello World!&quot;, white) -- draw the text</div>
+<div class="line">    draw.swapbuffers()                        -- show it on the screen</div>
 <div class="line">end</div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->

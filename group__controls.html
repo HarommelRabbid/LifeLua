@@ -101,151 +101,193 @@ $(function(){initNavTree('group__controls.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">controls</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Controls, touch &amp; motion.  
+<p>Buttons, analog sticks, touch screens &amp; motion sensors.  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Call <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a> once at the start of every frame, then check the buttons and sensors. The difference between the button functions:</p><ul>
+<li><a class="el" href="#ga4c6181c17bd456b82f75d8058e4c4722">controls.pressed()</a>: <code>true</code> only on the frame the button goes down (good for menus)</li>
+<li><a class="el" href="#ga19a4c0478237c822fdcf407886f347c4">controls.held()</a>: <code>true</code> on every frame while the button stays down, except the first one</li>
+<li><a class="el" href="#ga0bf0dd31e71170ddabce857fa5f0a69e">controls.released()</a>: <code>true</code> only on the frame the button is let go</li>
+<li><a class="el" href="#ga930bc66fc6e085d685c11630d6d42ff5">controls.check()</a>: <code>true</code> on every frame while the button is down</li>
+</ul>
+<div class="fragment"><div class="line">local x = 480</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    controls.update()</div>
+<div class="line">    <span class="keywordflow">if</span> controls.check(<a class="code hl_variable" href="#ga9f507a805c7e695675ef66dce0ce57c8">SCE_CTRL_LEFT</a>) then x = x - 4 end</div>
+<div class="line">    <span class="keywordflow">if</span> controls.check(<a class="code hl_variable" href="#ga53aaa911f326838fee1ac38e514b9d10">SCE_CTRL_RIGHT</a>) then x = x + 4 end</div>
+<div class="line">    <span class="keywordflow">if</span> controls.pressed(<a class="code hl_variable" href="#ga0be4de2ba51fd783102a83de8e973048">SCE_CTRL_START</a>) then <span class="keywordflow">break</span> end -- exit the loop</div>
+<div class="line">    draw.circle(x, 272, 20, color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="ttc" id="agroup__controls_html_ga0be4de2ba51fd783102a83de8e973048"><div class="ttname"><a href="#ga0be4de2ba51fd783102a83de8e973048">SCE_CTRL_START</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_START</div><div class="ttdoc">Start button.</div><div class="ttdef"><b>Definition</b> lj_controls.h:47</div></div>
+<div class="ttc" id="agroup__controls_html_ga53aaa911f326838fee1ac38e514b9d10"><div class="ttname"><a href="#ga53aaa911f326838fee1ac38e514b9d10">SCE_CTRL_RIGHT</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_RIGHT</div><div class="ttdoc">D-pad right.</div><div class="ttdef"><b>Definition</b> lj_controls.h:32</div></div>
+<div class="ttc" id="agroup__controls_html_ga9f507a805c7e695675ef66dce0ce57c8"><div class="ttname"><a href="#ga9f507a805c7e695675ef66dce0ce57c8">SCE_CTRL_LEFT</a></div><div class="ttdeci">SceCtrlButtons SCE_CTRL_LEFT</div><div class="ttdoc">D-pad left.</div><div class="ttdef"><b>Definition</b> lj_controls.h:31</div></div>
+</div><!-- fragment --><p>You can check several buttons at once by adding them together, e.g. <code>controls.check(SCE_CTRL_L1 + SCE_CTRL_R1)</code>. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga66cefe5ee05c1466962114c8fff2431b" id="r_ga66cefe5ee05c1466962114c8fff2431b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga66cefe5ee05c1466962114c8fff2431b">controls.update</a> (boolean ext, boolean bind)</td></tr>
-<tr class="separator:ga66cefe5ee05c1466962114c8fff2431b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae726649b4905dd7204df840eec400f81" id="r_gae726649b4905dd7204df840eec400f81"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae726649b4905dd7204df840eec400f81">controls.pressed</a> (SceCtrlButtons button)</td></tr>
-<tr class="separator:gae726649b4905dd7204df840eec400f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga658f662b18b96f5394f003cc40b20c90" id="r_ga658f662b18b96f5394f003cc40b20c90"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga658f662b18b96f5394f003cc40b20c90">controls.held</a> (SceCtrlButtons button)</td></tr>
-<tr class="separator:ga658f662b18b96f5394f003cc40b20c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga636d420e4a25e096da37a17a8d0ff279" id="r_ga636d420e4a25e096da37a17a8d0ff279"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga636d420e4a25e096da37a17a8d0ff279">controls.released</a> (SceCtrlButtons button)</td></tr>
-<tr class="separator:ga636d420e4a25e096da37a17a8d0ff279"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28a3af35d2a6f433e218c88266e2c0fe" id="r_ga28a3af35d2a6f433e218c88266e2c0fe"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga28a3af35d2a6f433e218c88266e2c0fe">controls.check</a> (SceCtrlButtons button)</td></tr>
-<tr class="separator:ga28a3af35d2a6f433e218c88266e2c0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaa095a534472d3bc4bc31e7ac9e3f7fa" id="r_gaaa095a534472d3bc4bc31e7ac9e3f7fa"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaa095a534472d3bc4bc31e7ac9e3f7fa">controls.lightbar</a> (number r, number g, number b, number port)</td></tr>
-<tr class="separator:gaaa095a534472d3bc4bc31e7ac9e3f7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5421461c6946ac9995f8701b6944dd46" id="r_ga5421461c6946ac9995f8701b6944dd46"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5421461c6946ac9995f8701b6944dd46">controls.leftanalog</a> ()</td></tr>
-<tr class="separator:ga5421461c6946ac9995f8701b6944dd46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b9d1633aadaa5a0bb461d8ffd6e44f3" id="r_ga4b9d1633aadaa5a0bb461d8ffd6e44f3"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4b9d1633aadaa5a0bb461d8ffd6e44f3">controls.rightanalog</a> ()</td></tr>
-<tr class="separator:ga4b9d1633aadaa5a0bb461d8ffd6e44f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaef4d3a099d76d2dd82a74eb8674ad9d9" id="r_gaef4d3a099d76d2dd82a74eb8674ad9d9"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaef4d3a099d76d2dd82a74eb8674ad9d9">controls.accelerometer</a> ()</td></tr>
-<tr class="separator:gaef4d3a099d76d2dd82a74eb8674ad9d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4bd576edc2be3e7a6c5a54264a015a02" id="r_ga4bd576edc2be3e7a6c5a54264a015a02"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4bd576edc2be3e7a6c5a54264a015a02">controls.gyroscope</a> ()</td></tr>
-<tr class="separator:ga4bd576edc2be3e7a6c5a54264a015a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga590c2839b488a29b0c22274bf44d9c5f" id="r_ga590c2839b488a29b0c22274bf44d9c5f"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga590c2839b488a29b0c22274bf44d9c5f">controls.fronttouch</a> ()</td></tr>
-<tr class="separator:ga590c2839b488a29b0c22274bf44d9c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5546ab22da442a8be2c008ab894111c" id="r_gaf5546ab22da442a8be2c008ab894111c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf5546ab22da442a8be2c008ab894111c">controls.reartouch</a> ()</td></tr>
-<tr class="separator:gaf5546ab22da442a8be2c008ab894111c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga259b600e0f50f986554d3aa0e142f436" id="r_ga259b600e0f50f986554d3aa0e142f436"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga259b600e0f50f986554d3aa0e142f436">controls.vibrate</a> (number small, number large, number port)</td></tr>
-<tr class="separator:ga259b600e0f50f986554d3aa0e142f436"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga546599137e47805a4d24b34ebee0360d" id="r_ga546599137e47805a4d24b34ebee0360d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update</a> (boolean ext, boolean bind)</td></tr>
+<tr class="separator:ga546599137e47805a4d24b34ebee0360d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c6181c17bd456b82f75d8058e4c4722" id="r_ga4c6181c17bd456b82f75d8058e4c4722"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4c6181c17bd456b82f75d8058e4c4722">controls.pressed</a> (SceCtrlButtons button)</td></tr>
+<tr class="separator:ga4c6181c17bd456b82f75d8058e4c4722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga19a4c0478237c822fdcf407886f347c4" id="r_ga19a4c0478237c822fdcf407886f347c4"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga19a4c0478237c822fdcf407886f347c4">controls.held</a> (SceCtrlButtons button)</td></tr>
+<tr class="separator:ga19a4c0478237c822fdcf407886f347c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0bf0dd31e71170ddabce857fa5f0a69e" id="r_ga0bf0dd31e71170ddabce857fa5f0a69e"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0bf0dd31e71170ddabce857fa5f0a69e">controls.released</a> (SceCtrlButtons button)</td></tr>
+<tr class="separator:ga0bf0dd31e71170ddabce857fa5f0a69e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga930bc66fc6e085d685c11630d6d42ff5" id="r_ga930bc66fc6e085d685c11630d6d42ff5"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga930bc66fc6e085d685c11630d6d42ff5">controls.check</a> (SceCtrlButtons button)</td></tr>
+<tr class="separator:ga930bc66fc6e085d685c11630d6d42ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9fe9b7b41cca2adf6d7f588877dbd3cb" id="r_ga9fe9b7b41cca2adf6d7f588877dbd3cb"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9fe9b7b41cca2adf6d7f588877dbd3cb">controls.leftanalog</a> ()</td></tr>
+<tr class="separator:ga9fe9b7b41cca2adf6d7f588877dbd3cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96d00f0fcb72baca8596ca5d4ad2a369" id="r_ga96d00f0fcb72baca8596ca5d4ad2a369"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga96d00f0fcb72baca8596ca5d4ad2a369">controls.rightanalog</a> ()</td></tr>
+<tr class="separator:ga96d00f0fcb72baca8596ca5d4ad2a369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga255d4340279b32ce0f63fd518ae578af" id="r_ga255d4340279b32ce0f63fd518ae578af"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga255d4340279b32ce0f63fd518ae578af">controls.accelerometer</a> ()</td></tr>
+<tr class="separator:ga255d4340279b32ce0f63fd518ae578af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6712bbf1ea732d1b0b4c06f04fc80a7" id="r_gac6712bbf1ea732d1b0b4c06f04fc80a7"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac6712bbf1ea732d1b0b4c06f04fc80a7">controls.gyroscope</a> ()</td></tr>
+<tr class="separator:gac6712bbf1ea732d1b0b4c06f04fc80a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9755739d997b8ccd669ed723d59e8db5" id="r_ga9755739d997b8ccd669ed723d59e8db5"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9755739d997b8ccd669ed723d59e8db5">controls.fronttouch</a> ()</td></tr>
+<tr class="separator:ga9755739d997b8ccd669ed723d59e8db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf550a6334dcb6a38e75557699723b1bd" id="r_gaf550a6334dcb6a38e75557699723b1bd"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf550a6334dcb6a38e75557699723b1bd">controls.reartouch</a> ()</td></tr>
+<tr class="separator:gaf550a6334dcb6a38e75557699723b1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad466d9e65e606bdd338ca32a722d61eb" id="r_gad466d9e65e606bdd338ca32a722d61eb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad466d9e65e606bdd338ca32a722d61eb">controls.vibrate</a> (number small, number large, number port)</td></tr>
+<tr class="separator:gad466d9e65e606bdd338ca32a722d61eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9bdb63bd501274161a0ec7f0bb4b5f09" id="r_ga9bdb63bd501274161a0ec7f0bb4b5f09"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9bdb63bd501274161a0ec7f0bb4b5f09">controls.lightbar</a> (number r, number g, number b, number port)</td></tr>
+<tr class="separator:ga9bdb63bd501274161a0ec7f0bb4b5f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga2f26ca1ed87e652cf5afac94e8ed14a1" id="r_ga2f26ca1ed87e652cf5afac94e8ed14a1"><td class="memItemLeft" align="right" valign="top"><a id="ga2f26ca1ed87e652cf5afac94e8ed14a1" name="ga2f26ca1ed87e652cf5afac94e8ed14a1"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_SELECT</b></td></tr>
-<tr class="separator:ga2f26ca1ed87e652cf5afac94e8ed14a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga435b8e5c0e1e8c78492978f44a5607eb" id="r_ga435b8e5c0e1e8c78492978f44a5607eb"><td class="memItemLeft" align="right" valign="top"><a id="ga435b8e5c0e1e8c78492978f44a5607eb" name="ga435b8e5c0e1e8c78492978f44a5607eb"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L3</b></td></tr>
-<tr class="separator:ga435b8e5c0e1e8c78492978f44a5607eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae17227ecbcde9136a6497ddf27429a90" id="r_gae17227ecbcde9136a6497ddf27429a90"><td class="memItemLeft" align="right" valign="top"><a id="gae17227ecbcde9136a6497ddf27429a90" name="gae17227ecbcde9136a6497ddf27429a90"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R3</b></td></tr>
-<tr class="separator:gae17227ecbcde9136a6497ddf27429a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0be4de2ba51fd783102a83de8e973048" id="r_ga0be4de2ba51fd783102a83de8e973048"><td class="memItemLeft" align="right" valign="top"><a id="ga0be4de2ba51fd783102a83de8e973048" name="ga0be4de2ba51fd783102a83de8e973048"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_START</b></td></tr>
-<tr class="separator:ga0be4de2ba51fd783102a83de8e973048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Buttons</h2></td></tr>
 <tr class="memitem:ga06e99d77a67035d1f4d2a27d38858f93" id="r_ga06e99d77a67035d1f4d2a27d38858f93"><td class="memItemLeft" align="right" valign="top"><a id="ga06e99d77a67035d1f4d2a27d38858f93" name="ga06e99d77a67035d1f4d2a27d38858f93"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_UP</b></td></tr>
+<tr class="memdesc:ga06e99d77a67035d1f4d2a27d38858f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">D-pad up. <br /></td></tr>
 <tr class="separator:ga06e99d77a67035d1f4d2a27d38858f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga53aaa911f326838fee1ac38e514b9d10" id="r_ga53aaa911f326838fee1ac38e514b9d10"><td class="memItemLeft" align="right" valign="top"><a id="ga53aaa911f326838fee1ac38e514b9d10" name="ga53aaa911f326838fee1ac38e514b9d10"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_RIGHT</b></td></tr>
-<tr class="separator:ga53aaa911f326838fee1ac38e514b9d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa0afec853485e1f99df5ea3de6ddf6c2" id="r_gaa0afec853485e1f99df5ea3de6ddf6c2"><td class="memItemLeft" align="right" valign="top"><a id="gaa0afec853485e1f99df5ea3de6ddf6c2" name="gaa0afec853485e1f99df5ea3de6ddf6c2"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_DOWN</b></td></tr>
+<tr class="memdesc:gaa0afec853485e1f99df5ea3de6ddf6c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">D-pad down. <br /></td></tr>
 <tr class="separator:gaa0afec853485e1f99df5ea3de6ddf6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9f507a805c7e695675ef66dce0ce57c8" id="r_ga9f507a805c7e695675ef66dce0ce57c8"><td class="memItemLeft" align="right" valign="top"><a id="ga9f507a805c7e695675ef66dce0ce57c8" name="ga9f507a805c7e695675ef66dce0ce57c8"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_LEFT</b></td></tr>
+<tr class="memdesc:ga9f507a805c7e695675ef66dce0ce57c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">D-pad left. <br /></td></tr>
 <tr class="separator:ga9f507a805c7e695675ef66dce0ce57c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1188d02889197429d0d36f188423d7e4" id="r_ga1188d02889197429d0d36f188423d7e4"><td class="memItemLeft" align="right" valign="top"><a id="ga1188d02889197429d0d36f188423d7e4" name="ga1188d02889197429d0d36f188423d7e4"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_LTRIGGER</b></td></tr>
-<tr class="separator:ga1188d02889197429d0d36f188423d7e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa0c66aca266dbaabe8b187ce25c9122e" id="r_gaa0c66aca266dbaabe8b187ce25c9122e"><td class="memItemLeft" align="right" valign="top"><a id="gaa0c66aca266dbaabe8b187ce25c9122e" name="gaa0c66aca266dbaabe8b187ce25c9122e"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L2</b></td></tr>
-<tr class="separator:gaa0c66aca266dbaabe8b187ce25c9122e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacc3ada5232b582ffce0918bdd8e2d5dc" id="r_gacc3ada5232b582ffce0918bdd8e2d5dc"><td class="memItemLeft" align="right" valign="top"><a id="gacc3ada5232b582ffce0918bdd8e2d5dc" name="gacc3ada5232b582ffce0918bdd8e2d5dc"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_RTRIGGER</b></td></tr>
-<tr class="separator:gacc3ada5232b582ffce0918bdd8e2d5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a18e2c05d3ca26a3bda9f9cea28f391" id="r_ga7a18e2c05d3ca26a3bda9f9cea28f391"><td class="memItemLeft" align="right" valign="top"><a id="ga7a18e2c05d3ca26a3bda9f9cea28f391" name="ga7a18e2c05d3ca26a3bda9f9cea28f391"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R2</b></td></tr>
-<tr class="separator:ga7a18e2c05d3ca26a3bda9f9cea28f391"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga76cdaddd6deaaca61d3edca34d3cdaf2" id="r_ga76cdaddd6deaaca61d3edca34d3cdaf2"><td class="memItemLeft" align="right" valign="top"><a id="ga76cdaddd6deaaca61d3edca34d3cdaf2" name="ga76cdaddd6deaaca61d3edca34d3cdaf2"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L1</b></td></tr>
-<tr class="separator:ga76cdaddd6deaaca61d3edca34d3cdaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadbc66abe777ba6a0e79fcbf5cc1c0fd4" id="r_gadbc66abe777ba6a0e79fcbf5cc1c0fd4"><td class="memItemLeft" align="right" valign="top"><a id="gadbc66abe777ba6a0e79fcbf5cc1c0fd4" name="gadbc66abe777ba6a0e79fcbf5cc1c0fd4"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R1</b></td></tr>
-<tr class="separator:gadbc66abe777ba6a0e79fcbf5cc1c0fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaddb28078a37f8f27f84170d667df95f0" id="r_gaddb28078a37f8f27f84170d667df95f0"><td class="memItemLeft" align="right" valign="top"><a id="gaddb28078a37f8f27f84170d667df95f0" name="gaddb28078a37f8f27f84170d667df95f0"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_TRIANGLE</b></td></tr>
-<tr class="separator:gaddb28078a37f8f27f84170d667df95f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7aac1213c8bad418c2924136cd6d3ae7" id="r_ga7aac1213c8bad418c2924136cd6d3ae7"><td class="memItemLeft" align="right" valign="top"><a id="ga7aac1213c8bad418c2924136cd6d3ae7" name="ga7aac1213c8bad418c2924136cd6d3ae7"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CIRCLE</b></td></tr>
-<tr class="separator:ga7aac1213c8bad418c2924136cd6d3ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga53aaa911f326838fee1ac38e514b9d10" id="r_ga53aaa911f326838fee1ac38e514b9d10"><td class="memItemLeft" align="right" valign="top"><a id="ga53aaa911f326838fee1ac38e514b9d10" name="ga53aaa911f326838fee1ac38e514b9d10"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_RIGHT</b></td></tr>
+<tr class="memdesc:ga53aaa911f326838fee1ac38e514b9d10"><td class="mdescLeft">&#160;</td><td class="mdescRight">D-pad right. <br /></td></tr>
+<tr class="separator:ga53aaa911f326838fee1ac38e514b9d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga470352724212f876af80ac37f568f8e0" id="r_ga470352724212f876af80ac37f568f8e0"><td class="memItemLeft" align="right" valign="top"><a id="ga470352724212f876af80ac37f568f8e0" name="ga470352724212f876af80ac37f568f8e0"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CROSS</b></td></tr>
+<tr class="memdesc:ga470352724212f876af80ac37f568f8e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cross (✕) button. <br /></td></tr>
 <tr class="separator:ga470352724212f876af80ac37f568f8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7aac1213c8bad418c2924136cd6d3ae7" id="r_ga7aac1213c8bad418c2924136cd6d3ae7"><td class="memItemLeft" align="right" valign="top"><a id="ga7aac1213c8bad418c2924136cd6d3ae7" name="ga7aac1213c8bad418c2924136cd6d3ae7"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CIRCLE</b></td></tr>
+<tr class="memdesc:ga7aac1213c8bad418c2924136cd6d3ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Circle (○) button. <br /></td></tr>
+<tr class="separator:ga7aac1213c8bad418c2924136cd6d3ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac4bc8011b57c93534e59ed408bbff76c" id="r_gac4bc8011b57c93534e59ed408bbff76c"><td class="memItemLeft" align="right" valign="top"><a id="gac4bc8011b57c93534e59ed408bbff76c" name="gac4bc8011b57c93534e59ed408bbff76c"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_SQUARE</b></td></tr>
+<tr class="memdesc:gac4bc8011b57c93534e59ed408bbff76c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Square (□) button. <br /></td></tr>
 <tr class="separator:gac4bc8011b57c93534e59ed408bbff76c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8bbcea0df733829413e549b64d99fdb0" id="r_ga8bbcea0df733829413e549b64d99fdb0"><td class="memItemLeft" align="right" valign="top"><a id="ga8bbcea0df733829413e549b64d99fdb0" name="ga8bbcea0df733829413e549b64d99fdb0"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_INTERCEPTED</b></td></tr>
-<tr class="separator:ga8bbcea0df733829413e549b64d99fdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7afc4bcd972b17e1c227445e4762ed6e" id="r_ga7afc4bcd972b17e1c227445e4762ed6e"><td class="memItemLeft" align="right" valign="top"><a id="ga7afc4bcd972b17e1c227445e4762ed6e" name="ga7afc4bcd972b17e1c227445e4762ed6e"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_PSBUTTON</b></td></tr>
-<tr class="separator:ga7afc4bcd972b17e1c227445e4762ed6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab28b1cd629d3bbe5d127d13651997fff" id="r_gab28b1cd629d3bbe5d127d13651997fff"><td class="memItemLeft" align="right" valign="top"><a id="gab28b1cd629d3bbe5d127d13651997fff" name="gab28b1cd629d3bbe5d127d13651997fff"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_HEADPHONE</b></td></tr>
-<tr class="separator:gab28b1cd629d3bbe5d127d13651997fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9b4f48a8db28a6f020de9c24cae086f4" id="r_ga9b4f48a8db28a6f020de9c24cae086f4"><td class="memItemLeft" align="right" valign="top"><a id="ga9b4f48a8db28a6f020de9c24cae086f4" name="ga9b4f48a8db28a6f020de9c24cae086f4"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_VOLUP</b></td></tr>
-<tr class="separator:ga9b4f48a8db28a6f020de9c24cae086f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga170be48da7971f5bc6a5436908e0eda0" id="r_ga170be48da7971f5bc6a5436908e0eda0"><td class="memItemLeft" align="right" valign="top"><a id="ga170be48da7971f5bc6a5436908e0eda0" name="ga170be48da7971f5bc6a5436908e0eda0"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_VOLDOWN</b></td></tr>
-<tr class="separator:ga170be48da7971f5bc6a5436908e0eda0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" id="r_ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memItemLeft" align="right" valign="top"><a id="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" name="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"></a>
-SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_POWER</b></td></tr>
-<tr class="separator:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaddb28078a37f8f27f84170d667df95f0" id="r_gaddb28078a37f8f27f84170d667df95f0"><td class="memItemLeft" align="right" valign="top"><a id="gaddb28078a37f8f27f84170d667df95f0" name="gaddb28078a37f8f27f84170d667df95f0"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_TRIANGLE</b></td></tr>
+<tr class="memdesc:gaddb28078a37f8f27f84170d667df95f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triangle (△) button. <br /></td></tr>
+<tr class="separator:gaddb28078a37f8f27f84170d667df95f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9976ea92afcfb52288d80d3d6e58ec3d" id="r_ga9976ea92afcfb52288d80d3d6e58ec3d"><td class="memItemLeft" align="right" valign="top"><a id="ga9976ea92afcfb52288d80d3d6e58ec3d" name="ga9976ea92afcfb52288d80d3d6e58ec3d"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_ACCEPT</b></td></tr>
+<tr class="memdesc:ga9976ea92afcfb52288d80d3d6e58ec3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The "confirm" button set in the system settings (Cross or Circle, depending on the console's region/settings) <br /></td></tr>
 <tr class="separator:ga9976ea92afcfb52288d80d3d6e58ec3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga757bda12a8c863abf44d0cab21b50993" id="r_ga757bda12a8c863abf44d0cab21b50993"><td class="memItemLeft" align="right" valign="top"><a id="ga757bda12a8c863abf44d0cab21b50993" name="ga757bda12a8c863abf44d0cab21b50993"></a>
 SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CANCEL</b></td></tr>
+<tr class="memdesc:ga757bda12a8c863abf44d0cab21b50993"><td class="mdescLeft">&#160;</td><td class="mdescRight">The "back" button set in the system settings (Circle or Cross, the opposite of SCE_CTRL_ACCEPT) <br /></td></tr>
 <tr class="separator:ga757bda12a8c863abf44d0cab21b50993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1188d02889197429d0d36f188423d7e4" id="r_ga1188d02889197429d0d36f188423d7e4"><td class="memItemLeft" align="right" valign="top"><a id="ga1188d02889197429d0d36f188423d7e4" name="ga1188d02889197429d0d36f188423d7e4"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_LTRIGGER</b></td></tr>
+<tr class="memdesc:ga1188d02889197429d0d36f188423d7e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">L button. <br /></td></tr>
+<tr class="separator:ga1188d02889197429d0d36f188423d7e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc3ada5232b582ffce0918bdd8e2d5dc" id="r_gacc3ada5232b582ffce0918bdd8e2d5dc"><td class="memItemLeft" align="right" valign="top"><a id="gacc3ada5232b582ffce0918bdd8e2d5dc" name="gacc3ada5232b582ffce0918bdd8e2d5dc"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_RTRIGGER</b></td></tr>
+<tr class="memdesc:gacc3ada5232b582ffce0918bdd8e2d5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">R button. <br /></td></tr>
+<tr class="separator:gacc3ada5232b582ffce0918bdd8e2d5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga76cdaddd6deaaca61d3edca34d3cdaf2" id="r_ga76cdaddd6deaaca61d3edca34d3cdaf2"><td class="memItemLeft" align="right" valign="top"><a id="ga76cdaddd6deaaca61d3edca34d3cdaf2" name="ga76cdaddd6deaaca61d3edca34d3cdaf2"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L1</b></td></tr>
+<tr class="memdesc:ga76cdaddd6deaaca61d3edca34d3cdaf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">L1 button (external controllers, or the L button when <code>bind</code> is used in <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a>) <br /></td></tr>
+<tr class="separator:ga76cdaddd6deaaca61d3edca34d3cdaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadbc66abe777ba6a0e79fcbf5cc1c0fd4" id="r_gadbc66abe777ba6a0e79fcbf5cc1c0fd4"><td class="memItemLeft" align="right" valign="top"><a id="gadbc66abe777ba6a0e79fcbf5cc1c0fd4" name="gadbc66abe777ba6a0e79fcbf5cc1c0fd4"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R1</b></td></tr>
+<tr class="memdesc:gadbc66abe777ba6a0e79fcbf5cc1c0fd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">R1 button (external controllers, or the R button when <code>bind</code> is used in <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a>) <br /></td></tr>
+<tr class="separator:gadbc66abe777ba6a0e79fcbf5cc1c0fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa0c66aca266dbaabe8b187ce25c9122e" id="r_gaa0c66aca266dbaabe8b187ce25c9122e"><td class="memItemLeft" align="right" valign="top"><a id="gaa0c66aca266dbaabe8b187ce25c9122e" name="gaa0c66aca266dbaabe8b187ce25c9122e"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L2</b></td></tr>
+<tr class="memdesc:gaa0c66aca266dbaabe8b187ce25c9122e"><td class="mdescLeft">&#160;</td><td class="mdescRight">L2 button (external controllers) <br /></td></tr>
+<tr class="separator:gaa0c66aca266dbaabe8b187ce25c9122e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a18e2c05d3ca26a3bda9f9cea28f391" id="r_ga7a18e2c05d3ca26a3bda9f9cea28f391"><td class="memItemLeft" align="right" valign="top"><a id="ga7a18e2c05d3ca26a3bda9f9cea28f391" name="ga7a18e2c05d3ca26a3bda9f9cea28f391"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R2</b></td></tr>
+<tr class="memdesc:ga7a18e2c05d3ca26a3bda9f9cea28f391"><td class="mdescLeft">&#160;</td><td class="mdescRight">R2 button (external controllers) <br /></td></tr>
+<tr class="separator:ga7a18e2c05d3ca26a3bda9f9cea28f391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga435b8e5c0e1e8c78492978f44a5607eb" id="r_ga435b8e5c0e1e8c78492978f44a5607eb"><td class="memItemLeft" align="right" valign="top"><a id="ga435b8e5c0e1e8c78492978f44a5607eb" name="ga435b8e5c0e1e8c78492978f44a5607eb"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_L3</b></td></tr>
+<tr class="memdesc:ga435b8e5c0e1e8c78492978f44a5607eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">L3 button, pressing the left stick (external controllers) <br /></td></tr>
+<tr class="separator:ga435b8e5c0e1e8c78492978f44a5607eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae17227ecbcde9136a6497ddf27429a90" id="r_gae17227ecbcde9136a6497ddf27429a90"><td class="memItemLeft" align="right" valign="top"><a id="gae17227ecbcde9136a6497ddf27429a90" name="gae17227ecbcde9136a6497ddf27429a90"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_R3</b></td></tr>
+<tr class="memdesc:gae17227ecbcde9136a6497ddf27429a90"><td class="mdescLeft">&#160;</td><td class="mdescRight">R3 button, pressing the right stick (external controllers) <br /></td></tr>
+<tr class="separator:gae17227ecbcde9136a6497ddf27429a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0be4de2ba51fd783102a83de8e973048" id="r_ga0be4de2ba51fd783102a83de8e973048"><td class="memItemLeft" align="right" valign="top"><a id="ga0be4de2ba51fd783102a83de8e973048" name="ga0be4de2ba51fd783102a83de8e973048"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_START</b></td></tr>
+<tr class="memdesc:ga0be4de2ba51fd783102a83de8e973048"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start button. <br /></td></tr>
+<tr class="separator:ga0be4de2ba51fd783102a83de8e973048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f26ca1ed87e652cf5afac94e8ed14a1" id="r_ga2f26ca1ed87e652cf5afac94e8ed14a1"><td class="memItemLeft" align="right" valign="top"><a id="ga2f26ca1ed87e652cf5afac94e8ed14a1" name="ga2f26ca1ed87e652cf5afac94e8ed14a1"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_SELECT</b></td></tr>
+<tr class="memdesc:ga2f26ca1ed87e652cf5afac94e8ed14a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select button. <br /></td></tr>
+<tr class="separator:ga2f26ca1ed87e652cf5afac94e8ed14a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7afc4bcd972b17e1c227445e4762ed6e" id="r_ga7afc4bcd972b17e1c227445e4762ed6e"><td class="memItemLeft" align="right" valign="top"><a id="ga7afc4bcd972b17e1c227445e4762ed6e" name="ga7afc4bcd972b17e1c227445e4762ed6e"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_PSBUTTON</b></td></tr>
+<tr class="memdesc:ga7afc4bcd972b17e1c227445e4762ed6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">PS button (only detected while it's locked with <a class="el" href="group__os.html#gabd5ac43e11920a965dc373cb00ec5a79">os.lock()</a> and SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN) <br /></td></tr>
+<tr class="separator:ga7afc4bcd972b17e1c227445e4762ed6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" id="r_ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memItemLeft" align="right" valign="top"><a id="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6" name="ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_POWER</b></td></tr>
+<tr class="memdesc:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Power button. <br /></td></tr>
+<tr class="separator:ga7ccb2ac3437ba1c3f0483ec2aeb55ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b4f48a8db28a6f020de9c24cae086f4" id="r_ga9b4f48a8db28a6f020de9c24cae086f4"><td class="memItemLeft" align="right" valign="top"><a id="ga9b4f48a8db28a6f020de9c24cae086f4" name="ga9b4f48a8db28a6f020de9c24cae086f4"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_VOLUP</b></td></tr>
+<tr class="memdesc:ga9b4f48a8db28a6f020de9c24cae086f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Volume up button. <br /></td></tr>
+<tr class="separator:ga9b4f48a8db28a6f020de9c24cae086f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga170be48da7971f5bc6a5436908e0eda0" id="r_ga170be48da7971f5bc6a5436908e0eda0"><td class="memItemLeft" align="right" valign="top"><a id="ga170be48da7971f5bc6a5436908e0eda0" name="ga170be48da7971f5bc6a5436908e0eda0"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_VOLDOWN</b></td></tr>
+<tr class="memdesc:ga170be48da7971f5bc6a5436908e0eda0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Volume down button. <br /></td></tr>
+<tr class="separator:ga170be48da7971f5bc6a5436908e0eda0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab28b1cd629d3bbe5d127d13651997fff" id="r_gab28b1cd629d3bbe5d127d13651997fff"><td class="memItemLeft" align="right" valign="top"><a id="gab28b1cd629d3bbe5d127d13651997fff" name="gab28b1cd629d3bbe5d127d13651997fff"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_HEADPHONE</b></td></tr>
+<tr class="memdesc:gab28b1cd629d3bbe5d127d13651997fff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Headphones are plugged in. <br /></td></tr>
+<tr class="separator:gab28b1cd629d3bbe5d127d13651997fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8bbcea0df733829413e549b64d99fdb0" id="r_ga8bbcea0df733829413e549b64d99fdb0"><td class="memItemLeft" align="right" valign="top"><a id="ga8bbcea0df733829413e549b64d99fdb0" name="ga8bbcea0df733829413e549b64d99fdb0"></a>
+SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_INTERCEPTED</b></td></tr>
+<tr class="memdesc:ga8bbcea0df733829413e549b64d99fdb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The input is being used by the system (e.g. the quick menu is open) <br /></td></tr>
+<tr class="separator:ga8bbcea0df733829413e549b64d99fdb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Controls, touch &amp; motion </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gaef4d3a099d76d2dd82a74eb8674ad9d9" name="gaef4d3a099d76d2dd82a74eb8674ad9d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaef4d3a099d76d2dd82a74eb8674ad9d9">&#9670;&#160;</a></span>controls.accelerometer()</h2>
+<a id="ga255d4340279b32ce0f63fd518ae578af" name="ga255d4340279b32ce0f63fd518ae578af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga255d4340279b32ce0f63fd518ae578af">&#9670;&#160;</a></span>controls.accelerometer()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">number controls.accelerometer </td>
+          <td class="memname">table controls.accelerometer </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Accelerometer input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">acc = controls.accelerometer()</div>
-<div class="line">-- acc.x, acc.y, acc.z</div>
+<p>Gets the accelerometer (tilt) readings </p><dl class="section return"><dt>Returns</dt><dd>A table with the fields <code>x</code>, <code>y</code> and <code>z</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local acc = controls.accelerometer()</div>
+<div class="line">draw.text(10, 10, <span class="stringliteral">&quot;X: &quot;</span>..acc.x..<span class="stringliteral">&quot; Y: &quot;</span>..acc.y..<span class="stringliteral">&quot; Z: &quot;</span>..acc.z, white)</div>
 </div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A table with the X, Y and Z of the accelerometer </dd></dl>
 
 </div>
 </div>
-<a id="ga28a3af35d2a6f433e218c88266e2c0fe" name="ga28a3af35d2a6f433e218c88266e2c0fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga28a3af35d2a6f433e218c88266e2c0fe">&#9670;&#160;</a></span>controls.check()</h2>
+<a id="ga930bc66fc6e085d685c11630d6d42ff5" name="ga930bc66fc6e085d685c11630d6d42ff5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga930bc66fc6e085d685c11630d6d42ff5">&#9670;&#160;</a></span>controls.check()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,56 +300,67 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a button was triggered </p>
+<p>Checks if a button is down right now </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">button</td><td>One of the button constants </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> while the button is down </dd></dl>
 
 </div>
 </div>
-<a id="ga590c2839b488a29b0c22274bf44d9c5f" name="ga590c2839b488a29b0c22274bf44d9c5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga590c2839b488a29b0c22274bf44d9c5f">&#9670;&#160;</a></span>controls.fronttouch()</h2>
+<a id="ga9755739d997b8ccd669ed723d59e8db5" name="ga9755739d997b8ccd669ed723d59e8db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9755739d997b8ccd669ed723d59e8db5">&#9670;&#160;</a></span>controls.fronttouch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">number controls.fronttouch </td>
+          <td class="memname">table controls.fronttouch </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Front touch pad input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">touch = controls.fronttouch()</div>
-<div class="line">-- touch[1].x, touch[1].y, touch[1].force, touch[1].id</div>
-<div class="line">-- touch[2].x, touch[2].y, touch[2].force, touch[2].id</div>
-<div class="line">-- index will increase <span class="keywordflow">if</span> more fingers are touching the screen...</div>
+<p>Gets the fingers touching the front touch screen </p><dl class="section return"><dt>Returns</dt><dd>A list with one table per finger (empty if nothing is touching). Each table has these fields:<ul>
+<li><code>x</code>, <code>y</code>: Position in screen pixels</li>
+<li><code>force</code>: How hard the finger is pressing</li>
+<li><code>id</code>: A number that stays the same for a finger while it keeps touching </li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local touch = controls.fronttouch()</div>
+<div class="line"><span class="keywordflow">for</span> i = 1, #touch <span class="keywordflow">do</span></div>
+<div class="line">    draw.circle(touch[i].x, touch[i].y, 30, color.new(255, 255, 255))</div>
+<div class="line">end</div>
 </div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>Tables with the X, Y, force and ID of the touch </dd></dl>
 
 </div>
 </div>
-<a id="ga4bd576edc2be3e7a6c5a54264a015a02" name="ga4bd576edc2be3e7a6c5a54264a015a02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4bd576edc2be3e7a6c5a54264a015a02">&#9670;&#160;</a></span>controls.gyroscope()</h2>
+<a id="gac6712bbf1ea732d1b0b4c06f04fc80a7" name="gac6712bbf1ea732d1b0b4c06f04fc80a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac6712bbf1ea732d1b0b4c06f04fc80a7">&#9670;&#160;</a></span>controls.gyroscope()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">number controls.gyroscope </td>
+          <td class="memname">table controls.gyroscope </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gyroscope input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">gyro = controls.gyroscope()</div>
-<div class="line">-- gyro.x, gyro.y, gyro.z</div>
+<p>Gets the gyroscope (rotation speed) readings </p><dl class="section return"><dt>Returns</dt><dd>A table with the fields <code>x</code>, <code>y</code> and <code>z</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local gyro = controls.gyroscope()</div>
+<div class="line">draw.text(10, 10, <span class="stringliteral">&quot;X: &quot;</span>..gyro.x..<span class="stringliteral">&quot; Y: &quot;</span>..gyro.y..<span class="stringliteral">&quot; Z: &quot;</span>..gyro.z, white)</div>
 </div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A table with the X, Y and Z of the gyroscope </dd></dl>
 
 </div>
 </div>
-<a id="ga658f662b18b96f5394f003cc40b20c90" name="ga658f662b18b96f5394f003cc40b20c90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga658f662b18b96f5394f003cc40b20c90">&#9670;&#160;</a></span>controls.held()</h2>
+<a id="ga19a4c0478237c822fdcf407886f347c4" name="ga19a4c0478237c822fdcf407886f347c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga19a4c0478237c822fdcf407886f347c4">&#9670;&#160;</a></span>controls.held()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,12 +373,18 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a button has been held </p>
+<p>Checks if a button is being held down (it was already down on the previous <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a>) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">button</td><td>One of the button constants </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> while the button is held, except on the frame it was first pressed </dd></dl>
 
 </div>
 </div>
-<a id="ga5421461c6946ac9995f8701b6944dd46" name="ga5421461c6946ac9995f8701b6944dd46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5421461c6946ac9995f8701b6944dd46">&#9670;&#160;</a></span>controls.leftanalog()</h2>
+<a id="ga9fe9b7b41cca2adf6d7f588877dbd3cb" name="ga9fe9b7b41cca2adf6d7f588877dbd3cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9fe9b7b41cca2adf6d7f588877dbd3cb">&#9670;&#160;</a></span>controls.leftanalog()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,14 +397,15 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Left analog stick input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">lx, ly = controls.leftanalog()</div>
+<p>Gets the position of the left analog stick </p><dl class="section return"><dt>Returns</dt><dd>2 numbers, X and Y, each from -128 to 127 (0 is the center, negative is left/up) </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local lx, ly = controls.leftanalog()</div>
+<div class="line"><span class="keywordflow">if</span> math.abs(lx) &gt; 20 then player_x = player_x + lx / 32 end -- ignore small movements (dead zone)</div>
 </div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>X and Y of the left analog stick, as 2 values </dd></dl>
 
 </div>
 </div>
-<a id="gaaa095a534472d3bc4bc31e7ac9e3f7fa" name="gaaa095a534472d3bc4bc31e7ac9e3f7fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaaa095a534472d3bc4bc31e7ac9e3f7fa">&#9670;&#160;</a></span>controls.lightbar()</h2>
+<a id="ga9bdb63bd501274161a0ec7f0bb4b5f09" name="ga9bdb63bd501274161a0ec7f0bb4b5f09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9bdb63bd501274161a0ec7f0bb4b5f09">&#9670;&#160;</a></span>controls.lightbar()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,17 +432,20 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the light bar color on a DualShock 4 controller </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Sets the light bar color of a connected DualShock 4 controller </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port</td><td>Optional </td></tr>
+    <tr><td class="paramname">r</td><td>Red, 0-255 </td></tr>
+    <tr><td class="paramname">g</td><td>Green, 0-255 </td></tr>
+    <tr><td class="paramname">b</td><td>Blue, 0-255 </td></tr>
+    <tr><td class="paramname">port</td><td>Controller port <em>(optional, default: 1)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="gae726649b4905dd7204df840eec400f81" name="gae726649b4905dd7204df840eec400f81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae726649b4905dd7204df840eec400f81">&#9670;&#160;</a></span>controls.pressed()</h2>
+<a id="ga4c6181c17bd456b82f75d8058e4c4722" name="ga4c6181c17bd456b82f75d8058e4c4722"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4c6181c17bd456b82f75d8058e4c4722">&#9670;&#160;</a></span>controls.pressed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -395,35 +458,36 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a button has been pressed </p>
+<p>Checks if a button was just pressed (it's down now, but wasn't on the previous <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a>) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">button</td><td>One of the button constants </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame the button was pressed </dd></dl>
 
 </div>
 </div>
-<a id="gaf5546ab22da442a8be2c008ab894111c" name="gaf5546ab22da442a8be2c008ab894111c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf5546ab22da442a8be2c008ab894111c">&#9670;&#160;</a></span>controls.reartouch()</h2>
+<a id="gaf550a6334dcb6a38e75557699723b1bd" name="gaf550a6334dcb6a38e75557699723b1bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf550a6334dcb6a38e75557699723b1bd">&#9670;&#160;</a></span>controls.reartouch()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">number controls.reartouch </td>
+          <td class="memname">table controls.reartouch </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Rear touch pad input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">touch = controls.reartouch()</div>
-<div class="line">-- touch[1].x, touch[1].y, touch[1].force, touch[1].id</div>
-<div class="line">-- touch[2].x, touch[2].y, touch[2].force, touch[2].id</div>
-<div class="line">-- index will increase <span class="keywordflow">if</span> more fingers are touching the rear touch pad...</div>
-</div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>Tables with the X, Y, force and ID of the touch </dd></dl>
+<p>Gets the fingers touching the rear touch pad. Works like <a class="el" href="#ga9755739d997b8ccd669ed723d59e8db5">controls.fronttouch()</a>. </p><dl class="section return"><dt>Returns</dt><dd>A list with one table per finger (empty if nothing is touching), each with the fields <code>x</code>, <code>y</code>, <code>force</code> and <code>id</code> </dd></dl>
 
 </div>
 </div>
-<a id="ga636d420e4a25e096da37a17a8d0ff279" name="ga636d420e4a25e096da37a17a8d0ff279"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga636d420e4a25e096da37a17a8d0ff279">&#9670;&#160;</a></span>controls.released()</h2>
+<a id="ga0bf0dd31e71170ddabce857fa5f0a69e" name="ga0bf0dd31e71170ddabce857fa5f0a69e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0bf0dd31e71170ddabce857fa5f0a69e">&#9670;&#160;</a></span>controls.released()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -436,12 +500,18 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a button has been released </p>
+<p>Checks if a button was just released (it's up now, but was down on the previous <a class="el" href="#ga546599137e47805a4d24b34ebee0360d">controls.update()</a>) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">button</td><td>One of the button constants </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on the frame the button was released </dd></dl>
 
 </div>
 </div>
-<a id="ga4b9d1633aadaa5a0bb461d8ffd6e44f3" name="ga4b9d1633aadaa5a0bb461d8ffd6e44f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4b9d1633aadaa5a0bb461d8ffd6e44f3">&#9670;&#160;</a></span>controls.rightanalog()</h2>
+<a id="ga96d00f0fcb72baca8596ca5d4ad2a369" name="ga96d00f0fcb72baca8596ca5d4ad2a369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga96d00f0fcb72baca8596ca5d4ad2a369">&#9670;&#160;</a></span>controls.rightanalog()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -454,14 +524,14 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Right analog stick input </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">rx, ry = controls.rightanalog()</div>
+<p>Gets the position of the right analog stick </p><dl class="section return"><dt>Returns</dt><dd>2 numbers, X and Y, each from -128 to 127 (0 is the center, negative is left/up) </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local rx, ry = controls.rightanalog()</div>
 </div><!-- fragment --> </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>X and Y of the Right analog stick, as 2 values </dd></dl>
 
 </div>
 </div>
-<a id="ga66cefe5ee05c1466962114c8fff2431b" name="ga66cefe5ee05c1466962114c8fff2431b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga66cefe5ee05c1466962114c8fff2431b">&#9670;&#160;</a></span>controls.update()</h2>
+<a id="ga546599137e47805a4d24b34ebee0360d" name="ga546599137e47805a4d24b34ebee0360d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga546599137e47805a4d24b34ebee0360d">&#9670;&#160;</a></span>controls.update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -478,18 +548,18 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Updates the controls </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Reads the latest state of the buttons, sticks, touch screens and motion sensors. Call this once per frame, before using any other function of this library. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ext</td><td>Extended controls, will update even if there are common dialogs running (IME keyboard, message etc.), optional </td></tr>
-    <tr><td class="paramname">bind</td><td>Binds the LTRIGGER &amp; RTRIGGER to L1 &amp; R1 respectively, optional </td></tr>
+    <tr><td class="paramname">ext</td><td>Use the extended reading mode, which keeps reading input even while system dialogs (keyboard, messages, etc.) are open <em>(optional, default: false)</em> </td></tr>
+    <tr><td class="paramname">bind</td><td>Makes L and R also count as L1 and R1 <em>(optional, default: false)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga259b600e0f50f986554d3aa0e142f436" name="ga259b600e0f50f986554d3aa0e142f436"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga259b600e0f50f986554d3aa0e142f436">&#9670;&#160;</a></span>controls.vibrate()</h2>
+<a id="gad466d9e65e606bdd338ca32a722d61eb" name="gad466d9e65e606bdd338ca32a722d61eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad466d9e65e606bdd338ca32a722d61eb">&#9670;&#160;</a></span>controls.vibrate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -511,9 +581,11 @@ SceCtrlButtons&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_CTRL_CA
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sets the vibration intensity on DualShock controllers </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Makes a connected DualShock controller vibrate (e.g. on a PS TV). Set both motors to 0 to stop. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">port</td><td>optional </td></tr>
+    <tr><td class="paramname">small</td><td>Strength of the small motor, 0-255 </td></tr>
+    <tr><td class="paramname">large</td><td>Strength of the large motor, 0-255 </td></tr>
+    <tr><td class="paramname">port</td><td>Controller port <em>(optional, default: 1)</em> </td></tr>
   </table>
   </dd>
 </dl>

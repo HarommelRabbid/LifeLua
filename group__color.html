@@ -106,37 +106,43 @@ $(function(){initNavTree('group__color.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Color library.  
+<p>Creating and changing colors.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>A color is a value holding red, green, blue and alpha (opacity), each from 0 to 255. Create one with <a class="el" href="#ga3535051106f64547ee3b5e50ebc289f4">color.new()</a> and pass it to any function that draws something.</p>
+<p>Colors are never changed in place: functions like <a class="el" href="#gade3388c1497a9a3f5b553e22e6b480cd">color.r()</a> or <a class="el" href="#ga86c7ba4f0aedf9059e28f02bbb73b46c">color.add()</a> return a <b>new</b> color.</p>
+<p>You can also call these functions as methods, and use <code>+</code>, <code>-</code> and <code>==</code> on colors: </p><div class="fragment"><div class="line">local red = color.new(255, 0, 0)</div>
+<div class="line">local blue = color.new(0, 0, 255)</div>
+<div class="line">local purple = red + blue           -- same as color.add(red, blue)</div>
+<div class="line">local halfred = red:a(128)          -- same as color.a(red, 128)</div>
+<div class="line">print(red:r(), purple == red)       -- 255   <span class="keyword">false</span></div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8e6f48c98c84556e37616d1f5ac050cc" id="r_ga8e6f48c98c84556e37616d1f5ac050cc"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8e6f48c98c84556e37616d1f5ac050cc">color.new</a> (number r, number g, number b, number a)</td></tr>
-<tr class="separator:ga8e6f48c98c84556e37616d1f5ac050cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2dcbc9501100787a137c61913c77f56b" id="r_ga2dcbc9501100787a137c61913c77f56b"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2dcbc9501100787a137c61913c77f56b">color.r</a> (color color, number r)</td></tr>
-<tr class="separator:ga2dcbc9501100787a137c61913c77f56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab72f0a4707e9f42fe5a1666bd5f09313" id="r_gab72f0a4707e9f42fe5a1666bd5f09313"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab72f0a4707e9f42fe5a1666bd5f09313">color.g</a> (color color, number g)</td></tr>
-<tr class="separator:gab72f0a4707e9f42fe5a1666bd5f09313"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaa11f6ffbb09e1615b3715f80b274199" id="r_gaaa11f6ffbb09e1615b3715f80b274199"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaa11f6ffbb09e1615b3715f80b274199">color.b</a> (color color, number b)</td></tr>
-<tr class="separator:gaaa11f6ffbb09e1615b3715f80b274199"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9b52389d6b1a1119d204d1db3982ac88" id="r_ga9b52389d6b1a1119d204d1db3982ac88"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9b52389d6b1a1119d204d1db3982ac88">color.a</a> (color color, number a)</td></tr>
-<tr class="separator:ga9b52389d6b1a1119d204d1db3982ac88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga898034f62c833162962c0c2f8aca69cf" id="r_ga898034f62c833162962c0c2f8aca69cf"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga898034f62c833162962c0c2f8aca69cf">color.add</a> (color color1, color color2)</td></tr>
-<tr class="separator:ga898034f62c833162962c0c2f8aca69cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga373cded3eb3a64ef99d2d588827ca7f2" id="r_ga373cded3eb3a64ef99d2d588827ca7f2"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga373cded3eb3a64ef99d2d588827ca7f2">color.sub</a> (color color1, color color2)</td></tr>
-<tr class="separator:ga373cded3eb3a64ef99d2d588827ca7f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d02a1638ce3a5a07023a75a79b2e079" id="r_ga6d02a1638ce3a5a07023a75a79b2e079"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6d02a1638ce3a5a07023a75a79b2e079">color.blend</a> (color color1, color color2)</td></tr>
-<tr class="separator:ga6d02a1638ce3a5a07023a75a79b2e079"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3dc37ba6d27550de74c66690f27deb53" id="r_ga3dc37ba6d27550de74c66690f27deb53"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3dc37ba6d27550de74c66690f27deb53">color.mix</a> (color color1, color color2, number p1, number p2)</td></tr>
-<tr class="separator:ga3dc37ba6d27550de74c66690f27deb53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3535051106f64547ee3b5e50ebc289f4" id="r_ga3535051106f64547ee3b5e50ebc289f4"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3535051106f64547ee3b5e50ebc289f4">color.new</a> (number r, number g, number b, number a)</td></tr>
+<tr class="separator:ga3535051106f64547ee3b5e50ebc289f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade3388c1497a9a3f5b553e22e6b480cd" id="r_gade3388c1497a9a3f5b553e22e6b480cd"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gade3388c1497a9a3f5b553e22e6b480cd">color.r</a> (color color, number r)</td></tr>
+<tr class="separator:gade3388c1497a9a3f5b553e22e6b480cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga95015f92ec73646d782784e3b0f1bbc0" id="r_ga95015f92ec73646d782784e3b0f1bbc0"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga95015f92ec73646d782784e3b0f1bbc0">color.g</a> (color color, number g)</td></tr>
+<tr class="separator:ga95015f92ec73646d782784e3b0f1bbc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6df14572bde07e277a3c2ba0e93b6a61" id="r_ga6df14572bde07e277a3c2ba0e93b6a61"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6df14572bde07e277a3c2ba0e93b6a61">color.b</a> (color color, number b)</td></tr>
+<tr class="separator:ga6df14572bde07e277a3c2ba0e93b6a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefac9805c4687f2bcc0d2d4e465569b9" id="r_gaefac9805c4687f2bcc0d2d4e465569b9"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaefac9805c4687f2bcc0d2d4e465569b9">color.a</a> (color color, number a)</td></tr>
+<tr class="separator:gaefac9805c4687f2bcc0d2d4e465569b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86c7ba4f0aedf9059e28f02bbb73b46c" id="r_ga86c7ba4f0aedf9059e28f02bbb73b46c"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga86c7ba4f0aedf9059e28f02bbb73b46c">color.add</a> (color color1, color color2)</td></tr>
+<tr class="separator:ga86c7ba4f0aedf9059e28f02bbb73b46c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb6e40175ad9d23df71794a5bbafb36b" id="r_gaeb6e40175ad9d23df71794a5bbafb36b"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeb6e40175ad9d23df71794a5bbafb36b">color.sub</a> (color color1, color color2)</td></tr>
+<tr class="separator:gaeb6e40175ad9d23df71794a5bbafb36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1e56f53b61334870d8e288f0eb0472c1" id="r_ga1e56f53b61334870d8e288f0eb0472c1"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e56f53b61334870d8e288f0eb0472c1">color.blend</a> (color color1, color color2)</td></tr>
+<tr class="separator:ga1e56f53b61334870d8e288f0eb0472c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59d5da0ed7be42ea5b6d827a4b1968fc" id="r_ga59d5da0ed7be42ea5b6d827a4b1968fc"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga59d5da0ed7be42ea5b6d827a4b1968fc">color.mix</a> (color color1, color color2, number p1, number p2)</td></tr>
+<tr class="separator:ga59d5da0ed7be42ea5b6d827a4b1968fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafa84a40332bd023b59171a20f8386023" id="r_gafa84a40332bd023b59171a20f8386023"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafa84a40332bd023b59171a20f8386023">tocolor</a> (number color)</td></tr>
 <tr class="separator:gafa84a40332bd023b59171a20f8386023"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Method calling will work on most of the functions here (e. g. <code>color:a</code>, <code>color:sub</code>, etc.) </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga9b52389d6b1a1119d204d1db3982ac88" name="ga9b52389d6b1a1119d204d1db3982ac88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9b52389d6b1a1119d204d1db3982ac88">&#9670;&#160;</a></span>color.a()</h2>
+<a id="gaefac9805c4687f2bcc0d2d4e465569b9" name="gaefac9805c4687f2bcc0d2d4e465569b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaefac9805c4687f2bcc0d2d4e465569b9">&#9670;&#160;</a></span>color.a()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -153,17 +159,23 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets or sets the alpha in a color </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets the alpha (opacity) of a color, or makes a copy of the color with a different alpha</p>
+<p>Also available as a method: <code>c:a()</code> / <code>c:a(value)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Optional, new value for the alpha in the color </td></tr>
+    <tr><td class="paramname">color</td><td>The color </td></tr>
+    <tr><td class="paramname">a</td><td>New alpha value, 0-255 <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The alpha value (0-255) if <code>a</code> is omitted, otherwise a new color with the changed alpha </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local faded = white:a(100) -- white stays the same, faded is a <span class="keyword">new</span> color</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga898034f62c833162962c0c2f8aca69cf" name="ga898034f62c833162962c0c2f8aca69cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga898034f62c833162962c0c2f8aca69cf">&#9670;&#160;</a></span>color.add()</h2>
+<a id="ga86c7ba4f0aedf9059e28f02bbb73b46c" name="ga86c7ba4f0aedf9059e28f02bbb73b46c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga86c7ba4f0aedf9059e28f02bbb73b46c">&#9670;&#160;</a></span>color.add()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,12 +192,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sum 2 colors </p>
+<p>Adds two colors together, channel by channel (results are capped at 255)</p>
+<p>Also available as <code>color1 + color2</code> and <code>color1:add(color2)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color1</td><td>First color </td></tr>
+    <tr><td class="paramname">color2</td><td>Second color </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
 
 </div>
 </div>
-<a id="gaaa11f6ffbb09e1615b3715f80b274199" name="gaaa11f6ffbb09e1615b3715f80b274199"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaaa11f6ffbb09e1615b3715f80b274199">&#9670;&#160;</a></span>color.b()</h2>
+<a id="ga6df14572bde07e277a3c2ba0e93b6a61" name="ga6df14572bde07e277a3c2ba0e93b6a61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6df14572bde07e277a3c2ba0e93b6a61">&#9670;&#160;</a></span>color.b()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -202,17 +222,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets or sets the blue in a color </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets the blue value of a color, or makes a copy of the color with a different blue value</p>
+<p>Also available as a method: <code>c:b()</code> / <code>c:b(value)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">b</td><td>Optional, new value for the blue in the color </td></tr>
+    <tr><td class="paramname">color</td><td>The color </td></tr>
+    <tr><td class="paramname">b</td><td>New blue value, 0-255 <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The blue value (0-255) if <code>b</code> is omitted, otherwise a new color with the changed blue value </dd></dl>
 
 </div>
 </div>
-<a id="ga6d02a1638ce3a5a07023a75a79b2e079" name="ga6d02a1638ce3a5a07023a75a79b2e079"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6d02a1638ce3a5a07023a75a79b2e079">&#9670;&#160;</a></span>color.blend()</h2>
+<a id="ga1e56f53b61334870d8e288f0eb0472c1" name="ga1e56f53b61334870d8e288f0eb0472c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1e56f53b61334870d8e288f0eb0472c1">&#9670;&#160;</a></span>color.blend()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,12 +252,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Blends 2 colors </p>
+<p>Blends two colors evenly (50% of each)</p>
+<p>Also available as a method: <code>color1:blend(color2)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color1</td><td>First color </td></tr>
+    <tr><td class="paramname">color2</td><td>Second color </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
 
 </div>
 </div>
-<a id="gab72f0a4707e9f42fe5a1666bd5f09313" name="gab72f0a4707e9f42fe5a1666bd5f09313"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab72f0a4707e9f42fe5a1666bd5f09313">&#9670;&#160;</a></span>color.g()</h2>
+<a id="ga95015f92ec73646d782784e3b0f1bbc0" name="ga95015f92ec73646d782784e3b0f1bbc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga95015f92ec73646d782784e3b0f1bbc0">&#9670;&#160;</a></span>color.g()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,17 +282,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets or sets the green in a color </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets the green value of a color, or makes a copy of the color with a different green value</p>
+<p>Also available as a method: <code>c:g()</code> / <code>c:g(value)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">g</td><td>Optional, new value for the green in the color </td></tr>
+    <tr><td class="paramname">color</td><td>The color </td></tr>
+    <tr><td class="paramname">g</td><td>New green value, 0-255 <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The green value (0-255) if <code>g</code> is omitted, otherwise a new color with the changed green value </dd></dl>
 
 </div>
 </div>
-<a id="ga3dc37ba6d27550de74c66690f27deb53" name="ga3dc37ba6d27550de74c66690f27deb53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3dc37ba6d27550de74c66690f27deb53">&#9670;&#160;</a></span>color.mix()</h2>
+<a id="ga59d5da0ed7be42ea5b6d827a4b1968fc" name="ga59d5da0ed7be42ea5b6d827a4b1968fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga59d5da0ed7be42ea5b6d827a4b1968fc">&#9670;&#160;</a></span>color.mix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,12 +322,24 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Blends 2 colors by 2 percentages </p>
+<p>Mixes two colors using a weight for each. The weights don't need to add up to 100, they are relative to each other (<code>3, 1</code> gives 75% of color1 and 25% of color2).</p>
+<p>Also available as a method: <code>color1:mix(color2, p1, p2)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color1</td><td>First color </td></tr>
+    <tr><td class="paramname">color2</td><td>Second color </td></tr>
+    <tr><td class="paramname">p1</td><td>Weight of the first color </td></tr>
+    <tr><td class="paramname">p2</td><td>Weight of the second color </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local orange = color.mix(color.new(255, 0, 0), color.new(255, 255, 0), 50, 50)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga8e6f48c98c84556e37616d1f5ac050cc" name="ga8e6f48c98c84556e37616d1f5ac050cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8e6f48c98c84556e37616d1f5ac050cc">&#9670;&#160;</a></span>color.new()</h2>
+<a id="ga3535051106f64547ee3b5e50ebc289f4" name="ga3535051106f64547ee3b5e50ebc289f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3535051106f64547ee3b5e50ebc289f4">&#9670;&#160;</a></span>color.new()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,17 +366,24 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new color </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Creates a new color. Values outside of 0-255 are clamped. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Alpha is optional, will default to 255 (maximum) </td></tr>
+    <tr><td class="paramname">r</td><td>Red, 0-255 </td></tr>
+    <tr><td class="paramname">g</td><td>Green, 0-255 </td></tr>
+    <tr><td class="paramname">b</td><td>Blue, 0-255 </td></tr>
+    <tr><td class="paramname">a</td><td>Alpha (opacity), 0 is invisible and 255 is fully visible <em>(optional, default: 255)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local transparent_black = color.new(0, 0, 0, 128)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga2dcbc9501100787a137c61913c77f56b" name="ga2dcbc9501100787a137c61913c77f56b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2dcbc9501100787a137c61913c77f56b">&#9670;&#160;</a></span>color.r()</h2>
+<a id="gade3388c1497a9a3f5b553e22e6b480cd" name="gade3388c1497a9a3f5b553e22e6b480cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade3388c1497a9a3f5b553e22e6b480cd">&#9670;&#160;</a></span>color.r()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -347,17 +400,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets or sets the red in a color </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets the red value of a color, or makes a copy of the color with a different red value</p>
+<p>Also available as a method: <code>c:r()</code> / <code>c:r(value)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">r</td><td>Optional, new value for the red in the color </td></tr>
+    <tr><td class="paramname">color</td><td>The color </td></tr>
+    <tr><td class="paramname">r</td><td>New red value, 0-255 <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The red value (0-255) if <code>r</code> is omitted, otherwise a new color with the changed red value </dd></dl>
 
 </div>
 </div>
-<a id="ga373cded3eb3a64ef99d2d588827ca7f2" name="ga373cded3eb3a64ef99d2d588827ca7f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga373cded3eb3a64ef99d2d588827ca7f2">&#9670;&#160;</a></span>color.sub()</h2>
+<a id="gaeb6e40175ad9d23df71794a5bbafb36b" name="gaeb6e40175ad9d23df71794a5bbafb36b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeb6e40175ad9d23df71794a5bbafb36b">&#9670;&#160;</a></span>color.sub()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -374,7 +430,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Subtract 2 colors </p>
+<p>Subtracts the second color from the first, channel by channel (results are capped at 0)</p>
+<p>Also available as <code>color1 - color2</code> and <code>color1:sub(color2)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color1</td><td>Color to subtract from </td></tr>
+    <tr><td class="paramname">color2</td><td>Color to subtract </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
 
 </div>
 </div>
@@ -392,7 +456,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Converts an integer (e. g. 0xFFFF0000) to a color </p>
+<p>Converts a number to a color. The number is read in <code>0xAABBGGRR</code> order: alpha, blue, green, red (the reverse of the usual HTML order).</p>
+<p>Any function that takes a color also accepts such a number directly. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The color as a number </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new color </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local red  = <a class="code hl_function" href="#gafa84a40332bd023b59171a20f8386023">tocolor</a>(0xFF0000FF) -- alpha FF, blue 00, green 00, red FF</div>
+<div class="line">local blue = <a class="code hl_function" href="#gafa84a40332bd023b59171a20f8386023">tocolor</a>(0xFFFF0000) -- alpha FF, blue FF, green 00, red 00</div>
+<div class="line">draw.rect(0, 0, 100, 100, 0xFF00FF00) -- green, without converting first</div>
+<div class="ttc" id="agroup__color_html_gafa84a40332bd023b59171a20f8386023"><div class="ttname"><a href="#gafa84a40332bd023b59171a20f8386023">tocolor</a></div><div class="ttdeci">color tocolor(number color)</div><div class="ttdef"><b>Definition</b> lj_draw.h:379</div></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

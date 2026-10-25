@@ -101,72 +101,163 @@ $(function(){initNavTree('group__image.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">image</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Image library.  
+<p>Loading, creating, drawing and saving images.  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Every function that takes an <code>image</code> as its first parameter can also be called as a method: </p><div class="fragment"><div class="line">local img = image.load(<span class="stringliteral">&quot;app0:picture.png&quot;</span>)</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    img:display(0, 0)           -- same as image.display(img, 0, 0)</div>
+<div class="line">    draw.text(10, 10, img:width()..<span class="stringliteral">&quot; × &quot;</span>..img:height(), color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --><p>Images are freed automatically when they are no longer used (garbage collected).</p>
+<p>All the rotating functions take the angle in <b>radians</b> (use <code>math.rad(degrees)</code> to convert) and use the given position as the <b>center</b> of the image. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae64395a9ba650ea9028450ab3b41030c" id="r_gae64395a9ba650ea9028450ab3b41030c"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae64395a9ba650ea9028450ab3b41030c">image.load</a> (string path)</td></tr>
-<tr class="separator:gae64395a9ba650ea9028450ab3b41030c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa622f5e5146f62db02194895cda3f487" id="r_gaa622f5e5146f62db02194895cda3f487"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa622f5e5146f62db02194895cda3f487">image.new</a> (number w, number h, color color)</td></tr>
-<tr class="separator:gaa622f5e5146f62db02194895cda3f487"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga522e8008939d0abb96b809157971fd7c" id="r_ga522e8008939d0abb96b809157971fd7c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga522e8008939d0abb96b809157971fd7c">image.display</a> (image image, number x, number y, color tint)</td></tr>
-<tr class="separator:ga522e8008939d0abb96b809157971fd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4de5f0cd213fc65a0ba00e456ff3b465" id="r_ga4de5f0cd213fc65a0ba00e456ff3b465"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4de5f0cd213fc65a0ba00e456ff3b465">image.scaledisplay</a> (image image, number x, number y, number scale_x, number scale_y, color tint)</td></tr>
-<tr class="separator:ga4de5f0cd213fc65a0ba00e456ff3b465"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga22457e38643ff5a4ef46c7cae3864fc5" id="r_ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga22457e38643ff5a4ef46c7cae3864fc5">image.rotatedisplay</a> (image image, number x, number y, number radius, color tint)</td></tr>
-<tr class="separator:ga22457e38643ff5a4ef46c7cae3864fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacfe9d3315cec307d3a6f4b9bf4fdce66" id="r_gacfe9d3315cec307d3a6f4b9bf4fdce66"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacfe9d3315cec307d3a6f4b9bf4fdce66">image.scalerotatedisplay</a> (image image, number x, number y, number scale_x, number scale_y, number radius, color tint)</td></tr>
-<tr class="separator:gacfe9d3315cec307d3a6f4b9bf4fdce66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacf5dfd9236eab56edf49b96e7f289545" id="r_gacf5dfd9236eab56edf49b96e7f289545"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacf5dfd9236eab56edf49b96e7f289545">image.partdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, color tint)</td></tr>
-<tr class="separator:gacf5dfd9236eab56edf49b96e7f289545"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga810debec84c943796636393978d7764b" id="r_ga810debec84c943796636393978d7764b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga810debec84c943796636393978d7764b">image.scalepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, color tint)</td></tr>
-<tr class="separator:ga810debec84c943796636393978d7764b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3a4066ca82b8a164d6ca62d910603fff" id="r_ga3a4066ca82b8a164d6ca62d910603fff"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3a4066ca82b8a164d6ca62d910603fff">image.scalerotatepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, number radius, color tint)</td></tr>
-<tr class="separator:ga3a4066ca82b8a164d6ca62d910603fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga179261011f2f9f02e17359603000f281" id="r_ga179261011f2f9f02e17359603000f281"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga179261011f2f9f02e17359603000f281">image.rotatepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number radius, color tint)</td></tr>
-<tr class="separator:ga179261011f2f9f02e17359603000f281"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga13827329a6a0eb5be13e4aabf91ffc58" id="r_ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga13827329a6a0eb5be13e4aabf91ffc58">image.width</a> (image image)</td></tr>
-<tr class="separator:ga13827329a6a0eb5be13e4aabf91ffc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6c172f644892fe4895de414d2ceb6ef7" id="r_ga6c172f644892fe4895de414d2ceb6ef7"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6c172f644892fe4895de414d2ceb6ef7">image.height</a> (image image)</td></tr>
-<tr class="separator:ga6c172f644892fe4895de414d2ceb6ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga42cf19dc7dd7ec3ca617bf03dfa38d7b" id="r_ga42cf19dc7dd7ec3ca617bf03dfa38d7b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga42cf19dc7dd7ec3ca617bf03dfa38d7b">image.qrscan</a> (image image)</td></tr>
-<tr class="separator:ga42cf19dc7dd7ec3ca617bf03dfa38d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad36412da10babb287406d331cbc486f1" id="r_gad36412da10babb287406d331cbc486f1"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad36412da10babb287406d331cbc486f1">image.qr</a> (table parameters)</td></tr>
-<tr class="separator:gad36412da10babb287406d331cbc486f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7eb30bdfb68790884f1525fa0bbe172b" id="r_ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7eb30bdfb68790884f1525fa0bbe172b">image.screen</a> (image image)</td></tr>
-<tr class="separator:ga7eb30bdfb68790884f1525fa0bbe172b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3ab330d341ed6f083d697d857a7ee141" id="r_ga3ab330d341ed6f083d697d857a7ee141"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3ab330d341ed6f083d697d857a7ee141">image.save</a> (image image, string path, string type)</td></tr>
-<tr class="separator:ga3ab330d341ed6f083d697d857a7ee141"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5909dcb0f5a5dfc5d6366bec17f77d6b" id="r_ga5909dcb0f5a5dfc5d6366bec17f77d6b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5909dcb0f5a5dfc5d6366bec17f77d6b">image.filter</a> (image image, SceGxmTextureFilter min, SceGxmTextureFilter mag)</td></tr>
-<tr class="separator:ga5909dcb0f5a5dfc5d6366bec17f77d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac9060fec7353a83ada286ed655b85597" id="r_gac9060fec7353a83ada286ed655b85597"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac9060fec7353a83ada286ed655b85597">image.load</a> (string path)</td></tr>
+<tr class="separator:gac9060fec7353a83ada286ed655b85597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b6f3775b39a5619aded870a5c657632" id="r_ga3b6f3775b39a5619aded870a5c657632"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3b6f3775b39a5619aded870a5c657632">image.new</a> (number width, number height, color color)</td></tr>
+<tr class="separator:ga3b6f3775b39a5619aded870a5c657632"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86acbf603b39ec0d5bf34e40edd68dd5" id="r_ga86acbf603b39ec0d5bf34e40edd68dd5"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga86acbf603b39ec0d5bf34e40edd68dd5">image.screen</a> ()</td></tr>
+<tr class="separator:ga86acbf603b39ec0d5bf34e40edd68dd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaf26df1793dec2badae34b0c79f8ca3" id="r_gadaf26df1793dec2badae34b0c79f8ca3"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadaf26df1793dec2badae34b0c79f8ca3">image.display</a> (image image, number x, number y, color tint)</td></tr>
+<tr class="separator:gadaf26df1793dec2badae34b0c79f8ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58ca2f225f50a50ab6cba36200bfa112" id="r_ga58ca2f225f50a50ab6cba36200bfa112"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga58ca2f225f50a50ab6cba36200bfa112">image.scaledisplay</a> (image image, number x, number y, number scale_x, number scale_y, color tint)</td></tr>
+<tr class="separator:ga58ca2f225f50a50ab6cba36200bfa112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaeb8f85e53383e16c883e24358cc021d" id="r_gaaeb8f85e53383e16c883e24358cc021d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaeb8f85e53383e16c883e24358cc021d">image.rotatedisplay</a> (image image, number x, number y, number angle, color tint)</td></tr>
+<tr class="separator:gaaeb8f85e53383e16c883e24358cc021d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafccbbef0308de8338be7abbddda98e1a" id="r_gafccbbef0308de8338be7abbddda98e1a"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafccbbef0308de8338be7abbddda98e1a">image.scalerotatedisplay</a> (image image, number x, number y, number scale_x, number scale_y, number angle, color tint)</td></tr>
+<tr class="separator:gafccbbef0308de8338be7abbddda98e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac14691e0f36a221ed4de924f31ddd66d" id="r_gac14691e0f36a221ed4de924f31ddd66d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac14691e0f36a221ed4de924f31ddd66d">image.partdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, color tint)</td></tr>
+<tr class="separator:gac14691e0f36a221ed4de924f31ddd66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b63dfb2e06c29159cfd1c8b0d7e2235" id="r_ga2b63dfb2e06c29159cfd1c8b0d7e2235"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2b63dfb2e06c29159cfd1c8b0d7e2235">image.scalepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, color tint)</td></tr>
+<tr class="separator:ga2b63dfb2e06c29159cfd1c8b0d7e2235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2e9c2332a90fe0be9201833431d0e1c8" id="r_ga2e9c2332a90fe0be9201833431d0e1c8"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2e9c2332a90fe0be9201833431d0e1c8">image.scalerotatepartdisplay</a> (image image, number x, number y, number tex_x, number tex_y, number tex_w, number tex_h, number scale_x, number scale_y, number angle, color tint)</td></tr>
+<tr class="separator:ga2e9c2332a90fe0be9201833431d0e1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga49a8d410d9124d9cee7ddfd95524e4fb" id="r_ga49a8d410d9124d9cee7ddfd95524e4fb"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga49a8d410d9124d9cee7ddfd95524e4fb">image.width</a> (image image)</td></tr>
+<tr class="separator:ga49a8d410d9124d9cee7ddfd95524e4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9eeadba4d55a2e3699350918b2bd331c" id="r_ga9eeadba4d55a2e3699350918b2bd331c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9eeadba4d55a2e3699350918b2bd331c">image.height</a> (image image)</td></tr>
+<tr class="separator:ga9eeadba4d55a2e3699350918b2bd331c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7aed7ae73bc2d9987fe0bafd86ce6db1" id="r_ga7aed7ae73bc2d9987fe0bafd86ce6db1"><td class="memItemLeft" align="right" valign="top">color&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7aed7ae73bc2d9987fe0bafd86ce6db1">image.pixel</a> (image image, number x, number y, color color)</td></tr>
+<tr class="separator:ga7aed7ae73bc2d9987fe0bafd86ce6db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga463f71fa229ba7a629c0a3958b9ec45c" id="r_ga463f71fa229ba7a629c0a3958b9ec45c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga463f71fa229ba7a629c0a3958b9ec45c">image.grayscale</a> (image image)</td></tr>
+<tr class="separator:ga463f71fa229ba7a629c0a3958b9ec45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3b8dc9d86826ee9fcb1aea4e45afd02" id="r_gad3b8dc9d86826ee9fcb1aea4e45afd02"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad3b8dc9d86826ee9fcb1aea4e45afd02">image.invert</a> (image image)</td></tr>
+<tr class="separator:gad3b8dc9d86826ee9fcb1aea4e45afd02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga07ef96c8094a2b1196b6025c7b63a12e" id="r_ga07ef96c8094a2b1196b6025c7b63a12e"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga07ef96c8094a2b1196b6025c7b63a12e">image.filter</a> (image image, SceGxmTextureFilter min, SceGxmTextureFilter mag)</td></tr>
+<tr class="separator:ga07ef96c8094a2b1196b6025c7b63a12e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3e4cc54e765501b6cfd3c0f1ec59642" id="r_gab3e4cc54e765501b6cfd3c0f1ec59642"><td class="memItemLeft" align="right" valign="top">SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab3e4cc54e765501b6cfd3c0f1ec59642">image.min</a> (image image)</td></tr>
+<tr class="separator:gab3e4cc54e765501b6cfd3c0f1ec59642"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1d2baf753e15f62ffbb428c62a721852" id="r_ga1d2baf753e15f62ffbb428c62a721852"><td class="memItemLeft" align="right" valign="top">SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d2baf753e15f62ffbb428c62a721852">image.mag</a> (image image)</td></tr>
+<tr class="separator:ga1d2baf753e15f62ffbb428c62a721852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga50c6daa847c902e63d1659d9d3cdf562" id="r_ga50c6daa847c902e63d1659d9d3cdf562"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga50c6daa847c902e63d1659d9d3cdf562">image.save</a> (image image, string path, string type, number quality)</td></tr>
+<tr class="separator:ga50c6daa847c902e63d1659d9d3cdf562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7171e0766650ec9fd72f50b2c497b56" id="r_gae7171e0766650ec9fd72f50b2c497b56"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae7171e0766650ec9fd72f50b2c497b56">image.qrscan</a> (image image, number index)</td></tr>
+<tr class="separator:gae7171e0766650ec9fd72f50b2c497b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ab371433d7b550a5b58700fa2e80dc3" id="r_ga1ab371433d7b550a5b58700fa2e80dc3"><td class="memItemLeft" align="right" valign="top">image&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1ab371433d7b550a5b58700fa2e80dc3">image.qr</a> (table parameters)</td></tr>
+<tr class="separator:ga1ab371433d7b550a5b58700fa2e80dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Texture filters</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#ga07ef96c8094a2b1196b6025c7b63a12e">image.filter()</a>, <a class="el" href="#gab3e4cc54e765501b6cfd3c0f1ec59642">image.min()</a> and <a class="el" href="#ga1d2baf753e15f62ffbb428c62a721852">image.mag()</a> </p>
+</td></tr>
 <tr class="memitem:ga4e1917616b924f127e7a4d648bfa48d9" id="r_ga4e1917616b924f127e7a4d648bfa48d9"><td class="memItemLeft" align="right" valign="top"><a id="ga4e1917616b924f127e7a4d648bfa48d9" name="ga4e1917616b924f127e7a4d648bfa48d9"></a>
 SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GXM_TEXTURE_FILTER_POINT</b></td></tr>
+<tr class="memdesc:ga4e1917616b924f127e7a4d648bfa48d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nearest pixel, keeps the image sharp/pixelated when scaled (good for pixel art) <br /></td></tr>
 <tr class="separator:ga4e1917616b924f127e7a4d648bfa48d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa9f4c49d1c3310daa5e798a62e903663" id="r_gaa9f4c49d1c3310daa5e798a62e903663"><td class="memItemLeft" align="right" valign="top"><a id="gaa9f4c49d1c3310daa5e798a62e903663" name="gaa9f4c49d1c3310daa5e798a62e903663"></a>
 SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GXM_TEXTURE_FILTER_LINEAR</b></td></tr>
+<tr class="memdesc:gaa9f4c49d1c3310daa5e798a62e903663"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smooths the image when scaled. <br /></td></tr>
 <tr class="separator:gaa9f4c49d1c3310daa5e798a62e903663"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6d2fc0bca0908273a78b54defd1746e2" id="r_ga6d2fc0bca0908273a78b54defd1746e2"><td class="memItemLeft" align="right" valign="top"><a id="ga6d2fc0bca0908273a78b54defd1746e2" name="ga6d2fc0bca0908273a78b54defd1746e2"></a>
 SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GXM_TEXTURE_FILTER_MIPMAP_LINEAR</b></td></tr>
+<tr class="memdesc:ga6d2fc0bca0908273a78b54defd1746e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear filtering with mipmaps. <br /></td></tr>
 <tr class="separator:ga6d2fc0bca0908273a78b54defd1746e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5c109210bac8dd3de206ed738c46ef7b" id="r_ga5c109210bac8dd3de206ed738c46ef7b"><td class="memItemLeft" align="right" valign="top"><a id="ga5c109210bac8dd3de206ed738c46ef7b" name="ga5c109210bac8dd3de206ed738c46ef7b"></a>
 SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GXM_TEXTURE_FILTER_MIPMAP_POINT</b></td></tr>
+<tr class="memdesc:ga5c109210bac8dd3de206ed738c46ef7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Point filtering with mipmaps. <br /></td></tr>
 <tr class="separator:ga5c109210bac8dd3de206ed738c46ef7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">QR code error correction levels</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used in the <code>error_correction</code> field of <a class="el" href="#ga1ab371433d7b550a5b58700fa2e80dc3">image.qr()</a>. Higher levels make the QR code bigger, but readable even if partly damaged. </p>
+</td></tr>
+<tr class="memitem:ga8b82ae17ad5e8c3be2a542381740f731" id="r_ga8b82ae17ad5e8c3be2a542381740f731"><td class="memItemLeft" align="right" valign="top"><a id="ga8b82ae17ad5e8c3be2a542381740f731" name="ga8b82ae17ad5e8c3be2a542381740f731"></a>
+qrcodegen_Ecc&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Ecc_LOW</b></td></tr>
+<tr class="memdesc:ga8b82ae17ad5e8c3be2a542381740f731"><td class="mdescLeft">&#160;</td><td class="mdescRight">About 7% of the QR code can be damaged. <br /></td></tr>
+<tr class="separator:ga8b82ae17ad5e8c3be2a542381740f731"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0f44c43cbbffa54230b431a7aa0017ce" id="r_ga0f44c43cbbffa54230b431a7aa0017ce"><td class="memItemLeft" align="right" valign="top"><a id="ga0f44c43cbbffa54230b431a7aa0017ce" name="ga0f44c43cbbffa54230b431a7aa0017ce"></a>
+qrcodegen_Ecc&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Ecc_MEDIUM</b></td></tr>
+<tr class="memdesc:ga0f44c43cbbffa54230b431a7aa0017ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">About 15% of the QR code can be damaged (default) <br /></td></tr>
+<tr class="separator:ga0f44c43cbbffa54230b431a7aa0017ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0a3545e5e68155ff2111b4627f189401" id="r_ga0a3545e5e68155ff2111b4627f189401"><td class="memItemLeft" align="right" valign="top"><a id="ga0a3545e5e68155ff2111b4627f189401" name="ga0a3545e5e68155ff2111b4627f189401"></a>
+qrcodegen_Ecc&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Ecc_QUARTILE</b></td></tr>
+<tr class="memdesc:ga0a3545e5e68155ff2111b4627f189401"><td class="mdescLeft">&#160;</td><td class="mdescRight">About 25% of the QR code can be damaged. <br /></td></tr>
+<tr class="separator:ga0a3545e5e68155ff2111b4627f189401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c6f08270024bce1593237e2d418afe9" id="r_ga9c6f08270024bce1593237e2d418afe9"><td class="memItemLeft" align="right" valign="top"><a id="ga9c6f08270024bce1593237e2d418afe9" name="ga9c6f08270024bce1593237e2d418afe9"></a>
+qrcodegen_Ecc&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Ecc_HIGH</b></td></tr>
+<tr class="memdesc:ga9c6f08270024bce1593237e2d418afe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">About 30% of the QR code can be damaged. <br /></td></tr>
+<tr class="separator:ga9c6f08270024bce1593237e2d418afe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">QR code masks</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used in the <code>mask</code> field of <a class="el" href="#ga1ab371433d7b550a5b58700fa2e80dc3">image.qr()</a>. Leave it at automatic unless you need a specific mask pattern. </p>
+</td></tr>
+<tr class="memitem:ga61134649ce0edfb447a5143a4a68a403" id="r_ga61134649ce0edfb447a5143a4a68a403"><td class="memItemLeft" align="right" valign="top"><a id="ga61134649ce0edfb447a5143a4a68a403" name="ga61134649ce0edfb447a5143a4a68a403"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_AUTO</b></td></tr>
+<tr class="memdesc:ga61134649ce0edfb447a5143a4a68a403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Picks the best mask automatically (default) <br /></td></tr>
+<tr class="separator:ga61134649ce0edfb447a5143a4a68a403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace9f51d6adc0d228cdafc5f1bea03682" id="r_gace9f51d6adc0d228cdafc5f1bea03682"><td class="memItemLeft" align="right" valign="top"><a id="gace9f51d6adc0d228cdafc5f1bea03682" name="gace9f51d6adc0d228cdafc5f1bea03682"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_0</b></td></tr>
+<tr class="memdesc:gace9f51d6adc0d228cdafc5f1bea03682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 0. <br /></td></tr>
+<tr class="separator:gace9f51d6adc0d228cdafc5f1bea03682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1cde376000069f2e1b9670a075a9fdef" id="r_ga1cde376000069f2e1b9670a075a9fdef"><td class="memItemLeft" align="right" valign="top"><a id="ga1cde376000069f2e1b9670a075a9fdef" name="ga1cde376000069f2e1b9670a075a9fdef"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_1</b></td></tr>
+<tr class="memdesc:ga1cde376000069f2e1b9670a075a9fdef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 1. <br /></td></tr>
+<tr class="separator:ga1cde376000069f2e1b9670a075a9fdef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga830a0e8915194a277d6c443ab3796d67" id="r_ga830a0e8915194a277d6c443ab3796d67"><td class="memItemLeft" align="right" valign="top"><a id="ga830a0e8915194a277d6c443ab3796d67" name="ga830a0e8915194a277d6c443ab3796d67"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_2</b></td></tr>
+<tr class="memdesc:ga830a0e8915194a277d6c443ab3796d67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 2. <br /></td></tr>
+<tr class="separator:ga830a0e8915194a277d6c443ab3796d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2e34e0829567d34c5a3963aed9180cfc" id="r_ga2e34e0829567d34c5a3963aed9180cfc"><td class="memItemLeft" align="right" valign="top"><a id="ga2e34e0829567d34c5a3963aed9180cfc" name="ga2e34e0829567d34c5a3963aed9180cfc"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_3</b></td></tr>
+<tr class="memdesc:ga2e34e0829567d34c5a3963aed9180cfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 3. <br /></td></tr>
+<tr class="separator:ga2e34e0829567d34c5a3963aed9180cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga257feb6dd535988ffb0b8f382e38bbaf" id="r_ga257feb6dd535988ffb0b8f382e38bbaf"><td class="memItemLeft" align="right" valign="top"><a id="ga257feb6dd535988ffb0b8f382e38bbaf" name="ga257feb6dd535988ffb0b8f382e38bbaf"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_4</b></td></tr>
+<tr class="memdesc:ga257feb6dd535988ffb0b8f382e38bbaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 4. <br /></td></tr>
+<tr class="separator:ga257feb6dd535988ffb0b8f382e38bbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga229c76c8503db64132b85f090055dd9b" id="r_ga229c76c8503db64132b85f090055dd9b"><td class="memItemLeft" align="right" valign="top"><a id="ga229c76c8503db64132b85f090055dd9b" name="ga229c76c8503db64132b85f090055dd9b"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_5</b></td></tr>
+<tr class="memdesc:ga229c76c8503db64132b85f090055dd9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 5. <br /></td></tr>
+<tr class="separator:ga229c76c8503db64132b85f090055dd9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3fed790a740113a5e094c922030f58b9" id="r_ga3fed790a740113a5e094c922030f58b9"><td class="memItemLeft" align="right" valign="top"><a id="ga3fed790a740113a5e094c922030f58b9" name="ga3fed790a740113a5e094c922030f58b9"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_6</b></td></tr>
+<tr class="memdesc:ga3fed790a740113a5e094c922030f58b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 6. <br /></td></tr>
+<tr class="separator:ga3fed790a740113a5e094c922030f58b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga524bda50b7692df57b198444690377da" id="r_ga524bda50b7692df57b198444690377da"><td class="memItemLeft" align="right" valign="top"><a id="ga524bda50b7692df57b198444690377da" name="ga524bda50b7692df57b198444690377da"></a>
+qrcodegen_Mask&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_Mask_7</b></td></tr>
+<tr class="memdesc:ga524bda50b7692df57b198444690377da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask pattern 7. <br /></td></tr>
+<tr class="separator:ga524bda50b7692df57b198444690377da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">QR code versions</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used in the <code>min_version</code> and <code>max_version</code> fields of <a class="el" href="#ga1ab371433d7b550a5b58700fa2e80dc3">image.qr()</a>. The version decides the size of the QR code. </p>
+</td></tr>
+<tr class="memitem:gabd8087c3bdd7a9593a31cfafcd4789b2" id="r_gabd8087c3bdd7a9593a31cfafcd4789b2"><td class="memItemLeft" align="right" valign="top"><a id="gabd8087c3bdd7a9593a31cfafcd4789b2" name="gabd8087c3bdd7a9593a31cfafcd4789b2"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_VERSION_MIN</b></td></tr>
+<tr class="memdesc:gabd8087c3bdd7a9593a31cfafcd4789b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smallest QR code version (1) <br /></td></tr>
+<tr class="separator:gabd8087c3bdd7a9593a31cfafcd4789b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga36fb1926862c2439e2d425a3d5d44732" id="r_ga36fb1926862c2439e2d425a3d5d44732"><td class="memItemLeft" align="right" valign="top"><a id="ga36fb1926862c2439e2d425a3d5d44732" name="ga36fb1926862c2439e2d425a3d5d44732"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>qrcodegen_VERSION_MAX</b></td></tr>
+<tr class="memdesc:ga36fb1926862c2439e2d425a3d5d44732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Biggest QR code version (40) <br /></td></tr>
+<tr class="separator:ga36fb1926862c2439e2d425a3d5d44732"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Method calling will work on most of the functions here (e. g. <code>image:display</code>, <code>image:width</code>, etc.) </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga522e8008939d0abb96b809157971fd7c" name="ga522e8008939d0abb96b809157971fd7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga522e8008939d0abb96b809157971fd7c">&#9670;&#160;</a></span>image.display()</h2>
+<a id="gadaf26df1793dec2badae34b0c79f8ca3" name="gadaf26df1793dec2badae34b0c79f8ca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadaf26df1793dec2badae34b0c79f8ca3">&#9670;&#160;</a></span>image.display()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,17 +284,21 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays an image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws an image</p>
+<p>Method form: <code>img:display(x, y, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image, e.g. a half transparent white makes the image half transparent <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga5909dcb0f5a5dfc5d6366bec17f77d6b" name="ga5909dcb0f5a5dfc5d6366bec17f77d6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5909dcb0f5a5dfc5d6366bec17f77d6b">&#9670;&#160;</a></span>image.filter()</h2>
+<a id="ga07ef96c8094a2b1196b6025c7b63a12e" name="ga07ef96c8094a2b1196b6025c7b63a12e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga07ef96c8094a2b1196b6025c7b63a12e">&#9670;&#160;</a></span>image.filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,12 +320,49 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Add filters to an image </p>
+<p>Sets how an image is smoothed when it's drawn scaled</p>
+<p>Method form: <code>img:filter(min, mag)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">min</td><td>Filter used when the image is drawn smaller, one of the texture filter constants </td></tr>
+    <tr><td class="paramname">mag</td><td>Filter used when the image is drawn bigger <em>(optional, default: same as min)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- Keep pixel art sharp when scaling it up</div>
+<div class="line">sprite:filter(<a class="code hl_variable" href="#ga4e1917616b924f127e7a4d648bfa48d9">SCE_GXM_TEXTURE_FILTER_POINT</a>)</div>
+<div class="line">sprite:scaledisplay(0, 0, 4, 4)</div>
+<div class="ttc" id="agroup__image_html_ga4e1917616b924f127e7a4d648bfa48d9"><div class="ttname"><a href="#ga4e1917616b924f127e7a4d648bfa48d9">SCE_GXM_TEXTURE_FILTER_POINT</a></div><div class="ttdeci">SceGxmTextureFilter SCE_GXM_TEXTURE_FILTER_POINT</div><div class="ttdoc">Nearest pixel, keeps the image sharp/pixelated when scaled (good for pixel art)</div><div class="ttdef"><b>Definition</b> lj_draw.h:427</div></div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga6c172f644892fe4895de414d2ceb6ef7" name="ga6c172f644892fe4895de414d2ceb6ef7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6c172f644892fe4895de414d2ceb6ef7">&#9670;&#160;</a></span>image.height()</h2>
+<a id="ga463f71fa229ba7a629c0a3958b9ec45c" name="ga463f71fa229ba7a629c0a3958b9ec45c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga463f71fa229ba7a629c0a3958b9ec45c">&#9670;&#160;</a></span>image.grayscale()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.grayscale </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Turns an image into black &amp; white. This changes the image itself.</p>
+<p>Method form: <code>img:grayscale()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga9eeadba4d55a2e3699350918b2bd331c" name="ga9eeadba4d55a2e3699350918b2bd331c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9eeadba4d55a2e3699350918b2bd331c">&#9670;&#160;</a></span>image.height()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,12 +375,43 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets height of an image </p>
+<p>Gets the height of an image</p>
+<p>Method form: <code>img:height()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Height in pixels </dd></dl>
 
 </div>
 </div>
-<a id="gae64395a9ba650ea9028450ab3b41030c" name="gae64395a9ba650ea9028450ab3b41030c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae64395a9ba650ea9028450ab3b41030c">&#9670;&#160;</a></span>image.load()</h2>
+<a id="gad3b8dc9d86826ee9fcb1aea4e45afd02" name="gad3b8dc9d86826ee9fcb1aea4e45afd02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad3b8dc9d86826ee9fcb1aea4e45afd02">&#9670;&#160;</a></span>image.invert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nil image.invert </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Inverts the colors of an image (like a photo negative). This changes the image itself, the alpha stays the same.</p>
+<p>Method form: <code>img:invert()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gac9060fec7353a83ada286ed655b85597" name="gac9060fec7353a83ada286ed655b85597"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac9060fec7353a83ada286ed655b85597">&#9670;&#160;</a></span>image.load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,12 +424,71 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Loads an image, can be a .PNG, .BMP, .JPG/.JPEG, .TGA, .PSD, .PIC, .PPM/.PGM &amp; .HDR </p>
+<p>Loads an image file. Supported formats: .PNG, .JPG/.JPEG, .BMP, .TGA, .PSD, .HDR, .PIC, .PPM/.PGM and .SVG. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Path to the image (e.g. <code>"app0:bg.png"</code>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The image, or <code>nil</code> if the file doesn't exist or its format isn't supported </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local bg = image.load(<span class="stringliteral">&quot;app0:bg.png&quot;</span>)</div>
+<div class="line"><span class="keywordflow">if</span> not bg then error(<span class="stringliteral">&quot;Couldn&#39;t load bg.png&quot;</span>) end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaa622f5e5146f62db02194895cda3f487" name="gaa622f5e5146f62db02194895cda3f487"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa622f5e5146f62db02194895cda3f487">&#9670;&#160;</a></span>image.new()</h2>
+<a id="ga1d2baf753e15f62ffbb428c62a721852" name="ga1d2baf753e15f62ffbb428c62a721852"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d2baf753e15f62ffbb428c62a721852">&#9670;&#160;</a></span>image.mag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SceGxmTextureFilter image.mag </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the filter used when the image is drawn bigger</p>
+<p>Method form: <code>img:mag()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>One of the texture filter constants </dd></dl>
+
+</div>
+</div>
+<a id="gab3e4cc54e765501b6cfd3c0f1ec59642" name="gab3e4cc54e765501b6cfd3c0f1ec59642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab3e4cc54e765501b6cfd3c0f1ec59642">&#9670;&#160;</a></span>image.min()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SceGxmTextureFilter image.min </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the filter used when the image is drawn smaller</p>
+<p>Method form: <code>img:min()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>One of the texture filter constants </dd></dl>
+
+</div>
+</div>
+<a id="ga3b6f3775b39a5619aded870a5c657632" name="ga3b6f3775b39a5619aded870a5c657632"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3b6f3775b39a5619aded870a5c657632">&#9670;&#160;</a></span>image.new()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -274,12 +496,12 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="memname">image image.new </td>
           <td>(</td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>h</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -288,17 +510,20 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new image </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Creates a new, empty image </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">color</td><td>Optional, will default to white </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">color</td><td>Color to fill the image with <em>(optional, the image is fully transparent if omitted)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The new image </dd></dl>
 
 </div>
 </div>
-<a id="gacf5dfd9236eab56edf49b96e7f289545" name="gacf5dfd9236eab56edf49b96e7f289545"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacf5dfd9236eab56edf49b96e7f289545">&#9670;&#160;</a></span>image.partdisplay()</h2>
+<a id="gac14691e0f36a221ed4de924f31ddd66d" name="gac14691e0f36a221ed4de924f31ddd66d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac14691e0f36a221ed4de924f31ddd66d">&#9670;&#160;</a></span>image.partdisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -345,17 +570,75 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a part of an image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws only a part of an image, useful for sprite sheets</p>
+<p>Method form: <code>img:partdisplay(x, y, tex_x, tex_y, tex_w, tex_h, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>Left position on the screen </td></tr>
+    <tr><td class="paramname">y</td><td>Top position on the screen </td></tr>
+    <tr><td class="paramname">tex_x</td><td>Left of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_y</td><td>Top of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_w</td><td>Width of the part </td></tr>
+    <tr><td class="paramname">tex_h</td><td>Height of the part </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- Draw the 3rd 32 × 32 frame of a sprite sheet</div>
+<div class="line">sheet:partdisplay(100, 100, 2 * 32, 0, 32, 32)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gad36412da10babb287406d331cbc486f1" name="gad36412da10babb287406d331cbc486f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad36412da10babb287406d331cbc486f1">&#9670;&#160;</a></span>image.qr()</h2>
+<a id="ga7aed7ae73bc2d9987fe0bafd86ce6db1" name="ga7aed7ae73bc2d9987fe0bafd86ce6db1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7aed7ae73bc2d9987fe0bafd86ce6db1">&#9670;&#160;</a></span>image.pixel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">color image.pixel </td>
+          <td>(</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>color</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets or sets the color of one pixel of an image</p>
+<p>Method form: <code>img:pixel(x, y)</code> / <code>img:pixel(x, y, color)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>X of the pixel, from 0 to width - 1 </td></tr>
+    <tr><td class="paramname">y</td><td>Y of the pixel, from 0 to height - 1 </td></tr>
+    <tr><td class="paramname">color</td><td>New color of the pixel <em>(optional)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The pixel's color if <code>color</code> is omitted, otherwise nothing </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The position isn't checked, make sure it's inside the image. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local img = image.new(64, 64, color.new(0, 0, 0))</div>
+<div class="line">img:pixel(10, 10, color.new(255, 0, 0)) -- set</div>
+<div class="line">print(img:pixel(10, 10):r())            -- get, prints 255</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga1ab371433d7b550a5b58700fa2e80dc3" name="ga1ab371433d7b550a5b58700fa2e80dc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1ab371433d7b550a5b58700fa2e80dc3">&#9670;&#160;</a></span>image.qr()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,23 +651,35 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Generates a QR code </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Generates a QR code image </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parameters</td><td><ul>
-<li><b>string</b> text: Text content of the QR code</li>
-<li><b>color</b> bg_color: optional, color of the QR's background</li>
-<li><b>color</b> fg_color: optional, color of the QR's foreground</li>
-<li><b>number</b> border: optional, border amount </li>
+    <tr><td class="paramname">parameters</td><td>A table with these fields (only <code>text</code> is required):<ul>
+<li><b>string</b> <code>text</code>: Text stored in the QR code</li>
+<li><b>color</b> <code>fg_color</code>: Color of the dark squares <em>(default: black)</em></li>
+<li><b>color</b> <code>bg_color</code>: Background color <em>(default: white)</em></li>
+<li><b>number</b> <code>scale</code>: Size of each square in pixels <em>(default: 4)</em></li>
+<li><b>number</b> <code>border</code>: Empty space around the code, in squares <em>(default: 2)</em></li>
+<li><b>number</b> <code>error_correction</code>: One of the QR error correction constants <em>(default: qrcodegen_Ecc_MEDIUM)</em></li>
+<li><b>number</b> <code>min_version</code>, <code>max_version</code>: Allowed QR versions <em>(default: qrcodegen_VERSION_MIN to qrcodegen_VERSION_MAX)</em></li>
+<li><b>number</b> <code>mask</code>: One of the QR mask constants <em>(default: qrcodegen_Mask_AUTO)</em></li>
+<li><b>boolean</b> <code>boostEcl</code>: Use a higher error correction level if it fits in the same size <em>(default: true)</em> </li>
 </ul>
 </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The QR code image. Raises an error if the text is too long to fit. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local qr = image.qr({text = <span class="stringliteral">&quot;https://github.com/HarommelRabbid/LifeLua&quot;</span>, scale = 6})</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    qr:display(480 - qr:width() / 2, 272 - qr:height() / 2)</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga42cf19dc7dd7ec3ca617bf03dfa38d7b" name="ga42cf19dc7dd7ec3ca617bf03dfa38d7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga42cf19dc7dd7ec3ca617bf03dfa38d7b">&#9670;&#160;</a></span>image.qrscan()</h2>
+<a id="gae7171e0766650ec9fd72f50b2c497b56" name="gae7171e0766650ec9fd72f50b2c497b56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7171e0766650ec9fd72f50b2c497b56">&#9670;&#160;</a></span>image.qrscan()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -392,17 +687,30 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="memname">string image.qrscan </td>
           <td>(</td>
-          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>index</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Scans for QR codes in an image </p>
+<p>Looks for a QR code in an image and reads it</p>
+<p>Method form: <code>img:qrscan(index)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">index</td><td>Which QR code to read if there are several, starting at 0 <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The text inside the QR code, or <code>nil</code> if no readable QR code was found </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__camera.html#ga611e6bdffaebf954632f37d834817b0d">camera.output()</a> to get <a class="el" href="group__camera.html" title="Using the front and back cameras.">camera</a> frames as images, for scanning QR codes live </dd></dl>
 
 </div>
 </div>
-<a id="ga22457e38643ff5a4ef46c7cae3864fc5" name="ga22457e38643ff5a4ef46c7cae3864fc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga22457e38643ff5a4ef46c7cae3864fc5">&#9670;&#160;</a></span>image.rotatedisplay()</h2>
+<a id="gaaeb8f85e53383e16c883e24358cc021d" name="gaaeb8f85e53383e16c883e24358cc021d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaeb8f85e53383e16c883e24358cc021d">&#9670;&#160;</a></span>image.rotatedisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -425,7 +733,7 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>angle</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -434,79 +742,22 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a rotated image</p>
+<p>Method form: <code>img:rotatedisplay(x, y, angle, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>X position of the image's center </td></tr>
+    <tr><td class="paramname">y</td><td>Y position of the image's center </td></tr>
+    <tr><td class="paramname">angle</td><td>Rotation in radians </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga179261011f2f9f02e17359603000f281" name="ga179261011f2f9f02e17359603000f281"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga179261011f2f9f02e17359603000f281">&#9670;&#160;</a></span>image.rotatepartdisplay()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">nil image.rotatepartdisplay </td>
-          <td>(</td>
-          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_x</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_y</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_w</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>tex_h</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">color</td>          <td class="paramname"><span class="paramname"><em>tint</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Displays a part of a rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ga3ab330d341ed6f083d697d857a7ee141" name="ga3ab330d341ed6f083d697d857a7ee141"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3ab330d341ed6f083d697d857a7ee141">&#9670;&#160;</a></span>image.save()</h2>
+<a id="ga50c6daa847c902e63d1659d9d3cdf562" name="ga50c6daa847c902e63d1659d9d3cdf562"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga50c6daa847c902e63d1659d9d3cdf562">&#9670;&#160;</a></span>image.save()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -524,28 +775,40 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>quality</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Saves an image </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Saves an image to a file</p>
+<p>Method form: <code>img:save(path, type, quality)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">type</td><td>available types:<ul>
-<li><b>"png"</b></li>
-<li><b>"jpeg"/"jpg"</b></li>
-<li><b>"bmp"</b></li>
-<li><b>"tga"</b></li>
-<li><b>"hdr"</b> </li>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">path</td><td>Where to save it (e.g. <code>"ux0:data/picture.png"</code>) </td></tr>
+    <tr><td class="paramname">type</td><td>File type <em>(optional, default: <code>"png"</code>)</em>, one of:<ul>
+<li><code>"png"</code></li>
+<li><code>"jpg"</code> / <code>"jpeg"</code></li>
+<li><code>"bmp"</code></li>
+<li><code>"tga"</code></li>
+<li><code>"hdr"</code> </li>
 </ul>
 </td></tr>
+    <tr><td class="paramname">quality</td><td>JPEG quality from 1 to 100, only used for <code>"jpg"</code>/<code>"jpeg"</code> <em>(optional, default: 100)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local shot = image.screen()</div>
+<div class="line">shot:save(<span class="stringliteral">&quot;ux0:data/screenshot.jpg&quot;</span>, <span class="stringliteral">&quot;jpg&quot;</span>, 90)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga4de5f0cd213fc65a0ba00e456ff3b465" name="ga4de5f0cd213fc65a0ba00e456ff3b465"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4de5f0cd213fc65a0ba00e456ff3b465">&#9670;&#160;</a></span>image.scaledisplay()</h2>
+<a id="ga58ca2f225f50a50ab6cba36200bfa112" name="ga58ca2f225f50a50ab6cba36200bfa112"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga58ca2f225f50a50ab6cba36200bfa112">&#9670;&#160;</a></span>image.scaledisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -582,17 +845,23 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a scaled image</p>
+<p>Method form: <code>img:scaledisplay(x, y, scale_x, scale_y, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">scale_x</td><td>Horizontal scale, 1 is the original size, 2 is twice as wide, -1 flips the image </td></tr>
+    <tr><td class="paramname">scale_y</td><td>Vertical scale, 1 is the original size, 2 is twice as tall, -1 flips the image </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga810debec84c943796636393978d7764b" name="ga810debec84c943796636393978d7764b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga810debec84c943796636393978d7764b">&#9670;&#160;</a></span>image.scalepartdisplay()</h2>
+<a id="ga2b63dfb2e06c29159cfd1c8b0d7e2235" name="ga2b63dfb2e06c29159cfd1c8b0d7e2235"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2b63dfb2e06c29159cfd1c8b0d7e2235">&#9670;&#160;</a></span>image.scalepartdisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -649,17 +918,27 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a part of a scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a scaled part of an image</p>
+<p>Method form: <code>img:scalepartdisplay(x, y, tex_x, tex_y, tex_w, tex_h, scale_x, scale_y, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>Left position on the screen </td></tr>
+    <tr><td class="paramname">y</td><td>Top position on the screen </td></tr>
+    <tr><td class="paramname">tex_x</td><td>Left of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_y</td><td>Top of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_w</td><td>Width of the part </td></tr>
+    <tr><td class="paramname">tex_h</td><td>Height of the part </td></tr>
+    <tr><td class="paramname">scale_x</td><td>Horizontal scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">scale_y</td><td>Vertical scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="gacfe9d3315cec307d3a6f4b9bf4fdce66" name="gacfe9d3315cec307d3a6f4b9bf4fdce66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacfe9d3315cec307d3a6f4b9bf4fdce66">&#9670;&#160;</a></span>image.scalerotatedisplay()</h2>
+<a id="gafccbbef0308de8338be7abbddda98e1a" name="gafccbbef0308de8338be7abbddda98e1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafccbbef0308de8338be7abbddda98e1a">&#9670;&#160;</a></span>image.scalerotatedisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -692,7 +971,7 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>angle</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -701,17 +980,24 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a rotated &amp; scaled image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a scaled and rotated image</p>
+<p>Method form: <code>img:scalerotatedisplay(x, y, scale_x, scale_y, angle, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>X position of the image's center </td></tr>
+    <tr><td class="paramname">y</td><td>Y position of the image's center </td></tr>
+    <tr><td class="paramname">scale_x</td><td>Horizontal scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">scale_y</td><td>Vertical scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">angle</td><td>Rotation in radians </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga3a4066ca82b8a164d6ca62d910603fff" name="ga3a4066ca82b8a164d6ca62d910603fff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3a4066ca82b8a164d6ca62d910603fff">&#9670;&#160;</a></span>image.scalerotatepartdisplay()</h2>
+<a id="ga2e9c2332a90fe0be9201833431d0e1c8" name="ga2e9c2332a90fe0be9201833431d0e1c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2e9c2332a90fe0be9201833431d0e1c8">&#9670;&#160;</a></span>image.scalerotatepartdisplay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -764,7 +1050,7 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>radius</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>angle</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -773,17 +1059,28 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Displays a part of a scaled &amp; rotated image to the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a scaled and rotated part of an image</p>
+<p>Method form: <code>img:scalerotatepartdisplay(x, y, tex_x, tex_y, tex_w, tex_h, scale_x, scale_y, angle, tint)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">tint</td><td>optional </td></tr>
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+    <tr><td class="paramname">x</td><td>X position of the part's center on the screen </td></tr>
+    <tr><td class="paramname">y</td><td>Y position of the part's center on the screen </td></tr>
+    <tr><td class="paramname">tex_x</td><td>Left of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_y</td><td>Top of the part inside the image </td></tr>
+    <tr><td class="paramname">tex_w</td><td>Width of the part </td></tr>
+    <tr><td class="paramname">tex_h</td><td>Height of the part </td></tr>
+    <tr><td class="paramname">scale_x</td><td>Horizontal scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">scale_y</td><td>Vertical scale, 1 is the original size </td></tr>
+    <tr><td class="paramname">angle</td><td>Rotation in radians </td></tr>
+    <tr><td class="paramname">tint</td><td>Color multiplied with the image <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga7eb30bdfb68790884f1525fa0bbe172b" name="ga7eb30bdfb68790884f1525fa0bbe172b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7eb30bdfb68790884f1525fa0bbe172b">&#9670;&#160;</a></span>image.screen()</h2>
+<a id="ga86acbf603b39ec0d5bf34e40edd68dd5" name="ga86acbf603b39ec0d5bf34e40edd68dd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga86acbf603b39ec0d5bf34e40edd68dd5">&#9670;&#160;</a></span>image.screen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -791,17 +1088,17 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         <tr>
           <td class="memname">image image.screen </td>
           <td>(</td>
-          <td class="paramtype">image</td>          <td class="paramname"><span class="paramname"><em>image</em></span></td><td>)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets screen buffer as an image </p>
+<p>Takes a screenshot of the screen as an image (960 × 544) </p><dl class="section return"><dt>Returns</dt><dd>The new image </dd></dl>
 
 </div>
 </div>
-<a id="ga13827329a6a0eb5be13e4aabf91ffc58" name="ga13827329a6a0eb5be13e4aabf91ffc58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga13827329a6a0eb5be13e4aabf91ffc58">&#9670;&#160;</a></span>image.width()</h2>
+<a id="ga49a8d410d9124d9cee7ddfd95524e4fb" name="ga49a8d410d9124d9cee7ddfd95524e4fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga49a8d410d9124d9cee7ddfd95524e4fb">&#9670;&#160;</a></span>image.width()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -814,7 +1111,14 @@ SceGxmTextureFilter&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_GX
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets width of an image </p>
+<p>Gets the width of an image</p>
+<p>Method form: <code>img:width()</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>The image </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Width in pixels </dd></dl>
 
 </div>
 </div>

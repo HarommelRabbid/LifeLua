@@ -106,20 +106,23 @@ $(function(){initNavTree('group__math.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Lua math library extension.  
+<p>Extra math functions (extends Lua's math library)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>These are added to Lua's standard <code>math</code> library, so <code>math.floor()</code>, <code>math.random()</code>, etc. still work like in normal Lua (see the <a href="https://www.lua.org/manual/5.1/manual.html#5.6">Lua manual</a>). </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8852fad8497a14fd99d950f95bb7747c" id="r_ga8852fad8497a14fd99d950f95bb7747c"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8852fad8497a14fd99d950f95bb7747c">math.range</a> (number num, number start, number end)</td></tr>
-<tr class="separator:ga8852fad8497a14fd99d950f95bb7747c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacfc7955696b2b21cb49b32db3f2d64dc" id="r_gacfc7955696b2b21cb49b32db3f2d64dc"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacfc7955696b2b21cb49b32db3f2d64dc">math.inrange</a> (number num, number start, number end)</td></tr>
-<tr class="separator:gacfc7955696b2b21cb49b32db3f2d64dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83da6040a110ad9ee98e178ef8823371" id="r_ga83da6040a110ad9ee98e178ef8823371"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga83da6040a110ad9ee98e178ef8823371">math.range</a> (number num, number min, number max)</td></tr>
+<tr class="separator:ga83da6040a110ad9ee98e178ef8823371"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf0d3f6cd49ad82c73cdbc0c39be4ac59" id="r_gaf0d3f6cd49ad82c73cdbc0c39be4ac59"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf0d3f6cd49ad82c73cdbc0c39be4ac59">math.inrange</a> (number num, number min, number max)</td></tr>
+<tr class="separator:gaf0d3f6cd49ad82c73cdbc0c39be4ac59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93d9e9577a3249a0aac16790ac55e41e" id="r_ga93d9e9577a3249a0aac16790ac55e41e"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93d9e9577a3249a0aac16790ac55e41e">math.round</a> (number num, number decimals)</td></tr>
+<tr class="separator:ga93d9e9577a3249a0aac16790ac55e41e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gacfc7955696b2b21cb49b32db3f2d64dc" name="gacfc7955696b2b21cb49b32db3f2d64dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacfc7955696b2b21cb49b32db3f2d64dc">&#9670;&#160;</a></span>math.inrange()</h2>
+<a id="gaf0d3f6cd49ad82c73cdbc0c39be4ac59" name="gaf0d3f6cd49ad82c73cdbc0c39be4ac59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf0d3f6cd49ad82c73cdbc0c39be4ac59">&#9670;&#160;</a></span>math.inrange()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -132,21 +135,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>start</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>min</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>max</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if a number is in between 2 numbers </p>
+<p>Checks if a number is between a minimum and a maximum (both included) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num</td><td>The number </td></tr>
+    <tr><td class="paramname">min</td><td>The minimum </td></tr>
+    <tr><td class="paramname">max</td><td>The maximum </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>min &lt;= num &lt;= max</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- Is the touch inside a button?</div>
+<div class="line"><span class="keywordflow">if</span> math.inrange(touch.x, 100, 300) and math.inrange(touch.y, 50, 100) then ... end</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga8852fad8497a14fd99d950f95bb7747c" name="ga8852fad8497a14fd99d950f95bb7747c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8852fad8497a14fd99d950f95bb7747c">&#9670;&#160;</a></span>math.range()</h2>
+<a id="ga83da6040a110ad9ee98e178ef8823371" name="ga83da6040a110ad9ee98e178ef8823371"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga83da6040a110ad9ee98e178ef8823371">&#9670;&#160;</a></span>math.range()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,16 +173,58 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>start</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>min</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end</em></span>&#160;)</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>max</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Limits a number between 2 numbers </p>
+<p>Keeps a number between a minimum and a maximum (also known as "clamp") </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num</td><td>The number </td></tr>
+    <tr><td class="paramname">min</td><td>The minimum </td></tr>
+    <tr><td class="paramname">max</td><td>The maximum </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>min</code> if <code>num</code> is smaller than it, <code>max</code> if <code>num</code> is bigger than it, otherwise <code>num</code> </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">volume = math.range(volume + 10, 0, 100) -- never goes over 100</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga93d9e9577a3249a0aac16790ac55e41e" name="ga93d9e9577a3249a0aac16790ac55e41e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga93d9e9577a3249a0aac16790ac55e41e">&#9670;&#160;</a></span>math.round()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">number math.round </td>
+          <td>(</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>decimals</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Rounds a number to the nearest whole number, or to a number of decimal places </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num</td><td>The number </td></tr>
+    <tr><td class="paramname">decimals</td><td>How many decimal places to keep <em>(optional, default: 0)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The rounded number </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">print(math.round(2.5))        -- 3</div>
+<div class="line">print(math.round(3.14159, 2)) -- 3.14</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

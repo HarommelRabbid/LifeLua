@@ -106,23 +106,25 @@ $(function(){initNavTree('group__string.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Lua string library extension.  
+<p>Extra string functions (extends Lua's string library)  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>These are added to Lua's standard <code>string</code> library, so like the other string functions, they can be called as methods on any string: </p><div class="fragment"><div class="line">local file = <span class="stringliteral">&quot;Picture.PNG&quot;</span></div>
+<div class="line">print(file:endswith(<span class="stringliteral">&quot;.png&quot;</span>))        -- <span class="keyword">false</span></div>
+<div class="line">print(file:endswith(<span class="stringliteral">&quot;.png&quot;</span>, <span class="keyword">true</span>))  -- <span class="keyword">true</span> (ignoring upper/lower <span class="keywordflow">case</span>)</div>
+</div><!-- fragment --> <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga9def8093696c30816ee61f8129961c85" id="r_ga9def8093696c30816ee61f8129961c85"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9def8093696c30816ee61f8129961c85">string.startswith</a> (string string, string sub)</td></tr>
-<tr class="separator:ga9def8093696c30816ee61f8129961c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae6ff241fbce86ad29b787fd3302de972" id="r_gae6ff241fbce86ad29b787fd3302de972"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae6ff241fbce86ad29b787fd3302de972">string.endswith</a> (string string, string sub)</td></tr>
-<tr class="separator:gae6ff241fbce86ad29b787fd3302de972"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d4c654311746d249f758433309f8528" id="r_ga1d4c654311746d249f758433309f8528"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d4c654311746d249f758433309f8528">string.split</a> (string string, string delimiter)</td></tr>
-<tr class="separator:ga1d4c654311746d249f758433309f8528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga789dc533a34288ab99d54f45b9243524" id="r_ga789dc533a34288ab99d54f45b9243524"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga789dc533a34288ab99d54f45b9243524">string.startswith</a> (string str, string prefix, boolean ignorecase)</td></tr>
+<tr class="separator:ga789dc533a34288ab99d54f45b9243524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7243eadeb8e61423af4532d84057625e" id="r_ga7243eadeb8e61423af4532d84057625e"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7243eadeb8e61423af4532d84057625e">string.endswith</a> (string str, string suffix, boolean ignorecase)</td></tr>
+<tr class="separator:ga7243eadeb8e61423af4532d84057625e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga65f272aca55531cde1b5a9a3ab729071" id="r_ga65f272aca55531cde1b5a9a3ab729071"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga65f272aca55531cde1b5a9a3ab729071">string.split</a> (string str, string delimiters)</td></tr>
+<tr class="separator:ga65f272aca55531cde1b5a9a3ab729071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Method calling will work on all of the functions listed here, just like other Lua string functions (e. g. <code>(""):startswith</code> &amp; <code>(""):endswith</code>) </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gae6ff241fbce86ad29b787fd3302de972" name="gae6ff241fbce86ad29b787fd3302de972"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae6ff241fbce86ad29b787fd3302de972">&#9670;&#160;</a></span>string.endswith()</h2>
+<a id="ga7243eadeb8e61423af4532d84057625e" name="ga7243eadeb8e61423af4532d84057625e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7243eadeb8e61423af4532d84057625e">&#9670;&#160;</a></span>string.endswith()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -130,21 +132,35 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">boolean string.endswith </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span>, </td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>sub</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>suffix</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>ignorecase</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if string ends with a substring </p>
+<p>Checks if a string ends with another string</p>
+<p>Method form: <code>str:endswith(suffix, ignorecase)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to check </td></tr>
+    <tr><td class="paramname">suffix</td><td>The end to look for </td></tr>
+    <tr><td class="paramname">ignorecase</td><td><code>true</code> to ignore the difference between upper and lower case <em>(optional, default: false)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>str</code> ends with <code>suffix</code> </dd></dl>
 
 </div>
 </div>
-<a id="ga1d4c654311746d249f758433309f8528" name="ga1d4c654311746d249f758433309f8528"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1d4c654311746d249f758433309f8528">&#9670;&#160;</a></span>string.split()</h2>
+<a id="ga65f272aca55531cde1b5a9a3ab729071" name="ga65f272aca55531cde1b5a9a3ab729071"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga65f272aca55531cde1b5a9a3ab729071">&#9670;&#160;</a></span>string.split()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -152,26 +168,34 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">table string.split </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span>, </td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>delimiter</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>delimiters</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Splits a string with a delimiter </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Splits a string into a list of parts. Every character of <code>delimiters</code> counts as a separator, and empty parts are skipped.</p>
+<p>Method form: <code>str:split(delimiters)</code> </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">delimiter</td><td>optional, will default to a space if not defined </td></tr>
+    <tr><td class="paramname">str</td><td>The string to split </td></tr>
+    <tr><td class="paramname">delimiters</td><td>The separator character(s) <em>(optional, default: <code>" "</code>)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>A list of the parts </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local parts = (<span class="stringliteral">&quot;ux0:data/myapp/save.txt&quot;</span>):split(<span class="stringliteral">&quot;/&quot;</span>)</div>
+<div class="line">-- parts = {<span class="stringliteral">&quot;ux0:data&quot;</span>, <span class="stringliteral">&quot;myapp&quot;</span>, <span class="stringliteral">&quot;save.txt&quot;</span>}</div>
+<div class="line">local words = (<span class="stringliteral">&quot;one, two,three&quot;</span>):split(<span class="stringliteral">&quot;, &quot;</span>)</div>
+<div class="line">-- words = {<span class="stringliteral">&quot;one&quot;</span>, <span class="stringliteral">&quot;two&quot;</span>, <span class="stringliteral">&quot;three&quot;</span>}</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga9def8093696c30816ee61f8129961c85" name="ga9def8093696c30816ee61f8129961c85"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9def8093696c30816ee61f8129961c85">&#9670;&#160;</a></span>string.startswith()</h2>
+<a id="ga789dc533a34288ab99d54f45b9243524" name="ga789dc533a34288ab99d54f45b9243524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga789dc533a34288ab99d54f45b9243524">&#9670;&#160;</a></span>string.startswith()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,16 +203,30 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">boolean string.startswith </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>string</em></span>, </td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>sub</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">boolean</td>          <td class="paramname"><span class="paramname"><em>ignorecase</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks if string starts with a substring </p>
+<p>Checks if a string starts with another string</p>
+<p>Method form: <code>str:startswith(prefix, ignorecase)</code> </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to check </td></tr>
+    <tr><td class="paramname">prefix</td><td>The start to look for </td></tr>
+    <tr><td class="paramname">ignorecase</td><td><code>true</code> to ignore the difference between upper and lower case <em>(optional, default: false)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>str</code> starts with <code>prefix</code> </dd></dl>
 
 </div>
 </div>

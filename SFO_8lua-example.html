@@ -103,12 +103,15 @@ $(function(){initNavTree('SFO_8lua-example.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">SFO.lua</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line">sfo = io.readsfo(&quot;app0:sce_sys/param.sfo&quot;)</div>
+<p>Reads and shows the contents of LifeLua's param.sfo.</p>
+<div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local sfo = io.readsfo(&quot;app0:sce_sys/param.sfo&quot;) -- read it once, before the loop</div>
+<div class="line"> </div>
 <div class="line">while true do</div>
-<div class="line">    draw.text(10, 10, &quot;From \&quot;app0:sce_sys/param.sfo\&quot;: &quot;, white)</div>
+<div class="line">    draw.text(10, 10, &quot;From \&quot;app0:sce_sys/param.sfo\&quot;:&quot;, white)</div>
 <div class="line">    local y = 50</div>
-<div class="line">    for k, v in pairs(sfo) do</div>
-<div class="line">        draw.text(10, y, tostring(k)..&quot;: &quot;..v, white)</div>
+<div class="line">    for key, value in pairs(sfo) do</div>
+<div class="line">        draw.text(10, y, key..&quot;: &quot;..tostring(value), white)</div>
 <div class="line">        y = y + 20</div>
 <div class="line">    end</div>
 <div class="line">    draw.swapbuffers()</div>

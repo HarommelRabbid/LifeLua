@@ -106,53 +106,61 @@ $(function(){initNavTree('group__draw.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Drawing library.  
+<p>Drawing shapes and text on the screen (uses vita2d)  
 <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Everything drawn with this library (and with images, ImGui, etc.) is drawn to a hidden buffer first. Nothing appears on the screen until you call <a class="el" href="#ga08b62b5ac3bfb9bc879b98589cb2c368">draw.swapbuffers()</a>, which shows the finished frame and clears the buffer for the next one. Because of this, a LifeLua app is usually one big loop:</p>
+<div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">true</span> <span class="keywordflow">do</span></div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Hello World!&quot;</span>, white)</div>
+<div class="line">    draw.rect(10, 40, 100, 50, color.new(255, 0, 0))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+</div><!-- fragment --><p>The screen is 960 × 544 pixels. (0, 0) is the top-left corner, x grows to the right and y grows downwards.</p>
+<p>Every parameter written as <code>color</code> accepts either a <a class="el" href="group__color.html">color</a> value made with <a class="el" href="group__color.html#ga3535051106f64547ee3b5e50ebc289f4">color.new()</a> or a plain number in <code>0xAABBGGRR</code> order (see <a class="el" href="group__color.html#gafa84a40332bd023b59171a20f8386023">tocolor()</a>). </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga18669948830cc9b7f4f2c8320c258caf" id="r_ga18669948830cc9b7f4f2c8320c258caf"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga18669948830cc9b7f4f2c8320c258caf">draw.swapbuffers</a> (color color)</td></tr>
-<tr class="separator:ga18669948830cc9b7f4f2c8320c258caf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf521cfc477a3fa4c98ed5b10438a603e" id="r_gaf521cfc477a3fa4c98ed5b10438a603e"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf521cfc477a3fa4c98ed5b10438a603e">draw.text</a> (number x, number y, string text, color color, number size, font font)</td></tr>
-<tr class="separator:gaf521cfc477a3fa4c98ed5b10438a603e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa63faab337734380228371ab18603478" id="r_gaa63faab337734380228371ab18603478"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa63faab337734380228371ab18603478">draw.textwidth</a> (string text, number size, font font)</td></tr>
-<tr class="separator:gaa63faab337734380228371ab18603478"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga54d762db97215b915214d68949bd591d" id="r_ga54d762db97215b915214d68949bd591d"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga54d762db97215b915214d68949bd591d">draw.textheight</a> (string text, number size, font font)</td></tr>
-<tr class="separator:ga54d762db97215b915214d68949bd591d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga84ba9beb6f78b2748266a821ee21b58c" id="r_ga84ba9beb6f78b2748266a821ee21b58c"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga84ba9beb6f78b2748266a821ee21b58c">draw.rect</a> (number x, number y, number width, number height, color color, color outline)</td></tr>
-<tr class="separator:ga84ba9beb6f78b2748266a821ee21b58c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad4924525978b3011935786fb7c214089" id="r_gad4924525978b3011935786fb7c214089"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad4924525978b3011935786fb7c214089">draw.circle</a> (number x, number y, number radius, color color)</td></tr>
-<tr class="separator:gad4924525978b3011935786fb7c214089"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gada9481b124d24c6ae394ba1d7c180901" id="r_gada9481b124d24c6ae394ba1d7c180901"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gada9481b124d24c6ae394ba1d7c180901">draw.line</a> (number start_x, number start_y, number endx, number endy, color color)</td></tr>
-<tr class="separator:gada9481b124d24c6ae394ba1d7c180901"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac7d59e0042a7c213866b9dc4945dfa19" id="r_gac7d59e0042a7c213866b9dc4945dfa19"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac7d59e0042a7c213866b9dc4945dfa19">draw.gradientline</a> (number start_x, number start_y, number endx, number endy, color start_color, color end_color)</td></tr>
-<tr class="separator:gac7d59e0042a7c213866b9dc4945dfa19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga95e817706cb647eb5a14ffd3c9d3d8e7" id="r_ga95e817706cb647eb5a14ffd3c9d3d8e7"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga95e817706cb647eb5a14ffd3c9d3d8e7">draw.polyline</a> (number x1, number y1, color color1, number x2, number y2, color color2,...)</td></tr>
-<tr class="separator:ga95e817706cb647eb5a14ffd3c9d3d8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga36a0c1ea27ab8da394779a09eb3ea297" id="r_ga36a0c1ea27ab8da394779a09eb3ea297"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga36a0c1ea27ab8da394779a09eb3ea297">draw.pixel</a> (number x, number y, color color)</td></tr>
-<tr class="separator:ga36a0c1ea27ab8da394779a09eb3ea297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga93157a35e20bbe326436f845667044ab" id="r_ga93157a35e20bbe326436f845667044ab"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93157a35e20bbe326436f845667044ab">draw.gradientrect</a> (number x, number y, number width, number height, color top_left, color top_right, color bottom_left, color bottom_right)</td></tr>
-<tr class="separator:ga93157a35e20bbe326436f845667044ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3fabcce4f3cde790b8d8032aeda20446" id="r_ga3fabcce4f3cde790b8d8032aeda20446"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3fabcce4f3cde790b8d8032aeda20446">draw.vdoublegradientrect</a> (number x, number y, number width, number height, color top_left, color top_right, color center_left, color center_right, color bottom_left, color bottom_right)</td></tr>
-<tr class="separator:ga3fabcce4f3cde790b8d8032aeda20446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2c374c06fa66523749554442e1bfe5fc" id="r_ga2c374c06fa66523749554442e1bfe5fc"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2c374c06fa66523749554442e1bfe5fc">draw.hdoublegradientrect</a> (number x, number y, number width, number height, color left_top, color center_top, color right_top, color left_bottom, color center_bottom, color right_bottom)</td></tr>
-<tr class="separator:ga2c374c06fa66523749554442e1bfe5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae997a12d36c849100a07b24b80a0b42d" id="r_gae997a12d36c849100a07b24b80a0b42d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae997a12d36c849100a07b24b80a0b42d">draw.enableclip</a> (boolean enable)</td></tr>
-<tr class="separator:gae997a12d36c849100a07b24b80a0b42d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf9d76c628f13730bdc3ddc6207703332" id="r_gaf9d76c628f13730bdc3ddc6207703332"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf9d76c628f13730bdc3ddc6207703332">draw.radialcircle</a> (number x, number y, number radius, color center, color edge, number smoothness)</td></tr>
-<tr class="separator:gaf9d76c628f13730bdc3ddc6207703332"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadd7dea97db4db19d8c9cdf1a34ea8fac" id="r_gadd7dea97db4db19d8c9cdf1a34ea8fac"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadd7dea97db4db19d8c9cdf1a34ea8fac">draw.cliprect</a> (number x, number y, number width, number height)</td></tr>
-<tr class="separator:gadd7dea97db4db19d8c9cdf1a34ea8fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga169ecf176bb95d8df7e3683c070155d8" id="r_ga169ecf176bb95d8df7e3683c070155d8"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga169ecf176bb95d8df7e3683c070155d8">draw.clipcircle</a> (number x, number y, number radius)</td></tr>
-<tr class="separator:ga169ecf176bb95d8df7e3683c070155d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga69d915154f2a348f74c7b754a8311f46" id="r_ga69d915154f2a348f74c7b754a8311f46"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga69d915154f2a348f74c7b754a8311f46">draw.triangle</a> (number x, number y, number x2, number y2, number x3, number y3, color c1, color c2, color c3)</td></tr>
-<tr class="separator:ga69d915154f2a348f74c7b754a8311f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga08b62b5ac3bfb9bc879b98589cb2c368" id="r_ga08b62b5ac3bfb9bc879b98589cb2c368"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08b62b5ac3bfb9bc879b98589cb2c368">draw.swapbuffers</a> (color color)</td></tr>
+<tr class="separator:ga08b62b5ac3bfb9bc879b98589cb2c368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacaab7eae04248be20c8e3d8906f20d5b" id="r_gacaab7eae04248be20c8e3d8906f20d5b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacaab7eae04248be20c8e3d8906f20d5b">draw.text</a> (number x, number y, string text, color color, number size, font font)</td></tr>
+<tr class="separator:gacaab7eae04248be20c8e3d8906f20d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga137d1a960268db708420821ae2b2ed2f" id="r_ga137d1a960268db708420821ae2b2ed2f"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga137d1a960268db708420821ae2b2ed2f">draw.textwidth</a> (string text, number size, font font)</td></tr>
+<tr class="separator:ga137d1a960268db708420821ae2b2ed2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab940f11f8e13b3d7af4a9f224f4d9e4a" id="r_gab940f11f8e13b3d7af4a9f224f4d9e4a"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab940f11f8e13b3d7af4a9f224f4d9e4a">draw.textheight</a> (string text, number size, font font)</td></tr>
+<tr class="separator:gab940f11f8e13b3d7af4a9f224f4d9e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82e2b14bb6d59d25e58559a3d1331cc2" id="r_ga82e2b14bb6d59d25e58559a3d1331cc2"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga82e2b14bb6d59d25e58559a3d1331cc2">draw.rect</a> (number x, number y, number width, number height, color color, color outline)</td></tr>
+<tr class="separator:ga82e2b14bb6d59d25e58559a3d1331cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga818bc981751ad2362b273413e8592501" id="r_ga818bc981751ad2362b273413e8592501"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga818bc981751ad2362b273413e8592501">draw.circle</a> (number x, number y, number radius, color color)</td></tr>
+<tr class="separator:ga818bc981751ad2362b273413e8592501"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee7e2a54e9e8808cd4d3723df8220380" id="r_gaee7e2a54e9e8808cd4d3723df8220380"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaee7e2a54e9e8808cd4d3723df8220380">draw.radialcircle</a> (number x, number y, number radius, color center, color edge, number smoothness)</td></tr>
+<tr class="separator:gaee7e2a54e9e8808cd4d3723df8220380"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c01cde3fd1ffc71191fe9baac4d5327" id="r_ga0c01cde3fd1ffc71191fe9baac4d5327"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0c01cde3fd1ffc71191fe9baac4d5327">draw.triangle</a> (number x1, number y1, number x2, number y2, number x3, number y3, color c1, color c2, color c3)</td></tr>
+<tr class="separator:ga0c01cde3fd1ffc71191fe9baac4d5327"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8aecc4d7c3d4a66da2e1b8d8fec5f795" id="r_ga8aecc4d7c3d4a66da2e1b8d8fec5f795"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8aecc4d7c3d4a66da2e1b8d8fec5f795">draw.line</a> (number start_x, number start_y, number end_x, number end_y, color color)</td></tr>
+<tr class="separator:ga8aecc4d7c3d4a66da2e1b8d8fec5f795"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf600fa8084628c7d6c3d7acc07aae95b" id="r_gaf600fa8084628c7d6c3d7acc07aae95b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf600fa8084628c7d6c3d7acc07aae95b">draw.gradientline</a> (number start_x, number start_y, number end_x, number end_y, color start_color, color end_color)</td></tr>
+<tr class="separator:gaf600fa8084628c7d6c3d7acc07aae95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga85b7167d5dd303fabea503500c2cd07b" id="r_ga85b7167d5dd303fabea503500c2cd07b"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga85b7167d5dd303fabea503500c2cd07b">draw.polyline</a> (number x1, number y1, color color1, number x2, number y2, color color2,...)</td></tr>
+<tr class="separator:ga85b7167d5dd303fabea503500c2cd07b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5048e5ec2f328f88541bd14d8995b0d4" id="r_ga5048e5ec2f328f88541bd14d8995b0d4"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5048e5ec2f328f88541bd14d8995b0d4">draw.pixel</a> (number x, number y, color color)</td></tr>
+<tr class="separator:ga5048e5ec2f328f88541bd14d8995b0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacd9abc87b9a6b70da8976b7f115619dc" id="r_gacd9abc87b9a6b70da8976b7f115619dc"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacd9abc87b9a6b70da8976b7f115619dc">draw.gradientrect</a> (number x, number y, number width, number height, color top_left, color top_right, color bottom_left, color bottom_right)</td></tr>
+<tr class="separator:gacd9abc87b9a6b70da8976b7f115619dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaadfd5779d62068693b4f6001ec5f9ed7" id="r_gaadfd5779d62068693b4f6001ec5f9ed7"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaadfd5779d62068693b4f6001ec5f9ed7">draw.vdoublegradientrect</a> (number x, number y, number width, number height, color top_left, color top_right, color center_left, color center_right, color bottom_left, color bottom_right)</td></tr>
+<tr class="separator:gaadfd5779d62068693b4f6001ec5f9ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad7b0acbbd0de39f2f1dd74f8eae17dca" id="r_gad7b0acbbd0de39f2f1dd74f8eae17dca"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad7b0acbbd0de39f2f1dd74f8eae17dca">draw.hdoublegradientrect</a> (number x, number y, number width, number height, color left_top, color center_top, color right_top, color left_bottom, color center_bottom, color right_bottom)</td></tr>
+<tr class="separator:gad7b0acbbd0de39f2f1dd74f8eae17dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52a228d71195efa0f00744ad1902d545" id="r_ga52a228d71195efa0f00744ad1902d545"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga52a228d71195efa0f00744ad1902d545">draw.enableclip</a> (boolean enable)</td></tr>
+<tr class="separator:ga52a228d71195efa0f00744ad1902d545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa96071a799a6a24a592bc5721fd1c62d" id="r_gaa96071a799a6a24a592bc5721fd1c62d"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa96071a799a6a24a592bc5721fd1c62d">draw.cliprect</a> (number x1, number y1, number x2, number y2)</td></tr>
+<tr class="separator:gaa96071a799a6a24a592bc5721fd1c62d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae3f0cb482923a29dd66670a80d42050a" id="r_gae3f0cb482923a29dd66670a80d42050a"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae3f0cb482923a29dd66670a80d42050a">draw.clipcircle</a> (number x, number y, number radius)</td></tr>
+<tr class="separator:gae3f0cb482923a29dd66670a80d42050a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Uses vita2d </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gad4924525978b3011935786fb7c214089" name="gad4924525978b3011935786fb7c214089"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad4924525978b3011935786fb7c214089">&#9670;&#160;</a></span>draw.circle()</h2>
+<a id="ga818bc981751ad2362b273413e8592501" name="ga818bc981751ad2362b273413e8592501"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga818bc981751ad2362b273413e8592501">&#9670;&#160;</a></span>draw.circle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,12 +187,20 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a circle on the screen </p>
+<p>Draws a filled circle </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>X position of the center </td></tr>
+    <tr><td class="paramname">y</td><td>Y position of the center </td></tr>
+    <tr><td class="paramname">radius</td><td>Radius in pixels </td></tr>
+    <tr><td class="paramname">color</td><td>Fill color </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga169ecf176bb95d8df7e3683c070155d8" name="ga169ecf176bb95d8df7e3683c070155d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga169ecf176bb95d8df7e3683c070155d8">&#9670;&#160;</a></span>draw.clipcircle()</h2>
+<a id="gae3f0cb482923a29dd66670a80d42050a" name="gae3f0cb482923a29dd66670a80d42050a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae3f0cb482923a29dd66670a80d42050a">&#9670;&#160;</a></span>draw.clipcircle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,12 +222,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Circle scrissor, same behavior as cliprect, but as a circle </p>
+<p>Sets a circular clipping area. Works like <a class="el" href="#gaa96071a799a6a24a592bc5721fd1c62d">draw.cliprect()</a>, but the visible area is a circle. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>X of the circle's center </td></tr>
+    <tr><td class="paramname">y</td><td>Y of the circle's center </td></tr>
+    <tr><td class="paramname">radius</td><td>Radius of the circle </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gadd7dea97db4db19d8c9cdf1a34ea8fac" name="gadd7dea97db4db19d8c9cdf1a34ea8fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadd7dea97db4db19d8c9cdf1a34ea8fac">&#9670;&#160;</a></span>draw.cliprect()</h2>
+<a id="gaa96071a799a6a24a592bc5721fd1c62d" name="gaa96071a799a6a24a592bc5721fd1c62d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa96071a799a6a24a592bc5721fd1c62d">&#9670;&#160;</a></span>draw.cliprect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,35 +242,44 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil draw.cliprect </td>
           <td>(</td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>width</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x2</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>height</em></span>&#160;)</td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y2</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Rectangle scrissor, useful for clipping text, &amp; masking stuff </p><dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.enableclip(<span class="keyword">true</span>)</div>
-<div class="line">draw.clip(0, 0, 25, 10)</div>
-<div class="line">draw.text(0, 0 <span class="stringliteral">&quot;This is some text&quot;</span>, ...)</div>
-<div class="line">draw.enableclip(<span class="keyword">false</span>)</div>
+<p>Sets a rectangular clipping area, useful for cutting off long text or making scrollable areas. Only has an effect while clipping is turned on with <a class="el" href="#ga52a228d71195efa0f00744ad1902d545">draw.enableclip()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x1</td><td>Left edge of the area </td></tr>
+    <tr><td class="paramname">y1</td><td>Top edge of the area </td></tr>
+    <tr><td class="paramname">x2</td><td>Right edge of the area (this is a position, not a width) </td></tr>
+    <tr><td class="paramname">y2</td><td>Bottom edge of the area (this is a position, not a height) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.enableclip(<span class="keyword">true</span>)</div>
+<div class="line">draw.cliprect(10, 10, 110, 30) -- a 100 × 20 area at (10, 10)</div>
+<div class="line">draw.text(10, 10, <span class="stringliteral">&quot;This long text gets cut off at x = 110&quot;</span>, white)</div>
+<div class="line">draw.enableclip(false)</div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gae997a12d36c849100a07b24b80a0b42d" name="gae997a12d36c849100a07b24b80a0b42d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae997a12d36c849100a07b24b80a0b42d">&#9670;&#160;</a></span>draw.enableclip()</h2>
+<a id="ga52a228d71195efa0f00744ad1902d545" name="ga52a228d71195efa0f00744ad1902d545"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga52a228d71195efa0f00744ad1902d545">&#9670;&#160;</a></span>draw.enableclip()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -260,12 +292,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Enables or disables clipping/masking </p>
+<p>Turns clipping on or off. While clipping is on, only the area set with <a class="el" href="#gaa96071a799a6a24a592bc5721fd1c62d">draw.cliprect()</a> or <a class="el" href="#gae3f0cb482923a29dd66670a80d42050a">draw.clipcircle()</a> can be drawn on; everything outside of it is cut off. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td><code>true</code> to turn clipping on, <code>false</code> to turn it off </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gac7d59e0042a7c213866b9dc4945dfa19" name="gac7d59e0042a7c213866b9dc4945dfa19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac7d59e0042a7c213866b9dc4945dfa19">&#9670;&#160;</a></span>draw.gradientline()</h2>
+<a id="gaf600fa8084628c7d6c3d7acc07aae95b" name="gaf600fa8084628c7d6c3d7acc07aae95b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf600fa8084628c7d6c3d7acc07aae95b">&#9670;&#160;</a></span>draw.gradientline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,12 +320,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>endx</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end_x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>endy</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end_y</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -302,12 +339,22 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a gradient line on the screen </p>
+<p>Draws a 1 pixel wide line that fades from one color to another </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start_x</td><td>X of the start point </td></tr>
+    <tr><td class="paramname">start_y</td><td>Y of the start point </td></tr>
+    <tr><td class="paramname">end_x</td><td>X of the end point </td></tr>
+    <tr><td class="paramname">end_y</td><td>Y of the end point </td></tr>
+    <tr><td class="paramname">start_color</td><td>Color at the start point </td></tr>
+    <tr><td class="paramname">end_color</td><td>Color at the end point </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga93157a35e20bbe326436f845667044ab" name="ga93157a35e20bbe326436f845667044ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga93157a35e20bbe326436f845667044ab">&#9670;&#160;</a></span>draw.gradientrect()</h2>
+<a id="gacd9abc87b9a6b70da8976b7f115619dc" name="gacd9abc87b9a6b70da8976b7f115619dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacd9abc87b9a6b70da8976b7f115619dc">&#9670;&#160;</a></span>draw.gradientrect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,12 +401,27 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a gradient rectangle on the screen </p>
+<p>Draws a rectangle with a different color in each corner, shaded between them </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">top_left</td><td>Top-left color </td></tr>
+    <tr><td class="paramname">top_right</td><td>Top-right color </td></tr>
+    <tr><td class="paramname">bottom_left</td><td>Bottom-left color </td></tr>
+    <tr><td class="paramname">bottom_right</td><td>Bottom-right color </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- Horizontal gradient from red to blue</div>
+<div class="line">draw.gradientrect(0, 0, 960, 60, red, blue, red, blue)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga2c374c06fa66523749554442e1bfe5fc" name="ga2c374c06fa66523749554442e1bfe5fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2c374c06fa66523749554442e1bfe5fc">&#9670;&#160;</a></span>draw.hdoublegradientrect()</h2>
+<a id="gad7b0acbbd0de39f2f1dd74f8eae17dca" name="gad7b0acbbd0de39f2f1dd74f8eae17dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad7b0acbbd0de39f2f1dd74f8eae17dca">&#9670;&#160;</a></span>draw.hdoublegradientrect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -416,12 +478,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a double horizontal gradient rectangle on the screen </p>
+<p>Draws a rectangle shaded in two halves side by side: the left half goes from the left colors to the center colors, the right half from the center colors to the right colors </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">left_top</td><td>Top-left color </td></tr>
+    <tr><td class="paramname">center_top</td><td>Top-middle color </td></tr>
+    <tr><td class="paramname">right_top</td><td>Top-right color </td></tr>
+    <tr><td class="paramname">left_bottom</td><td>Bottom-left color </td></tr>
+    <tr><td class="paramname">center_bottom</td><td>Bottom-middle color </td></tr>
+    <tr><td class="paramname">right_bottom</td><td>Bottom-right color </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="gada9481b124d24c6ae394ba1d7c180901" name="gada9481b124d24c6ae394ba1d7c180901"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gada9481b124d24c6ae394ba1d7c180901">&#9670;&#160;</a></span>draw.line()</h2>
+<a id="ga8aecc4d7c3d4a66da2e1b8d8fec5f795" name="ga8aecc4d7c3d4a66da2e1b8d8fec5f795"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8aecc4d7c3d4a66da2e1b8d8fec5f795">&#9670;&#160;</a></span>draw.line()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -439,12 +515,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>endx</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end_x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>endy</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>end_y</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -453,12 +529,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a line on the screen </p>
+<p>Draws a 1 pixel wide line </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start_x</td><td>X of the start point </td></tr>
+    <tr><td class="paramname">start_y</td><td>Y of the start point </td></tr>
+    <tr><td class="paramname">end_x</td><td>X of the end point </td></tr>
+    <tr><td class="paramname">end_y</td><td>Y of the end point </td></tr>
+    <tr><td class="paramname">color</td><td>Line color </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga36a0c1ea27ab8da394779a09eb3ea297" name="ga36a0c1ea27ab8da394779a09eb3ea297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga36a0c1ea27ab8da394779a09eb3ea297">&#9670;&#160;</a></span>draw.pixel()</h2>
+<a id="ga5048e5ec2f328f88541bd14d8995b0d4" name="ga5048e5ec2f328f88541bd14d8995b0d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5048e5ec2f328f88541bd14d8995b0d4">&#9670;&#160;</a></span>draw.pixel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -480,12 +565,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a pixel on the screen </p>
+<p>Draws a single pixel </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>X position </td></tr>
+    <tr><td class="paramname">y</td><td>Y position </td></tr>
+    <tr><td class="paramname">color</td><td>Pixel color </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga95e817706cb647eb5a14ffd3c9d3d8e7" name="ga95e817706cb647eb5a14ffd3c9d3d8e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga95e817706cb647eb5a14ffd3c9d3d8e7">&#9670;&#160;</a></span>draw.polyline()</h2>
+<a id="ga85b7167d5dd303fabea503500c2cd07b" name="ga85b7167d5dd303fabea503500c2cd07b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga85b7167d5dd303fabea503500c2cd07b">&#9670;&#160;</a></span>draw.polyline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -527,14 +619,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a polyline on the screen Can have as many points as you want, but two points are required </p><dl class="section note"><dt>Note</dt><dd>A point must have these parameters: x, y &amp; color </dd></dl>
-<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">draw.polyline(10, 10, white, 50, 10, blue, 30, 70, green)</div>
+<p>Draws lines connecting several points, one after another. Each point is given as 3 values: <code>x, y, color</code>. At least 2 points are required. Each line fades between the colors of the 2 points it connects. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x1</td><td>X of the 1st point </td></tr>
+    <tr><td class="paramname">y1</td><td>Y of the 1st point </td></tr>
+    <tr><td class="paramname">color1</td><td>Color of the 1st point </td></tr>
+    <tr><td class="paramname">x2</td><td>X of the 2nd point </td></tr>
+    <tr><td class="paramname">y2</td><td>Y of the 2nd point </td></tr>
+    <tr><td class="paramname">color2</td><td>Color of the 2nd point </td></tr>
+    <tr><td class="paramname">...</td><td>More points, 3 values each </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- A white-blue-green zigzag</div>
+<div class="line">draw.polyline(10, 10, white, 50, 10, blue, 30, 70, green)</div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="gaf9d76c628f13730bdc3ddc6207703332" name="gaf9d76c628f13730bdc3ddc6207703332"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf9d76c628f13730bdc3ddc6207703332">&#9670;&#160;</a></span>draw.radialcircle()</h2>
+<a id="gaee7e2a54e9e8808cd4d3723df8220380" name="gaee7e2a54e9e8808cd4d3723df8220380"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaee7e2a54e9e8808cd4d3723df8220380">&#9670;&#160;</a></span>draw.radialcircle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -571,17 +675,22 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a radial (gradient) circle </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a filled circle with a gradient from its center to its edge </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">smoothness</td><td>smoothness of the radial circle, higher = smoother, optional, default is 64, maximum 100 </td></tr>
+    <tr><td class="paramname">x</td><td>X position of the center </td></tr>
+    <tr><td class="paramname">y</td><td>Y position of the center </td></tr>
+    <tr><td class="paramname">radius</td><td>Radius in pixels </td></tr>
+    <tr><td class="paramname">center</td><td>Color in the center </td></tr>
+    <tr><td class="paramname">edge</td><td>Color at the edge </td></tr>
+    <tr><td class="paramname">smoothness</td><td>Number of segments used for the edge, higher is smoother <em>(optional, default: 64, minimum: 3)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga84ba9beb6f78b2748266a821ee21b58c" name="ga84ba9beb6f78b2748266a821ee21b58c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga84ba9beb6f78b2748266a821ee21b58c">&#9670;&#160;</a></span>draw.rect()</h2>
+<a id="ga82e2b14bb6d59d25e58559a3d1331cc2" name="ga82e2b14bb6d59d25e58559a3d1331cc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga82e2b14bb6d59d25e58559a3d1331cc2">&#9670;&#160;</a></span>draw.rect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -618,12 +727,22 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a rectangle on the screen </p>
+<p>Draws a filled rectangle </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">color</td><td>Fill color </td></tr>
+    <tr><td class="paramname">outline</td><td>Color of a 1 pixel border around the rectangle <em>(optional, no border if omitted)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga18669948830cc9b7f4f2c8320c258caf" name="ga18669948830cc9b7f4f2c8320c258caf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga18669948830cc9b7f4f2c8320c258caf">&#9670;&#160;</a></span>draw.swapbuffers()</h2>
+<a id="ga08b62b5ac3bfb9bc879b98589cb2c368" name="ga08b62b5ac3bfb9bc879b98589cb2c368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga08b62b5ac3bfb9bc879b98589cb2c368">&#9670;&#160;</a></span>draw.swapbuffers()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -636,17 +755,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Swaps the buffers. Needed for the drawing functions above it to show. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Shows everything that was drawn since the last call on the screen, then clears the drawing buffer. Call this once at the end of every frame of your main loop. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">color</td><td>Optional color, default will be black </td></tr>
+    <tr><td class="paramname">color</td><td>The color the next frame starts with <em>(optional, default: black)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="gaf521cfc477a3fa4c98ed5b10438a603e" name="gaf521cfc477a3fa4c98ed5b10438a603e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf521cfc477a3fa4c98ed5b10438a603e">&#9670;&#160;</a></span>draw.text()</h2>
+<a id="gacaab7eae04248be20c8e3d8906f20d5b" name="gacaab7eae04248be20c8e3d8906f20d5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacaab7eae04248be20c8e3d8906f20d5b">&#9670;&#160;</a></span>draw.text()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -683,17 +802,37 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws text on the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws text on the screen</p>
+<p>After the 4 required parameters, you can choose the font and the size in any of these ways:</p><ul>
+<li><code>draw.text(x, y, text, color)</code>: system font (PGF), size 1</li>
+<li><code>draw.text(x, y, text, color, size)</code>: system font (PGF) at <code>size</code></li>
+<li><code>draw.text(x, y, text, color, font)</code> or <code>draw.text(x, y, text, color, font, size)</code>: a font loaded with <a class="el" href="group__font.html#gae97ac253a30b098e6a2a37f5f2b885e9">font.load()</a></li>
+<li><code>draw.text(x, y, text, color, size, font)</code>: same as above, with the size first</li>
+<li><code>draw.text(x, y, text, color, true)</code> / <code>draw.text(x, y, text, color, true, size)</code>: system PVF font (<code>false</code> = system PGF font)</li>
+<li><code>draw.text(x, y, text, color, size, true)</code>: same as above, with the size first</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">size</td><td>The size argument can be also a font, if so, then the size will be the next argument </td></tr>
+    <tr><td class="paramname">x</td><td>Left position of the text </td></tr>
+    <tr><td class="paramname">y</td><td>Top position of the text </td></tr>
+    <tr><td class="paramname">text</td><td>The text to draw </td></tr>
+    <tr><td class="paramname">color</td><td>Color of the text </td></tr>
+    <tr><td class="paramname">size</td><td>Text scale, 1 is the normal size <em>(optional, default: 1)</em> </td></tr>
+    <tr><td class="paramname">font</td><td>A font from <a class="el" href="group__font.html#gae97ac253a30b098e6a2a37f5f2b885e9">font.load()</a>, or a boolean to pick the system PVF (<code>true</code>) or PGF (<code>false</code>) font <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">local myfont = font.load(<span class="stringliteral">&quot;app0:font.ttf&quot;</span>)</div>
+<div class="line">draw.text(10, 10, <span class="stringliteral">&quot;System font&quot;</span>, white)</div>
+<div class="line">draw.text(10, 40, <span class="stringliteral">&quot;Twice as big&quot;</span>, white, 2)</div>
+<div class="line">draw.text(10, 100, <span class="stringliteral">&quot;Custom font&quot;</span>, white, myfont)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga54d762db97215b915214d68949bd591d" name="ga54d762db97215b915214d68949bd591d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga54d762db97215b915214d68949bd591d">&#9670;&#160;</a></span>draw.textheight()</h2>
+<a id="gab940f11f8e13b3d7af4a9f224f4d9e4a" name="gab940f11f8e13b3d7af4a9f224f4d9e4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab940f11f8e13b3d7af4a9f224f4d9e4a">&#9670;&#160;</a></span>draw.textheight()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -715,17 +854,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the text height as displayed on the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets how tall a text will be when drawn with <a class="el" href="#gacaab7eae04248be20c8e3d8906f20d5b">draw.text()</a></p>
+<p>Accepts the same size/font combinations as <a class="el" href="#ga137d1a960268db708420821ae2b2ed2f">draw.textwidth()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">size</td><td>The size argument can be also a font, if so, then the size will be the next argument </td></tr>
+    <tr><td class="paramname">text</td><td>The text to measure </td></tr>
+    <tr><td class="paramname">size</td><td>Text scale <em>(optional, default: 1)</em> </td></tr>
+    <tr><td class="paramname">font</td><td>A font from <a class="el" href="group__font.html#gae97ac253a30b098e6a2a37f5f2b885e9">font.load()</a>, or <code>true</code>/<code>false</code> for the system PVF/PGF font <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The height in pixels </dd></dl>
 
 </div>
 </div>
-<a id="gaa63faab337734380228371ab18603478" name="gaa63faab337734380228371ab18603478"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa63faab337734380228371ab18603478">&#9670;&#160;</a></span>draw.textwidth()</h2>
+<a id="ga137d1a960268db708420821ae2b2ed2f" name="ga137d1a960268db708420821ae2b2ed2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga137d1a960268db708420821ae2b2ed2f">&#9670;&#160;</a></span>draw.textwidth()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -747,17 +890,25 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the text width as displayed on the screen </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Gets how wide a text will be when drawn with <a class="el" href="#gacaab7eae04248be20c8e3d8906f20d5b">draw.text()</a></p>
+<p>Accepts the same size/font combinations as <a class="el" href="#gacaab7eae04248be20c8e3d8906f20d5b">draw.text()</a>, e.g. <code>draw.textwidth(text)</code>, <code>draw.textwidth(text, size)</code>, <code>draw.textwidth(text, font)</code>, <code>draw.textwidth(text, font, size)</code>, <code>draw.textwidth(text, true)</code>, etc. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">size</td><td>The size argument can be also a font, if so, then the size will be the next argument </td></tr>
+    <tr><td class="paramname">text</td><td>The text to measure </td></tr>
+    <tr><td class="paramname">size</td><td>Text scale <em>(optional, default: 1)</em> </td></tr>
+    <tr><td class="paramname">font</td><td>A font from <a class="el" href="group__font.html#gae97ac253a30b098e6a2a37f5f2b885e9">font.load()</a>, or <code>true</code>/<code>false</code> for the system PVF/PGF font <em>(optional)</em> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The width in pixels </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">-- Center a text horizontally</div>
+<div class="line">local text = <span class="stringliteral">&quot;Centered!&quot;</span></div>
+<div class="line">draw.text(480 - draw.textwidth(text) / 2, 10, text, color.new(255, 255, 255))</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ga69d915154f2a348f74c7b754a8311f46" name="ga69d915154f2a348f74c7b754a8311f46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga69d915154f2a348f74c7b754a8311f46">&#9670;&#160;</a></span>draw.triangle()</h2>
+<a id="ga0c01cde3fd1ffc71191fe9baac4d5327" name="ga0c01cde3fd1ffc71191fe9baac4d5327"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0c01cde3fd1ffc71191fe9baac4d5327">&#9670;&#160;</a></span>draw.triangle()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -765,12 +916,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">nil draw.triangle </td>
           <td>(</td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>x1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>y1</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -809,18 +960,25 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a triangle. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a filled triangle. If you give 3 colors, each corner gets its own color and the triangle is shaded between them. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c2</td><td>optional </td></tr>
-    <tr><td class="paramname">c3</td><td>optional </td></tr>
+    <tr><td class="paramname">x1</td><td>X of the 1st corner </td></tr>
+    <tr><td class="paramname">y1</td><td>Y of the 1st corner </td></tr>
+    <tr><td class="paramname">x2</td><td>X of the 2nd corner </td></tr>
+    <tr><td class="paramname">y2</td><td>Y of the 2nd corner </td></tr>
+    <tr><td class="paramname">x3</td><td>X of the 3rd corner </td></tr>
+    <tr><td class="paramname">y3</td><td>Y of the 3rd corner </td></tr>
+    <tr><td class="paramname">c1</td><td>Color of the 1st corner (or of the whole triangle) </td></tr>
+    <tr><td class="paramname">c2</td><td>Color of the 2nd corner <em>(optional, default: c1)</em> </td></tr>
+    <tr><td class="paramname">c3</td><td>Color of the 3rd corner <em>(optional, default: c1)</em> </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga3fabcce4f3cde790b8d8032aeda20446" name="ga3fabcce4f3cde790b8d8032aeda20446"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3fabcce4f3cde790b8d8032aeda20446">&#9670;&#160;</a></span>draw.vdoublegradientrect()</h2>
+<a id="gaadfd5779d62068693b4f6001ec5f9ed7" name="gaadfd5779d62068693b4f6001ec5f9ed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaadfd5779d62068693b4f6001ec5f9ed7">&#9670;&#160;</a></span>draw.vdoublegradientrect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -877,7 +1035,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a double vertical gradient rectangle on the screen </p>
+<p>Draws a rectangle shaded in two halves stacked vertically: the top half goes from the top colors to the center colors, the bottom half from the center colors to the bottom colors </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>Left position </td></tr>
+    <tr><td class="paramname">y</td><td>Top position </td></tr>
+    <tr><td class="paramname">width</td><td>Width in pixels </td></tr>
+    <tr><td class="paramname">height</td><td>Height in pixels </td></tr>
+    <tr><td class="paramname">top_left</td><td>Top-left color </td></tr>
+    <tr><td class="paramname">top_right</td><td>Top-right color </td></tr>
+    <tr><td class="paramname">center_left</td><td>Middle-left color </td></tr>
+    <tr><td class="paramname">center_right</td><td>Middle-right color </td></tr>
+    <tr><td class="paramname">bottom_left</td><td>Bottom-left color </td></tr>
+    <tr><td class="paramname">bottom_right</td><td>Bottom-right color </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
