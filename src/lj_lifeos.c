@@ -15,6 +15,10 @@
 #include <stdbool.h>
 #include <zlib.h>
 
+// Newer vitasdk ships its own (incomplete) photo import/review dialog headers;
+// skip them so the full definitions below are used instead.
+#define _PSP2_COMMON_DIALOG_PHOTO_IMPORT_DIALOG_H
+#define _PSP2_COMMON_DIALOG_PHOTO_REVIEW_DIALOG_H
 #include <vitasdk.h>
 #include <taihen.h>
 #include <vita2d.h>
@@ -429,7 +433,7 @@ static void loadPromoter() {
   	buf[2] = -1;
   	buf[3] = -1;
 
-  	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, buf);
+  	sceSysmoduleLoadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, sizeof(argp), argp, (const SceSysmoduleOpt *)buf);
 	sceSysmoduleLoadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
 	scePromoterUtilityInit();
 }
@@ -438,7 +442,7 @@ static void unloadPromoter() {
 	scePromoterUtilityExit();
 	sceSysmoduleUnloadModuleInternal(SCE_SYSMODULE_INTERNAL_PROMOTER_UTIL);
   	uint32_t buf = 0;
-  	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, &buf);
+  	sceSysmoduleUnloadModuleInternalWithArg(SCE_SYSMODULE_INTERNAL_PAF, 0, NULL, (const SceSysmoduleOpt *)&buf);
 }
 
 static int lua_delay(lua_State *L) {

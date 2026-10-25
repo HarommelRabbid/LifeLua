@@ -40,6 +40,7 @@ set(VITA_MAKE_FSELF_FLAGS "${VITA_MAKE_FSELF_FLAGS} -a 0x2800000000000001")
 # Add any additional include paths here
 include_directories(
   ${VITASDK}/arm-vita-eabi/include/luajit-2.1
+  ${VITASDK}/arm-vita-eabi/include/opus
 )
 
 # Add any additional library paths here
@@ -137,6 +138,7 @@ target_link_libraries(${PROJECT_NAME}
     ftpvita
     taihen_stub
     archive
+    zstd
     png
     jpeg
     imagequant
