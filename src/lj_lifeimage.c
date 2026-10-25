@@ -349,7 +349,7 @@ static int lua_imagescalerotatedraw(lua_State *L){
 	if(argc <= 5){
 		vita2d_draw_texture_scale_rotate(image->tex, x, y, scalex, scaley, radius);
 	}else{
-		color = lua_tocolor(L, 5);
+		color = lua_tocolor(L, 7);
 		vita2d_draw_texture_tint_scale_rotate(image->tex, x, y, scalex, scaley, radius, color->color);
 	}
 	return 0;
