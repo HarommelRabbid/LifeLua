@@ -118,13 +118,13 @@ static int lua_newimage(lua_State *L) {
 	unsigned int w = luaL_checkinteger(L, 1);
 	unsigned int h = luaL_checkinteger(L, 2);
 
-	vita2d_texture_set_alloc_memblock_type(SCE_KERNEL_MEMBLOCK_TYPE_USER_CDRAM_RW);
-
-	image->tex = vita2d_create_empty_texture_rendertarget(w, h, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
-	if(lua_gettop(L) >= 3){
+	image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
+	if(!lua_isnone(L, 3)){
 		Color *color = lua_tocolor(L, 3);
-		sceClibMemset(vita2d_texture_get_datap(image->tex), color->color, vita2d_texture_get_stride(image->tex) * h);
-	}else sceClibMemset(vita2d_texture_get_datap(image->tex), 0xFFFFFFFF, vita2d_texture_get_stride(image->tex) * h);
+        uint32_t *datap = vita2d_texture_get_datap(image->tex);
+        for(uint32_t i = 0; i < (vita2d_texture_get_stride(image->tex) / 4) * h; i++)
+            datap[i] = color->col;
+    }
 
     luaL_getmetatable(L, "image");
     lua_setmetatable(L, -2);
@@ -133,13 +133,10 @@ static int lua_newimage(lua_State *L) {
 
 static int lua_screenimage(lua_State *L) {
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
-	// Get framebuffer (ABGR)
     uint32_t *fb = (uint32_t *)vita2d_get_current_fb();
 
-    // Create a texture (RGBA8)
-	image->tex = vita2d_create_empty_texture_rendertarget(960, 544, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
+	image->tex = vita2d_create_empty_texture_format(960, 544, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
 
-    // Copy framebuffer into texture
     sceClibMemcpy(vita2d_texture_get_datap(image->tex), fb, 960 * 544 * sizeof(uint32_t));
 
     luaL_getmetatable(L, "image");
@@ -562,6 +559,26 @@ static int lua_invert(lua_State *L) {
     return 0;
 }
 
+static int image_pixel(lua_State *L){
+    Image *img = (Image *)luaL_checkudata(L, 1, "image");
+    uint32_t *datap = vita2d_texture_get_datap(img->tex);
+    int stride = vita2d_texture_get_stride(img->tex) / 4;
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    if(lua_isnone(L, 4)){
+        uint32_t color = datap[y * stride + x];
+        Color *col = (Color *)lua_newuserdata(L, sizeof(Color *));
+        col->color = color;
+        luaL_getmetatable(L, "color");
+        lua_setmetatable(L, -2);
+        return 1;
+    }else{
+        Color *col = luaL_tocolor(L, 4);
+        datap[y * stride + x] = col->color;
+    }
+    return 0;
+}
+
 static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
@@ -583,6 +600,7 @@ static const luaL_Reg image_lib[] = {
 	{"qrscan", lua_qrscan},
 	{"grayscale", lua_grayscale},
 	{"invert", lua_invert},
+    {"pixel", image_pixel},
     {NULL, NULL}
 };
 
@@ -603,6 +621,7 @@ static const luaL_Reg image_methods[] = {
 	{"qrscan", lua_qrscan},
 	{"grayscale", lua_grayscale},
 	{"invert", lua_invert},
+    {"pixel", image_pixel},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
