@@ -4,14 +4,13 @@ LifeLua is a Lua interpreter for the PS Vita which combines simplicity with adva
 <img src="bg0.png"></img>
 
 ## Features
-* Timers with pausing and stopping
 * Camera support with effects and filters
 * JSON, TOML and SQLite3 support
 * Image support including PSD, TGA & HDR support
 * Audio with support for MP3, WAV, OGG, OPUS, FLAC and tracker module formats (.MOD, .IT & more)
 * QR code scanning & generation
 * Shapes with solid colors or gradients
-* TBA
+* Timers
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
 ## Samples
@@ -43,7 +42,6 @@ find . -mindepth 1 -delete && cmake .. && make
 * USB support (maybe)
 * Update some libraries (like utf8 and some other libraries LifeLua uses)
 * Add MessagePack support
-* Get & set pixel of an image
 * DDS, GIF and WebP image support
 * libime support (half-screen keyboard)
 * Syntax extensions that were recently added to LuaJIT
