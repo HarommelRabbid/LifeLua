@@ -52,7 +52,7 @@ void luaL_lifelua_dofile(lua_State *L){
 	bool error = false;
 	if (luaL_dofile(L, "main.lua") != LUA_OK) {
 		vita2d_end_drawing();
-    	vita2d_swap_buffers();
+		vita2d_swap_buffers();
 		sceAppMgrSetInfobarState(SCE_APPMGR_INFOBAR_VISIBILITY_INVISIBLE, SCE_APPMGR_INFOBAR_COLOR_BLACK, SCE_APPMGR_INFOBAR_TRANSPARENCY_OPAQUE);
 		if(audio_active){
 			vitaAudioSetChannelCallback(0, NULL, NULL);
@@ -74,7 +74,7 @@ void luaL_lifelua_dofile(lua_State *L){
 		while(error){
 			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
-   vita2d_clear_screen();
+			vita2d_clear_screen();
 			vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 			vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
 			vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, error_str);
@@ -127,17 +127,9 @@ void luaL_lifelua_dofile(lua_State *L){
 			};
 
 			vita2d_end_drawing();
-    		vita2d_swap_buffers();
+			vita2d_swap_buffers();
 			oldpad = pad;
 		}
-		/*if(!error){
-			vita2d_start_drawing();
-			vita2d_clear_screen();
-			vita2d_end_drawing();
-			vita2d_swap_buffers();
-
-		//luaL_lifelua_dofile(L);
-		}*/
 	}
 }
 
@@ -155,7 +147,7 @@ void luaL_extend(lua_State *L){
 			vita2d_pvf_draw_text(pvf, 2, 20, "LifeLua has encountered an error at initialization (you can't fix this):");
 			vita2d_pvf_draw_text(pvf, 2, 40, error);
 			vita2d_end_drawing();
-	  vita2d_swap_buffers();
+			vita2d_swap_buffers();
 		}
 	}
 }
@@ -176,12 +168,12 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_MUSIC_EXPORT);
-    sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
-    sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_PHOTO_EXPORT);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_ATRAC);
-    sqlite3_rw_init();
+	sqlite3_rw_init();
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
 	memset(&appUtilParam, 0, sizeof(SceAppUtilInitParam));
@@ -207,7 +199,7 @@ int main(){
 	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030) unsafe = false;
 
 	vita2d_init();
-    vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+	vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
 	psexchar = vita2d_load_custom_pvf("sa0:data/font/pvf/psexchar.pvf");
@@ -236,7 +228,7 @@ int main(){
 	luaL_extend(L);
 	
 	vita2d_start_drawing();
-    vita2d_clear_screen();
+	vita2d_clear_screen();
 
 	luaL_lifelua_dofile(L);
 
@@ -268,9 +260,9 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SCREEN_SHOT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_PHOTO_EXPORT);
-    sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
-    sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
-    sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_VIDEO_EXPORT);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_AVPLAYER);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_ATRAC);
 	sceAppUtilCacheUmount();
