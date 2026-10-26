@@ -36,6 +36,9 @@ bool unsafe = true;
 char vita_ip[16];
 unsigned short int vita_port = 0;
 
+extern const unsigned char _binary_ext_init_lua_start[];
+extern const unsigned char _binary_ext_init_lua_size[];
+
 int string_ends_with(const char * str, const char * suffix){
 	int str_len = strlen(str);
 	int suffix_len = strlen(suffix);
@@ -71,7 +74,8 @@ void luaL_lifelua_dofile(lua_State *L){
 		while(error){
 			sceCtrlPeekBufferPositive(0, &pad, 1);
 			vita2d_start_drawing();
-    		vita2d_clear_screen();
+   vita2d_clear_screen();
+			vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 			vita2d_pvf_draw_text(pvf, 2, 20, RGBA8(255, 255, 255, 255), 1.0f, "LifeLua has encountered an error:");
 			vita2d_pvf_draw_text(pvf, 2, 40, RGBA8(255, 255, 255, 255), 1.0f, error_str);
 
@@ -138,33 +142,22 @@ void luaL_lifelua_dofile(lua_State *L){
 }
 
 void luaL_extend(lua_State *L){
-	if(
-	luaL_dostring(L, "function math.range(num, min, max) return math.min(math.max(num, min), max) end\n\
-					  function table.find(value, table) --Checks if an item is in an array\n\
- 				      	for i, v in ipairs(table) do\n\
-  							if v == value then\n\
-   								return true\n\
-  							end\n\
- 						end\n\
- 						return false\n\
-						end\n\
-						function table.removefirst(value, table1) --Removes the first instance of an item in an array\n\
- 							for i, v in ipairs(table1) do\n\
-  								if v == value then\n\
-   									return table.remove(table1, i)\n\
-  								end\n\
- 							end\n\
-						end\n\
-						function math.round(num, idp)\n\
-  							local mult = 10^(idp or 0)\n\
-  							return math.floor(num * mult + 0.5) / mult\n\
-						end\n\
-						function math.inrange(num, min, max) return num >= min and num <= max end\n\
-						function os.installvpk(path, head)\n\
-							io.extract(path, \"ux0:data/ll_temp\")\n\
-							if not head then os.installdir(\"ux0:data/ll_temp\")\n\
-							else os.installdir(\"ux0:data/ll_temp\", true) end\n\
-						end") != LUA_OK) sceClibPrintf("LL error: %s", lua_tostring(L, -1));
+	size_t size = (size_t)_binary_ext_init_lua_size;
+
+	if((luaL_loadbuffer(L, (const char *)_binary_ext_init_lua_start, size, "LL init.lua") || lua_pcall(L, 0, 0, 0)) != LUA_OK){
+		vita2d_end_drawing();
+  vita2d_swap_buffers();
+		const char *error = lua_tostring(L, -1) != NULL ? lua_tostring(L, -1) : "Unknown error";
+		while(true){
+			vita2d_start_drawing();
+			vita2d_clear_screen();
+			vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
+			vita2d_pvf_draw_text(pvf, 2, 20, "LifeLua has encountered an error at initialization (you can't fix this):");
+			vita2d_pvf_draw_text(pvf, 2, 40, error);
+			vita2d_end_drawing();
+	  vita2d_swap_buffers();
+		}
+	}
 }
 
 int main(){
@@ -213,7 +206,7 @@ int main(){
 
 	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030) unsafe = false;
 
-	vita2d_init_advanced_with_msaa((1 * 1024 * 1024), SCE_GXM_MULTISAMPLE_4X);
+	vita2d_init();
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
