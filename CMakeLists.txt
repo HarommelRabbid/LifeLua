@@ -71,6 +71,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
   src/lj_lifevideo.c
+  src/lj_lifeclipboard.c
   src/ext/lutf8lib.c
   src/ext/mp.c
   src/include/sha1.c
@@ -145,6 +146,7 @@ target_link_libraries(${PROJECT_NAME}
     SceUdcd_stub
     SceAVConfig_stub
     SceSqlite_stub
+    SceClipboard_stub
     luajit-5.1
     dl
     SceSblSsMgr_stub

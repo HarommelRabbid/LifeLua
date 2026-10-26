@@ -403,7 +403,10 @@ static int io_base64encode(lua_State *L){
         return luaL_error(L, "out of memory");
     }
 
-    size_t out_len = b64_encode(in, in_len, out);
+    size_t out_len;
+    bool use_url = lua_toboolean(L, 2);
+    if(use_url) out_len = b64url_encode(in, in_len, out);
+    else out_len = b64_encode(in, in_len, out);
 
     lua_pushlstring(L, out, out_len);
 
