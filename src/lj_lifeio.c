@@ -125,7 +125,7 @@ static int lua_readsfo(lua_State *L) {
 }
 
 static void push_datetime(lua_State *L, const SceDateTime *dt) {
-    char buffer[20];
+    char buffer[36];
     snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d",
              dt->year, dt->month, dt->day,
              dt->hour, dt->minute, dt->second);
