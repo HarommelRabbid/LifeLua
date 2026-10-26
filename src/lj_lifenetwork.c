@@ -81,9 +81,8 @@ static int lua_wifi(lua_State *L){
 
 static int lua_ip(lua_State *L){
 	SceNetCtlInfo info;
-	if (sceNetCtlInetGetInfo(SCE_NETCTL_INFO_GET_IP_ADDRESS, &info) < 0) strcpy(vita_ip, "127.0.0.1");
-	else strcpy(vita_ip, info.ip_address);
-	lua_pushstring(L, vita_ip);
+	if (sceNetCtlInetGetInfo(SCE_NETCTL_INFO_GET_IP_ADDRESS, &info) < 0) lua_pushstring(L, "127.0.0.1");
+	else lua_pushstring(L, info.ip_address);
 	return 1;
 }
 
