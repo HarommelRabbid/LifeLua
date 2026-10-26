@@ -21,22 +21,19 @@
 #include "lj_lifeinit.h"
 
 typedef struct {
-	uint32_t elapsed;
+	SceUInt64 elapsed;
 	bool running;
-	uint32_t current_time;
-	uint32_t start_time;
-	uint32_t pause_time;
-	uint32_t pause_start;
-	uint32_t pause_end;
+	SceUInt64 current_time;
+	SceUInt64 start_time;
+	SceUInt64 pause_time;
+	SceUInt64 pause_start;
+	SceUInt64 pause_end;
 } Timer;
 
 void updateTimer(Timer *timer){	
 	if(!timer->running) return;
 	
-	SceRtcTick rtick;
-	sceRtcGetCurrentTick(&rtick);
-	
-	timer->current_time = rtick.tick;
+	timer->current_time = sceKernelGetProcessTimeWide();
 	
 	timer->elapsed = timer->current_time - timer->start_time;
 }
@@ -44,10 +41,7 @@ void updateTimer(Timer *timer){
 static int lua_newtimer(lua_State *L){
     Timer *timer = (Timer *)lua_newuserdata(L, sizeof(Timer));
 
-    SceRtcTick rtick;
-	sceRtcGetCurrentTick(&rtick);
-	
-	timer->start_time = rtick.tick;
+	timer->start_time = sceKernelGetProcessTimeWide();
     
     luaL_getmetatable(L, "timer");
     lua_setmetatable(L, -2);
@@ -56,10 +50,8 @@ static int lua_newtimer(lua_State *L){
 
 static int lua_timerstart(lua_State *L){
     Timer *timer = (Timer *)luaL_checkudata(L, 1, "timer");
-    SceRtcTick rtick;
-	sceRtcGetCurrentTick(&rtick);
 	
-	timer->start_time = rtick.tick;
+	timer->start_time = sceKernelGetProcessTimeWide();
 	timer->current_time = 0;
 	timer->running = true;
     return 0;
@@ -67,12 +59,10 @@ static int lua_timerstart(lua_State *L){
 
 static int lua_timerpause(lua_State *L){
     Timer *timer = (Timer *)luaL_checkudata(L, 1, "timer");
-    SceRtcTick rtick;
-	sceRtcGetCurrentTick(&rtick);
 	
-	if(timer->running) timer->pause_start = rtick.tick;
+	if(timer->running) timer->pause_start = sceKernelGetProcessTimeWide();
 	else {
-		timer->pause_end = rtick.tick;
+		timer->pause_end = sceKernelGetProcessTimeWide();
 		timer->pause_time = timer->pause_end - timer->pause_start;
 		timer->start_time += timer->pause_time;
 	}
@@ -116,12 +106,10 @@ static int lua_timerrunning(lua_State *L){
 static int lua_timerset(lua_State *L){
     Timer *timer = (Timer *)luaL_checkudata(L, 1, "timer");
     double seconds = luaL_checknumber(L, 2);
-    SceRtcTick rtick;
-	sceRtcGetCurrentTick(&rtick);
 
-	uint64_t offset_ticks = (uint64_t)(seconds * 1000000.0); // seconds to microseconds
-	timer->start_time = rtick.tick - offset_ticks;
-	timer->current_time = rtick.tick;
+	SceUInt64 offset_ticks = (SceUInt64)(seconds * 1000000); // seconds to microseconds
+	timer->start_time = sceKernelGetProcessTimeWide() - offset_ticks;
+	timer->current_time = sceKernelGetProcessTimeWide();
 	timer->elapsed = offset_ticks;
 	timer->running = true;
     return 0;
