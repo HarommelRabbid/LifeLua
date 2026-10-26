@@ -72,6 +72,7 @@ add_executable(${PROJECT_NAME}
   src/lj_lifeaudio.c
   src/lj_lifevideo.c
   src/ext/lutf8lib.c
+  src/ext/mp.c
   src/include/sha1.c
   src/include/md5.c
   src/include/makeheadbin.c
