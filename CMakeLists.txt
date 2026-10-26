@@ -82,6 +82,10 @@ add_executable(${PROJECT_NAME}
   src/include/tomlc17.c
 )
 
+target_link_options(LifeLua PRIVATE
+    "-Wl,-b,binary,src/ext/init.lua,-b,default"
+)
+
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
     quirc
