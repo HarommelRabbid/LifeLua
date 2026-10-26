@@ -172,7 +172,7 @@ int main(){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_VIDEO_EXPORT);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_SQLITE);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
-	sceSysmoduleLoadModule(SCE_SYSMODULE_ATRAC);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_CLIPBOARD);
 	sqlite3_rw_init();
 	SceAppUtilInitParam appUtilParam;
 	SceAppUtilBootParam appUtilBootParam;
@@ -265,7 +265,7 @@ int main(){
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_MUSIC_EXPORT);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_SQLITE);
 	sceSysmoduleUnloadModule(SCE_SYSMODULE_AVPLAYER);
-	sceSysmoduleUnloadModule(SCE_SYSMODULE_ATRAC);
+	sceSysmoduleUnloadModule(SCE_SYSMODULE_CLIPBOARD);
 	sceAppUtilCacheUmount();
 	sceAppUtilMusicUmount();
 	sceAppUtilPhotoUmount();

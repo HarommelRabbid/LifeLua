@@ -22,6 +22,7 @@
 #include "include/sha1.h"
 #include "include/sha256.h"
 #include "include/md5.h"
+#include "include/b64.h"
 #include <archive.h>
 #include <archive_entry.h>
 
@@ -324,17 +325,17 @@ static int lua_getfolder(lua_State *L) {
 }
 
 static int lua_sha1(lua_State *L){
-	const char *input = luaL_checkstring(L, 1);
-	size_t len = strlen(input);
+    size_t len;
+	const char *input = luaL_checklstring(L, 1, &len);
 
-	uint8_t sha1out[20];
+	uint8_t sha1out[SHA1_BLOCK_SIZE];
     
 	SHA1_CTX ctx;
 	sha1_init(&ctx);
 	sha1_update(&ctx, (const uint8_t *)input, len);
 	sha1_final(&ctx, sha1out);
 
-	char sha1msg[42];
+	char sha1msg[SHA1_BLOCK_SIZE * 2 + 1];
 	for (int i = 0; i < 20; i++) {
 		sprintf(sha1msg + i * 2, "%02X", sha1out[i]);
 	}
@@ -372,23 +373,61 @@ static int lua_md5(lua_State *L){
 }
 
 static int lua_sha256(lua_State *L){
-	const char *input = luaL_checkstring(L, 1);
-	size_t len = strlen(input);
+    size_t len;
+	const char *input = luaL_checklstring(L, 1, &len);
 
-	uint8_t sha256out[20];
+	uint8_t sha256out[SHA256_BLOCK_SIZE];
     
 	SHA256_CTX ctx;
 	sha256_init(&ctx);
 	sha256_update(&ctx, (const uint8_t *)input, len);
 	sha256_final(&ctx, sha256out);
 
-	char sha256msg[42]; // 40 chars + null terminator
+	char sha256msg[SHA256_BLOCK_SIZE * 2 + 1]; // 40 chars + null terminator
 	for (int i = 0; i < 20; i++) {
 		sprintf(sha256msg + i * 2, "%02X", sha256out[i]);
 	}
 
 	lua_pushstring(L, sha256msg);
 	return 1;
+}
+
+static int io_base64encode(lua_State *L){
+    size_t in_len;
+    const unsigned char *in = (const unsigned char *)luaL_checklstring(L, 1, &in_len);
+
+    size_t out_cap = 4 * ((in_len + 2) / 3) + 1;
+
+    char *out = malloc(out_cap);
+    if (!out) {
+        return luaL_error(L, "out of memory");
+    }
+
+    size_t out_len = b64_encode(in, in_len, out);
+
+    lua_pushlstring(L, out, out_len);
+
+    free(out);
+    return 1;
+}
+
+static int io_base64decode(lua_State *L){
+    size_t in_len;
+    const char *in = luaL_checklstring(L, 1, &in_len);
+
+    size_t out_cap = 3 * ((in_len + 3) / 4);
+
+    char *out = malloc(out_cap);
+    if (!out) {
+        return luaL_error(L, "out of memory");
+    }
+
+    size_t out_len = b64_decode(in, out, out_cap);
+
+    lua_pushlstring(L, out, out_len);
+
+    free(out);
+    return 1;
 }
 
 static int lua_workpath(lua_State *L) {
@@ -662,6 +701,8 @@ static const luaL_Reg io_lib[] = {
     {"sha256", lua_sha256},
     {"crc32", lua_crc32},
     {"md5", lua_md5},
+    {"base64encode", io_base64encode},
+    {"base64decode", io_base64decode},
     {"workpath", lua_workpath},
     {"freespace", lua_freespace},
     {"fullspace", lua_totalspace},
