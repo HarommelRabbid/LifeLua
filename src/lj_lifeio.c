@@ -416,16 +416,16 @@ static int io_base64decode(lua_State *L){
     const char *in = luaL_checklstring(L, 1, &in_len);
 
     size_t out_cap = 3 * ((in_len + 3) / 4);
+    unsigned char *out = malloc(out_cap ? out_cap : 1);
+    if (!out) return luaL_error(L, "out of memory");
 
-    char *out = malloc(out_cap);
-    if (!out) {
-        return luaL_error(L, "out of memory");
+    int out_len = b64_decode(in, out, out_cap);
+    if (out_len < 0) {
+        free(out);
+        return lua_pushnil(L), 1;
     }
 
-    size_t out_len = b64_decode(in, out, out_cap);
-
-    lua_pushlstring(L, out, out_len);
-
+    lua_pushlstring(L, (const char *)out, out_len);
     free(out);
     return 1;
 }
