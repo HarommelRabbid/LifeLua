@@ -579,7 +579,7 @@ static int image_pixel(lua_State *L){
 }
 
 static int image_fill(lua_State *L){
-    Image *image = (Image *)lua_checkudata(L, 1, "image");
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
 	unsigned int h = vita2d_texture_get_height(image->tex);
 	Color *color = lua_tocolor(L, 2);
     uint32_t *datap = vita2d_texture_get_datap(image->tex);
@@ -590,7 +590,7 @@ static int image_fill(lua_State *L){
 }
 
 static int image_copy(lua_State *L){
-    Image *image = (Image *)lua_checkudata(L, 1, "image");
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
     uint32_t *datap = vita2d_texture_get_datap(image->tex);
     unsigned int stride = vita2d_texture_get_stride(image->tex) / 4;
     unsigned int w = vita2d_texture_get_width(image->tex);
