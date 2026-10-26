@@ -91,6 +91,7 @@ add_executable(${PROJECT_NAME}
 configure_file(src/ext/init.lua ${CMAKE_CURRENT_BINARY_DIR}/ext/init.lua COPYONLY)
 target_link_options(LifeLua PRIVATE
     "-Wl,-b,binary,ext/init.lua,-b,default"
+    "-Wl,--defsym=__sce_headroom=0x4000"
 )
 set_target_properties(LifeLua PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/ext/init.lua)
 
