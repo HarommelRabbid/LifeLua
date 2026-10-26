@@ -134,7 +134,7 @@ static int lua_swapbuff(lua_State *L) {
 	vita2d_wait_rendering_done();
     vita2d_swap_buffers();
     vita2d_start_drawing();
-	if (!lua_gettop(L, 1)) vita2d_set_clear_color(color->color);
+	if (!lua_isnone(L, 1)) vita2d_set_clear_color(color->color);
     vita2d_clear_screen(); // Clear for next frame
     return 0;
 }
