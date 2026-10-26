@@ -35,24 +35,44 @@
 #include "include/nanosvg.h"
 #define NANOSVGRAST_IMPLEMENTATION
 #include "include/nanosvgrast.h"
+#include "include/dds.h"
 
 #include "lj_lifeinit.h"
 
 static int lua_imageload(lua_State *L) {
     const char *filename = luaL_checkstring(L, 1);
     Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
+    image->tex = NULL;
     
     if(file_exists(filename)){
+        uint32_t magic32 = 0;
         SceUID file = sceIoOpen(filename, SCE_O_RDONLY, 0777);
-	    uint16_t magic;
-	    sceIoRead(file, &magic, 2);
-	    sceIoClose(file);
+        if (file >= 0) {
+            sceIoRead(file, &magic32, sizeof(magic32));
+            sceIoClose(file);
+        }
+        uint16_t magic = magic32 & 0xFFFF;
 		if(magic == 0x5089){
 			image->tex = vita2d_load_PNG_file(filename);
 		}else if(magic == 0xD8FF){
 			image->tex = vita2d_load_JPEG_file(filename);
 		}else if(magic == 0x4D42){
 			image->tex = vita2d_load_BMP_file(filename);
+        }else if(magic32 == 0x20534444){ //dds
+            dds_image_t img = dds_load_from_file(filename);
+            if (img == NULL) return lua_pushnil(L), 1;
+
+            unsigned int w = img->header.width;
+            unsigned int h = img->header.height;
+            image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_U8U8U8U8_ABGR);
+
+            uint8_t *tex_ptr = vita2d_texture_get_datap(image->tex);
+            unsigned int stride = vita2d_texture_get_stride(image->tex);
+            for (unsigned int y = 0; y < h; y++) {
+                // the library stores rows bottom-up, so flip while copying
+                memcpy(tex_ptr + y * stride, img->pixels + (h - 1 - y) * w * 4, w * 4);
+            }
+            dds_image_free(img);
 		}else if(magic == 0x4238 || (magic == 0x3F23 || stbi_is_hdr(filename)) || magic == 0x3550 || magic == 0x8053 || string_ends_with(filename, ".tga")){ //PSD, TGA, HDR, PIC & PNM
 			int w, h, comp;
 			uint8_t *img = stbi_load(filename, &w, &h, &comp, STBI_rgb_alpha);

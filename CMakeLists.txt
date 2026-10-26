@@ -81,6 +81,7 @@ add_executable(${PROJECT_NAME}
   src/include/sha256.c
   src/include/vitaaudiolib.c
   src/include/tomlc17.c
+  src/include/dds.c
 )
 
 # Embed init.lua. The linker runs in the build folder and names the symbols
