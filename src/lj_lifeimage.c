@@ -234,7 +234,6 @@ static int lua_qr(lua_State *L) {
         }
     }
 
-    // Return new Image userdata
     Image *img = (Image *)lua_newuserdata(L, sizeof(Image));
     img->tex = tex;
 
@@ -562,12 +561,12 @@ static int lua_invert(lua_State *L) {
 static int image_pixel(lua_State *L){
     Image *img = (Image *)luaL_checkudata(L, 1, "image");
     uint32_t *datap = vita2d_texture_get_datap(img->tex);
-    int stride = vita2d_texture_get_stride(img->tex) / 4;
-    int x = luaL_checkint(L, 2);
-    int y = luaL_checkint(L, 3);
+    unsigned int stride = vita2d_texture_get_stride(img->tex) / 4;
+    unsigned int x = luaL_checkint(L, 2);
+    unsigned int y = luaL_checkint(L, 3);
     if(lua_isnone(L, 4)){
         uint32_t color = datap[y * stride + x];
-        Color *col = (Color *)lua_newuserdata(L, sizeof(Color *));
+        Color *col = (Color *)lua_newuserdata(L, sizeof(Color));
         col->color = color;
         luaL_getmetatable(L, "color");
         lua_setmetatable(L, -2);
@@ -577,6 +576,34 @@ static int image_pixel(lua_State *L){
         datap[y * stride + x] = col->color;
     }
     return 0;
+}
+
+static int image_fill(lua_State *L){
+    Image *image = (Image *)lua_checkudata(L, 1, "image");
+	unsigned int h = vita2d_texture_get_height(image->tex);
+	Color *color = lua_tocolor(L, 2);
+    uint32_t *datap = vita2d_texture_get_datap(image->tex);
+    
+    for(uint32_t i = 0; i < (vita2d_texture_get_stride(image->tex) / 4) * h; i++)
+        datap[i] = color->color;
+    return 0;
+}
+
+static int image_copy(lua_State *L){
+    Image *image = (Image *)lua_checkudata(L, 1, "image");
+    uint32_t *datap = vita2d_texture_get_datap(image->tex);
+    unsigned int stride = vita2d_texture_get_stride(image->tex) / 4;
+    unsigned int w = vita2d_texture_get_width(image->tex);
+    unsigned int h = vita2d_texture_get_height(image->tex);
+    
+    Image *img = (Image *)lua_newuserdata(L, sizeof(Image));
+    img->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
+
+    sceClibMemcpy(vita2d_texture_get_datap(img->tex), datap, stride * h * sizeof(uint32_t));
+
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+    return 1;
 }
 
 static const luaL_Reg image_lib[] = {
@@ -601,6 +628,8 @@ static const luaL_Reg image_lib[] = {
 	{"grayscale", lua_grayscale},
 	{"invert", lua_invert},
     {"pixel", image_pixel},
+    {"fill", image_fill},
+    {"copy", image_copy},
     {NULL, NULL}
 };
 
@@ -622,6 +651,8 @@ static const luaL_Reg image_methods[] = {
 	{"grayscale", lua_grayscale},
 	{"invert", lua_invert},
     {"pixel", image_pixel},
+    {"fill", image_fill},
+    {"copy", image_copy},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
