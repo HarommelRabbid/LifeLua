@@ -28,8 +28,16 @@ static int clipboard_get(lua_State *L){
     return 1;
 }
 
+static int clipboard_set(lua_State *L){
+    SceWChar16 buf[SCE_CLIPBOARD_MAX_STRING_LENGTH+1];
+    const char *str = luaL_checkstring(L, 1);
+    ascii2utf(buf, str);
+    sceClipboardSetText(buf, SCE_CLIPBOARD_MAX_STRING_LENGTH);
+    return 0;
+}
+
 static const luaL_Reg clipboard_lib[] = {
-    {"set", NULL},
+    {"set", clipboard_set},
     {"get", clipboard_get},
     {NULL, NULL}
 };

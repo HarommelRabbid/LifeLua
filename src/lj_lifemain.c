@@ -226,6 +226,7 @@ int main(){
 	luaL_openaudio(L);
 	luaL_openvideo(L);
 	luaL_openmp(L);
+	luaL_openclipboard(L);
 	luaL_extend(L);
 	
 	vita2d_start_drawing();
