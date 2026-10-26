@@ -52,7 +52,7 @@ static int lua_opendb(lua_State *L){
 
 static int lua_closedb(lua_State *L){
 	sqlite3 *db = *(sqlite3 **)luaL_checkudata(L, 1, "sqlite3");
-	sqlite3_close(db);
+	if(db) sqlite3_close(db);
 	return 0;
 }
 
