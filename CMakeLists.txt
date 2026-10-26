@@ -82,9 +82,14 @@ add_executable(${PROJECT_NAME}
   src/include/tomlc17.c
 )
 
+# Embed init.lua. The linker runs in the build folder and names the symbols
+# after the path it's given, so copy it to <build>/ext/init.lua to get
+# _binary_ext_init_lua_start/_size
+configure_file(src/ext/init.lua ${CMAKE_CURRENT_BINARY_DIR}/ext/init.lua COPYONLY)
 target_link_options(LifeLua PRIVATE
-    "-Wl,-b,binary,src/ext/init.lua,-b,default"
+    "-Wl,-b,binary,ext/init.lua,-b,default"
 )
+set_target_properties(LifeLua PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/ext/init.lua)
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
