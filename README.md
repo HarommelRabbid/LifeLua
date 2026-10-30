@@ -30,19 +30,17 @@ find . -mindepth 1 -delete && cmake .. && make
 ```
 
 ## To do
-* Rewrite the audio library with a new backend
+* Rewrite the audio library with a new backend (and audio streaming)
 * libmpv video support, so that video streaming will work and also support for 1080p video quality
 * Audio streaming support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches
 * Adhoc & socket support, and maybe PSN support as well
-* SHA512 & Base64 decoding/encoding support
+* SHA512 hashing support
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
 * Channels for communicating between threads (like in LÖVE2D)
 * USB support (maybe)
-* Update some libraries (like utf8 and some other libraries LifeLua uses)
-* Add MessagePack support
-* DDS, GIF and WebP image support
+* GIF and WebP image support
 * libime support (half-screen keyboard)
 * Syntax extensions that were recently added to LuaJIT
 ## Credits
