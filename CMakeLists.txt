@@ -67,11 +67,11 @@ add_executable(${PROJECT_NAME}
   src/lj_lifethread.c
   src/lj_lifejson.c
   src/lj_lifetoml.c
-  src/lj_lifestring.c
   src/lj_lifeimgui.c++
   src/lj_lifeaudio.c
   src/lj_lifevideo.c
   src/lj_lifeclipboard.c
+  src/lj_lifesocket.c
   src/ext/lutf8lib.c
   src/ext/mp.c
   src/include/sha1.c

@@ -208,7 +208,6 @@ int main(){
 	luaL_openlibs(L);
 	luaL_openutf8(L);
 	luaL_extendos(L);
-	luaL_extendstring(L);
 	luaL_opendraw(L);
 	luaL_opencolor(L);
 	luaL_opencontrols(L);
@@ -227,6 +226,7 @@ int main(){
 	luaL_openvideo(L);
 	luaL_openmp(L);
 	luaL_openclipboard(L);
+	luaL_opensocket(L);
 	luaL_extend(L);
 	
 	vita2d_start_drawing();
