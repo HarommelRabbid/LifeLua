@@ -23,22 +23,11 @@
 
 typedef struct {
     SceUID thread;
-    int func_ref;      // Lua registry reference to the function
-    lua_State *L;      // Main Lua state (for reference)
 } Thread;
 
 static int lua_thread(SceSize args, void *argp) {
     Thread *thread_data = (Thread *)argp;
-
-    // Create a new coroutine from the main Lua state
-    lua_State *T = lua_newthread(thread_data->L);
-
-    // Push the function to the new thread's stack
-    lua_rawgeti(T, LUA_REGISTRYINDEX, thread_data->func_ref);
-
-    lua_pcall(T, 0, 0, 0);
-
-    luaL_unref(thread_data->L, LUA_REGISTRYINDEX, thread_data->func_ref);
+    sceClibPrintf("Thread Placeholder! %p\nExiting\n", &thread_data->thread);
     sceKernelExitDeleteThread(0);
     return 0;
 }
@@ -48,9 +37,6 @@ static int lua_new(lua_State *L) {
     const char *name = luaL_optstring(L, 2, "LifeLua Thread");
     Thread *thread = (Thread *)lua_newuserdata(L, sizeof(Thread));
     //memset(thread, 0, sizeof(Thread));
-    lua_pushvalue(L, 1);
-    thread->func_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    thread->L = L;
     thread->thread = sceKernelCreateThread(name, &lua_thread, 0x10000100, 0x100000, 0, 0, NULL);
     luaL_getmetatable(L, "thread");
     lua_setmetatable(L, -2);
@@ -60,9 +46,7 @@ static int lua_new(lua_State *L) {
 static int lua_start(lua_State *L){
     Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
     int res = sceKernelStartThread(thread->thread, sizeof(Thread), (void *)thread);
-    if (res < 0) {
-        return luaL_error(L, "Failed to start thread (err: 0x%08X)", res);
-    }
+    if (res < 0) return luaL_error(L, "Failed to start thread (err: 0x%08X)", res);
     return 0;
 }
 
