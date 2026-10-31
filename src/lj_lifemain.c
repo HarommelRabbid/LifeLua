@@ -29,7 +29,7 @@ vita2d_pvf *pvf;
 vita2d_pvf *psexchar;
 SceCtrlData pad, oldpad;
 SceCtrlActuator actuators[4];
-SceTouchData fronttouch, reartouch;
+SceTouchData fronttouch, reartouch, oldfronttouch, oldreartouch;
 SceMotionSensorState motion;
 SceCommonDialogConfigParam cmnDlgCfgParam;
 bool unsafe = true;

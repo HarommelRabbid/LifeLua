@@ -48,7 +48,7 @@ extern unsigned short int vita_port;
 
 extern SceCtrlData pad, oldpad;
 extern SceCtrlActuator actuators[4];
-extern SceTouchData fronttouch, reartouch;
+extern SceTouchData fronttouch, reartouch, oldfronttouch, oldreartouch;
 extern SceMotionSensorState motion;
 
 extern bool unsafe;
