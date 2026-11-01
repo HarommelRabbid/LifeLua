@@ -1,6 +1,7 @@
 var group__io =
 [
     [ "io.archive", "group__io.html#ga91876b1c76ef231873e9e0a9c1fa06ca", null ],
+    [ "io.copy", "group__io.html#gaf2f909e4c41e451704af684840a5e19a", null ],
     [ "io.crc32", "group__io.html#ga303d6f21c105ac6d731d41f54ba4e782", null ],
     [ "io.delete", "group__io.html#gab835b13b970fe00fd1d4b742295e6f3f", null ],
     [ "io.editsfo", "group__io.html#ga74ef7482387c3eef7a649e39f3540e9e", null ],

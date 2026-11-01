@@ -130,6 +130,8 @@ Functions</h2></td></tr>
 <tr class="separator:gaeb8893d8c6955069abbaf9c3c17d6ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab835b13b970fe00fd1d4b742295e6f3f" id="r_gab835b13b970fe00fd1d4b742295e6f3f"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab835b13b970fe00fd1d4b742295e6f3f">io.delete</a> (string path)</td></tr>
 <tr class="separator:gab835b13b970fe00fd1d4b742295e6f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf2f909e4c41e451704af684840a5e19a" id="r_gaf2f909e4c41e451704af684840a5e19a"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf2f909e4c41e451704af684840a5e19a">io.copy</a> (string source, string destination)</td></tr>
+<tr class="separator:gaf2f909e4c41e451704af684840a5e19a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafa4e6443a7b5b36ebb5780a69642596c" id="r_gafa4e6443a7b5b36ebb5780a69642596c"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafa4e6443a7b5b36ebb5780a69642596c">io.list</a> (string path)</td></tr>
 <tr class="separator:gafa4e6443a7b5b36ebb5780a69642596c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga90e72a660ef3d1c72afa199b467149a8" id="r_ga90e72a660ef3d1c72afa199b467149a8"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga90e72a660ef3d1c72afa199b467149a8">io.info</a> (string path)</td></tr>
@@ -200,6 +202,51 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="gaf2f909e4c41e451704af684840a5e19a" name="gaf2f909e4c41e451704af684840a5e19a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf2f909e4c41e451704af684840a5e19a">&#9670;&#160;</a></span>io.copy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean io.copy </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>source</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>destination</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Copies a file, or a folder together with everything inside it. Missing parent folders of the destination are created, and existing files are overwritten.</p>
+<p>If you define a global function called <code>LifeLuaCopying</code>, it's called while copying, so you can show the progress: once when each folder is created, once when each file starts, and after every piece (64 KB) of a file is copied. It receives:</p><ol type="1">
+<li><b>string</b>: Path of the file or folder being copied</li>
+<li><b>string</b>: Path of its copy</li>
+<li><b>number</b>: Bytes of this file copied so far (0 for folders)</li>
+<li><b>number</b>: Size of this file in bytes (0 for folders)</li>
+<li><b>number</b>: How many files and folders have been handled so far, counting this one</li>
+</ol>
+<p>If the callback raises an error, copying stops (what was already copied stays) and the error is passed on. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">source</td><td>Path of the file or folder to copy </td></tr>
+    <tr><td class="paramname">destination</td><td>Full path of the copy, <b>not</b> the folder to put it in: <code>io.copy("ux0:data/a.txt", "ux0:data/backup/a.txt")</code>, not <code>io.copy("ux0:data/a.txt", "ux0:data/backup")</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> if the source doesn't exist or something couldn't be copied (copying stops at the first thing that fails). Raises an error if you try to copy a folder into itself. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white = color.new(255, 255, 255)</div>
+<div class="line">function LifeLuaCopying(source, destination, copied, size, number)</div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Copying #&quot;</span>..number..<span class="stringliteral">&quot;: &quot;</span>..source, white)</div>
+<div class="line">    <span class="keywordflow">if</span> size &gt; 0 then draw.text(10, 40, math.floor(copied * 100 / size)..<span class="stringliteral">&quot;%&quot;</span>, white) end</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="line">io.copy(<span class="stringliteral">&quot;ux0:data/myapp&quot;</span>, <span class="stringliteral">&quot;ux0:data/myapp_backup&quot;</span>)</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
 <a id="ga303d6f21c105ac6d731d41f54ba4e782" name="ga303d6f21c105ac6d731d41f54ba4e782"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga303d6f21c105ac6d731d41f54ba4e782">&#9670;&#160;</a></span>io.crc32()</h2>
 
@@ -238,13 +285,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Deletes a file or an <b>empty</b> folder </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Deletes a file, or a folder together with everything inside it</p>
+<p>If you define a global function called <code>LifeLuaDeleting</code>, it's called right before each file or folder is deleted, so you can show the progress. A folder's contents are deleted before the folder itself. It receives:</p><ol type="1">
+<li><b>string</b>: Path of the file or folder about to be deleted</li>
+<li><b>boolean</b>: <code>true</code> if it's a folder</li>
+<li><b>number</b>: How many files and folders have been handled so far, counting this one</li>
+</ol>
+<p>If the callback raises an error, deleting stops (what was already deleted stays deleted) and the error is passed on. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>Path to delete </td></tr>
+    <tr><td class="paramname">path</td><td>Path of the file or folder to delete </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> if it doesn't exist or couldn't be deleted (e.g. the folder isn't empty) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> if it doesn't exist or something couldn't be deleted (deleting stops at the first thing that fails) </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Folders are deleted with everything in them, without asking. Double-check the path! </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">function LifeLuaDeleting(path, isafolder, number)</div>
+<div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Deleting #&quot;</span>..number..<span class="stringliteral">&quot;: &quot;</span>..path, color.new(255, 255, 255))</div>
+<div class="line">    draw.swapbuffers()</div>
+<div class="line">end</div>
+<div class="line">io.delete(<span class="stringliteral">&quot;ux0:data/myapp/cache&quot;</span>)</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
