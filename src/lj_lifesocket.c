@@ -10,6 +10,17 @@ typedef struct {
     SceNetSocketType type;
 } Socket;
 
+static int resolve_host(const char *host, SceNetInAddr *out) {
+    if (sceNetInetPton(SCE_NET_AF_INET, host, out) == 1) return 0;
+
+    int rid = sceNetResolverCreate("lifelua_resolver", NULL, 0);
+    if (rid < 0) return rid;
+
+    int ret = sceNetResolverStartNtoa(rid, host, out, 0, 0, 0);
+    sceNetResolverDestroy(rid);
+    return ret < 0 ? ret : 0;
+}
+
 static int socket_connect(lua_State *L){
     const char *ip = luaL_checkstring(L, 1);
     unsigned int port = luaL_checkinteger(L, 2);
@@ -21,7 +32,10 @@ static int socket_connect(lua_State *L){
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = SCE_NET_AF_INET;
     addr.sin_port = sceNetHtons(port);
-    sceNetInetPton(SCE_NET_AF_INET, ip, &addr.sin_addr);
+    if (resolve_host(host, &addr.sin_addr) < 0) {
+        sceNetSocketClose(fd);
+        return luaL_error(L, "Couldn't resolve host \"%s\"", host);
+    }
 
     if (sceNetConnect(fd, (SceNetSockaddr*)&addr, sizeof(addr)) < 0) {
         sceNetSocketClose(fd);
@@ -65,7 +79,7 @@ static int socket_host(lua_State *L){
     return 1;
 }
 
-static int socket_bind(lua_State *L) {
+static int socket_accept(lua_State *L) {
     Socket *host = (Socket*)luaL_checkudata(L, 1, "socket");
     if (host->type != SCE_NET_SOCK_STREAM) return luaL_error(L, "Cannot bind on UDP socket");
 
@@ -76,7 +90,7 @@ static int socket_bind(lua_State *L) {
     
     if (client_fd < 0) {
         if (client_fd == SCE_NET_ERROR_EAGAIN) return lua_pushnil(L), 1;
-        return luaL_error(L, "Bind failed (%x)", client_fd);
+        return luaL_error(L, "Accept failed (%x)", client_fd);
     }
 
     Socket *sock = (Socket *)lua_newuserdata(L, sizeof(Socket));
@@ -94,6 +108,7 @@ static int socket_send(lua_State *L) {
     const char *data = luaL_checklstring(L, 2, &len);
     
     size_t send_len = luaL_optinteger(L, 3, len);
+    if (send_len > len) send_len = len;
 
     int sent = sceNetSend(sock->fd, data, send_len, 0);
     lua_pushinteger(L, sent);
@@ -104,7 +119,7 @@ static int socket_receive(lua_State *L) {
     Socket *sock = (Socket*)luaL_checkudata(L, 1, "socket");
     size_t req_len = luaL_optinteger(L, 2, 1024); // Default to 1KB chunks
     
-    char buffer[req_len];
+    char *buffer = malloc(req_len);
     int bytes_read = sceNetRecv(sock->fd, buffer, req_len, 0);
     
     if (bytes_read < 0) {
@@ -115,6 +130,7 @@ static int socket_receive(lua_State *L) {
     if (bytes_read == 0) return lua_pushnil(L), 1;
 
     lua_pushlstring(L, buffer, bytes_read);
+    free(buffer);
     return 1;
 }
 
@@ -122,7 +138,7 @@ static int socket_receivefrom(lua_State *L) {
     Socket *sock = (Socket*)luaL_checkudata(L, 1, "socket");
     size_t req_len = luaL_optinteger(L, 2, 1024);
     
-    char buffer[req_len];
+    char *buffer = malloc(req_len);
     SceNetSockaddrIn sender_addr;
     unsigned int addr_len = sizeof(sender_addr);
     
@@ -130,7 +146,7 @@ static int socket_receivefrom(lua_State *L) {
     
     if (bytes_read < 0) {
         if (bytes_read == SCE_NET_ERROR_EAGAIN) return lua_pushnil(L), 1;
-        return luaL_error(L, "Socket receivefrom error: %x", bytes_read);
+        return luaL_error(L, "Socket receivefrom error (%x)", bytes_read);
     }
     
     if (bytes_read == 0) return lua_pushnil(L), 1;
@@ -144,6 +160,7 @@ static int socket_receivefrom(lua_State *L) {
     lua_pushstring(L, ip_str);
     lua_pushinteger(L, port);
     
+    free(buffer);
     return 3;
 }
 
@@ -197,11 +214,11 @@ static int socket_setbroadcast(lua_State *L){
 static const luaL_Reg socket_lib[] = {
     {"connect", socket_connect},
     {"host", socket_host},
-    {"bind", socket_bind},
+    {"accept", socket_accept},
     {"send", socket_send},
-    {"recieve", socket_receive},
+    {"receive", socket_receive},
     {"sendto", socket_sendto},
-    {"recievefrom", socket_receivefrom},
+    {"receivefrom", socket_receivefrom},
     {"setnonblocking", socket_setnonblocking},
     {"setbroadcast", socket_setbroadcast},
     {"close", socket_close},
@@ -209,11 +226,11 @@ static const luaL_Reg socket_lib[] = {
 };
 
 static const luaL_Reg socket_methods[] = {
-    {"bind", socket_bind},
+    {"accept", socket_accept},
     {"send", socket_send},
-    {"recieve", socket_receive},
+    {"receive", socket_receive},
     {"sendto", socket_sendto},
-    {"recievefrom", socket_receivefrom},
+    {"receivefrom", socket_receivefrom},
     {"setnonblocking", socket_setnonblocking},
     {"setbroadcast", socket_setbroadcast},
     {"close", socket_close},
