@@ -121,8 +121,10 @@ Functions</h2></td></tr>
 <tr class="separator:gae4981c0d5de1fd9427bdefefece89e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafcf4920bb90b973f8771379aa0d6170e" id="r_gafcf4920bb90b973f8771379aa0d6170e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafcf4920bb90b973f8771379aa0d6170e">network.mac</a> ()</td></tr>
 <tr class="separator:gafcf4920bb90b973f8771379aa0d6170e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9eaa4ac94f325313db3b5538e8288aeb" id="r_ga9eaa4ac94f325313db3b5538e8288aeb"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9eaa4ac94f325313db3b5538e8288aeb">network.download</a> (string url, string path, string useragent)</td></tr>
-<tr class="separator:ga9eaa4ac94f325313db3b5538e8288aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3fabe2c05b254f68cfc74867a0e5b676" id="r_ga3fabe2c05b254f68cfc74867a0e5b676"><td class="memItemLeft" align="right" valign="top">number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3fabe2c05b254f68cfc74867a0e5b676">network.download</a> (string url, string path, number method, string data, string contenttype, string useragent)</td></tr>
+<tr class="separator:ga3fabe2c05b254f68cfc74867a0e5b676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2af1d5401d36c2f5ce19899845f1badc" id="r_ga2af1d5401d36c2f5ce19899845f1badc"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2af1d5401d36c2f5ce19899845f1badc">network.get</a> (string url, number method, string data, string contenttype, string useragent)</td></tr>
+<tr class="separator:ga2af1d5401d36c2f5ce19899845f1badc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadaddc25b974d3b04e9c43878cfe20558" id="r_gadaddc25b974d3b04e9c43878cfe20558"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadaddc25b974d3b04e9c43878cfe20558">network.header</a> (string url, string useragent)</td></tr>
 <tr class="separator:gadaddc25b974d3b04e9c43878cfe20558"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga640a84271b87040df07dc18dbb1d19f7" id="r_ga640a84271b87040df07dc18dbb1d19f7"><td class="memItemLeft" align="right" valign="top">table&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga640a84271b87040df07dc18dbb1d19f7">network.ftp.start</a> (boolean enable)</td></tr>
@@ -133,16 +135,52 @@ Functions</h2></td></tr>
 <tr class="separator:gaeb02e46771bd6fc6891ae5c7473cf6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1f26466f55330df914f27629b8f3b94f" id="r_ga1f26466f55330df914f27629b8f3b94f"><td class="memItemLeft" align="right" valign="top">nil&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1f26466f55330df914f27629b8f3b94f">network.ftp.removedevice</a> (string partition)</td></tr>
 <tr class="separator:ga1f26466f55330df914f27629b8f3b94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">HTTP methods</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>Used with <a class="el" href="#ga3fabe2c05b254f68cfc74867a0e5b676">network.download()</a> and <a class="el" href="#ga2af1d5401d36c2f5ce19899845f1badc">network.get()</a> to choose how the request is sent. </p>
+</td></tr>
+<tr class="memitem:ga2e64f9ac1e79269343fced58cc7f0f24" id="r_ga2e64f9ac1e79269343fced58cc7f0f24"><td class="memItemLeft" align="right" valign="top"><a id="ga2e64f9ac1e79269343fced58cc7f0f24" name="ga2e64f9ac1e79269343fced58cc7f0f24"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_GET</b></td></tr>
+<tr class="memdesc:ga2e64f9ac1e79269343fced58cc7f0f24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a page or file (the default) <br /></td></tr>
+<tr class="separator:ga2e64f9ac1e79269343fced58cc7f0f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe1674f78594300b3f151b055987dc37" id="r_gafe1674f78594300b3f151b055987dc37"><td class="memItemLeft" align="right" valign="top"><a id="gafe1674f78594300b3f151b055987dc37" name="gafe1674f78594300b3f151b055987dc37"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_POST</b></td></tr>
+<tr class="memdesc:gafe1674f78594300b3f151b055987dc37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send data to the server, e.g. a form or JSON. <br /></td></tr>
+<tr class="separator:gafe1674f78594300b3f151b055987dc37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gace45c0754e2b8cb65350c1569f789b77" id="r_gace45c0754e2b8cb65350c1569f789b77"><td class="memItemLeft" align="right" valign="top"><a id="gace45c0754e2b8cb65350c1569f789b77" name="gace45c0754e2b8cb65350c1569f789b77"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_HEAD</b></td></tr>
+<tr class="memdesc:gace45c0754e2b8cb65350c1569f789b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like GET, but the server only sends the headers, no content. <br /></td></tr>
+<tr class="separator:gace45c0754e2b8cb65350c1569f789b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6488f85f5cce4546d2fdbe8f49c1e4bf" id="r_ga6488f85f5cce4546d2fdbe8f49c1e4bf"><td class="memItemLeft" align="right" valign="top"><a id="ga6488f85f5cce4546d2fdbe8f49c1e4bf" name="ga6488f85f5cce4546d2fdbe8f49c1e4bf"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_OPTIONS</b></td></tr>
+<tr class="memdesc:ga6488f85f5cce4546d2fdbe8f49c1e4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask the server which methods it supports. <br /></td></tr>
+<tr class="separator:ga6488f85f5cce4546d2fdbe8f49c1e4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40b434680516e6e31065730991e38465" id="r_ga40b434680516e6e31065730991e38465"><td class="memItemLeft" align="right" valign="top"><a id="ga40b434680516e6e31065730991e38465" name="ga40b434680516e6e31065730991e38465"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_PUT</b></td></tr>
+<tr class="memdesc:ga40b434680516e6e31065730991e38465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload data to replace what's at the URL. <br /></td></tr>
+<tr class="separator:ga40b434680516e6e31065730991e38465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7eb657bc07b18fc7cdf6b0b36498c05" id="r_gae7eb657bc07b18fc7cdf6b0b36498c05"><td class="memItemLeft" align="right" valign="top"><a id="gae7eb657bc07b18fc7cdf6b0b36498c05" name="gae7eb657bc07b18fc7cdf6b0b36498c05"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_DELETE</b></td></tr>
+<tr class="memdesc:gae7eb657bc07b18fc7cdf6b0b36498c05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete what's at the URL. <br /></td></tr>
+<tr class="separator:gae7eb657bc07b18fc7cdf6b0b36498c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2634e9a0efe791d81f02576f04917f62" id="r_ga2634e9a0efe791d81f02576f04917f62"><td class="memItemLeft" align="right" valign="top"><a id="ga2634e9a0efe791d81f02576f04917f62" name="ga2634e9a0efe791d81f02576f04917f62"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_TRACE</b></td></tr>
+<tr class="memdesc:ga2634e9a0efe791d81f02576f04917f62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ask the server to send the request back (for debugging) <br /></td></tr>
+<tr class="separator:ga2634e9a0efe791d81f02576f04917f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa54e6d872b5ccbd0cd0fcd30acc5786a" id="r_gaa54e6d872b5ccbd0cd0fcd30acc5786a"><td class="memItemLeft" align="right" valign="top"><a id="gaa54e6d872b5ccbd0cd0fcd30acc5786a" name="gaa54e6d872b5ccbd0cd0fcd30acc5786a"></a>
+number&#160;</td><td class="memItemRight" valign="bottom"><b>SCE_HTTP_METHOD_CONNECT</b></td></tr>
+<tr class="memdesc:gaa54e6d872b5ccbd0cd0fcd30acc5786a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a tunnel through a proxy. <br /></td></tr>
+<tr class="separator:gaa54e6d872b5ccbd0cd0fcd30acc5786a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga9eaa4ac94f325313db3b5538e8288aeb" name="ga9eaa4ac94f325313db3b5538e8288aeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9eaa4ac94f325313db3b5538e8288aeb">&#9670;&#160;</a></span>network.download()</h2>
+<a id="ga3fabe2c05b254f68cfc74867a0e5b676" name="ga3fabe2c05b254f68cfc74867a0e5b676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3fabe2c05b254f68cfc74867a0e5b676">&#9670;&#160;</a></span>network.download()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nil network.download </td>
+          <td class="memname">number network.download </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>url</em></span>, </td>
         </tr>
@@ -150,6 +188,21 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>method</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>contenttype</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -164,15 +217,20 @@ Functions</h2></td></tr>
 <li>Total bytes written to the file so far</li>
 <li>Size of the whole file in bytes (0 if the server doesn't say)</li>
 <li>Bytes downloaded in this piece</li>
-<li>Bytes written in this piece <dl class="params"><dt>Parameters</dt><dd>
+<li>Bytes written in this piece</li>
+</ol>
+<p>If the callback raises an error, the download stops and the error is passed on. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">url</td><td>The URL of the file </td></tr>
     <tr><td class="paramname">path</td><td>Where to save the file </td></tr>
+    <tr><td class="paramname">method</td><td>The <a class="el" href="#ga2e64f9ac1e79269343fced58cc7f0f24">HTTP method</a> <em>(optional, default: SCE_HTTP_METHOD_GET)</em> </td></tr>
+    <tr><td class="paramname">data</td><td>Data to send with the request, e.g. for SCE_HTTP_METHOD_POST <em>(optional, default: nothing is sent)</em> </td></tr>
+    <tr><td class="paramname">contenttype</td><td>The type of <code>data</code> <em>(optional, default: <code>"application/x-www-form-urlencoded"</code>)</em>. Only used if <code>data</code> is given. </td></tr>
     <tr><td class="paramname">useragent</td><td>The User-Agent sent to the server <em>(optional, default: a desktop Chrome User-Agent)</em> </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>nil</code> if the connection or request failed </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The HTTP status code (e.g. <code>200</code> for OK, <code>404</code> for not found), or <code>nil</code> if the connection, the request or writing the file failed </dd></dl>
 <dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local white, blue = color.new(255, 255, 255), color.new(0, 0, 255)</div>
 <div class="line">function LifeLuaNetworkDownload(downloaded, written, size)</div>
 <div class="line">    <span class="keywordflow">if</span> size &gt; 0 then</div>
@@ -181,10 +239,9 @@ Functions</h2></td></tr>
 <div class="line">    end</div>
 <div class="line">    draw.swapbuffers()</div>
 <div class="line">end</div>
-<div class="line">network.download(<span class="stringliteral">&quot;https://example.com/file.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/file.zip&quot;</span>)</div>
+<div class="line">local status = network.download(<span class="stringliteral">&quot;https://example.com/file.zip&quot;</span>, <span class="stringliteral">&quot;ux0:data/file.zip&quot;</span>)</div>
+<div class="line"><span class="keywordflow">if</span> status ~= 200 then print(<span class="stringliteral">&quot;Download failed:&quot;</span>, status) end</div>
 </div><!-- fragment --> </dd></dl>
-</li>
-</ol>
 
 </div>
 </div>
@@ -279,6 +336,64 @@ Functions</h2></td></tr>
 <div class="line">    draw.text(10, 10, <span class="stringliteral">&quot;Connect to &quot;</span>..ftp.ip..<span class="stringliteral">&quot;:&quot;</span>..ftp.port, color.new(255, 255, 255))</div>
 <div class="line">    draw.swapbuffers()</div>
 <div class="line">end</div>
+</div><!-- fragment --> </dd></dl>
+
+</div>
+</div>
+<a id="ga2af1d5401d36c2f5ce19899845f1badc" name="ga2af1d5401d36c2f5ce19899845f1badc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2af1d5401d36c2f5ce19899845f1badc">&#9670;&#160;</a></span>network.get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string network.get </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>url</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">number</td>          <td class="paramname"><span class="paramname"><em>method</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>contenttype</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>useragent</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Downloads a page (HTTP or HTTPS) and returns its content as a string, instead of saving it to a file. The app waits until it's finished.</p>
+<p>The <code>LifeLuaNetworkDownload</code> callback is called here too (see <a class="el" href="#ga3fabe2c05b254f68cfc74867a0e5b676">network.download()</a>). Since nothing is written to a file, its "written" numbers are the same as the "downloaded" ones. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>The URL of the page </td></tr>
+    <tr><td class="paramname">method</td><td>The <a class="el" href="#ga2e64f9ac1e79269343fced58cc7f0f24">HTTP method</a> <em>(optional, default: SCE_HTTP_METHOD_GET)</em> </td></tr>
+    <tr><td class="paramname">data</td><td>Data to send with the request, e.g. for SCE_HTTP_METHOD_POST <em>(optional, default: nothing is sent)</em> </td></tr>
+    <tr><td class="paramname">contenttype</td><td>The type of <code>data</code> <em>(optional, default: <code>"application/x-www-form-urlencoded"</code>)</em>. Only used if <code>data</code> is given. </td></tr>
+    <tr><td class="paramname">useragent</td><td>The User-Agent sent to the server <em>(optional, default: a desktop Chrome User-Agent)</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Two values: the content of the page, and the HTTP status code (e.g. <code>200</code>). <code>nil</code> if the connection or the request failed. </dd></dl>
+<dl class="section user"><dt>Example:</dt><dd><div class="fragment"><div class="line">local body, status = network.get(<span class="stringliteral">&quot;https://api.github.com/repos/HarommelRabbid/LifeLua&quot;</span>)</div>
+<div class="line"><span class="keywordflow">if</span> status == 200 then</div>
+<div class="line">    print(json.decode(body).stargazers_count)</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">-- Sending JSON with POST</div>
+<div class="line">local reply = network.get(<span class="stringliteral">&quot;https://example.com/api/score&quot;</span>, <a class="code hl_variable" href="#gafe1674f78594300b3f151b055987dc37">SCE_HTTP_METHOD_POST</a>,</div>
+<div class="line">    json.encode({name = <span class="stringliteral">&quot;Harommel&quot;</span>, points = 100}), <span class="stringliteral">&quot;application/json&quot;</span>)</div>
+<div class="ttc" id="agroup__network_html_gafe1674f78594300b3f151b055987dc37"><div class="ttname"><a href="#gafe1674f78594300b3f151b055987dc37">SCE_HTTP_METHOD_POST</a></div><div class="ttdeci">number SCE_HTTP_METHOD_POST</div><div class="ttdoc">Send data to the server, e.g. a form or JSON.</div><div class="ttdef"><b>Definition</b> lj_network.h:31</div></div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
