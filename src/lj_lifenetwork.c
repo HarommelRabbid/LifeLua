@@ -93,101 +93,181 @@ static int lua_mac(lua_State *L) {
 	return 1;
 }
 
+#define LIFELUA_USERAGENT "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+#define HTTP_CHUNK_SIZE (16*1024)
+
+typedef struct {
+	int tpl, conn, req;
+} HttpHandles;
+
+static void http_close(HttpHandles *h){
+	if (h->req >= 0) sceHttpDeleteRequest(h->req);
+	if (h->conn >= 0) sceHttpDeleteConnection(h->conn);
+	if (h->tpl >= 0) sceHttpDeleteTemplate(h->tpl);
+	h->req = h->conn = h->tpl = -1;
+}
+
+// Creates the template/connection/request and sends it. On failure everything already created is freed.
+static int http_open(HttpHandles *h, const char *url, int method, const char *data, size_t datalen, const char *contenttype, const char *useragent){
+	h->tpl = h->conn = h->req = -1;
+	h->tpl = sceHttpCreateTemplate(useragent, SCE_HTTP_VERSION_1_1, SCE_TRUE);
+	if (h->tpl < 0) goto fail;
+	h->conn = sceHttpCreateConnectionWithURL(h->tpl, url, SCE_TRUE);
+	if (h->conn < 0) goto fail;
+	h->req = sceHttpCreateRequestWithURL(h->conn, method, url, data ? datalen : 0);
+	if (h->req < 0) goto fail;
+	if (data && contenttype) sceHttpAddRequestHeader(h->req, "Content-Type", contenttype, SCE_HTTP_HEADER_OVERWRITE);
+	if (sceHttpSendRequest(h->req, data, data ? datalen : 0) < 0) goto fail;
+	return 0;
+fail:
+	http_close(h);
+	return -1;
+}
+
+// Calls the global LifeLuaNetworkDownload, if there is one. Returns 0, or non-zero with the error message on the stack.
+static int http_progress(lua_State *L, uint64_t downloaded, uint64_t written, uint64_t size, int read, int wrote){
+	lua_getglobal(L, "LifeLuaNetworkDownload");
+	if (!lua_isfunction(L, -1)){
+		lua_pop(L, 1);
+		return 0;
+	}
+	lua_pushnumber(L, downloaded);
+	lua_pushnumber(L, written);
+	lua_pushnumber(L, size);
+	lua_pushnumber(L, read);
+	lua_pushnumber(L, wrote);
+	return lua_pcall(L, 5, 0, 0);
+}
+
+// network.download(url, path, [method], [data], [contenttype], [useragent]) -> status code, or nil on failure
 static int lua_download(lua_State *L){
 	const char *url = luaL_checkstring(L, 1);
 	const char *path = luaL_checkstring(L, 2);
-	const char *template = luaL_optstring(L, 3, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
-	int tpl = sceHttpCreateTemplate(template, SCE_HTTP_VERSION_1_1, SCE_TRUE);
-	if(tpl < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-	int conn = sceHttpCreateConnectionWithURL(tpl, url, SCE_TRUE);
-	if(conn < 0){
-		lua_pushnil(L);
-		return 1;
-	}
+	int method = luaL_optinteger(L, 3, SCE_HTTP_METHOD_GET);
+	size_t datalen = 0;
+	const char *data = luaL_optlstring(L, 4, NULL, &datalen);
+	const char *contenttype = luaL_optstring(L, 5, "application/x-www-form-urlencoded");
+	const char *useragent = luaL_optstring(L, 6, LIFELUA_USERAGENT);
 
-	int req = sceHttpCreateRequestWithURL(conn, SCE_HTTP_METHOD_GET, url, 0);
-	if(req < 0){
+	HttpHandles h;
+	if (http_open(&h, url, method, data, datalen, contenttype, useragent) < 0){
 		lua_pushnil(L);
 		return 1;
 	}
 
-	int res = sceHttpSendRequest(req, NULL, 0);
-	if(res < 0){
+	int status = 0;
+	sceHttpGetStatusCode(h.req, &status);
+	unsigned long long size = 0;
+	sceHttpGetResponseContentLength(h.req, &size);
+
+	SceUID fh = sceIoOpen(path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+	if (fh < 0){
+		http_close(&h);
 		lua_pushnil(L);
 		return 1;
 	}
+	unsigned char *chunk = malloc(HTTP_CHUNK_SIZE);
+	if (!chunk){
+		sceIoClose(fh);
+		http_close(&h);
+		return luaL_error(L, "out of memory");
+	}
 
-	int fh = sceIoOpen(path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
-	unsigned char data[16*1024];
-	int read;
-	int luaread = 0, luawrote = 0;
-	uint64_t size = 0;
-	sceHttpGetResponseContentLength(req, &size);
-
-	// read data until finished
-	while ((read = sceHttpReadData(req, &data, sizeof(data))) > 0) {
-		//psvDebugScreenPrintf("read %d bytes\n", read);
-
-		// writing the count of read bytes from the data buffer to the file
-		int written = sceIoWrite(fh, data, read);
-		//psvDebugScreenPrintf("wrote %d bytes\n", write);
-		lua_getglobal(L, "LifeLuaNetworkDownload");
-		if (lua_isfunction(L, -1)) {
-			lua_pushnumber(L, luaread+=read);
-			lua_pushnumber(L, luawrote+=written);
-			lua_pushnumber(L, size);
-			lua_pushnumber(L, read);
-			lua_pushnumber(L, written);
-			lua_call(L, 5, 0);
+	uint64_t downloaded = 0, written = 0;
+	int read, failed = 0;
+	while ((read = sceHttpReadData(h.req, chunk, HTTP_CHUNK_SIZE)) > 0){
+		int wrote = sceIoWrite(fh, chunk, read);
+		if (wrote < 0){ failed = 1; break; }
+		downloaded += read;
+		written += wrote;
+		if (http_progress(L, downloaded, written, size, read, wrote) != 0){
+			// the callback raised an error: clean up, then pass the error on
+			free(chunk);
+			sceIoClose(fh);
+			http_close(&h);
+			return lua_error(L);
 		}
 	}
+
+	free(chunk);
 	sceIoClose(fh);
-    if (req >= 0) sceHttpDeleteRequest(req);
-    if (conn >= 0) sceHttpDeleteConnection(conn);
-    if (tpl >= 0) sceHttpDeleteTemplate(tpl);
+	http_close(&h);
+	if (read < 0 || failed){
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_pushinteger(L, status);
 	return 1;
 }
 
-static int lua_header(lua_State *L){
-    char *header;
-    unsigned int headerSize;
+// network.get(url, [method], [data], [contenttype], [useragent]) -> body, status code; or nil on failure
+static int lua_get(lua_State *L){
 	const char *url = luaL_checkstring(L, 1);
-	const char *template = luaL_optstring(L, 2, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
-	int tpl = sceHttpCreateTemplate(template, SCE_HTTP_VERSION_1_1, SCE_TRUE);
-	if(tpl < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-	int conn = sceHttpCreateConnectionWithURL(tpl, url, SCE_TRUE);
-	if(conn < 0){
+	int method = luaL_optinteger(L, 2, SCE_HTTP_METHOD_GET);
+	size_t datalen = 0;
+	const char *data = luaL_optlstring(L, 3, NULL, &datalen);
+	const char *contenttype = luaL_optstring(L, 4, "application/x-www-form-urlencoded");
+	const char *useragent = luaL_optstring(L, 5, LIFELUA_USERAGENT);
+
+	HttpHandles h;
+	if (http_open(&h, url, method, data, datalen, contenttype, useragent) < 0){
 		lua_pushnil(L);
 		return 1;
 	}
 
-	int req = sceHttpCreateRequestWithURL(conn, SCE_HTTP_METHOD_GET, url, 0);
-	if(req < 0){
+	int status = 0;
+	sceHttpGetStatusCode(h.req, &status);
+	unsigned long long size = 0;
+	sceHttpGetResponseContentLength(h.req, &size);
+
+	unsigned char *chunk = malloc(HTTP_CHUNK_SIZE);
+	if (!chunk){
+		http_close(&h);
+		return luaL_error(L, "out of memory");
+	}
+
+	luaL_Buffer b;
+	luaL_buffinit(L, &b);
+	uint64_t downloaded = 0;
+	int read;
+	while ((read = sceHttpReadData(h.req, chunk, HTTP_CHUNK_SIZE)) > 0){
+		luaL_addlstring(&b, (const char *)chunk, read);
+		downloaded += read;
+		// nothing is written to a file here, so "written" is the same as "downloaded"
+		if (http_progress(L, downloaded, downloaded, size, read, read) != 0){
+			free(chunk);
+			http_close(&h);
+			return lua_error(L);
+		}
+	}
+
+	free(chunk);
+	http_close(&h);
+	if (read < 0){
+		lua_pushnil(L);
+		return 1;
+	}
+	luaL_pushresult(&b);
+	lua_pushinteger(L, status);
+	return 2;
+}
+
+// network.header(url, [useragent]) -> all response headers as one string, or nil on failure
+static int lua_header(lua_State *L){
+	const char *url = luaL_checkstring(L, 1);
+	const char *useragent = luaL_optstring(L, 2, LIFELUA_USERAGENT);
+
+	HttpHandles h;
+	if (http_open(&h, url, SCE_HTTP_METHOD_GET, NULL, 0, NULL, useragent) < 0){
 		lua_pushnil(L);
 		return 1;
 	}
 
-	int res = sceHttpSendRequest(req, NULL, 0);
-	if(res < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-
-	res = sceHttpGetAllResponseHeaders(req, &header, &headerSize);
-    if(res < 0){
-		lua_pushnil(L);
-		return 1;
-	}
-    lua_pushlstring(L, header, headerSize);
-    if (req >= 0) sceHttpDeleteRequest(req);
-    if (conn >= 0) sceHttpDeleteConnection(conn);
-    if (tpl >= 0) sceHttpDeleteTemplate(tpl);
+	char *header;
+	unsigned int headerSize;
+	if (sceHttpGetAllResponseHeaders(h.req, &header, &headerSize) < 0) lua_pushnil(L);
+	else lua_pushlstring(L, header, headerSize); // copied before the request (which owns it) is deleted
+	http_close(&h);
 	return 1;
 }
 
@@ -196,7 +276,8 @@ static const luaL_Reg network_lib[] = {
 	{"ip", lua_ip},
 	{"mac", lua_mac},
 	{"download", lua_download},
-    {"header", lua_header},
+	{"get", lua_get},
+	{"header", lua_header},
     {NULL, NULL}
 };
 
@@ -214,5 +295,14 @@ LUALIB_API int luaL_opennetwork(lua_State *L) {
 	lua_newtable(L);
 	luaL_register(L, NULL, ftp_lib);
 	lua_setfield(L, -2, "ftp"); // network.ftp = ftp_lib
+
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_GET);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_POST);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_HEAD);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_OPTIONS);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_PUT);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_DELETE);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_TRACE);
+	luaL_pushglobalint(L, SCE_HTTP_METHOD_CONNECT);
     return 1;
 }

@@ -24,6 +24,18 @@ string networkꓸip() {}
  * @return The MAC address, e.g. `"00:11:22:AA:BB:CC"`
 */
 string networkꓸmac() {}
+/** @name HTTP methods
+ * Used with networkꓸdownload() and networkꓸget() to choose how the request is sent.
+ * @{ */
+number SCE_HTTP_METHOD_GET; ///< Get a page or file (the default)
+number SCE_HTTP_METHOD_POST; ///< Send data to the server, e.g. a form or JSON
+number SCE_HTTP_METHOD_HEAD; ///< Like GET, but the server only sends the headers, no content
+number SCE_HTTP_METHOD_OPTIONS; ///< Ask the server which methods it supports
+number SCE_HTTP_METHOD_PUT; ///< Upload data to replace what's at the URL
+number SCE_HTTP_METHOD_DELETE; ///< Delete what's at the URL
+number SCE_HTTP_METHOD_TRACE; ///< Ask the server to send the request back (for debugging)
+number SCE_HTTP_METHOD_CONNECT; ///< Open a tunnel through a proxy
+/** @} */
 /**
  * Downloads a file (HTTP or HTTPS). The app waits until the download is finished.
  *
@@ -34,10 +46,16 @@ string networkꓸmac() {}
  * 3. Size of the whole file in bytes (0 if the server doesn't say)
  * 4. Bytes downloaded in this piece
  * 5. Bytes written in this piece
+ *
+ * If the callback raises an error, the download stops and the error is passed on.
  * @param url The URL of the file
  * @param path Where to save the file
+ * @param method The @ref SCE_HTTP_METHOD_GET "HTTP method" *(optional, default: SCE_HTTP_METHOD_GET)*
+ * @param data Data to send with the request, e.g. for SCE_HTTP_METHOD_POST *(optional, default: nothing is sent)*
+ * @param contenttype The type of `data` *(optional, default: `"application/x-www-form-urlencoded"`)*. Only used if `data` is given.
  * @param useragent The User-Agent sent to the server *(optional, default: a desktop Chrome User-Agent)*
- * @return `nil` if the connection or request failed
+ * @return The HTTP status code (e.g. `200` for OK, `404` for not found), or `nil` if the connection, the request
+ * or writing the file failed
  * @par Example:
  * @code
  * local white, blue = color.new(255, 255, 255), color.new(0, 0, 255)
@@ -48,10 +66,36 @@ string networkꓸmac() {}
  *     end
  *     draw.swapbuffers()
  * end
- * network.download("https://example.com/file.zip", "ux0:data/file.zip")
+ * local status = network.download("https://example.com/file.zip", "ux0:data/file.zip")
+ * if status ~= 200 then print("Download failed:", status) end
  * @endcode
 */
-nil networkꓸdownload(string url, string path, string useragent) {}
+number networkꓸdownload(string url, string path, number method, string data, string contenttype, string useragent) {}
+/**
+ * Downloads a page (HTTP or HTTPS) and returns its content as a string, instead of saving it to a file.
+ * The app waits until it's finished.
+ *
+ * The `LifeLuaNetworkDownload` callback is called here too (see networkꓸdownload()).
+ * Since nothing is written to a file, its "written" numbers are the same as the "downloaded" ones.
+ * @param url The URL of the page
+ * @param method The @ref SCE_HTTP_METHOD_GET "HTTP method" *(optional, default: SCE_HTTP_METHOD_GET)*
+ * @param data Data to send with the request, e.g. for SCE_HTTP_METHOD_POST *(optional, default: nothing is sent)*
+ * @param contenttype The type of `data` *(optional, default: `"application/x-www-form-urlencoded"`)*. Only used if `data` is given.
+ * @param useragent The User-Agent sent to the server *(optional, default: a desktop Chrome User-Agent)*
+ * @return Two values: the content of the page, and the HTTP status code (e.g. `200`). `nil` if the connection or the request failed.
+ * @par Example:
+ * @code
+ * local body, status = network.get("https://api.github.com/repos/HarommelRabbid/LifeLua")
+ * if status == 200 then
+ *     print(json.decode(body).stargazers_count)
+ * end
+ *
+ * -- Sending JSON with POST
+ * local reply = network.get("https://example.com/api/score", SCE_HTTP_METHOD_POST,
+ *     json.encode({name = "Harommel", points = 100}), "application/json")
+ * @endcode
+*/
+string networkꓸget(string url, number method, string data, string contenttype, string useragent) {}
 /**
  * Gets the HTTP response headers of a URL
  * @param url The URL

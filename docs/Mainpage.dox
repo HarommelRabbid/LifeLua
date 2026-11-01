@@ -110,7 +110,7 @@ To show progress or keep drawing during that time, define a **global function** 
 
 | Function name | Called during | Parameters |
 |---------------|---------------|------------|
-| `LifeLuaNetworkDownload` | networkꓸdownload() | downloaded bytes, written bytes, total size, piece size, written piece size |
+| `LifeLuaNetworkDownload` | networkꓸdownload(), networkꓸget() | downloaded bytes, written bytes, total size, piece size, written piece size |
 | `LifeLuaArchiveExtracting` | ioꓸextract() | file name, file number, file size |
 | `LifeLuaIMEDialog`, `LifeLuaMessageDialog`, ... | The @ref os "os" dialogs | none (see the list in @ref os "os") |
 
