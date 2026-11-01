@@ -32,11 +32,60 @@ boolean ioꓸexists(string path) {}
 */
 nil ioꓸnewfolder(string path) {}
 /**
- * Deletes a file or an **empty** folder
- * @param path Path to delete
- * @return `true` on success, `false` if it doesn't exist or couldn't be deleted (e.g. the folder isn't empty)
+ * Deletes a file, or a folder together with everything inside it
+ *
+ * If you define a global function called `LifeLuaDeleting`, it's called right before each file or folder is deleted,
+ * so you can show the progress. A folder's contents are deleted before the folder itself. It receives:
+ * 1. **string**: Path of the file or folder about to be deleted
+ * 2. **boolean**: `true` if it's a folder
+ * 3. **number**: How many files and folders have been handled so far, counting this one
+ *
+ * If the callback raises an error, deleting stops (what was already deleted stays deleted) and the error is passed on.
+ * @param path Path of the file or folder to delete
+ * @return `true` on success, `false` if it doesn't exist or something couldn't be deleted
+ * (deleting stops at the first thing that fails)
+ * @warning Folders are deleted with everything in them, without asking. Double-check the path!
+ * @par Example:
+ * @code
+ * function LifeLuaDeleting(path, isafolder, number)
+ *     draw.text(10, 10, "Deleting #"..number..": "..path, color.new(255, 255, 255))
+ *     draw.swapbuffers()
+ * end
+ * io.delete("ux0:data/myapp/cache")
+ * @endcode
 */
 boolean ioꓸdelete(string path) {}
+/**
+ * Copies a file, or a folder together with everything inside it.
+ * Missing parent folders of the destination are created, and existing files are overwritten.
+ *
+ * If you define a global function called `LifeLuaCopying`, it's called while copying, so you can show the progress:
+ * once when each folder is created, once when each file starts, and after every piece (64 KB) of a file is copied.
+ * It receives:
+ * 1. **string**: Path of the file or folder being copied
+ * 2. **string**: Path of its copy
+ * 3. **number**: Bytes of this file copied so far (0 for folders)
+ * 4. **number**: Size of this file in bytes (0 for folders)
+ * 5. **number**: How many files and folders have been handled so far, counting this one
+ *
+ * If the callback raises an error, copying stops (what was already copied stays) and the error is passed on.
+ * @param source Path of the file or folder to copy
+ * @param destination Full path of the copy, **not** the folder to put it in:
+ * `io.copy("ux0:data/a.txt", "ux0:data/backup/a.txt")`, not `io.copy("ux0:data/a.txt", "ux0:data/backup")`
+ * @return `true` on success, `false` if the source doesn't exist or something couldn't be copied
+ * (copying stops at the first thing that fails). Raises an error if you try to copy a folder into itself.
+ * @par Example:
+ * @code
+ * local white = color.new(255, 255, 255)
+ * function LifeLuaCopying(source, destination, copied, size, number)
+ *     draw.text(10, 10, "Copying #"..number..": "..source, white)
+ *     if size > 0 then draw.text(10, 40, math.floor(copied * 100 / size).."%", white) end
+ *     draw.swapbuffers()
+ * end
+ * io.copy("ux0:data/myapp", "ux0:data/myapp_backup")
+ * @endcode
+*/
+boolean ioꓸcopy(string source, string destination) {}
 /**
  * Lists the contents of a folder
  * @param path Path of the folder

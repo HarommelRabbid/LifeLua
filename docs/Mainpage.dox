@@ -74,7 +74,7 @@ nil image.display(image image, number x, number y, color tint)
 | @ref imgui "imgui" | Windows, menus, buttons and other UI widgets |
 | @ref timer "timer" | Measuring time |
 | @ref os "os" | System dialogs (keyboard, messages), apps, battery, power, system info |
-| @ref io "io" | Files, folders, archives, hashes |
+| @ref io "io" | Files, folders (copying, deleting), archives, hashes |
 | @ref network "network" | Wi-Fi, downloads, FTP server |
 | @ref json "json" / @ref toml "toml" | Reading and writing JSON, reading TOML |
 | @ref sqlite3 "sqlite3" | SQLite databases |
@@ -112,6 +112,8 @@ To show progress or keep drawing during that time, define a **global function** 
 |---------------|---------------|------------|
 | `LifeLuaNetworkDownload` | networkꓸdownload(), networkꓸget() | downloaded bytes, written bytes, total size, piece size, written piece size |
 | `LifeLuaArchiveExtracting` | ioꓸextract() | file name, file number, file size |
+| `LifeLuaDeleting` | ioꓸdelete() | path, is a folder, number |
+| `LifeLuaCopying` | ioꓸcopy() | source path, destination path, copied bytes, file size, number |
 | `LifeLuaIMEDialog`, `LifeLuaMessageDialog`, ... | The @ref os "os" dialogs | none (see the list in @ref os "os") |
 
 ## Tips ##

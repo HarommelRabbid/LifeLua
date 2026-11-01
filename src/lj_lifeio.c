@@ -260,53 +260,178 @@ static int lua_editsfo(lua_State *L) {
     return 0;
 }
 
-int recursive_delete(const char *path) {
-    SceIoStat stat;
-    if (sceIoGetstat(path, &stat) < 0) return -1;
+int recursive_folders(const char* path); // defined further down
 
-    if (SCE_S_ISDIR(stat.st_mode)) {
-        SceUID dfd = sceIoDopen(path);
-        if (dfd < 0) return -1;
+#define IO_COPY_CHUNK (64*1024)
+#define IO_CALLBACK_ERROR -2 // a Lua callback raised an error; the message is on the Lua stack
 
-        SceIoDirent dir;
-        memset(&dir, 0, sizeof(SceIoDirent));
-
-        while (sceIoDread(dfd, &dir) > 0) {
-            if (strcmp(dir.d_name, ".") == 0 || strcmp(dir.d_name, "..") == 0) continue;
-
-            char fullpath[1024];
-            snprintf(fullpath, sizeof(fullpath), "%s/%s", path, dir.d_name);
-            
-            if (recursive_delete(fullpath) < 0) {
-                sceIoDclose(dfd);
-                return -1;
-            }
-        }
-
-        sceIoDclose(dfd);
-        return sceIoRmdir(path);
-
-    } else {
-        return sceIoRemove(path);
-    }
+// Joins a folder and a name without doubling the slash. Returns 0, or -1 if the result doesn't fit.
+static int join_path(char *out, size_t outsize, const char *folder, const char *name){
+	size_t len = strlen(folder);
+	int n = (len > 0 && (folder[len-1] == '/' || folder[len-1] == ':'))
+		? snprintf(out, outsize, "%s%s", folder, name)
+		: snprintf(out, outsize, "%s/%s", folder, name);
+	return (n < 0 || (size_t)n >= outsize) ? -1 : 0;
 }
 
-static int lua_delete(lua_State *L){
-    const char *path = luaL_checkstring(L, 1);
+// Calls the global LifeLuaDeleting(path, isafolder, number), if it's defined
+static int delete_callback(lua_State *L, const char *path, bool isfolder, int number){
+	lua_getglobal(L, "LifeLuaDeleting");
+	if (!lua_isfunction(L, -1)){
+		lua_pop(L, 1);
+		return 0;
+	}
+	lua_pushstring(L, path);
+	lua_pushboolean(L, isfolder);
+	lua_pushinteger(L, number);
+	return lua_pcall(L, 3, 0, 0) ? IO_CALLBACK_ERROR : 0;
+}
+
+// Deletes a file, or a folder with everything inside it. The callback is called right before each item is deleted
+// (a folder's contents come before the folder itself).
+static int recursive_delete(lua_State *L, const char *path, int *count){
 	SceIoStat stat;
-	if(sceIoGetstat(path, &stat) < 0){
-		lua_pushboolean(L, false);
-		return 1;
-	}
+	if (sceIoGetstat(path, &stat) < 0) return -1;
 
-    if(SCE_S_ISDIR(stat.st_mode)){
-		if(sceIoRmdir(path) >= 0) lua_pushboolean(L, true);
-		else lua_pushboolean(L, false);
+	if (SCE_S_ISDIR(stat.st_mode)){
+		SceUID dfd = sceIoDopen(path);
+		if (dfd < 0) return -1;
+
+		SceIoDirent dir;
+		memset(&dir, 0, sizeof(SceIoDirent));
+		while (sceIoDread(dfd, &dir) > 0){
+			if (strcmp(dir.d_name, ".") == 0 || strcmp(dir.d_name, "..") == 0) continue;
+
+			char fullpath[1024];
+			int ret = join_path(fullpath, sizeof(fullpath), path, dir.d_name);
+			if (ret == 0) ret = recursive_delete(L, fullpath, count);
+			if (ret < 0){
+				sceIoDclose(dfd);
+				return ret;
+			}
+		}
+		sceIoDclose(dfd);
+
+		if (delete_callback(L, path, true, ++*count)) return IO_CALLBACK_ERROR;
+		return sceIoRmdir(path) < 0 ? -1 : 0;
 	}else{
-		if(sceIoRemove(path) < 0) lua_pushboolean(L, false);
-		else lua_pushboolean(L, true);
+		if (delete_callback(L, path, false, ++*count)) return IO_CALLBACK_ERROR;
+		return sceIoRemove(path) < 0 ? -1 : 0;
+	}
+}
+
+// io.delete(path) -> true, or false if something couldn't be deleted
+static int lua_delete(lua_State *L){
+	const char *path = luaL_checkstring(L, 1);
+	int count = 0;
+	int ret = recursive_delete(L, path, &count);
+	if (ret == IO_CALLBACK_ERROR) return lua_error(L);
+	lua_pushboolean(L, ret == 0);
+	return 1;
+}
+
+// Calls the global LifeLuaCopying(source, destination, copied, size, number), if it's defined
+static int copy_callback(lua_State *L, const char *src, const char *dst, uint64_t copied, uint64_t size, int number){
+	lua_getglobal(L, "LifeLuaCopying");
+	if (!lua_isfunction(L, -1)){
+		lua_pop(L, 1);
+		return 0;
+	}
+	lua_pushstring(L, src);
+	lua_pushstring(L, dst);
+	lua_pushnumber(L, copied);
+	lua_pushnumber(L, size);
+	lua_pushinteger(L, number);
+	return lua_pcall(L, 5, 0, 0) ? IO_CALLBACK_ERROR : 0;
+}
+
+static int copy_file(lua_State *L, const char *src, const char *dst, uint64_t size, unsigned char *buf, int number){
+	SceUID in = sceIoOpen(src, SCE_O_RDONLY, 0);
+	if (in < 0) return -1;
+	SceUID out = sceIoOpen(dst, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_TRUNC, 0777);
+	if (out < 0){
+		sceIoClose(in);
+		return -1;
 	}
 
+	int ret = copy_callback(L, src, dst, 0, size, number); // tells the callback a new file has started
+	uint64_t copied = 0;
+	int read;
+	while (ret == 0 && (read = sceIoRead(in, buf, IO_COPY_CHUNK)) > 0){
+		if (sceIoWrite(out, buf, read) != read){
+			ret = -1;
+			break;
+		}
+		copied += read;
+		ret = copy_callback(L, src, dst, copied, size, number);
+	}
+	if (ret == 0 && read < 0) ret = -1;
+
+	sceIoClose(in);
+	sceIoClose(out);
+	return ret;
+}
+
+// Copies a file, or a folder with everything inside it, to dst (the full path of the copy)
+static int recursive_copy(lua_State *L, const char *src, const char *dst, unsigned char *buf, int *count){
+	SceIoStat stat;
+	if (sceIoGetstat(src, &stat) < 0) return -1;
+
+	if (SCE_S_ISDIR(stat.st_mode)){
+		if (!file_exists(dst) && sceIoMkdir(dst, 0777) < 0) return -1;
+		if (copy_callback(L, src, dst, 0, 0, ++*count)) return IO_CALLBACK_ERROR;
+
+		SceUID dfd = sceIoDopen(src);
+		if (dfd < 0) return -1;
+
+		SceIoDirent dir;
+		memset(&dir, 0, sizeof(SceIoDirent));
+		while (sceIoDread(dfd, &dir) > 0){
+			if (strcmp(dir.d_name, ".") == 0 || strcmp(dir.d_name, "..") == 0) continue;
+
+			char srcpath[1024], dstpath[1024];
+			int ret = (join_path(srcpath, sizeof(srcpath), src, dir.d_name) == 0 &&
+			           join_path(dstpath, sizeof(dstpath), dst, dir.d_name) == 0) ? 0 : -1;
+			if (ret == 0) ret = recursive_copy(L, srcpath, dstpath, buf, count);
+			if (ret < 0){
+				sceIoDclose(dfd);
+				return ret;
+			}
+		}
+		sceIoDclose(dfd);
+		return 0;
+	}else{
+		return copy_file(L, src, dst, stat.st_size, buf, ++*count);
+	}
+}
+
+// io.copy(source, destination) -> true, or false if something couldn't be copied
+static int io_copy(lua_State *L){
+	const char *src = luaL_checkstring(L, 1);
+	const char *dst = luaL_checkstring(L, 2);
+
+	// copying a folder into itself would never end
+	size_t srclen = strlen(src);
+	while (srclen > 0 && src[srclen-1] == '/') srclen--;
+	if (strncmp(src, dst, srclen) == 0 && (dst[srclen] == '\0' || dst[srclen] == '/'))
+		return luaL_error(L, "can't copy \"%s\" into itself", src);
+
+	// create the folders the copy goes into
+	char parent[1024];
+	snprintf(parent, sizeof(parent), "%s", dst);
+	char *slash = strrchr(parent, '/');
+	if (slash && slash > parent && slash[-1] != ':'){
+		*slash = '\0';
+		recursive_folders(parent);
+	}
+
+	unsigned char *buf = malloc(IO_COPY_CHUNK);
+	if (!buf) return luaL_error(L, "out of memory");
+	int count = 0;
+	int ret = recursive_copy(L, src, dst, buf, &count);
+	free(buf);
+	if (ret == IO_CALLBACK_ERROR) return lua_error(L);
+	lua_pushboolean(L, ret == 0);
 	return 1;
 }
 
@@ -697,6 +822,7 @@ static const luaL_Reg io_lib[] = {
     {"exists", lua_fileexist},
     {"newfolder", lua_newfolder},
     {"delete", lua_delete},
+    {"copy", io_copy},
     {"list", lua_list},
     {"pathstrip", lua_getfilename},
     {"filestrip", lua_getfolder},
