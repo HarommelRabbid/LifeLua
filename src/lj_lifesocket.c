@@ -32,9 +32,9 @@ static int socket_connect(lua_State *L){
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = SCE_NET_AF_INET;
     addr.sin_port = sceNetHtons(port);
-    if (resolve_host(host, &addr.sin_addr) < 0) {
+    if (resolve_host(ip, &addr.sin_addr) < 0) {
         sceNetSocketClose(fd);
-        return luaL_error(L, "Couldn't resolve host \"%s\"", host);
+        return luaL_error(L, "Couldn't resolve host \"%s\"", ip);
     }
 
     if (sceNetConnect(fd, (SceNetSockaddr*)&addr, sizeof(addr)) < 0) {
