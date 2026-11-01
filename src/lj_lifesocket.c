@@ -234,6 +234,7 @@ static const luaL_Reg socket_methods[] = {
     {"setnonblocking", socket_setnonblocking},
     {"setbroadcast", socket_setbroadcast},
     {"close", socket_close},
+    {"__gc", socket_close},
     {NULL, NULL}
 };
 
