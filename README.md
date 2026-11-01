@@ -6,10 +6,11 @@ LifeLua is a Lua interpreter for the PS Vita which combines simplicity with adva
 ## Features
 * Camera support with effects and filters
 * JSON, TOML and SQLite3 support
-* Image support including PSD, TGA & HDR support
+* Image support including PSD, TGA, DDS & HDR support
 * Audio with support for MP3, WAV, OGG, OPUS, FLAC and tracker module formats (.MOD, .IT & more)
 * QR code scanning & generation
 * Shapes with solid colors or gradients
+* Sockets, downloading web pages
 * Timers
 ## Documentation
 https://harommelrabbid.github.io/LifeLua
@@ -35,7 +36,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * Audio streaming support
 * 3D support with shading, shadows & reflections
 * More shape drawing functions, such as drawing arches
-* Adhoc & socket support, and maybe PSN support as well
+* Adhoc support, and maybe PSN support as well
 * SHA512 hashing support
 * Fix the thread library (it's kind of unstable, some functions as a thread may crash the app, depending on how heavy the function is)
 * Channels for communicating between threads (like in LÖVE2D)
@@ -49,7 +50,7 @@ find . -mindepth 1 -delete && cmake .. && make
 * [QR-Code-generator](https://github.com/nayuki/QR-Code-generator) by [nayuki](https://github.com/nayuki)
 * libvita2d & ftpvita by xerpi
 * Inspiration from [Lua Player Plus Vita](https://github.com/Rinnegatamante/lpp-vita) by [Rinnegatamante](https://github.com/Rinnegatamante)
-* [luautf8](https://github.com/starwing/luautf8) by [starwing](https://github.com/starwing)
+* [luautf8](https://github.com/starwing/luautf8) & mp-lua by [starwing](https://github.com/starwing)
 <!--
 * [Compound Assignment Operators](http://lua-users.org/files/wiki_insecure/power_patches/5.2/compound-5.2.2.patch) (Lua diff patch) by [SvenOlsen](http://lua-users.org/wiki/SvenOlsen)
 * [Bitwise operators, integer division and !=](http://lua-users.org/files/wiki_insecure/power_patches/5.1/bitwise_operators_5.1.4_1.patch) by Thierry Grellier, darkmist(at)mail.ru & Joshua Simmons
