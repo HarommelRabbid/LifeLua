@@ -38,6 +38,7 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
 #define lua_rawlen(L, i) lua_objlen(L, i)
+#define LL_VERSION "26-11-07"
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +85,7 @@ void ascii2utf(uint16_t* dst, char* src);
 
 Color *lua_tocolor(lua_State *L, int n);
 
+void luaL_extend(lua_State *L);
 LUALIB_API int luaL_opentimer(lua_State *L);
 LUALIB_API int luaL_extendio(lua_State *L);
 LUALIB_API int luaL_extendos(lua_State *L);

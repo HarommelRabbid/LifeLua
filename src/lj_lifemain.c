@@ -205,6 +205,7 @@ int main(){
 	psexchar = vita2d_load_custom_pvf("sa0:data/font/pvf/psexchar.pvf");
 
 	L = luaL_newstate();
+	lua_pushstring(L, LL_VERSION); lua_setglobal(L, "LL_VERSION"); 
 	luaL_openlibs(L);
 	luaL_openutf8(L);
 	luaL_extendos(L);
