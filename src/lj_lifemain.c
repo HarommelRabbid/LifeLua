@@ -136,7 +136,7 @@ void luaL_lifelua_dofile(lua_State *L){
 void luaL_extend(lua_State *L){
 	size_t size = (size_t)(_binary_ext_init_lua_end - _binary_ext_init_lua_start);
 
-	if((luaL_loadbuffer(L, (const char *)_binary_ext_init_lua_start, size, "LL init.lua") || lua_pcall(L, 0, 0, 0)) != LUA_OK){
+	if((luaL_loadbuffer(L, (const char *)_binary_ext_init_lua_start, size, "=LL init.lua") || lua_pcall(L, 0, 0, 0)) != LUA_OK){
 		vita2d_end_drawing();
 		vita2d_swap_buffers();
 		const char *error = lua_tostring(L, -1) != NULL ? lua_tostring(L, -1) : "Unknown error";

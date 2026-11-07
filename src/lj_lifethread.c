@@ -10,15 +10,17 @@ typedef struct {
     char *script;
     size_t script_len;
     char *error;
+    bool running;
 } Thread;
 
 static int lua_lifelua_thread(SceSize args, void *argp) {
     (void)args;
     Thread *thread_data = *(Thread **)argp;
     
+    thread_data->running = true;
+
     lua_State *T = luaL_newstate();
     luaL_openlibs(T);
-    luaL_extend(T);
     luaL_openjson(T);
     luaL_openmp(T);
     luaL_opentoml(T);
@@ -28,10 +30,13 @@ static int lua_lifelua_thread(SceSize args, void *argp) {
     luaL_openclipboard(T);
     luaL_opencolor(T);
     luaL_extendio(T);
+    luaL_extendos(T);
     luaL_opentimer(T);
     luaL_opensqlite3(T);
     luaL_openfont(T);
-    if((luaL_loadbuffer(T, thread_data->script, thread_data->script_len, "LifeLua Thread") || lua_pcall(T, 0, 0, 0)) != LUA_OK){
+    luaL_opencontrols(T);
+    luaL_extend(T);
+    if((luaL_loadbuffer(T, thread_data->script, thread_data->script_len, "=LifeLua Thread") || lua_pcall(T, 0, 0, 0)) != LUA_OK){
         size_t err_len;
         const char *error = lua_tolstring(T, -1, &err_len);
         if(error != NULL){
@@ -41,7 +46,9 @@ static int lua_lifelua_thread(SceSize args, void *argp) {
     }
 
     lua_close(T);
-    
+
+    thread_data->running = false;
+
     sceKernelExitDeleteThread(0);
     return 0;
 }
@@ -71,6 +78,12 @@ static int thread_error(lua_State *L){
     Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
     if(thread->error != NULL) lua_pushstring(L, thread->error);
     else lua_pushnil(L);
+    return 1;
+}
+
+static int thread_running(lua_State *L){
+    Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
+    lua_pushboolean(L, thread->running);
     return 1;
 }
 
@@ -106,6 +119,7 @@ static const luaL_Reg thread_lib[] = {
     {"new", thread_new},
     {"start", thread_start},
     {"error", thread_error},
+    {"running", thread_running},
     {"wait", lua_wait},
     {"waitcb", lua_waitcb},
     {"exit", lua_exit},
@@ -116,6 +130,7 @@ static const luaL_Reg thread_lib[] = {
 static const luaL_Reg thread_methods[] = {
     {"start", thread_start},
     {"error", thread_error},
+    {"running", thread_running},
     {"wait", lua_wait},
     {"waitcb", lua_waitcb},
     {"__gc", thread_gc},
