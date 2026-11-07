@@ -7,14 +7,14 @@
 
 typedef struct {
     SceUID thread;
-    const char *script;
+    char *script;
     size_t script_len;
     char *error;
 } Thread;
 
 static int lua_lifelua_thread(SceSize args, void *argp) {
     (void)args;
-    Thread *thread_data = (Thread *)argp;
+    Thread *thread_data = *(Thread **)argp;
     
     lua_State *T = luaL_newstate();
     luaL_openlibs(T);
@@ -34,9 +34,10 @@ static int lua_lifelua_thread(SceSize args, void *argp) {
     if((luaL_loadbuffer(T, thread_data->script, thread_data->script_len, "LifeLua Thread") || lua_pcall(T, 0, 0, 0)) != LUA_OK){
         size_t err_len;
         const char *error = lua_tolstring(T, -1, &err_len);
-        thread_data->error = malloc(err_len + 1);
-        if(error != NULL) strcpy(thread_data->error, error);
-        else strcpy(thread_data->error, "Unknown error");
+        if(error != NULL){
+            thread_data->error = malloc(err_len + 1);
+            strcpy(thread_data->error, error);
+        }else thread_data->error = strdup("Unknown error");
     }
 
     lua_close(T);
@@ -46,12 +47,13 @@ static int lua_lifelua_thread(SceSize args, void *argp) {
 }
 
 static int thread_new(lua_State *L) {
-    Thread *thread = (Thread *)lua_newuserdata(L, sizeof(Thread));
-    thread->error = NULL;
-    size_t script_len;
-    thread->script = luaL_checklstring(L, 1, &script_len);
-    thread->script_len = script_len;
+    size_t script_len = 0;
+    const char *script = luaL_checklstring(L, 1, &script_len);
     const char *name = luaL_optstring(L, 2, "LifeLua Thread");
+    Thread *thread = (Thread *)lua_newuserdata(L, sizeof(Thread));
+    thread->script = strndup(script, script_len);
+    thread->script_len = script_len;
+    thread->error = NULL;
     thread->thread = sceKernelCreateThread(name, &lua_lifelua_thread, 0x10000100, 0x100000, 0, 0, NULL);
     luaL_getmetatable(L, "thread");
     lua_setmetatable(L, -2);
@@ -60,7 +62,7 @@ static int thread_new(lua_State *L) {
 
 static int thread_start(lua_State *L){
     Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
-    int res = sceKernelStartThread(thread->thread, sizeof(Thread), (void *)thread);
+    int res = sceKernelStartThread(thread->thread, sizeof(Thread *), &thread);
     if (res < 0) return luaL_error(L, "Failed to start thread (err: 0x%08X)", res);
     return 0;
 }
