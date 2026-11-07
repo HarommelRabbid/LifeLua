@@ -112,6 +112,7 @@ static int lua_waitcb(lua_State *L){
 static int thread_gc(lua_State *L){
     Thread *thread = (Thread *)luaL_checkudata(L, 1, "thread");
     if(thread->error != NULL) free(thread->error);
+    if(thread->script != NULL) free(thread->script);
     return 0;
 }
 
