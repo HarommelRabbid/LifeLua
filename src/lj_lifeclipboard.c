@@ -5,8 +5,6 @@
 
 #include "lj_lifeinit.h"
 
-#include <psp2/sysmodule.h>
-
 #define SCE_CLIPBOARD_MAX_STRING_LENGTH		8189
 
 #define SCE_CLIPBOARD_ERROR_INTERNAL				-2146417152	/* 0x80104600 */
