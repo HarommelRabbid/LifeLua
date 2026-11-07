@@ -24,7 +24,6 @@
 static SceTouchPanelInfo rearinfo;
 
 static int lua_updatecontrols(lua_State *L){
-	int argc = lua_gettop(L);
 	bool ext = lua_toboolean(L, 1);
 	bool bind = lua_toboolean(L, 2);
 	oldpad = pad;
