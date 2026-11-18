@@ -1,38 +1,29 @@
 /*
-    LifeLua WIP
+    LifeLua PS Vita
     Color library
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <math.h>
-#include <ctype.h>
-#include <errno.h>
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdbool.h>
-#include <zlib.h>
-
-#include <vitasdk.h>
-#include <taihen.h>
-#include <vita2d.h>
-
 #include "lj_lifeinit.h"
 
-Color *lua_tocolor(lua_State *L, int n) {
-    Color *color = (Color *)luaL_testudata(L, n, "color");
-    if (color) return color;
-    if (lua_isnumber(L, n)) {
-        unsigned int col = luaL_checknumber(L, n);
-        Color *newcolor = (Color *)lua_newuserdata(L, sizeof(Color));
-        newcolor->color = RGBA8(col & 0xFF, (col >> 8) & 0xFF, (col >> 16) & 0xFF, (col >> 24) & 0xFF); //ABGR to RGBA
-        luaL_getmetatable(L, "color");
-        lua_setmetatable(L, -2);
-        return newcolor;
+Color *lua_tocolor(lua_State *L, int n){
+    int type = lua_type(L, n);
+
+    switch(type){
+        case LUA_TNUMBER: {
+            unsigned int rawcolor = luaL_checkinteger(L, n);
+            Color *color = (Color *)lua_newuserdata(L, sizeof(Color));
+            color->color = RGBA8(rawcolor & 0xFF, (rawcolor >> 8) & 0xFF, (rawcolor >> 16) & 0xFF, (rawcolor >> 24) & 0xFF);
+            return color;
+        }
+        case LUA_TUSERDATA: {
+            Color *color = (Color *)luaL_checkudata(L, n, "color");
+            return color;
+        }
+        default: break;
     }
-    return (Color *)luaL_typerror(L, n, "color");
+
+    luaL_typerror(L, n, "color or number");
+    return NULL;
 }
 
 static int lua_tocolortype(lua_State *L){
