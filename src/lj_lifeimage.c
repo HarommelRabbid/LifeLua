@@ -134,13 +134,15 @@ static int lua_imageload(lua_State *L) {
 }
 
 static int lua_newimage(lua_State *L) {
-    Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
-	unsigned int w = luaL_checkinteger(L, 1);
+    unsigned int w = luaL_checkinteger(L, 1);
 	unsigned int h = luaL_checkinteger(L, 2);
+    Color *color = NULL;
+    if(!lua_isnone(L, 3)) color = lua_tocolor(L, 3);
+    Image *image = (Image *)lua_newuserdata(L, sizeof(Image));
 
 	image->tex = vita2d_create_empty_texture_format(w, h, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
-	if(!lua_isnone(L, 3)){
-		Color *color = lua_tocolor(L, 3);
+	if(color != NULL){
+		color = lua_tocolor(L, 3);
         uint32_t *datap = vita2d_texture_get_datap(image->tex);
         for(uint32_t i = 0; i < (vita2d_texture_get_stride(image->tex) / 4) * h; i++)
             datap[i] = color->color;
