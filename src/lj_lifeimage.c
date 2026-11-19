@@ -628,6 +628,45 @@ static int image_copy(lua_State *L){
     return 1;
 }
 
+static int image_crop(lua_State *L){
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
+    unsigned int width = vita2d_texture_get_width(image->tex);
+    unsigned int height = vita2d_texture_get_height(image->tex);
+    unsigned int stride = vita2d_texture_get_stride(image->tex) / 4;
+
+    unsigned int crop_x = CLAMP(luaL_checkint(L, 2), 0, width-1);
+    unsigned int crop_y = CLAMP(luaL_checkint(L, 3), 0, height-1);
+    unsigned int new_width = CLAMP(luaL_checkint(L, 4), 0, width-1);
+    unsigned int new_height = CLAMP(luaL_checkint(L, 5), 0, height-1);
+
+    uint32_t *datap = vita2d_texture_get_datap(image->tex);
+
+    Image *cropped_image = (Image *)lua_newuserdata(L, sizeof(Image));
+    cropped_image->tex = vita2d_create_empty_texture_format(new_width, new_height, SCE_GXM_TEXTURE_FORMAT_A8B8G8R8);
+
+    uint32_t *cropped_datap = vita2d_texture_get_datap(cropped_image->tex);
+    unsigned int cropped_stride = vita2d_texture_get_stride(cropped_image->tex) / 4;
+
+    for (int y = 0; y < new_height; y++) {
+		for (int x = 0; x < new_width; x++) {
+			uint32_t src_offset = (crop_y + y) * stride + (crop_x + x);
+			uint32_t dst_offset = y * cropped_stride + x;
+			cropped_datap[dst_offset] = datap[src_offset];
+		}
+	}
+
+    luaL_getmetatable(L, "image");
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+static int image_data(lua_State *L){
+    Image *image = (Image *)luaL_checkudata(L, 1, "image");
+    lua_pushlightuserdata(L, vita2d_texture_get_datap(image->tex));
+    lua_pushinteger(L, vita2d_texture_get_stride(image->tex) / 4);
+    return 2;
+}
+
 static const luaL_Reg image_lib[] = {
     {"load", lua_imageload},
 	{"new", lua_newimage},
@@ -652,6 +691,8 @@ static const luaL_Reg image_lib[] = {
     {"pixel", image_pixel},
     {"fill", image_fill},
     {"copy", image_copy},
+    {"crop", image_crop},
+    {"data", image_data},
     {NULL, NULL}
 };
 
@@ -675,6 +716,8 @@ static const luaL_Reg image_methods[] = {
     {"pixel", image_pixel},
     {"fill", image_fill},
     {"copy", image_copy},
+    {"crop", image_crop},
+    {"data", image_data},
 	{"__gc", lua_imagegc},
     {NULL, NULL}
 };
