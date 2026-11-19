@@ -182,6 +182,38 @@ static int lua_colormix(lua_State *L) {
     return 1;
 }
 
+static int color_invert(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+
+	Color *inverted = (Color *)lua_newuserdata(L, sizeof(Color));
+	inverted->color = RGBA8(
+		CLAMP(255-(color->color & 0xFF), 0, 255),
+		CLAMP(255-((color->color >> 8) & 0xFF), 0, 255),
+		CLAMP(255-((color->color >> 16) & 0xFF), 0, 255),
+		CLAMP(255-((color->color >> 24) & 0xFF), 0, 255));
+	
+	luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
+	return 1;
+}
+
+static int color_grayscale(lua_State *L){
+	Color *color = (Color *)luaL_checkudata(L, 1, "color");
+
+	Color *grayscale = (Color *)lua_newuserdata(L, sizeof(Color));
+	uint8_t r = grayscale->color & 0xFF;
+    uint8_t g = (grayscale->color >> 8) & 0xFF;
+    uint8_t b = (grayscale->color >> 16) & 0xFF;
+    uint8_t a = (grayscale->color >> 24) & 0xFF;
+
+    uint8_t gray = (r * 299 + g * 587 + b * 114) / 1000;
+	grayscale->color = (a << 24) | (gray << 16) | (gray << 8) | gray;
+	
+	luaL_getmetatable(L, "color");
+    lua_setmetatable(L, -2);
+	return 1;
+}
+
 static const luaL_Reg color_lib[] = {
     {"new", lua_newcolor},
 	{"r", lua_colorr},
@@ -192,6 +224,8 @@ static const luaL_Reg color_lib[] = {
 	{"sub", lua_colorsub},
 	{"blend", lua_colorblend},
 	{"mix", lua_colormix},
+	{"invert", color_invert},
+	{"grayscale", color_grayscale},
     {NULL, NULL}
 };
 
@@ -204,6 +238,8 @@ static const luaL_Reg color_methods[] = {
 	{"sub", lua_colorsub},
 	{"blend", lua_colorblend},
 	{"mix", lua_colormix},
+	{"invert", color_invert},
+	{"grayscale", color_grayscale},
 	{"__add", lua_coloradd},
 	{"__sub", lua_colorsub},
 	{"__eq", lua_coloreq},
